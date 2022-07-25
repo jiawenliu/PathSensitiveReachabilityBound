@@ -1,10 +1,23 @@
-from bound_infer import TransitionGraph, TransitionBound, DifferenceConstraint
+from rechability_bound_pathsensitive import PathSensitiveReachabilityBound, RefinedProg
+from bound_infer import DifferenceConstraint, TransitionGraph, TransitionBound
 from adapt_base import AdaptType
+from graph_parse import GraphParser
 
 class TestUnits:
 
     def __init__(self, ALG) -> None:
         self.ALG = ALG
+
+    def runner(self, transition_graph, refined_prog):
+        pathsensitive_rb = self.ALG(transition_graph)
+        pathsensitive_rb.compute_rb(refined_prog)
+        bound_infer = TransitionBound(transition_graph)
+        bound_infer.compute_transition_bounds()
+        
+        print("The Reachability Bounds Calculated for Transitions in This Graph are: ")
+        bound_infer.print_transition_bounds()
+        print("The Calculated Path Sensitive Reachability Bounds are: ") 
+        pathsensitive_rb.print_path_bound()
 
     # test the default graph
     def test_default(self):
@@ -15,13 +28,48 @@ class TestUnits:
     # the example with only sequence, 
     # Expected Weights: [1,1,1,1]
     def test_seq(self):
-        ctl_edges = [(0, 1)]
-        transitions = [(0, [DifferenceConstraint("x", None, "k", DifferenceConstraint.DCType.RESET)], 1, [0, 1, 2 ,3])]
-        bound_infer = self.ALG(TransitionGraph(ctl_edges, transitions))
-        bound_infer.compute_transition_bounds()
-        print("The Reachability Bounds Expected for  Vertices in Pure Sequence Graph are: [1,1,1,1] ")
-        print("The Reachability Bounds Calculated for Vertices in This Graph are: ", bound_infer.print_transition_bounds())
-        # adapt_search = AdaptSearchAlgRefined(bound_infer.graph)
+        ctl_edges = [(2, 3), (1, 2), (0, 1), (3, 4)]
+        transitions = [
+            (2, [ DifferenceConstraint("z", None, "Q", DifferenceConstraint.DCType.RESET) ], 3, [2]),
+            (1, [ DifferenceConstraint("y", None, "Q", DifferenceConstraint.DCType.RESET) ], 2, [1]),
+            (0, [ DifferenceConstraint("x", None, "Q", DifferenceConstraint.DCType.RESET) ], 1, [0]),
+            (3, [ DifferenceConstraint("w", None, "Q", DifferenceConstraint.DCType.RESET) ], -1, [3])
+            ]
+        refined_prog = RefinedProg(RefinedProg.RType.TP, [0, 1, 2, 3])
+        print("The Reachability Bounds Expected for Vertices in Simple Sequence Graph are: [1,1,1,1] ")
+        print("The Path Sensitive Reachability Bounds Expected for All Transitions in Simple Sequence Graph are: [1,1,1,1] ")
+        transition_graph = GraphParser("./examples/seq.br").abscfg_parse()
+        self.runner(transition_graph, refined_prog)
+
+
+    # the example with while loop of multi-path from if branch (multi-path loop will result in different visiting times for
+    # verteices  belong to the same loop),  
+    # Expected Adaptivity: 1 + k
+    # Ouput Adaptivity: 1 + k/2 + k
+    def multiple_round_odd_sim(self):
+        ctl_edges = [(0, 1), (1, 2), (2, 3), (2, 3), (3, 1)]
+        transitions = [
+            (0, [DifferenceConstraint("i", None, "k", DifferenceConstraint.DCType.RESET),
+            DifferenceConstraint("x", None, "Q", DifferenceConstraint.DCType.RESET)], 1, [0, 1]),
+            (1, [DifferenceConstraint("i", None, "1", DifferenceConstraint.DCType.DEC)], 2, [2]),
+            (2, [DifferenceConstraint("y", None, "Q", DifferenceConstraint.DCType.RESET)], 3, [3]),
+            (2, [DifferenceConstraint("y", None, "Q", DifferenceConstraint.DCType.RESET)], 3, [4]),
+            (3, [DifferenceConstraint("x", None, "Q", DifferenceConstraint.DCType.RESET)], 2, [5])
+            ]
+        refined_prog = RefinedProg(RefinedProg.RType.REPEAT, 
+            RefinedProg(RefinedProg.RType.CHOICE, 
+                [RefinedProg(RefinedProg.RType.SEQ, 
+                    [RefinedProg(RefinedProg.RType.REPEAT, RefinedProg(RefinedProg.RType.TP, [2, 0, 3])),
+                    RefinedProg(RefinedProg.RType.TP, [2, 1, 4])]),
+                 RefinedProg(RefinedProg.RType.SEQ, 
+                    [RefinedProg(RefinedProg.RType.REPEAT, RefinedProg(RefinedProg.RType.TP, [2, 1, 4])),
+                    RefinedProg(RefinedProg.RType.TP, [2, 0, 3])])
+                    ]))
+        print("The Reachability Bounds Expected for  Vertices in the Multiple Path Simple While Graph are: [1, 1, k, k/2, k/2, k] ")
+        print("The Reachability Bounds Expected for  Vertices in the Multiple Path Simple While Graph are: [1, 1, k, k/2, k/2, k] ")
+
+        transition_graph = GraphParser("./examples/multiple_round_odd_sim.br").abscfg_parse()
+        self.runner(transition_graph, refined_prog)
 
 
     # the example with simple Loop sequence, 
@@ -129,6 +177,19 @@ class TestUnits:
         bound_infer.compute_transition_bounds()
         print("The Reachability Bounds Calculated for Vertices in This Graph are: ", bound_infer.print_transition_bounds())
         print("The Reachability Bounds Expected for  Vertices in the Multiple Path Simple While Graph are: [1, 1, k, k/2, k/2, k] ")
+        refined_prog = RefinedProg(RefinedProg.RType.REPEAT, 
+            [RefinedProg(RefinedProg.RType.CHOICE, 
+                [RefinedProg(RefinedProg.RType.SEQ, 
+                    [RefinedProg(RefinedProg.RType.REPEAT, RefinedProg(RefinedProg.RType.TP, [2, 0, 3])),
+                    RefinedProg(RefinedProg.RType.TP, [2, 1, 4])]),
+                 RefinedProg(RefinedProg.RType.SEQ, 
+                    [RefinedProg(RefinedProg.RType.REPEAT, RefinedProg(RefinedProg.RType.TP, [2, 1, 4])),
+                    RefinedProg(RefinedProg.RType.TP, [2, 0, 3])])
+                    ])])
+        pathsensitive_rb = self.ALG(TransitionGraph(ctl_edges, transitions))
+        pathsensitive_rb.compute_rb(refined_prog)
+        print("The Reachability Bounds Calculated for Vertices in This Program are: ", pathsensitive_rb.print_path_bound())
+        print("The Reachability Bounds Expected for  Vertices in the Multiple Path Simple While Graph are: [1, 1, k, k/2, k/2, k] ")
 
 
 
@@ -215,5 +276,7 @@ class TestUnits:
 
 
 
-TestUnits(TransitionBound).run_tests()
+tester = TestUnits(PathSensitiveReachabilityBound)
+tester.test_seq()
+tester.multiple_round_odd_sim()
 
