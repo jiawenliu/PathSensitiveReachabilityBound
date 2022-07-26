@@ -862,27 +862,94 @@ $
   \triangleq \absclr(\absevent)
 $
 \paragraph*{While Loop Refinement}
-\paragraph*{Outside-In Algorithm}
-\paragraph*{Inside-Out Algorithm}
-
-\paragraph*{Path Sensitive Reachability Bound Computation}
-
-\paragraph*{Reachability Bound Computation}
-Through the transition closure computed above, 
-The weight of every label in 
-% Then we update 
-the program $c$'s abstract control flow graph,
-$\absG(c) =(\absV, \absE, \absW)$
-is 
-computed as the maximum over all the abstract events $\absevent \in \absE$ heading out from this vertex, formally as follows.
-% by annotating each vertex with a symbolic weight. 
-% This weight corresponds to 
-%reachability bounds of
+Transition Path : $\tpath \in \absG(c)$
+->  $\rprog \in \mathcal{RP}$
 \\
-$\absW 
-\triangleq \left\{ (l, w) \in \mathbb{N} \times \mathcal{A}_{\lin} | 
-w = \max \left\{ \absclr(\absevent) ~\mid~   \absevent \in \absflow(c) \land \absevent = (l, \_, \_) \right\} \right\}$.
+\paragraph*{Outside-In Algorithm}
+$rLB: \rprog \to \mathcal{A}_{in}$
+\\
+$\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of difference constraints, refined abstract state.
+\\
+$rInit : \rprog \to \absstate $ : initial refined abstract state;
+\\
+$rFinal : \rprog \to \absstate $ : final refined abstract state;
+\\
+$varGD : \rprog \to \mathcal{A}_{in}$ : the variable grade decedent in one iteration;
+\\
+Given a refined program $\rprog$:
+\\
+$rLB(\rpchoose\{\rprog_i\}) =  \max\{rLB(\rprog_i)\}$
+\\
+$rLB(\rprepeat\{\rprog\}) =  \frac{rInit(\rprog) - rFinal(\rprog)}{varGD(\rprog)}$
+\\
+$rLB(\rpseq(\rprog_1, \rprog_2)) =  rLB(\rprog_1)+ rLB( \rprog_2)$
+\\
+$rLB(\tpath) =  1$.
+\\
+The Variable Grade decedent is computed as:
+\\
+Given a refined program $\rprog$:
+\\
+$varGD(\rpchoose\{\rprog_i\}) =  \max\{varGD(\rprog_i)\}$
+\\
+$varGD(\rprepeat\{\rprog\}) =  rLB(\rprog) \times {varGD(\rprog)}$
+\\
+$varGD(\rpseq(\rprog_1, \rprog_2)) =  varGD(\rprog_1)+ varGD( \rprog_2)$
+\\
+$varGD(\tpath) =  rInit(\tpath) - rFinal(\tpath)$
+
+\paragraph*{Inside-Out Algorithm}
+$RB: \tpath \to \mathcal{A}_{in}$
+\\
+For each transition path $\tpath \in \rprog$:
+\\
+1. collect the repeat chain: $rpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
+\\
+2. compute the path sensitive reachability bound for $\tpath$ as:
+\\
+For $chain \in rpchain(\tpath)$:
+\\
+$RBtemp = 1$
+\\
+For $\rprog \in chain$:
+\\
+$RBtemp *= rLB(\rprog)$
+\\
+EndFor
+\\
+$RB(\tpath) = \max(RB(\tpath), RBtemp)$
 % \\
+\paragraph*{Path Sensitive Reachability Bound Computation for Every Location}
+$RB \in \rprog \to \ldom \to \mathcal{A}_{in}$
+\\
+For each location $l \in \rprog$:
+\\
+1. collect the transition paths set involving $l$: $loc_{\tpath} : l \to \mathcal{P}(\tpath)$.
+\\
+2. compute the path sensitive reachability bound for $l$ as:
+\\
+For $\tpath \in loc_{\tpath}(l)$:
+\\
+$RB(l) += RB(\tpath)$
+\\
+EndFor
+% %
+% \paragraph*{Reachability Bound Computation}
+% Through the transition closure computed above, 
+% The weight of every label in 
+% % Then we update 
+% the program $c$'s abstract control flow graph,
+% $\absG(c) =(\absV, \absE, \absW)$
+% is 
+% computed as the maximum over all the abstract events $\absevent \in \absE$ heading out from this vertex, formally as follows.
+% % by annotating each vertex with a symbolic weight. 
+% % This weight corresponds to 
+% %reachability bounds of
+% \\
+% $\absW 
+% \triangleq \left\{ (l, w) \in \mathbb{N} \times \mathcal{A}_{\lin} | 
+% w = \max \left\{ \absclr(\absevent) ~\mid~   \absevent \in \absflow(c) \land \absevent = (l, \_, \_) \right\} \right\}$.
+% % \\
 \paragraph*{Example}
 We perform the symbolic reachability bound analysis on the abstract control flow graph as follows. 
 We would like to generate the closure of every edge, which is an equality relation between variables.  Solving this closure gives us the reachability bound for this edge. With all the bound for all the edges in the abstract control flow graph, we can calculate the weight for every vertex in this graph. For example, we show the closure generated for the edge 
@@ -942,7 +1009,7 @@ as follows,
  \[\progV(c) \triangleq
    \left\{ (x^l, w) 
 \mid
-x^l \in \progV^0(c) \land (l, w) \in \absW(c)
+x^l \in \progV^0(c) \land w = RB(l)
 \right\}.
 \]
 }
