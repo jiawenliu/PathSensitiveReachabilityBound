@@ -61,7 +61,7 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \mbox{Labeled Command} 
 & {c} & ::= &  
 \clabel{\assign{x}{\expr}}^l 
-~|~ \clabel{\assign{x}{\query(\qexpr)}}^l
+% ~|~ \clabel{\assign{x}{\query(\qexpr)}}^l
 ~|~  \clabel{\eskip}^l
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo {c}
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
@@ -77,7 +77,8 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 % \\
 \mbox{Event} 
 & \event & ::= & 
-    ({x}, l, v, \bullet) ~|~ ({x}, l, v, \qval)  ~~~~~~~~~~~ \mbox{Assignment Event} \\
+% ~|~ ({x}, l, v, \qval)
+({x}, l, v, \bullet)   ~~~~~~~~~~~ \mbox{Assignment Event} \\
 &&& ~|~(\bexpr, l, v, \bullet)   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \mbox{Testing Event}
 \\
 % &&& \text{\mg{I think it would be better to use quadruples for events, where the}}\\
@@ -112,9 +113,9 @@ We use following notations to represent the set of corresponding terms:
 \\ 
 %
 \mathcal{VAL} & : & \mbox{Set of Values} 
-\\ 
-%
-\mathcal{QVAL} & : & \mbox{Set of Query Values} 
+% \\ 
+% %
+% \mathcal{QVAL} & : & \mbox{Set of Query Values} 
 \\ 
 %
 \cdom & : & \mbox{Set of Commands} 
@@ -135,19 +136,14 @@ We use following notations to represent the set of corresponding terms:
 \mathcal{VAL}  & : & \mbox{Set of Labeled Variables}  
 \\
 %%
-\dbdom  & : & \mbox{{Set of Databases}} 
-\\
+% \dbdom  & : & \mbox{{Set of Databases}} 
+% \\
 %
 {\mathcal{T}} & : & \mbox{Set of Traces}
 \\
 %
 \mathcal{T}_0(c) & : & \mbox{Set of Initial Traces, where all the input variables of the program $c$ are initialized.
 }
-\\
-%
-% \qdom = {[-1,1]} & : & \mbox{{Domain of Query Results}}\\
-\qdom & : & \mbox{{Domain of Query Results}}\\
-% &&\text{\mg{I don't think you need to hard code [-1,1] here}}\\
 \end{array}
 \]
 %
@@ -316,37 +312,37 @@ Environment $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to \mathcal{VAL} \cup \{\
  \config{\trace,  v} 
  \earrow v
 }
-\\
-\boxed{ \config{\trace, \qexpr} \qarrow \qval \, : \, \mbox{Trace  $\times$ Query Expr $\Rightarrow$ Query Value} }
-\\
-\inferrule{ 
-  \config{\trace, \aexpr} \aarrow n
-}{
- \config{\trace,  \aexpr} 
- \qarrow n
-}
-\and
-\inferrule{ 
-  \config{\trace, \qexpr_1} \qarrow \qval_1
-  \and
-  \config{\trace, \qexpr_2} \qarrow \qval_2
-}{
- \config{\trace,  \qexpr_1 \oplus_a \qexpr_2} 
- \qarrow \qval_1 \oplus_a \qval_2
-}
-\and
-\inferrule{ 
-  \config{\trace, \aexpr} \aarrow n
-}{
- \config{\trace, \chi[\aexpr]} \qarrow \chi[n]
-}
-\and
-\inferrule{ 
-  \empty
-}{
- \config{\trace,  \qval} 
- \qarrow \qval
-}
+% \\
+% \boxed{ \config{\trace, \qexpr} \qarrow \qval \, : \, \mbox{Trace  $\times$ Query Expr $\Rightarrow$ Query Value} }
+% \\
+% \inferrule{ 
+%   \config{\trace, \aexpr} \aarrow n
+% }{
+%  \config{\trace,  \aexpr} 
+%  \qarrow n
+% }
+% \and
+% \inferrule{ 
+%   \config{\trace, \qexpr_1} \qarrow \qval_1
+%   \and
+%   \config{\trace, \qexpr_2} \qarrow \qval_2
+% }{
+%  \config{\trace,  \qexpr_1 \oplus_a \qexpr_2} 
+%  \qarrow \qval_1 \oplus_a \qval_2
+% }
+% \and
+% \inferrule{ 
+%   \config{\trace, \aexpr} \aarrow n
+% }{
+%  \config{\trace, \chi[\aexpr]} \qarrow \chi[n]
+% }
+% \and
+% \inferrule{ 
+%   \empty
+% }{
+%  \config{\trace,  \qval} 
+%  \qarrow \qval
+% }
  \end{mathpar}
 %
 The trace based operational semantics rules are defined in Figure \ref{fig:os}.
@@ -717,41 +713,41 @@ it is the set of variables set to the result of a query in the program formally 
 %
 % \begin{defn}[Query Variables ($\qvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$)].
   % \\
-\begin{defn}[Query Variables ($\qvar: \cdom \to \mathcal{P}(\mathcal{LV})$)] 
-  \label{def:qvar}
-Given a program $c$, its query variables 
-% \mg{it seems you are missing the $_c$ subscript. Also, this is a minor point but I don't think it is a good idea to use a subscript, cannot you just use $\qvar(c)$.}
-$\qvar(c)$ is the set of variables set to the result of a query in the program.
-% \jl{fixed}
-It is defined as follows:
-{\footnotesize
-$$
-  % \qvar_{{c}} \triangleq
-  \qvar(c) \triangleq
-  \left\{
-  \begin{array}{ll}
-      \{\}                  
-      & {c} = [{\assign x \expr}]^{l} 
-      \\
-      \{{x}^l\}                  
-      & {c} = [{\assign x \query(\qexpr)}]^{l} 
-      \\
-      \qvar(c_1) \cup \qvar(c_2)  
-      & {c} = {c_1};{c_2}
-      \\
-      \qvar(c_1) \cup \qvar(c_2) 
-      & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
-      \\
-      \qvar(c')
-      & {c}   = \ewhile ([\bexpr]^{l}, {c}')
-\end{array}
-\right.
-$$
-}
-\end{defn}
-%
-It is easy to see that a program $c$'s query variables is a subset of 
-its labeled variables, $\qvar(c) \subseteq \lvar(c)$.
+% % \begin{defn}[Query Variables ($\qvar: \cdom \to \mathcal{P}(\mathcal{LV})$)] 
+% %   \label{def:qvar}
+% % Given a program $c$, its query variables 
+% % % \mg{it seems you are missing the $_c$ subscript. Also, this is a minor point but I don't think it is a good idea to use a subscript, cannot you just use $\qvar(c)$.}
+% % $\qvar(c)$ is the set of variables set to the result of a query in the program.
+% % % \jl{fixed}
+% % It is defined as follows:
+% % {\footnotesize
+% % $$
+% %   % \qvar_{{c}} \triangleq
+% %   \qvar(c) \triangleq
+% %   \left\{
+% %   \begin{array}{ll}
+% %       \{\}                  
+% %       & {c} = [{\assign x \expr}]^{l} 
+% %       \\
+% %       \{{x}^l\}                  
+% %       & {c} = [{\assign x \query(\qexpr)}]^{l} 
+% %       \\
+% %       \qvar(c_1) \cup \qvar(c_2)  
+% %       & {c} = {c_1};{c_2}
+% %       \\
+% %       \qvar(c_1) \cup \qvar(c_2) 
+% %       & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
+% %       \\
+% %       \qvar(c')
+% %       & {c}   = \ewhile ([\bexpr]^{l}, {c}')
+% % \end{array}
+% % \right.
+% % $$
+% % }
+% % \end{defn}
+% %
+% It is easy to see that a program $c$'s query variables is a subset of 
+% its labeled variables, $\qvar(c) \subseteq \lvar(c)$.
 %
 % \mg{In this definition as well as in others, I have the impression that you assume that the labelled variables are unique in the program. For example, it would not make sense to assign a query to the same labelled variable over and over. If this is the case, we need to make this very explicit in the paper.}
 % \jl{TODO}
@@ -767,5 +763,9 @@ Every labeled variable in a program is unique, formally as follows with proof in
 \end{lem}
 %
 %
+\subsection{Event and Trace}
+\label{subsec:event_trace}
+\input{event}
+\input{trace}
 %
 \clearpage

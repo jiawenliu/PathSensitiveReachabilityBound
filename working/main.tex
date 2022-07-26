@@ -8,7 +8,7 @@
 \newcommand{\highlight}[1]{\textcolor[rgb]{.0,0.0,1.0}{ #1}}
 
 \usetikzlibrary{shapes,arrows}
-\newcommand{\THESYSTEM}{\textsf{AdaptFun}}
+\newcommand{\THESYSTEM}{\textsf{PsRB}}
 
 % Define block styles
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
@@ -33,24 +33,24 @@
 % \input{example_cousot}
 % \clearpage
 % %
-\section{\highlight{{\tt Query While} Language - Extended}}
+\section{{While Language}\todo{remove query}}
 \label{sec:language}
 \input{language}
 \clearpage
 % %
-\section{Event and Trace}
-\label{sec:event_trace}
-\input{event}
-\input{trace}
-\clearpage
+% \section{Event and Trace\todo{remove query}}
+% \label{sec:event_trace}
+% \input{event}
+% \input{trace}
+% \clearpage
 % %
-\section{\highlight{Dependency and Reachability}}
-\label{sec:adapt}
-\input{dep}
+\section{\highlight{Execution-Based Reachability Bound}}
+\label{sec:execution_rb}
+\input{execution_reachabilitybound}
 \clearpage
 % % 
-\section{Path Sensitive Reachability Bound Analysis}
-\label{sec:adpfun}
+\section{Path Sensitive Reachability Bound Static Analysis \todo{add the refinement, Outside-In and Inside-Out Algorithm Detail}}
+\label{sec:static_pathsensitiverb}
 \input{pathsensitive_rb}
 % % % % 
 
