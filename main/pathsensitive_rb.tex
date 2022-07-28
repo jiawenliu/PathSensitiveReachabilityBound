@@ -886,7 +886,7 @@ $rLB(\rpseq(\rprog_1, \rprog_2)) =  rLB(\rprog_1)+ rLB( \rprog_2)$
 \\
 $rLB(\tpath) =  1$.
 \\
-The Variable Grade decedent is computed as:
+The Variable Gradient Decent is computed as:
 \\
 Given a refined program $\rprog$:
 \\
@@ -898,26 +898,49 @@ $varGD(\rpseq(\rprog_1, \rprog_2)) =  varGD(\rprog_1)+ varGD( \rprog_2)$
 \\
 $varGD(\tpath) =  rInit(\tpath) - rFinal(\tpath)$
 
+\paragraph*{Choose Chain and Repeat Chain}
+For each transition path, collect their repeat chain and choose chain 
+from the head of the while loop.
+\\
+1. collect the choose chain: $chschain : (\tpath \times \tpath) \to \mathcal{P}(\mathcal{P}(\rprog)))$
+\\
+$chschain(\rprog_n, \tpath) = \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath$
+such that there isn't consecutive repeat between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
+\\
+2. collect the repeat chain: $rpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
+\\
+ $rpchain(\tpath) = chschain(\rprog_n', \rprog_{n-1}) \to \cdots \to chschain(\rprog_1', \tpath)$
+ such that there isn't choose chain between $\rprog_{i - 1}$ and $\rprog_{i}'$ for $i = n, \cdots, 1$.
+\\
+3. Compute the local bound for every choose chain as follows:
+\\
+$clb(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n', \rprog_{n-1})}
+\frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
+\\
 \paragraph*{Inside-Out Algorithm}
-$RB: \tpath \to \mathcal{A}_{in}$
+$rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
 \\
-For each transition path $\tpath \in \rprog$:
+For each transition path $\tpath \in \rprog$,
 \\
-1. collect the repeat chain: $rpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
+1. First compute the path sensitive reachability choosing bound through their choose chain:
 \\
-2. compute the path sensitive reachability bound for $\tpath$ as:
+$chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n', \rprog_{n-1})}
+\frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
 \\
-For $chain \in rpchain(\tpath)$:
+2. Then compute the path sensitive reachability repeating bound for $\tpath$ as:
 \\
-$RBtemp = 1$
-\\
-For $\rprog \in chain$:
-\\
-$RBtemp *= rLB(\rprog)$
-\\
-EndFor
-\\
-$RB(\tpath) = \max(RB(\tpath), RBtemp)$
+$rpRB(\tpath) = \prod\limits_{chschain(\rprog_i', \rprog_{i-1})  \in rpchain(\tpath)} chsRB(\rprog_i', \rprog_{i-1})$
+% For $chain \in rpchain(\tpath)$:
+% \\
+% $RBtemp = 1$
+% \\
+% For $\rprog \in chain$:
+% \\
+% $RBtemp *= rLB(\rprog)$
+% \\
+% EndFor
+% \\
+% $RB(\tpath) = \max(RB(\tpath), RBtemp)$
 % \\
 \paragraph*{Path Sensitive Reachability Bound Computation for Every Location}
 $RB \in \rprog \to \ldom \to \mathcal{A}_{in}$
@@ -928,12 +951,13 @@ For each location $l \in \rprog$:
 \\
 2. compute the path sensitive reachability bound for $l$ as:
 \\
-For $\tpath \in loc_{\tpath}(l)$:
-\\
-$RB(l) += RB(\tpath)$
-\\
-EndFor
+% For $\tpath \in loc_{\tpath}(l)$:
+% \\
+% $RB(l) \ RB(\tpath)$
+% \\
+% EndFor
 % %
+$RB(l) \sum\limits_{\tpath \in loc_{\tpath}(l)} rpRB(\tpath)$.
 % \paragraph*{Reachability Bound Computation}
 % Through the transition closure computed above, 
 % The weight of every label in 
