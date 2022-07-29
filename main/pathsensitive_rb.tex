@@ -905,7 +905,8 @@ from the head of the while loop.
 1. collect the choose chain: $chschain : (\tpath \times \tpath) \to \mathcal{P}(\mathcal{P}(\rprog)))$
 \\
 $chschain(\rprog_n, \tpath) = \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath$
-such that there isn't consecutive repeat between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
+such that there is at least a $\rpchoose$ and isn't consecutive repeats $\rprepeat$ (i.e., at most one 
+$\rprepeat$) between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
 \\
 2. collect the repeat chain: $rpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
 \\
@@ -914,7 +915,7 @@ such that there isn't consecutive repeat between any $\rprog_{i - 1}$ and $\rpro
 \\
 3. Compute the local bound for every choose chain as follows:
 \\
-$clb(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n', \rprog_{n-1})}
+$chsLB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n, \tpath)}
 \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
 \\
 \paragraph*{Inside-Out Algorithm}
@@ -924,7 +925,7 @@ For each transition path $\tpath \in \rprog$,
 \\
 1. First compute the path sensitive reachability choosing bound through their choose chain:
 \\
-$chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n', \rprog_{n-1})}
+$chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n, \tpath)}
 \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
 \\
 2. Then compute the path sensitive reachability repeating bound for $\tpath$ as:
