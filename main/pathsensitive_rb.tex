@@ -1040,6 +1040,8 @@ $RB(l) \sum\limits_{\tpath \in loc_{\tpath}(l)} rpRB(\tpath)$.
 % w = \max \left\{ \absclr(\absevent) ~\mid~   \absevent \in \absflow(c) \land \absevent = (l, \_, \_) \right\} \right\}$.
 % % \\
 \paragraph*{Example}
+\input{examples/threeNestedWhile}
+\paragraph*{Example}
 % We perform the symbolic reachability bound analysis on the abstract control flow graph as follows. 
 % We would like to generate the closure of every edge, which is an equality relation between variables.  Solving this closure gives us the reachability bound for this edge. With all the bound for all the edges in the abstract control flow graph, we can calculate the weight for every vertex in this graph. For example, we show the closure generated for the edge 
 % $(4, j < j - 1, 5)$, 
