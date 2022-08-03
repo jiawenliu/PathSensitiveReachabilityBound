@@ -1,0 +1,41 @@
+\begin{example}[Three Nested While]
+    \label{ex:threeNestedWhile}
+    %
+    %
+    \[
+    %
+    \begin{array}{l}
+        \kw{threeNestedWhile}(k, m, N) \triangleq \\
+        \clabel{ \assign{i}{0} }^{0} ; \\
+            \ewhile ~ \clabel{i < k}^{1} ~ \edo ~ \\
+            \qquad \Big(
+             \clabel{\assign{j}{m}}^{4} ;\\
+             \qquad \ewhile ~ \clabel{j > 0}^{5} ~ \edo ~ \\
+             \qquad \qquad \Big(
+              \clabel{\assign{j}{j-1}}^{6};
+              \clabel{\assign{w}{i}}^{6};\\
+              \qquad \qquad \ewhile ~ \clabel{w < N}^{5} ~ \edo ~
+              \Big(
+                \clabel{\assign{w}{w + 1}}^{6}
+                  \Big); \\
+                  \qquad \qquad \clabel{\assign{i}{w}}^{3}
+                  \Big); \\
+                  \qquad \clabel{\assign{i}{i+1}}^{3}
+              \Big)
+        \end{array}
+    \]
+\end{example}
+
+% [ i <- k ] 0;
+% while [ > (i, 0) ] 1 do {
+%     [ j <- c ] 2;
+%     while [ > (j, 0) ] 3 do {
+%         [ j <- - (j, 1) ] 4;
+%         [ w <- i ] 5;
+%         while [ < (w, N) ] 6 do {
+%             [ w <- - (w, 1) ] 7
+%         };
+%         [ w <- N ] 8
+%     };
+%     [ i <- - (i, 1)] 9
+%  }
