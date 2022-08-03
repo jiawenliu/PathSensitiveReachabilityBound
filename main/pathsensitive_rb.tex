@@ -862,11 +862,15 @@ $
   \triangleq \absclr(\absevent)
 $
 \paragraph*{While Loop Refinement}
-Transition Path : $\tpath \in \absG(c)$
+For a Loop $L$,
+computes all the transition Paths : $\tpath \in \absG(c)$
 ->  $\rprog \in \mathcal{RP}$
-\\
+in this loop and generate the refined statement.
 \paragraph*{Outside-In Algorithm}
-$rLB: \rprog \to \mathcal{A}_{in}$
+For a Loop $L$, with its refined statement $\rprog \in \mathcal{RP}$,
+compute refined local bound for the refined statement $\rprog$.
+\\
+ $rLB: \rprog \to \mathcal{A}_{in}$
 \\
 $\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of difference constraints, refined abstract state.
 \\
@@ -898,51 +902,111 @@ $varGD(\rpseq(\rprog_1, \rprog_2)) =  varGD(\rprog_1)+ varGD( \rprog_2)$
 \\
 $varGD(\tpath) =  rInit(\tpath) - rFinal(\tpath)$
 
-\paragraph*{Choose Chain and Repeat Chain}
-For each transition path, collect their repeat chain and choose chain 
-from the head of the while loop.
+\paragraph*{Collect the Repeat Chain}
+For a Loop $L$, with its refined statement $\rprog \in \mathcal{RP}$,
+for each transition path in the refined statement, $\tpath \in \rprog $ , 
+collect their repeat chain.
+% and loop chain.
+% from the head of the while loop.
 \\
-1. collect the choose chain: $chschain : (\tpath \times \tpath) \to \mathcal{P}(\mathcal{P}(\rprog)))$
+1. collect the repeat chain: $rpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
 \\
-$chschain(\rprog_n, \tpath) = \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath$
-such that there is at least a $\rpchoose$ and isn't consecutive repeats $\rprepeat$ (i.e., at most one 
-$\rprepeat$) between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
+ $rpchain(L, \tpath) = \left \{ 
+   \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath \right \}$
+ such that 
+ $\rprog_{n}= \rprepeat^{L}(\cdots)$ 
+ and
+ $\rprog_{i}= \rprepeat(\cdots, \rprog_{i - 1}, \cdots)$ and
+ there isn't any loop (i.e., $\rprepeat^{L'}$) or $\rprepeat_i$ between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
+% \\
+% 2. 
+% collect the loop chain: 
+% $lpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
+% \\
+% $lpchain(\tpath) = \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath$
+% % such that there is at least a $\rpchoose$ and isn't consecutive repeats $\rprepeat$ (i.e., at most one 
+% % $\rprepeat$) between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
+% $\rprog_{i}= \rprepeat^{L_i}(\cdots, \rprog_{i - 1}, \cdots)$ and
+%  there isn't any loop (i.e., $\rprepeat^{L}$) between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
+% \\
+% 2. Compute the local bound for every repeat chain as follows:
+% \\
+% $rpLB(L, \tpath) = \prod\limits_{\rprog_i \in rpchain(\tpath)}
+% % \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}
+% rLB(\rprog_i)$
+% % \\
+% where $\rprepeat^{L}$ is the closet loop containing $\tpath$, $\rprepeat^{L}(\cdots, \rprog, \cdots)$.
+% \\
+% 4. Compute the nested local bound for every loop chain as follows, for every of 
+% $(\rprog_i, \tpath)$ such that $\rprog_i \in lpchain(\tpath)$,
+% \\
+% $lpLB(\rprog_i, \tpath) = 
+% % \prod\limits_{\rprog_i \in lpchain(\tpath)}
+% \frac{lpInit(\rprog_i, \tpath) - lpFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
+% \\
+\paragraph*{Inside-Out Algorithm on Repeat Chain}
+% $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
+% \\
+% For each transition path $\tpath \in \rprog$,
+% \\
+% 1. First compute the path sensitive reachability choosing bound through their choose chain:
+% \\
+% $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
+% \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
+Compute the local bound for every repeat chain as follows:
 \\
-2. collect the repeat chain: $rpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
+$rpLB(L, \tpath) = \prod\limits_{\rprog_i \in rpchain(\tpath)}
+% \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}
+rLB(\rprog_i)$.
+% \\
+% \\
+% 2. Then compute the path sensitive reachability repeating bound for $\tpath$ as:
+% \\
+% $RB(\tpath) = \max\limits_{l \in lpchains(\tpath)} \{rpLB(n, \tpath) \prod\limits_{\rprog_i \in l} lpRB(\rprog_i, \tpath) \}$
+% % For $chain \in rpchain(\tpath)$:
+% where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
+%
+\paragraph*{Compute Loop Chain for Nested Loop}
+For all while loop in a program, let $L_i$ represents each loop,
+then there is loop tree as follows for a program:
+$P = \rprepeat^{L_n}(\cdots, \rprepeat^{L_{n'}}(\cdots), \cdots, \rprepeat^{L_{n''}}(\cdots))$.
 \\
- $rpchain(\tpath) = chschain(\rprog_n', \rprog_{n-1}) \to \cdots \to chschain(\rprog_1', \tpath)$
- such that there isn't choose chain between $\rprog_{i - 1}$ and $\rprog_{i}'$ for $i = n, \cdots, 1$.
+For each transition path $\tpath$, we:
+% from the head of the while loop.
 \\
-3. Compute the local bound for every choose chain as follows:
+1. firstly collect the loop chain: 
+$lpchain : \tpath \to \mathcal{P}(\mathcal{P}(\rprog)))$
 \\
-$chsLB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n, \tpath)}
-\frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
+$lpchain(\tpath) = \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath$
+% such that there is at least a $\rpchoose$ and isn't consecutive repeats $\rprepeat$ (i.e., at most one 
+% $\rprepeat$) between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
+$\rprog_{i}= \rprepeat^{L_i}(\cdots, \rprog_{i - 1}, \cdots)$ and
+ there isn't any loop (i.e., $\rprepeat^{L}$) between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
 \\
-\paragraph*{Inside-Out Algorithm}
-$rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
+2. then compute the nested local bound for every loop chain as follows, for every of 
+$(\rprog_i, \tpath)$ such that $\rprog_i \in lpchain(\tpath)$,
 \\
-For each transition path $\tpath \in \rprog$,
+$lpLB(\rprog_i, \tpath) = 
+% \prod\limits_{\rprog_i \in lpchain(\tpath)}
+\frac{lpInit(\rprog_i, \tpath) - lpFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
 \\
-1. First compute the path sensitive reachability choosing bound through their choose chain:
+\paragraph*{Inside-Out Algorithm on Nested Loop}
+% $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
+% \\
+% For each transition path $\tpath \in \rprog$,
+% \\
+% 1. First compute the path sensitive reachability choosing bound through their choose chain:
+% \\
+% $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
+% \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
+% \\
+Compute the path sensitive reachability repeating bound for $\tpath$ as:
 \\
-$chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in chschain(\rprog_n, \tpath)}
-\frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
-\\
-2. Then compute the path sensitive reachability repeating bound for $\tpath$ as:
-\\
-$rpRB(\tpath) = \prod\limits_{chschain(\rprog_i', \rprog_{i-1})  \in rpchain(\tpath)} chsRB(\rprog_i', \rprog_{i-1})$
+$RB(\tpath) = \max\limits_{l \in lpchains(\tpath)} \{rpLB(L_n, \tpath) \prod\limits_{\rprog_i \in l} 
+lpRB(\rprog_i, \tpath) \}$
 % For $chain \in rpchain(\tpath)$:
-% \\
-% $RBtemp = 1$
-% \\
-% For $\rprog \in chain$:
-% \\
-% $RBtemp *= rLB(\rprog)$
-% \\
-% EndFor
-% \\
-% $RB(\tpath) = \max(RB(\tpath), RBtemp)$
-% \\
+where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
+
 \paragraph*{Path Sensitive Reachability Bound Computation for Every Location}
 $RB \in \rprog \to \ldom \to \mathcal{A}_{in}$
 \\
@@ -976,18 +1040,18 @@ $RB(l) \sum\limits_{\tpath \in loc_{\tpath}(l)} rpRB(\tpath)$.
 % w = \max \left\{ \absclr(\absevent) ~\mid~   \absevent \in \absflow(c) \land \absevent = (l, \_, \_) \right\} \right\}$.
 % % \\
 \paragraph*{Example}
-We perform the symbolic reachability bound analysis on the abstract control flow graph as follows. 
-We would like to generate the closure of every edge, which is an equality relation between variables.  Solving this closure gives us the reachability bound for this edge. With all the bound for all the edges in the abstract control flow graph, we can calculate the weight for every vertex in this graph. For example, we show the closure generated for the edge 
-$(4, j < j - 1, 5)$, 
-$\absclr(4, 5) = \varinvar(j)$. The invariant for variable $j$, $\varinvar(j)$ used here is 
-$\varinvar(j) = k * \absclr(1, 2)$, which is generated by all the difference constraints involving $j$ in the graph. Notice the $k$ in $\varinvar(j)$ comes from considering both difference constraint $j<=k$ from edge (1,2) and $j<=j-1$ from (4,5), which intuitively reflects the while loop whose counter is set to $k$ at the beginning and decreases by 1 at each iteration. 
-With all the closures for all the edges of the abstract control flow graph, we can solve them to obtains the reachability bound of every edge. We decide the weight for every vertex in the abstract control flow graph by using the bound of the edges which head out from this vertex, by taking the max of the bound from these involving edges. For instance,   
-By the constraint on the edge $(4, j \leq j - 1, 5)$, we get bound $k$ for this edge.
-Then, we assign vertex $4$ by reachability bound $k$, as in Figure~\ref{fig:abscfg_tworound}(c). 
-Another interesting vertex is $2$, which has more than one edge heading out from it, $(2, \top, 3)$ and $(2,\top, 6)$. For the weight for vertex $2$, we choose the max between the bound $k$ from $(2,\top, 3)$ and $1$ from $(2,\top, 6)$.
-The same way for the rest weights' computation.
-We use $\absW(c)$ for the set of weights we just computed 
-for each label in the abstract control flow graph of $c$.
+% We perform the symbolic reachability bound analysis on the abstract control flow graph as follows. 
+% We would like to generate the closure of every edge, which is an equality relation between variables.  Solving this closure gives us the reachability bound for this edge. With all the bound for all the edges in the abstract control flow graph, we can calculate the weight for every vertex in this graph. For example, we show the closure generated for the edge 
+% $(4, j < j - 1, 5)$, 
+% $\absclr(4, 5) = \varinvar(j)$. The invariant for variable $j$, $\varinvar(j)$ used here is 
+% $\varinvar(j) = k * \absclr(1, 2)$, which is generated by all the difference constraints involving $j$ in the graph. Notice the $k$ in $\varinvar(j)$ comes from considering both difference constraint $j<=k$ from edge (1,2) and $j<=j-1$ from (4,5), which intuitively reflects the while loop whose counter is set to $k$ at the beginning and decreases by 1 at each iteration. 
+% With all the closures for all the edges of the abstract control flow graph, we can solve them to obtains the reachability bound of every edge. We decide the weight for every vertex in the abstract control flow graph by using the bound of the edges which head out from this vertex, by taking the max of the bound from these involving edges. For instance,   
+% By the constraint on the edge $(4, j \leq j - 1, 5)$, we get bound $k$ for this edge.
+% Then, we assign vertex $4$ by reachability bound $k$, as in Figure~\ref{fig:abscfg_tworound}(c). 
+% Another interesting vertex is $2$, which has more than one edge heading out from it, $(2, \top, 3)$ and $(2,\top, 6)$. For the weight for vertex $2$, we choose the max between the bound $k$ from $(2,\top, 3)$ and $1$ from $(2,\top, 6)$.
+% The same way for the rest weights' computation.
+% We use $\absW(c)$ for the set of weights we just computed 
+% for each label in the abstract control flow graph of $c$.
 % Still looking at the two-round example as in Figure~\ref{fig:adapfun_tworound}(b) where 
 % each label $l$ is added with a weight by $absW$.
 % This weight represents the  maximum reaching times of this location $l$, in the other word, 
