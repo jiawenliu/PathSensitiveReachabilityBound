@@ -26,16 +26,90 @@
     \]
 \end{example}
 
-% [ i <- k ] 0;
-% while [ > (i, 0) ] 1 do {
-%     [ j <- c ] 2;
-%     while [ > (j, 0) ] 3 do {
-%         [ j <- - (j, 1) ] 4;
-%         [ w <- i ] 5;
-%         while [ < (w, N) ] 6 do {
-%             [ w <- - (w, 1) ] 7
-%         };
-%         [ w <- N ] 8
-%     };
-%     [ i <- - (i, 1)] 9
-%  }
+Step 1: Abstract Transition Graph:
+
+Step 2: Path Insensitive Transition Bound Computation
+
+Step 3: Program Rephrase through Path Collection on Abstract CFG
+$\tpath_0 = (l_0 \to l_1)$
+\\
+$\tpath_1 = (1 \to 2) (l_2 \to l_3)$
+\\
+$\tpath_2 = (3 \to 4), (4 \to 5), (5 \to 6)$
+\\
+$\tpath_3 = (6 \to 7), (7 \to 6)$
+\\
+$\tpath_4 = (6 \to 8), (8 \to 3)$
+\\
+$\tpath_5 = (3 \to 9), (9 \to 1)$
+\\
+$\tpath_6 = (1 \to \lex)$
+\\
+Rephrase Program
+\[
+\tpath_0 ; LOOP1: \rprepeat(\tpath_1; LOOP2: \rprepeat(\tpath_2; LOOP3 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
+\]
+Step 4: While Loop Refinement:
+\[
+\tpath_0 ; LOOP1: \rprepeat(\tpath_1; LOOP2: \rprepeat(\tpath_2; LOOP3 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
+\]
+Step 5: Outside-In Algorithm
+\\
+$LB(\tpath_0) = 1$
+\\
+$LB(LOOP3 : \rprepeat(\tpath_3)) = N $
+\\
+$LB(LOOP2: \rprepeat(\tpath_2; \cdots)) = m $
+\\
+$LB(LOOP1: \rprepeat(\tpath_1; \cdots)) = n - N $
+\\
+Step 6: Inside-Out Algorithm
+\begin{itemize}
+    \item \textbf{Repeat Chain}
+    $rp\mathcal{C}(LOOP1, \tpath_1) = \{\rprepeat(\tpath_1; \cdots)\}$ \\
+    $rp\mathcal{C}(LOOP1, \tpath_5) = \{\rprepeat(\tpath_1; \cdots)\}$ \\
+    $rp\mathcal{C}(LOOP2, \tpath_2) = \{\rprepeat(\tpath_2; \cdots)\}$ \\
+    $rp\mathcal{C}(LOOP2, \tpath_4) = \{\rprepeat(\tpath_2; \cdots)\}$ \\
+    $rp\mathcal{C}(LOOP3, \tpath_3) = \{\rprepeat(\tpath_3)\}$ \\
+    $rp\mathcal{C}(_, \_) = \emptyset$ 
+    % \\
+    \item \textbf{Rp Local Bound for Every Transition Path $\tpath$ on its Repeat Chain}
+    $rpLB(LOOP1, \tpath_1) = n - N$ \\
+    $rpLB(LOOP1, \tpath_5) = n - N$ \\
+    $rpLB(LOOP2, \tpath_2) = m$ \\
+    $rpLB(LOOP2, \tpath_4) = m$ \\
+    $rpLB(LOOP3, \tpath_3) = N$ \\
+    $rpLB(_, \_) = \bot $ 
+    %
+    \item \textbf{Loop Chain}
+    $lp\mathcal{C}(\tpath_1) = \{LOOP1\to \tpath_1\}$ \\
+    $lp\mathcal{C}(\tpath_5) = \{LOOP1\to \tpath_5\}$ \\
+    $lp\mathcal{C}(\tpath_2) = \{LOOP1 \to LOOP2 \to \tpath_2\}$ \\
+    $lp\mathcal{C}(\tpath_4) = \{LOOP1 \to LOOP2 \to \tpath_4\}$ \\
+    $lp\mathcal{C}(\tpath_3) = \{LOOP1 \to LOOP2 \to LOOP3 \to \tpath_3\}$ \\
+    $lp\mathcal{C}(\tpath_0) = \{\tpath_0\}$ \\
+    $lp\mathcal{C}(\tpath_6) = \{\tpath_6\}$ 
+    \item \textbf{Nested Loop Bound for Every Transition Path $\tpath$ on its Loop Chain}
+    $rpLB(LOOP1, \tpath_1) = n - N$ \\
+    $rpLB(LOOP1, \tpath_5) = n - N$ \\
+    $rpLB(LOOP1, \tpath_2) = n$;  $rpLB(LOOP2, \tpath_2) = m$; \\
+    $rpLB(LOOP1, \tpath_4) = n$; $rpLB(LOOP2, \tpath_4) = m$ \\
+    $rpLB(LOOP1, \tpath_3) = 1$; $rpLB(LOOP2, \tpath_3) = 1$; $rpLB(LOOP3, \tpath_3) = N$ \\
+    $rpLB(_, \_) = \bot $ 
+    \item \textbf{Path Sensitive Reachability Bound For Every Transition Path $\tpath$ }
+    $psRB(\tpath_1) = n - N$ \\
+    $psRB(\tpath_5) = n - N$ \\
+    $psRB(\tpath_2) = n \times m$ \\
+    $psRB(\tpath_4) = n \times m$ \\
+    $psRB(\tpath_3) = N$ \\
+    $psRB(\tpath_0) = 1$ \\
+    $psRB(\tpath_6) = 1$ 
+\end{itemize}
+Step 7: Path Sensitive Reachability Bound Computation for Every Location
+$psRB(\{1, 2, 3\}) = n - N$ \\
+$psRB(\{1, 9\}) = n - N$ \\
+$psRB(\{3, 4, 5, 6\}) = n \times m$ \\
+$psRB(\{3, 8\}) = n \times m$ \\
+$psRB(\{6, 7, 6\}) = N$ \\
+$psRB(\{0, 1\}) = 1$ \\
+$psRB(\{1, \lex\}) = 1$ 

@@ -49,11 +49,20 @@
 \input{execution_reachabilitybound}
 \clearpage
 % % 
-\section{Path Sensitive Reachability Bound Static Analysis \todo{add the refinement, Outside-In and Inside-Out Algorithm Detail}}
+\section{Path Sensitive Reachability Bound Static Analysis 
+% \todo{add the refinement, Outside-In and Inside-Out Algorithm Detail}}
+}
 \label{sec:static_pathsensitiverb}
 \input{pathsensitive_rb}
 % % % % 
 
+\section{Examples}
+\input{examples_psrb/threeNestedWhile}
+\todo{step by step}
+\input{examples_psrb/whileTwoCounters}
+\input{examples_psrb/twoRounds}
+\input{examples_psrb/multipleRoundsOdd}
+\input{examples_psrb/multipleRoundsSingle}
 
 % \clearpage
 %
@@ -64,8 +73,11 @@
 \appendix
 \addcontentsline{toc}{section}{Appendices}
 \section*{Appendices}
-\input{appendix}
-
+% \input{appendix}
+\input{theorem/reachability_soundness}
+\clearpage
+\bibliographystyle{plain}
+\bibliography{adaptivity.bib}
 \end{document}
 
 
