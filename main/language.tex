@@ -78,8 +78,10 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \mbox{Event} 
 & \event & ::= & 
 % ~|~ ({x}, l, v, \qval)
-({x}, l, v, \bullet)   ~~~~~~~~~~~ \mbox{Assignment Event} \\
-&&& ~|~(\bexpr, l, v, \bullet)   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \mbox{Testing Event}
+({x}, l, v) ~ \mbox{Assignment Event} 
+% \\
+% &&& 
+~|~(\bexpr, l, v) ~ \mbox{Testing Event}
 \\
 % &&& \text{\mg{I think it would be better to use quadruples for events, where the}}\\
 % &&& \text{\mg{first element is either a variable or a boolean expression and }}\\
@@ -133,8 +135,8 @@ We use following notations to represent the set of corresponding terms:
 \ldom  & : & \mbox{Set of Labels}  
 \\
 %%
-\mathcal{VAL}  & : & \mbox{Set of Labeled Variables}  
-\\
+% \mathcal{VAL}  & : & \mbox{Set of Labeled Variables}  
+% \\
 %%
 % \dbdom  & : & \mbox{{Set of Databases}} 
 % \\
@@ -147,9 +149,202 @@ We use following notations to represent the set of corresponding terms:
 \end{array}
 \]
 %
+% The labeled variables and assigned variables are set of variables annotated by a label. 
+% We use  
+% %$\mathcal{LVAR} = \mathcal{VAR} \times \mathcal{L} $ 
+% $\mathcal{LV}$ represents the universe of all the labeled variables and 
+% $\avar_c \in \mathcal{P}(\mathcal{VAR} \times \mathbb{N}) \subset \mathcal{LV}$ and 
+$\lvar_c \in \mathcal{P}(\ldom)$,
+represents the set of labels
+% assigned variables and labeles variables 
+for a labeled command $c$,
+% defined in Definition~\ref{def:lvar} and 
+\ref{def:avar}.
+%
+\\
+$FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. To be precise,
+$FV(\aexpr)$, $FV(\bexpr)$ and $FV(\qexpr)$ represent the set of free variables in arithmetic
+expression $\aexpr$, boolean expression $\bexpr$ and query expression $\qexpr$ respectively.
+Labeled variables in $c$ is the set of assigned variables and all the free variables
+showing up in $c$ with a default label $in$. 
+The free variables
+showing up in $c$, which aren't defined before be used, are actually the input variables of this program.
+%
+% \begin{defn}[Assigned Variables (
+% % $\avar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
+% $\avar : \cdom \to \mathcal{P}(\mathcal{VAR} \times \mathbb{N})$)]
+% % labelled Variables 
+% % (
+% % % $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
+% % $\lvar : \cdom \to \mathcal{P}(\mathcal{VAR} \times \mathcal{L})$
+% \label{def:avar}
+% {\footnotesize
+% $$ \avar_{c} \triangleq
+%   \left\{
+%   \begin{array}{ll}
+%       \{{x}^l\}                   
+%       & {c} = [{\assign x e}]^{l} 
+%       \\
+%       \{{x}^l\}                   
+%       & {c} = [{\assign x \query(\qexpr)}]^{l} 
+%       \\
+%       \avar_{{c_1}} \cup \avar_{{c_2}}  
+%       & {c} = {c_1};{c_2}
+%       \\
+%       \avar_{{c}} \cup \avar_{{c_2}} 
+%       & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
+%       \\
+%       \avar_{{c}'}
+%       & {c}   = \ewhile ([\bexpr]^{l}, {c}')
+% \end{array}
+% \right.
+% $$
+% }
+% \end{defn}
+% %
+
+\begin{defn}[Program Labels
+(
+% $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
+$\lvar : \cdom \to \mathcal{P}(\mathcal{LV})$]
+\label{def:lvar}
+{\footnotesize
+$$
+  \lvar_{c} \triangleq
+  \left\{
+  \begin{array}{ll}
+      \{l\}                  
+      & {c} = [{\assign x e}]^{l} 
+      \\
+      \{l\}                
+      & {c} = [{\assign x \query(\qexpr)}]^{l} 
+      \\
+      \lvar_{{c_1}} \cup \lvar_{{c_2}}  \cup \{l\} 
+      & {c} = {c_1};{c_2}
+      \\
+      \lvar_{{c}} \cup \lvar_{{c_2}} \cup  \cup \{l\} 
+      & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
+      \\
+      \lvar_{{c}'} \cup \{l\} 
+      & {c}   = \ewhile ([\bexpr]^{l}, {c}')
+\end{array}
+\right.
+$$
+}
+\end{defn}
+%
+\highlight{
+  \begin{defn}[Label Increase]
+    \label{def:label_inc}  
+    Label Increase $ + : {\ldom \to \mathbb{N} \to \ldom}$, increase a label $l$ by a natural number $n$:
+\[
+    n + n' \triangleq n'' ~ n, n' \in \mathbb{N} \land \config{[], n + n'} \aarrow n''
+   \qquad (l, n) + n' \triangleq (l + n', n'') ~ n, n' \in \mathbb{N} \land \config{[], n + n'} \aarrow n''
+   \]
+\end{defn}
+The case of $(l, n) + n'$ will never happen during evaluation.
+By Operational semantics, the only place the label increase is in rule \textbf{fun-def},
+$c' = (c)^{+n}$, where $c$ is the function body.
+By the rule \textbf{fun-call}, and the label augment in Definition~\ref{def:comlabel_aug}, the function body $c$ will never be augmented.
+%
+\begin{defn}[Command Label Increase] 
+  \label{def:comlabel_inc}
+Command Label Increase $ {(\cdot)}{}^{+n} : {\cdom \to \cdom}$, increase the label in command by $n$.
+\[
+\begin{array}{ll}
+  (\clabel{\assign{x}{\expr}}^l){}^{+n} & \triangleq \clabel{\assign{x}{\expr}}^{l + n}\\
+(\clabel{\assign{x}{\query(\qexpr)}}^l)^{+n} & \triangleq \clabel{\assign{x}{\query(\qexpr)}}^{l + n}\\
+(\clabel{\eskip}^l)^{+n} & \triangleq \clabel{\eskip}^{l + n}\\
+(\ewhile \clabel{\bexpr}^{l} \edo {c'})^{+n} & \triangleq \ewhile \clabel{\bexpr}^{l+n} \edo {(c')^{+n}}\\
+(\eif(\clabel{\bexpr}^{l} , {c_1}, {c_2}))^{+n}  & \triangleq \eif(\clabel{\bexpr}^{l+n} , {(c_1)^{+n}}, {(c_2)^{+n}})\\
+% (\clabel{\efun}^l: x(r^l, x_1, \ldots, x_n) := c)^{+n} & \triangleq \clabel{\efun}^{l + n}: x(r^l, x_1, \ldots, x_n) := (c)^{+n} \\
+(\clabel{\efun}^l: x(r^l, x_1, \ldots, x_n) := c)^{+n} & \triangleq \clabel{\efun}^{l + n}: x(r^l, x_1, \ldots, x_n) := c \\
+(\clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^l)^{+n} & \triangleq \clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^{l + n}\\
+({c_1};{c_2})^{+n} &  \triangleq {(c_1)}^{+n};{(c_2)}^{+n}
+\end{array}
+\]
+\end{defn}
+%
+\begin{defn}[Command Label Augment] 
+  \label{def:comlabel_aug}
+  Command Label Augment $ \clabel{\cdot}^{l} : {\cdom \to \cdom}$, augment the label in command with a label $l$ 
+in order to record the calling site.
+\[
+\begin{array}{ll}
+  \clabel{\clabel{\assign{x}{\expr}}^{l'}}{}^{l} & \triangleq \clabel{\assign{x}{\expr}}^{(l, l')}\\
+  \clabel{\clabel{\assign{x}{\query(\qexpr)}}^{l'}}^{l} & \triangleq \clabel{\assign{x}{\query(\qexpr)}}^{(l, l')}\\
+  \clabel{\clabel{\eskip}^{l'}}^{l} & \triangleq \clabel{\eskip}^{(l, l')}\\
+  \clabel{\ewhile \clabel{\bexpr}^{l'} \edo {c'}}^{l} & \triangleq \ewhile \clabel{\bexpr}^{(l, l')} \edo {(c')^{l}}\\
+  \clabel{\eif(\clabel{\bexpr}^{l'} , {c_1}, {c_2})}^{l}  & \triangleq \eif(\clabel{\bexpr}^{(l, l')} , {(c_1)^{l}}, {(c_2)^{l}})\\
+  \clabel{\clabel{\efun}^{l'}: x(r^l, x_1, \ldots, x_n) := c}^{l} & \triangleq \clabel{\efun}^{(l, l')}: x(r^l, x_1, \ldots, x_n) := c \\
+  \clabel{\clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^{l'}}^{l} & \triangleq \clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^{(l, l')}\\
+  \clabel{{c_1};{c_2}}^{l} &  \triangleq \clabel{c_1}^{l};\clabel{c_2}^{l}
+\end{array}
+\]
+\end{defn}
+}
+% Each command is now labeled with a label $l$, either a natural number standing for the line of code where the command appears, or a symbol of $in$ or $ex$ used for annotating the input variables, and the exist point of the program. Notice that we associate the label $l$ to the conditional predicate $\bexpr$ in the if statement, and to the while guard counter $\bexpr$ in the $\ewhile$ statement.
+% We abuse the same notation $c$ for labeled command in the rest of the paper.
+% \\
+% \todo{notation}
 %
 %
-Environment $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to \mathcal{VAL} \cup \{\bot\}$
+%
+% % $$
+% % }
+% % \end{defn}
+% %
+% It is easy to see that a program $c$'s query variables is a subset of 
+% its labeled variables, $\qvar(c) \subseteq \lvar(c)$.
+%
+% \mg{In this definition as well as in others, I have the impression that you assume that the labelled variables are unique in the program. For example, it would not make sense to assign a query to the same labelled variable over and over. If this is the case, we need to make this very explicit in the paper.}
+% \jl{TODO}
+%
+Every labeled variable in a program is unique, formally as follows with proof in Appendix~\ref{apdx:lemma_sec123}.
+\begin{lem}[Uniqueness of the Labeled Variables]
+  \label{lem:lvar_unique}
+  For every program $c \in \cdom$ and every two labeled variables such that
+  $x^i, y^j \in \lvar(c)$, then $x^i \neq y^j$.
+  \[
+    \forall c \in \cdom, x^i, y^j \in \mathcal{L} \st x^i, y^j \in \lvar(c)\implies x^i \neq y^j.
+    \]
+\end{lem}
+%
+%
+%
+% \subsection{Trace-based Operational Semantics for Language \mg{What is ``Language''?}}
+\subsection{{Trace-based Operational Semantics for {\tt Query While} Language}}
+
+\subsubsection{Event}
+Event projection operators $\pi_i$ projects the $i$th element from an event: 
+\\
+$\pi_i : 
+\eventset \to \mathcal{VAR}\cup \mbox{Boolean Expression}  \cup \mathbb{N} \cup \mathcal{VAL} \cup \mathcal{QVAL} $ 
+% \wqside{use b for Boolean expression?}
+\\
+% $\pi_{(i,j)} (\event) \triangleq (\pi_i(\event), \pi_j(\event)) $
+% %
+% \\
+% Event Signature : $\pi_{\sig} : \eventset \to (\mathcal{VAR}\cup \mbox{Boolean Expression}) \times\mathbb{N}\times \mathbb{N}$
+% \[
+% \begin{array}{lll}
+% \pi_{\sig} (x, l, n, v) \triangleq (x, l, n)
+% &
+% \pi_{\sig} (x, l, n, \qval, v) \triangleq (x, l, n, \query)
+% &
+% \pi_{\sig} (b, l, n, v)  \triangleq (b, l, n)
+% \end{array}
+% \]
+%
+%
+Free Variables: $FV: \expr \to \mathcal{P}(\mathcal{VAR})$, 
+the set of free variables in an expression.
+\\
+$FV(\qexpr)$ is the set of free variables in the query expression $\qexpr$.
+
+\subsubsection{Trace}
+\input{trace}
+\subsubsection{Environment} $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to \mathcal{VAL} \cup \{\bot\}$
 % \mgside{The following definition is missing one case, also it is better to say that $y\neq x$.}
 % \[
 % \begin{array}{lll}
@@ -181,10 +376,7 @@ Environment $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to \mathcal{VAL} \cup \{\
 \env({[]} ) x \triangleq \bot
 \end{array}
 \]
-%
-%
-% \subsection{Trace-based Operational Semantics for Language \mg{What is ``Language''?}}
-\subsection{{Trace-based Operational Semantics for {\tt Query While} Language}}
+\subsubsection{Operational Semantics Rules}
 {
 \begin{mathpar}
 \boxed{ \config{\trace,\aexpr} \aarrow v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
@@ -394,24 +586,24 @@ The trace based operational semantics rules are defined in Figure \ref{fig:os}.
 }
 ~\textbf{assn}
 %
-\and
-%
-{
-\inferrule
-{
- \config{\trace, \qexpr }\qarrow \qval
- \and 
-\query(\qval) = v
-\and 
-\event = ({x}, l, v, \qval)
-}
-{
-\config{{[\assign{x}{\query(\qexpr)}]^l, \trace}}
-\xrightarrow{} 
-\config{{\clabel{\eskip}^l,  \trace \traceadd \event} }
-}
-~\textbf{query}
-}
+% \and
+% %
+% {
+% \inferrule
+% {
+%  \config{\trace, \qexpr }\qarrow \qval
+%  \and 
+% \query(\qval) = v
+% \and 
+% \event = ({x}, l, v, \qval)
+% }
+% {
+% \config{{[\assign{x}{\query(\qexpr)}]^l, \trace}}
+% \xrightarrow{} 
+% \config{{\clabel{\eskip}^l,  \trace \traceadd \event} }
+% }
+% ~\textbf{query}
+% }
 %
 \and
 %
@@ -567,205 +759,11 @@ c; \ewhile [b]^{l} \edo c,
 \end{figure}
 %
 \\
-\highlight{
-  \begin{defn}[Label Increase]
-    \label{def:label_inc}  
-    Label Increase $ + : {\ldom \to \mathbb{N} \to \ldom}$, increase a label $l$ by a natural number $n$:
-\[
-    n + n' \triangleq n'' ~ n, n' \in \mathbb{N} \land \config{[], n + n'} \aarrow n''
-   \qquad (l, n) + n' \triangleq (l + n', n'') ~ n, n' \in \mathbb{N} \land \config{[], n + n'} \aarrow n''
-   \]
-\end{defn}
-The case of $(l, n) + n'$ will never happen during evaluation.
-By Operational semantics, the only place the label increase is in rule \textbf{fun-def},
-$c' = (c)^{+n}$, where $c$ is the function body.
-By the rule \textbf{fun-call}, and the label augment in Definition~\ref{def:comlabel_aug}, the function body $c$ will never be augmented.
-%
-\begin{defn}[Command Label Increase] 
-  \label{def:comlabel_inc}
-Command Label Increase $ {(\cdot)}{}^{+n} : {\cdom \to \cdom}$, increase the label in command by $n$.
-\[
-\begin{array}{ll}
-  (\clabel{\assign{x}{\expr}}^l){}^{+n} & \triangleq \clabel{\assign{x}{\expr}}^{l + n}\\
-(\clabel{\assign{x}{\query(\qexpr)}}^l)^{+n} & \triangleq \clabel{\assign{x}{\query(\qexpr)}}^{l + n}\\
-(\clabel{\eskip}^l)^{+n} & \triangleq \clabel{\eskip}^{l + n}\\
-(\ewhile \clabel{\bexpr}^{l} \edo {c'})^{+n} & \triangleq \ewhile \clabel{\bexpr}^{l+n} \edo {(c')^{+n}}\\
-(\eif(\clabel{\bexpr}^{l} , {c_1}, {c_2}))^{+n}  & \triangleq \eif(\clabel{\bexpr}^{l+n} , {(c_1)^{+n}}, {(c_2)^{+n}})\\
-% (\clabel{\efun}^l: x(r^l, x_1, \ldots, x_n) := c)^{+n} & \triangleq \clabel{\efun}^{l + n}: x(r^l, x_1, \ldots, x_n) := (c)^{+n} \\
-(\clabel{\efun}^l: x(r^l, x_1, \ldots, x_n) := c)^{+n} & \triangleq \clabel{\efun}^{l + n}: x(r^l, x_1, \ldots, x_n) := c \\
-(\clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^l)^{+n} & \triangleq \clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^{l + n}\\
-({c_1};{c_2})^{+n} &  \triangleq {(c_1)}^{+n};{(c_2)}^{+n}
-\end{array}
-\]
-\end{defn}
-%
-\begin{defn}[Command Label Augment] 
-  \label{def:comlabel_aug}
-  Command Label Augment $ \clabel{\cdot}^{l} : {\cdom \to \cdom}$, augment the label in command with a label $l$ 
-in order to record the calling site.
-\[
-\begin{array}{ll}
-  \clabel{\clabel{\assign{x}{\expr}}^{l'}}{}^{l} & \triangleq \clabel{\assign{x}{\expr}}^{(l, l')}\\
-  \clabel{\clabel{\assign{x}{\query(\qexpr)}}^{l'}}^{l} & \triangleq \clabel{\assign{x}{\query(\qexpr)}}^{(l, l')}\\
-  \clabel{\clabel{\eskip}^{l'}}^{l} & \triangleq \clabel{\eskip}^{(l, l')}\\
-  \clabel{\ewhile \clabel{\bexpr}^{l'} \edo {c'}}^{l} & \triangleq \ewhile \clabel{\bexpr}^{(l, l')} \edo {(c')^{l}}\\
-  \clabel{\eif(\clabel{\bexpr}^{l'} , {c_1}, {c_2})}^{l}  & \triangleq \eif(\clabel{\bexpr}^{(l, l')} , {(c_1)^{l}}, {(c_2)^{l}})\\
-  \clabel{\clabel{\efun}^{l'}: x(r^l, x_1, \ldots, x_n) := c}^{l} & \triangleq \clabel{\efun}^{(l, l')}: x(r^l, x_1, \ldots, x_n) := c \\
-  \clabel{\clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^{l'}}^{l} & \triangleq \clabel{\assign{x}{\ecall(x, e_1, \ldots, e_n)}}^{(l, l')}\\
-  \clabel{{c_1};{c_2}}^{l} &  \triangleq \clabel{c_1}^{l};\clabel{c_2}^{l}
-\end{array}
-\]
-\end{defn}
-}
-% Each command is now labeled with a label $l$, either a natural number standing for the line of code where the command appears, or a symbol of $in$ or $ex$ used for annotating the input variables, and the exist point of the program. Notice that we associate the label $l$ to the conditional predicate $\bexpr$ in the if statement, and to the while guard counter $\bexpr$ in the $\ewhile$ statement.
-% We abuse the same notation $c$ for labeled command in the rest of the paper.
-% \\
-% \todo{notation}
-The labeled variables and assigned variables are set of variables annotated by a label. 
-We use  
-%$\mathcal{LVAR} = \mathcal{VAR} \times \mathcal{L} $ 
-$\mathcal{LV}$ represents the universe of all the labeled variables and 
-$\avar_c \in \mathcal{P}(\mathcal{VAR} \times \mathbb{N}) \subset \mathcal{LV}$ and 
-$\lvar_c \in \mathcal{P}(\mathcal{VAR} \times \mathcal{L}) \subseteq \mathcal{LV}$,
-represents the the set of assigned variables and labeled variables for a labeled command $c$,
-defined in Definition~\ref{def:lvar} and \ref{def:avar}.
-%
-\\
-$FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. To be precise,
-$FV(\aexpr)$, $FV(\bexpr)$ and $FV(\qexpr)$ represent the set of free variables in arithmetic
-expression $\aexpr$, boolean expression $\bexpr$ and query expression $\qexpr$ respectively.
-Labeled variables in $c$ is the set of assigned variables and all the free variables
-showing up in $c$ with a default label $in$. 
-The free variables
-showing up in $c$, which aren't defined before be used, are actually the input variables of this program.
-%
-\begin{defn}[Assigned Variables (
-% $\avar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-$\avar : \cdom \to \mathcal{P}(\mathcal{VAR} \times \mathbb{N})$)]
-% labelled Variables 
-% (
-% % $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-% $\lvar : \cdom \to \mathcal{P}(\mathcal{VAR} \times \mathcal{L})$
-\label{def:avar}
-{\footnotesize
-$$ \avar_{c} \triangleq
-  \left\{
-  \begin{array}{ll}
-      \{{x}^l\}                   
-      & {c} = [{\assign x e}]^{l} 
-      \\
-      \{{x}^l\}                   
-      & {c} = [{\assign x \query(\qexpr)}]^{l} 
-      \\
-      \avar_{{c_1}} \cup \avar_{{c_2}}  
-      & {c} = {c_1};{c_2}
-      \\
-      \avar_{{c}} \cup \avar_{{c_2}} 
-      & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
-      \\
-      \avar_{{c}'}
-      & {c}   = \ewhile ([\bexpr]^{l}, {c}')
-\end{array}
-\right.
-$$
-}
-\end{defn}
-%
 
-\begin{defn}[labelled Variables 
-(
-% $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-$\lvar : \cdom \to \mathcal{P}(\mathcal{LV})$]
-\label{def:lvar}
-{\footnotesize
-$$
-  \lvar_{c} \triangleq
-  \left\{
-  \begin{array}{ll}
-      \{{x}^l\} \cup FV(\expr)^{in}                  
-      & {c} = [{\assign x e}]^{l} 
-      \\
-      \{{x}^l\}   \cup FV(\qexpr)^{in}                
-      & {c} = [{\assign x \query(\qexpr)}]^{l} 
-      \\
-      \lvar_{{c_1}} \cup \lvar_{{c_2}}  
-      & {c} = {c_1};{c_2}
-      \\
-      \lvar_{{c}} \cup \lvar_{{c_2}} \cup FV(\bexpr)^{in}
-      & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
-      \\
-      \lvar_{{c}'} \cup FV(\bexpr)^{in}
-      & {c}   = \ewhile ([\bexpr]^{l}, {c}')
-\end{array}
-\right.
-$$
-}
-\end{defn}
 %
 %
-%
-% is a subset of the program's assigned variables, where every variable in this set is assigned by a query in the program.
-% \mg{The set of query variables of a program is the set of variables set to the result of a query in the program.}\\
-We also defined the set of query variables for a program $c$,
-it is the set of variables set to the result of a query in the program formally in Definition~\ref{def:qvar}.
-% \mg{In the next definition, why do you call it a vector? It seems that you define it as a set.}\\
-% \jl{fixed}\\
-%
-% \begin{defn}[Query Variables ($\qvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$)].
-  % \\
-% % \begin{defn}[Query Variables ($\qvar: \cdom \to \mathcal{P}(\mathcal{LV})$)] 
-% %   \label{def:qvar}
-% % Given a program $c$, its query variables 
-% % % \mg{it seems you are missing the $_c$ subscript. Also, this is a minor point but I don't think it is a good idea to use a subscript, cannot you just use $\qvar(c)$.}
-% % $\qvar(c)$ is the set of variables set to the result of a query in the program.
-% % % \jl{fixed}
-% % It is defined as follows:
-% % {\footnotesize
-% % $$
-% %   % \qvar_{{c}} \triangleq
-% %   \qvar(c) \triangleq
-% %   \left\{
-% %   \begin{array}{ll}
-% %       \{\}                  
-% %       & {c} = [{\assign x \expr}]^{l} 
-% %       \\
-% %       \{{x}^l\}                  
-% %       & {c} = [{\assign x \query(\qexpr)}]^{l} 
-% %       \\
-% %       \qvar(c_1) \cup \qvar(c_2)  
-% %       & {c} = {c_1};{c_2}
-% %       \\
-% %       \qvar(c_1) \cup \qvar(c_2) 
-% %       & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
-% %       \\
-% %       \qvar(c')
-% %       & {c}   = \ewhile ([\bexpr]^{l}, {c}')
-% % \end{array}
-% % \right.
-% % $$
-% % }
-% % \end{defn}
-% %
-% It is easy to see that a program $c$'s query variables is a subset of 
-% its labeled variables, $\qvar(c) \subseteq \lvar(c)$.
-%
-% \mg{In this definition as well as in others, I have the impression that you assume that the labelled variables are unique in the program. For example, it would not make sense to assign a query to the same labelled variable over and over. If this is the case, we need to make this very explicit in the paper.}
-% \jl{TODO}
-%
-Every labeled variable in a program is unique, formally as follows with proof in Appendix~\ref{apdx:lemma_sec123}.
-\begin{lem}[Uniqueness of the Labeled Variables]
-  \label{lem:lvar_unique}
-  For every program $c \in \cdom$ and every two labeled variables such that
-  $x^i, y^j \in \lvar(c)$, then $x^i \neq y^j$.
-  \[
-    \forall c \in \cdom, x^i, y^j \in \mathcal{L} \st x^i, y^j \in \lvar(c)\implies x^i \neq y^j.
-    \]
-\end{lem}
-%
-%
-\subsection{Event and Trace}
-\label{subsec:event_trace}
-\input{event}
-\input{trace}
+% \subsection{Event and Trace}
+% \label{subsec:event_trace}
+
 %
 \clearpage

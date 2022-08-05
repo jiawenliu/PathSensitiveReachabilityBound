@@ -1,56 +1,5 @@
 %
-\subsection{Trace}
-%
-% An event $\event \in \eventset$ belongs to a trace $\trace$, i.e., $\event \eventin \trace$ are defined as follows:
-% %
-% \begin{equation}
-%   \event \eventin \trace  
-%   \triangleq \left\{
-%   \begin{array}{ll} 
-%     \etrue                  & \trace =  (\trace' \tracecate \event') \land (\event \eventeq \event') \\
-%     \event \eventin \trace' & \trace =  (\trace' \tracecate \event') \land (\event \eventneq \event') \\ 
-%     \efalse                 & o.w.
-%   \end{array}
-%   \right.
-% \end{equation}
-% %
-% A well-formed event $\event \in \eventset$ belongs to a trace $\trace$ in signature, 
-% i.e., $\event \sigin \trace$ are defined as follows:
-%   %
-% \begin{equation}
-%   \event \sigin \trace  
-%   \triangleq \left\{
-%   \begin{array}{ll} 
-%     \etrue                  & \trace =  (\trace' \tracecate \event') \land (\event \sigeq \event') \\
-%     \event \sigin \trace'   & \trace =  (\trace' \tracecate \event') \land (\event \signeq \event') \\ 
-%     \efalse                 & o.w.
-%   \end{array}
-%   \right.
-% \end{equation}
-%
-%
-%
-%
-% \todo{
-% \[
-% \mbox{Post-Processed Trace} \qquad \trace \qquad ::= \qquad \tracecate | \trace \tracecate \event
-% % %
-% \]
-% Trace appending: $\tracecate: \mathcal{T} \to \eventset \to \mathcal{T}$
-% \[
-%   \trace \tracecate \event \triangleq
-%   \left\{
-%   \begin{array}{ll} 
-%     {} \tracecate \event           & \trace =  \tracecate \\
-%     \trace \tracecate \event    & \trace =  \trace' \tracecate \event\\ 
-%   \end{array}
-%   \right.
-% \]
-%
-% \mg{I suggest to use more definition environments throughout this section.}
-% \mg{Is ++ a constructor or a defined operation? It is in the grammar
-%   but it seems that you are actually defining it here.}
-%   \jl{It is a defined operator, I mixed them wrongly.}
+
   \begin{defn}[Trace Concatenation, $\tracecat: \mathcal{T} \to \mathcal{T} \to \mathcal{T}$]
 Given two traces $\trace_1, \trace_2 \in \mathcal{T}$, the trace concatenation operator 
 $\tracecat$ is defined as:
@@ -654,5 +603,3 @@ $\event$ and $\event'$ equivalent but may differ in their query value.
 % \subsection{SSA Transformation and Soundness of Transformation}
 % in File {\tt ``ssa\_transform\_sound.tex''}
 % \input{ssa_transform_sound}
-%
-\clearpage
