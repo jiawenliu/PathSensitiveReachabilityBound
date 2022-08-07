@@ -1,0 +1,229 @@
+\begin{example}
+    [While Single Algorithm]
+    \label{ex:whileSigle}
+    \[
+      %
+      \begin{array}{l}
+          \kw{whileSingle}(k) \triangleq \\
+          \clabel{ \assign{i}{k} }^{0} ; \\
+              \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
+              \qquad \Big(
+                \eif(\clabel{i = 2 }^{2}, \\
+                \qquad \qquad \clabel{\assign{i}{i - 2}}^{3},\\
+                \qquad \qquad \clabel{\assign{i}{i - 1}}^{4});
+                \Big)
+          \end{array}
+      \]
+    % \end{example}
+    
+    \begin{enumerate}
+      \item Step 1: Abstract Transition Graph:
+    
+    \item Step 2: Path Insensitive Transition Bound Computation
+    
+    \item Step 3: Program Rephrase through Path Collection on Abstract CFG
+    \\
+    $\tpath_0 = (0, 1)$
+    \\
+    $\tpath_1 = (1 \to 2), (2 \to 3), (3 \to 1)$
+    \\
+    $\tpath_2 = (1 \to 2), (2 \to 4), (4 \to 1)$
+    \\
+    $\tpath_3 = (1 \to \lex)$
+    \\
+    Rephrased Program
+    \[
+    \tpath_0 ; LOOP1: \rprepeat(\rpchoose\{\tpath_1, \tpath_2 \}); \tpath_3
+    \]
+    \item Step 4: While Loop Refinement:
+    \[
+      \tpath_0 ; 
+      LOOP1: \rpchoose\{\rprepeat_1(\tpath_1), \rprepeat_2(\tpath_2),
+      \rprepeat_3(\rprepeat_2(\tpath_2); \tpath_1)\}; \tpath_3
+      \]
+    \item Step 5: Outside-In Algorithm
+    \\
+    $LB(\tpath_0) = 1$
+    \\
+    $LB(\tpath_3) = 1$
+    \\
+    $LB(\rprepeat_1(\tpath_1)) = 1 $
+    \\
+    $LB(\rprepeat_2(\tpath_2)) = 
+    \left\{
+      \begin{array}{ll}
+      \max\{0, n\} & \env(\trace_0) n < 2 \\
+      n - 2 & \env(\trace_0)  n \geq 2
+      \end{array} 
+    \right.$
+    \\
+    $LB(\rprepeat_3(\rprepeat_1(\tpath_1); \tpath_2)) = 
+    \left\{
+      \begin{array}{ll}
+      0 & \env(\trace_0) n \leq 2 \\
+      1 & \env(\trace_0)  n > 2
+      \end{array} 
+    \right.$
+    \\
+    % \\
+    % $LB(LOOP1: \rpchoose(\rprepeat_2(\cdots), \rprepeat_1(\tpath_1))) 
+    % = \max\{m, \frac{n}{m}\} $
+    % \\
+    \item Step 6: Inside-Out Algorithm
+    \begin{itemize}
+      \item \textbf{Repeat Chain}
+      \\
+      $rp\mathcal{C}(LOOP1, \tpath_1) = \{\rprepeat_3(\cdots, \tpath_1), \rprepeat_1(\tpath_1)\}$ 
+      \\
+      $rp\mathcal{C}(LOOP1, \tpath_2) = \{\rprepeat_2(\tpath_2), \rprepeat_3(\rprepeat_2(\tpath_2); \tpath_1) \to \rprepeat_2(\tpath_2)\}$ \\
+      $rp\mathcal{C}(\_, \_) = \emptyset$ 
+      % \\
+      \item \textbf{Rp Local Bound for Every Transition Path $\tpath$ on its Repeat Chain}
+      \\
+      $rpLB(LOOP1, \tpath_1) = 
+      \left\{
+        \begin{array}{ll}
+        0 & \env(\trace_0)  n < 2 \\
+        1 & \env(\trace_0)  n \geq 2
+        \end{array} 
+      \right.$
+      \\
+      $rpLB(LOOP1, \tpath_2) =     
+      \left\{
+        \begin{array}{ll}
+        \max\{0, n\} & \env(\trace_0) n < 2 \\
+        n - 2 & \env(\trace_0)  n \geq 2
+        \end{array} 
+      \right.$
+      %
+      \item \textbf{Loop Chain}
+      \\
+      $lp\mathcal{C}(\tpath_1) = \{LOOP1\to \tpath_1\}$ \\
+      $lp\mathcal{C}(\tpath_2) = \{LOOP1\to \tpath_2\}$ \\
+      $lp\mathcal{C}(\tpath_0) = \{\tpath_0\}$ \\
+      $lp\mathcal{C}(\tpath_3) = \{\tpath_3\}$ 
+      \item \textbf{Nested Loop Bound for Every Transition Path $\tpath$ on its Loop Chain}
+      \\
+      $rpLB(LOOP1, \tpath_1) =       
+      \left\{
+        \begin{array}{ll}
+        0 & \env(\trace_0)  n < 2 \\
+        1 & \env(\trace_0)  n \geq 2
+        \end{array} 
+      \right.$
+      \\
+      $rpLB(LOOP1, \tpath_2) = 
+      \left\{
+        \begin{array}{ll}
+        \max\{0, n\} & \env(\trace_0) n < 2 \\
+        n - 2 & \env(\trace_0)  n \geq 2
+        \end{array} 
+      \right.$
+       \\
+      $rpLB(\bot, \tpath_0) = 1$ \\
+      $rpLB(\bot, \tpath_3) = 1$ 
+      \item \textbf{Path Sensitive Reachability Bound For Every Transition Path $\tpath$ }
+      \\
+      $psRB(\tpath_1) = 
+      \left\{
+        \begin{array}{ll}
+        0 & \env(\trace_0)  n < 2 \\
+        1 & \env(\trace_0)  n \geq 2
+        \end{array} 
+      \right.$
+       \\
+      $psRB(\tpath_2) = 
+      \left\{
+        \begin{array}{ll}
+        \max\{0, n\} & \env(\trace_0) n < 2 \\
+        n - 2 & \env(\trace_0)  n \geq 2
+        \end{array} 
+      \right.$
+      \\
+      $psRB(\tpath_0) = 1$ \\
+      $psRB(\tpath_3) = 1$ 
+    \end{itemize}
+    \item Step 7: Path Sensitive Reachability Bound Computation for Every Location
+    \\
+    $psRB(\{0, 1\}) = 1$ \\
+    $psRB(\{2, 3, 1 \}) = 
+    \left\{
+      \begin{array}{ll}
+      0 & \env(\trace_0) n < 2 \\
+      1 & \env(\trace_0)  n \geq 2
+      \end{array} 
+    \right.$
+     \\
+    $psRB(\{2, 4, 1\}) = 
+    \left\{
+      \begin{array}{ll}
+      \max\{0, n\} & \env(\trace_0) n < 2 \\
+      n - 2 & \env(\trace_0)  n \geq 2
+      \end{array} 
+    \right.$
+     \\
+    $psRB(\{\lex\}) = 1$ 
+    \end{enumerate}
+
+        \begin{figure}
+     \centering
+    \begin{subfigure}{.6\textwidth}
+        \begin{centering}
+        \begin{tikzpicture}[scale=\textwidth/15cm,samples=150]
+    % Variables Initialization
+    % \draw[] (-5, 1) circle (0pt) node{{ $z^1: {}^{w_1}_{1}$}};
+    % \draw[] (-5, 7) circle (0pt) node{{$p^2: {}^{w_1}_{0}$}};
+    \draw[] (-5, 4) circle (0pt) node{{ $z^1: {}^{w_1}_{1}$}};
+    % Variables Inside the Loop
+     \draw[] (0, 6) circle (0pt) node{{ $y^3: {}^{w_k}_{1}$}};
+     \draw[] (0, 2) circle (0pt) node{{ $y^{5}: {}^{w_k}_{0}$}};
+     % Counter Variables
+     \draw[] (5, 6) circle (0pt) node {{$j^0: {}^{w_1}_{0}$}};
+     \draw[] (5, 2) circle (0pt) node {{ $j^8: {}^{w_k}_{0}$}};
+     %
+     % Value Dependency Edges:
+     \draw[ ultra thick, -Straight Barb, densely dotted,] (0.8, 7) arc (220:-100:1);
+     % The Weight for this edge
+     \draw[](1.2, 9.5) node 
+     {\highlight{\footnotesize
+            $\trace_0 \to 
+            \left\{\begin{array}{ll}
+               \env(\trace_0) k & \env(\trace_0) k  \leq 1 \\
+           2 & \env(\trace_0) k \geq 2
+            \end{array}\right\}
+            $}};
+     \draw[ thick, -latex] (-1, 6)  to  [out=-130,in=130]  
+    % The Weight for this edge
+    node [] {\highlight{$\trace_0 \to 1 $}} (-1, 2);
+     % Value Dependency Edges on Initial Values:
+     \draw[ ultra thick, -latex, densely dotted,] (-1.5, 6)  -- 
+    % The Weight for this edge
+    node [left] {\highlight{$\trace_0 \to \env(\trace_0) k $}} (-4, 4.7) ;
+     %
+     % Value Dependency For Control Variables:
+     \draw[ thick, -Straight Barb] (6.5, 2.5) arc  (150:-150:1);
+    % The Weight for this edge
+    \draw[](8, 2) node [] {\highlight{$\trace_0 \to \env(\trace_0) k  $}};
+     % Control Dependency
+     \draw[ thick, -latex] (5, 2.5)  -- 
+    % The Weight for this edge
+    node [right] {\highlight{$\trace_0 \to \env(\trace_0) k $}} (5, 5.5);
+     \draw[ thick,-latex] (1.5, 6)  -- (3.5, 6) ;
+     \draw[ thick,-latex] (1.5, 1.8)  -- 
+    % The Weight for this edge
+    node [] {\highlight{$\trace_0 \to \env(\trace_0) k $}} (3.5, 6) ;
+     \draw[ thick,-latex] (1.5, 6)  -- (3.5, 2) ;
+     \draw[ thick,-latex] (1.5, 1.8)  -- (3.5, 2) ; 
+    \end{tikzpicture}
+     \caption{}
+        \end{centering}
+        \end{subfigure}
+    % \end{wrapfigure}
+    % \end{equation*}
+    \vspace{-0.4cm}
+     \caption{(a) The multi rounds single example
+     (b) The execution-based dependency graph.}
+    \label{fig:multipleRoundsSingle}
+    \vspace{-0.5cm}
+    \end{figure}
+    \end{example}
