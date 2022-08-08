@@ -15,7 +15,100 @@
           \end{array}
       \]
     % \end{example}
+    { \small
+    \begin{figure}
+    \centering
+    %
+    \begin{subfigure}{.4\textwidth}
+        \begin{centering}
+        \begin{tikzpicture}[scale=\textwidth/15cm,samples=200]
+    % Variables Initialization
+    \draw[] (5, 1) circle (0pt) node{{ $x^1: {}^1_{1}$}};
+    % Variables Inside the Loop
+     \draw[] (0, 7) circle (0pt) node{\highlight{ $y^5: {}^{\frac{k}{2}}_{1}$}};
+     \draw[] (0, 4) circle (0pt) node{\highlight{ \boldsymbol{$p^6: {}^{\frac{k}{2}}_{1}$}}};
+     \draw[] (0, 1) circle (0pt) node{{ $\mathbf{x^7: {}^{k}_{1}}$}};
+     % Counter Variables
+     \draw[] (5, 7) circle (0pt) node {{$j^0: {}^{1}_{0}$}};
+     \draw[] (5, 4) circle (0pt) node {{ $j^3: {}^{k}_{0}$}};
+     %
+    % Value Dependency Edges:
+             % Value Dependency Edges:
+             \draw[ thick, -latex,]  (0, 3.5) -- 
+             node [] {\highlight{$k $}}(0, 1.5) ;
+             \draw[ thick, -Straight Barb] (6.5, 4.5) arc (150:-150:1);
+             \draw[](7, 4) node [] {\highlight{$k  $}};
+             \draw[ thick, -latex] (5, 4.5)  -- 
+             node [right] {\highlight{$k$}}(5, 6.5) ;
+             % Value Dependency Edges on Initial Values:
+             \draw[ thick, -latex,] (1.5, 1)  -- 
+             node [above] {\highlight{$k$}}(4, 1) ;
+             %
+            \draw[ ultra thick, -latex, densely dotted,] (-0.6, 1.5)  to  [out=-220,in=220]  
+            node [left] {\highlight{$k $}}(-0.5, 6.5);
+            \draw[ ultra thick, -latex, densely dotted,]  (0.5, 6.5) to  [out=-30,in=30] 
+            node [above] {\highlight{$k $}}(0.6, 1.6) ;
+             % Control Dependency
+            \draw[ thick,-latex] (1.5, 7)  -- 
+            node [above] {\highlight{$k$}}(4, 6) ;
+            \draw[ thick,-latex] (1.5, 4)  -- 
+            node [above] {\highlight{$k$}}(4, 6) ;
+             \draw[ thick,-latex] (1.5, 1)  -- 
+             node [below] {\highlight{$k $}}(4, 6) ;
     
+    \end{tikzpicture}
+    \caption{}
+    \end{centering}
+    \end{subfigure}
+    %
+            \begin{subfigure}{.5\textwidth}
+                \begin{centering}
+                \begin{tikzpicture}[scale=\textwidth/11cm,samples=200]
+            % Variables Initialization
+             \draw[] (5, 1) circle (0pt) node{{ $x^1: {}^{w_1}_{1}$}};
+            % Variables Inside the Loop
+             \draw[] (0, 7) circle (0pt) node{{ $y^5: {}^{w_k/2}_{1}$}};
+             \draw[] (0, 4) circle (0pt) node{{ $p^6: {}^{w_k/2}_{1}$}};
+             \draw[] (0, 1) circle (0pt) node{{ $x^7: {}^{w_k}_{1}$}};
+             % Counter Variables
+             \draw[] (5, 7) circle (0pt) node {{$j^0: {}^{w_1}_{0}$}};
+             \draw[] (5, 4) circle (0pt) node {{ $j^3: {}^{w_k}_{0}$}};
+             %
+             % Value Dependency Edges:
+             \draw[ thick, -latex,]  (0, 3.5) -- 
+             node [] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(0, 1.5) ;
+             \draw[ thick, -Straight Barb] (6.5, 4.5) arc (150:-150:1);
+             \draw[](7, 4) node [] {\highlight{$\trace_0 \to \env(\trace_0) k  $}};
+             \draw[ thick, -latex] (5, 4.5)  -- 
+             node [right] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(5, 6.5) ;
+             % Value Dependency Edges on Initial Values:
+             \draw[ thick, -latex,] (1.5, 1)  -- 
+             node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 1) ;
+             %
+            \draw[ ultra thick, -latex, densely dotted,] (-0.6, 1.5)  to  [out=-220,in=220]  
+            node [left] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(-0.5, 6.5);
+            \draw[ ultra thick, -latex, densely dotted,]  (0.5, 6.5) to  [out=-30,in=30] 
+            node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(0.6, 1.6) ;
+             % Control Dependency
+            \draw[ thick,-latex] (1.5, 7)  -- 
+            node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 6) ;
+            \draw[ thick,-latex] (1.5, 4)  -- 
+            node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 6) ;
+             \draw[ thick,-latex] (1.5, 1)  -- 
+             node [below] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 6) ;
+             \end{tikzpicture}
+             \caption{}
+                \end{centering}
+                \end{subfigure}
+    \caption{
+    (a) The multiple rounds odd example 
+    (b) The program-based dependency graph from $\THESYSTEM$
+    (c) The execution-based dependency graph.}
+        \label{fig:overappr_example}
+    \end{figure}
+    }
+    %
+    \end{example}    
     \begin{enumerate}
       \item Step 1: Abstract Transition Graph:
     
@@ -58,13 +151,13 @@
     % \\
     \item Step 6: Inside-Out Algorithm
     \begin{itemize}
-      \item \textbf{Repeat Chain}
+      \item \textbf{Repeat Chain Set}
       \\
       $rp\mathcal{C}(LOOP1, \tpath_1) = \{\rprepeat_4(\cdots, \tpath_1), \rprepeat_3(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
       $rp\mathcal{C}(LOOP1, \tpath_2) = \{\rprepeat_3(\cdots, \tpath_2), \rprepeat_4(\rprepeat_2(\tpath_2); \tpath_1) \to \rprepeat_2(\tpath_2)\}$ \\
       $rp\mathcal{C}(\_, \_) = \emptyset$ 
       % \\
-      \item \textbf{Rp Local Bound for Every Transition Path $\tpath$ on its Repeat Chain}
+      \item \textbf{{Local Repeat Chain Bound} for Every Transition Path $\tpath$ on its Repeat Chain}
       $rpLB(LOOP1, \tpath_1) = \frac{n}{4}$ \\
       $rpLB(LOOP1, \tpath_2) = \frac{n}{4}$ 
       %
@@ -95,98 +188,3 @@
     $psRB(\{\lex\}) = 1$ 
     \end{enumerate}
 
-{ \small
-\begin{figure}
-\centering
-%
-\begin{subfigure}{.4\textwidth}
-    \begin{centering}
-    \begin{tikzpicture}[scale=\textwidth/15cm,samples=200]
-% Variables Initialization
-\draw[] (5, 1) circle (0pt) node{{ $x^1: {}^1_{1}$}};
-% Variables Inside the Loop
- \draw[] (0, 7) circle (0pt) node{\highlight{ $y^5: {}^{\frac{k}{2}}_{1}$}};
- \draw[] (0, 4) circle (0pt) node{\highlight{ \boldsymbol{$p^6: {}^{\frac{k}{2}}_{1}$}}};
- \draw[] (0, 1) circle (0pt) node{{ $\mathbf{x^7: {}^{k}_{1}}$}};
- % Counter Variables
- \draw[] (5, 7) circle (0pt) node {{$j^0: {}^{1}_{0}$}};
- \draw[] (5, 4) circle (0pt) node {{ $j^3: {}^{k}_{0}$}};
- %
-% Value Dependency Edges:
-         % Value Dependency Edges:
-         \draw[ thick, -latex,]  (0, 3.5) -- 
-         node [] {\highlight{$k $}}(0, 1.5) ;
-         \draw[ thick, -Straight Barb] (6.5, 4.5) arc (150:-150:1);
-         \draw[](7, 4) node [] {\highlight{$k  $}};
-         \draw[ thick, -latex] (5, 4.5)  -- 
-         node [right] {\highlight{$k$}}(5, 6.5) ;
-         % Value Dependency Edges on Initial Values:
-         \draw[ thick, -latex,] (1.5, 1)  -- 
-         node [above] {\highlight{$k$}}(4, 1) ;
-         %
-        \draw[ ultra thick, -latex, densely dotted,] (-0.6, 1.5)  to  [out=-220,in=220]  
-        node [left] {\highlight{$k $}}(-0.5, 6.5);
-        \draw[ ultra thick, -latex, densely dotted,]  (0.5, 6.5) to  [out=-30,in=30] 
-        node [above] {\highlight{$k $}}(0.6, 1.6) ;
-         % Control Dependency
-        \draw[ thick,-latex] (1.5, 7)  -- 
-        node [above] {\highlight{$k$}}(4, 6) ;
-        \draw[ thick,-latex] (1.5, 4)  -- 
-        node [above] {\highlight{$k$}}(4, 6) ;
-         \draw[ thick,-latex] (1.5, 1)  -- 
-         node [below] {\highlight{$k $}}(4, 6) ;
-
-\end{tikzpicture}
-\caption{}
-\end{centering}
-\end{subfigure}
-%
-        \begin{subfigure}{.5\textwidth}
-            \begin{centering}
-            \begin{tikzpicture}[scale=\textwidth/11cm,samples=200]
-        % Variables Initialization
-         \draw[] (5, 1) circle (0pt) node{{ $x^1: {}^{w_1}_{1}$}};
-        % Variables Inside the Loop
-         \draw[] (0, 7) circle (0pt) node{{ $y^5: {}^{w_k/2}_{1}$}};
-         \draw[] (0, 4) circle (0pt) node{{ $p^6: {}^{w_k/2}_{1}$}};
-         \draw[] (0, 1) circle (0pt) node{{ $x^7: {}^{w_k}_{1}$}};
-         % Counter Variables
-         \draw[] (5, 7) circle (0pt) node {{$j^0: {}^{w_1}_{0}$}};
-         \draw[] (5, 4) circle (0pt) node {{ $j^3: {}^{w_k}_{0}$}};
-         %
-         % Value Dependency Edges:
-         \draw[ thick, -latex,]  (0, 3.5) -- 
-         node [] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(0, 1.5) ;
-         \draw[ thick, -Straight Barb] (6.5, 4.5) arc (150:-150:1);
-         \draw[](7, 4) node [] {\highlight{$\trace_0 \to \env(\trace_0) k  $}};
-         \draw[ thick, -latex] (5, 4.5)  -- 
-         node [right] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(5, 6.5) ;
-         % Value Dependency Edges on Initial Values:
-         \draw[ thick, -latex,] (1.5, 1)  -- 
-         node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 1) ;
-         %
-        \draw[ ultra thick, -latex, densely dotted,] (-0.6, 1.5)  to  [out=-220,in=220]  
-        node [left] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(-0.5, 6.5);
-        \draw[ ultra thick, -latex, densely dotted,]  (0.5, 6.5) to  [out=-30,in=30] 
-        node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(0.6, 1.6) ;
-         % Control Dependency
-        \draw[ thick,-latex] (1.5, 7)  -- 
-        node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 6) ;
-        \draw[ thick,-latex] (1.5, 4)  -- 
-        node [above] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 6) ;
-         \draw[ thick,-latex] (1.5, 1)  -- 
-         node [below] {\highlight{$\trace_0 \to \env(\trace_0) k $}}(4, 6) ;
-         \end{tikzpicture}
-         \caption{}
-            \end{centering}
-            \end{subfigure}
-\caption{
-(a) The multiple rounds odd example 
-(b) The program-based dependency graph from $\THESYSTEM$
-(c) The execution-based dependency graph.}
-    \label{fig:overappr_example}
-    \vspace{-0.5cm}
-\end{figure}
-}
-%
-\end{example}

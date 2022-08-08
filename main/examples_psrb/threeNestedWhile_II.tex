@@ -68,7 +68,7 @@ $LB(LOOP1: \rprepeat(\tpath_1; \cdots)) = n - N $
 \\
 \item Step 6: Inside-Out Algorithm
 \begin{itemize}
-    \item \textbf{Repeat Chain}
+    \item \textbf{Repeat Chain Set}
     \\
     $rp\mathcal{C}(LOOP1, \tpath_1) = \{\rprepeat(\tpath_1; \cdots)\}$ \\
     $rp\mathcal{C}(LOOP1, \tpath_5) = \{\rprepeat(\tpath_1; \cdots)\}$ \\
@@ -77,7 +77,7 @@ $LB(LOOP1: \rprepeat(\tpath_1; \cdots)) = n - N $
     $rp\mathcal{C}(LOOP3, \tpath_3) = \{\rprepeat(\tpath_3)\}$ \\
     $rp\mathcal{C}(_, \_) = \emptyset$ 
     % \\
-    \item \textbf{Rp Local Bound for Every Transition Path $\tpath$ on its Repeat Chain}
+    \item \textbf{{Local Repeat Chain Bound} for Every Transition Path $\tpath$ on its Repeat Chain}
     \\
     $rpLB(LOOP1, \tpath_1) = n - N$ \\
     $rpLB(LOOP1, \tpath_5) = n - N$ \\
@@ -86,7 +86,7 @@ $LB(LOOP1: \rprepeat(\tpath_1; \cdots)) = n - N $
     $rpLB(LOOP3, \tpath_3) = N$ \\
     $rpLB(_, \_) = \bot $ 
     %
-    \item \textbf{Loop Chain}
+    \item \textbf{Loop Chain Set}
     \\
     $lp\mathcal{C}(\tpath_1) = \{LOOP1\to \tpath_1\}$ \\
     $lp\mathcal{C}(\tpath_5) = \{LOOP1\to \tpath_5\}$ \\

@@ -1063,11 +1063,11 @@ The $lpLB(LOOP_i, \tpath)$ can also be computed using the algorithm $BOUNDFINDER
 \end{enumerate}
 \item \emph{Global Loop Bound}.
 \\
-For every transition path $\tpath \in \rprog$, its \emph{Global Loop Bound} $RB(\tpath)$ is 
+For every transition path $\tpath \in \rprog$, its \emph{Global Loop Bound} $tRB(\tpath) \in \mathcal{A}_{in}$ is 
 % Compute 
 its path sensitive reachability bound globally. It is computed as follows,
 \\
-$RB(\tpath) = \max
+$tRB(\tpath) = \max
 \left \{ \prod\limits_{LOOP \in l} rpLB(LOOP, \tpath)
 % lpRB(\rprog_i, \tpath) 
 ~ \middle\vert~ l \in lp\mathcal{C}(\tpath) \right\}$
@@ -1075,13 +1075,15 @@ $RB(\tpath) = \max
 % where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
 \end{enumerate}
 \paragraph*{Path Sensitive Reachability Bound Computation for Every Location}
-$RB \in \rprog \to \ldom \to \mathcal{A}_{in}$
+$psRB : \ldom \to \mathcal{A}_{in}$
 \\
-For a refined program $\rprog \in \mathcal{RP}$, 
-with the path sensitive reachability repeating bound for every $\tpath \in \rprog$
-computed as above, notated by $RB(\tpath)$.
-\\
-For each location $l \in \rprog$:
+For every label in a refined program $l \in \lvar(\rprog)$,
+ $psRB(l)$ is its path sensitive reachability bound.
+ \\
+Given a refined program $\rprog \in \mathcal{RP}$, for each of its transition path $\tpath \in \rprog$ 
+with the \emph{Global Loop Bound}
+computed as above, notated by $tRB(\tpath)$.
+$psRB(l)$ for each label $l \in \rprog$ is computed as follows,
 \\
 \[psRB(l) = \sum\limits_{l \in \tpath}RB(\tpath)\]
 \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
