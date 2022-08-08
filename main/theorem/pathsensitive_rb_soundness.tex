@@ -1,0 +1,226 @@
+\begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
+  Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
+  and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
+  % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
+  and $\config{ppsRB(l), \trace_0} \earrow v$,
+  % for some generated evaluation trace $\vtrace \in \mathcal{T}$,
+  we have $ w(\trace_0) \leq v $.
+  %
+  \[
+    \begin{array}{l}
+    \forall (l, w_{t}) \in \exeRB(c),
+    % (x^l, w_{p}) \in \progV, 
+    \trace_0 \in \mathcal{T}_0(c), 
+    v \in \mathbb{N} \st
+    \config{psRB(l), \trace_0} \earrow v
+    \implies
+    % \right\} 
+    w_{t}(\trace_0) \leq v
+    \end{array}
+  \]
+  \end{thm}
+Proof Summary:
+\begin{enumerate}
+\item Step 1 - 2: rely on soundness of path insensitive reachability bound by Theorem~\ref{thm:vertexweight_soundness}
+\\
+\item Step 3: Program Rephrase : soundness of Step - 1
+By the soundness of the abstract execution trace in Lemma~\ref{lem:abscfg_sound}
+and the uniqueness of the abstract execution trace in Lemma~\ref{lem:absevent_unique},
+the rephrased program $p$ is equivalent to the program $c$.
+\\
+\item Step 4: While loop Refinement : soundness of Paper \cite{GulwaniJK09}
+\\
+\item Step 5: Outside-In 
+$rLB(\rprog)$ is local bound of execution time of $\rprog$ without considering outside loops.
+\\
+\item Step 6: Inside-Out
+\begin{enumerate}
+\item: $rpLB(LOOP_t, \tpath)$, the local bound of execution time of 
+transition path in the closest $LOOP$.
+by repeat chain 
+\item $RB(\tpath)$, the bound of execution time for every transition path in the program
+\\
+By collecting loop chains.
+\\
+For every $LOOP_i$ on loop chain of $\tpath$, $lpRB(LOOP_i, LOOP_t)$ bound the execution times of $LOOP_t$ inside the $LOOP_i$
+\\
+Then, $lRB(LOOP_t) = \prod_{LOOP_i} lpRB(LOOP_i, LOOP_t)$ is the bound of execution time for the $LOOP_t$ in program, globally.
+\\
+$RB(\tpath) = lRB(LOOP_t) \times rpLB(LOOP_t, \tpath) $ is the bound of execution time for transition path $\tpath$ 
+in program globally.
+\end{enumerate}
+\item Reachability Bound for every location.
+$RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for location $l$.
+
+\end{enumerate}
+  \begin{proof}
+        Taking arbitrary program $c$, a pair  $(l, w) \in \exeRB(c)$, 
+        and an initial trace $\trace_0 \in \mathcal{T}_0(c)$,  
+        we know $w_t$ is the execution-based 
+        reachability bound 
+        for label $l \in \lvar(c)$, 
+        % with a natural number
+        % $v \in \mathbb{N}$ satisfying
+        % $\config{psRB(l), \trace_0} \earrow v$, 
+        it is sufficient to show,
+        % \\
+        \[
+            \forall v \in \mathbb{N} \st \config{psRB(l), \trace_0} \earrow v
+            \implies w_{t}(\trace_0) \leq v.\]
+        By the Definition~\ref{def:exe_rb}, 
+        let $\trace \in \mathcal{T}$ be an arbitrary execution trace 
+        satisfying 
+        $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} $,
+        it is sufficient to show 
+        \[
+            \vcounter(\vtrace, l) \leq v.
+        \]
+        Let $\rprog$ be the rephrased program for $c$,
+        by computation of $psRB(l)$ in Definition~\ref{def:label_psrb}, it is sufficient to show 
+        \[
+          \forall v \in \mathbb{N} \st 
+          \config{\sum\limits_{\tpath \in \rprog \land 
+          l \in \tpath} tRB(\tpath), \trace_0
+          } \earrow v \implies  \vcounter(\vtrace, l) \leq v\]
+          %
+          By the soundness of the abstract execution trace in Lemma~\ref{lem:abscfg_sound}, 
+          the uniqueness of the abstract execution trace in Lemma~\ref{lem:absevent_unique},
+          we have an abstract event $\absevent = (l, \_, \_) \in \absE(c)$.
+          \\
+          Then we know there exists $\tpath \in \paths(\absG(c))$ such that 
+          $l \in \tpath$.
+          \\
+          There are two cases as follows,
+        $\tpath \in SCC(\absG(c))$ and $\tpath \notin SCC(\absG(c))$.
+        %   \\
+          \caseL{$\tpath \not\in SCC(\absG(c))$}
+          In case of  $\tpath \not\in SCC(\absG(c))$, there is only one $\tpath$ contains $l$ and $tRB(\tpath) = 1$.
+          \\
+          Then we have $\config{\sum\limits_{\tpath} 1, \trace_0
+          } \earrow 1$ and $ \vcounter(\vtrace, l) \leq 1$.
+          \\
+          This case is proved.
+          \caseL{$\tpath \in SCC(\absG(c))$}
+          In this case, let $TP$ be the set of all transition paths containing 
+          label $l$ in program $\rprog$, then it is sufficient to show 
+          \[
+          \forall v \in \mathbb{N} \st 
+          \config{\sum\limits_{\tpath \in TP} tRB(\tpath), \trace_0
+          } \earrow v \implies  \vcounter(\vtrace, l) \leq v
+          \]
+          %
+          By the \emph{Global Loop Bound} computation and the uniqueness of the 
+          nested loop chain from Lemma~\ref{lem:lpch_unique}, 
+          we have the only one loop chain $lpch(\tpath)$ for each 
+          transition path $\tpath \in TP$.
+          \\
+          Then it is sufficient to show 
+          \[
+            \forall v \in \mathbb{N} \st 
+          \config{\sum\limits_{\tpath \in TP} \prod_{LOOP_i \in lpch(\tpath)}lpRB(LOOP_i, \tpath), \trace_0
+          } \earrow v \implies  \vcounter(\vtrace, l) \leq v
+        \]
+        For each transition path $\tpath \in TP$, 
+        let $\{LOOP_n \to \cdots \to LOOP_i \to \tpath\}$
+        be its loop chain $lpch(\tpath)$. 
+        Let $\rprog_i$ be the refined program for every while loop 
+        with label $LOOP_i \in lpch(\tpath)$ and $\trace_i, \trace_i' \in \mathcal{T}$ satisfying
+        %
+        \[
+            \config{c, \trace_0} \to^{*} \config{\rprog_n, \trace_0 \tracecat \trace_n'}
+        \to^{*} \config{\eskip, \trace_0 \tracecat \trace_n' \tracecat \trace_n}.
+        \]
+        It is sufficient to show 
+        \[
+            \forall v \in \mathbb{N} \st
+            \config{
+        %   \prod_{LOOP_i \in lpch(\tpath)}
+        lpRB(LOOP_i, \tpath), \trace_0
+          } \earrow v \implies  \vcounter(\vtrace, l) \leq v
+        \]        
+        By the label consistency, since $\trace = \trace_i' \tracecat \trace_i$, then
+        It is sufficient to show 
+        \[
+            \forall v \in \mathbb{N} \st
+            \config{
+        %   \prod_{LOOP_i \in lpch(\tpath)}
+          lpRB(LOOP_i, \tpath), \trace_0
+          } \earrow v \implies  \vcounter(\vtrace_i, l) \leq v
+        \]   
+        By the computation of \emph{Nested Loop Bound} in Definition~\ref{def:nested_loop_bound},
+        there are two cases:
+        \subcaseL{$rpLB(LOOP_i, \tpath) \neq \bot$}
+        In this case, we have $lpRB(LOOP_i, \tpath) = rpLB(LOOP_i, \tpath)$.
+        \\
+        By computation of \emph{Local Repeat Chain Bound}, we know 
+        $LOOP_i$ is the closest while loop containing transition path $\tpath$,
+        and it is sufficient to show:
+        \[
+            \forall v \in \mathbb{N} \st
+            \config{
+        %   \prod_{LOOP_i \in lpch(\tpath)}
+        \max \left\{ \prod\limits_{\rprog_j \in ch}  rLB(\rprog_j) 
+        ~\middle\vert~ ch \in rp\mathcal{C}(LOOP_i, \tpath) \right\}, \trace_0
+          } \earrow v \implies  \vcounter(\vtrace_i, l) \leq v
+        \]
+    For each $ch \in rp\mathcal{C}(LOOP_i, \tpath)$ and 
+    every $\rprog_j \in ch$, let $ v_j \in \mathbb{N}$  and 
+            $\trace_j', \trace_j \in \mathcal{T}$ be arbitrary natural number
+            and evaluation traces satisfying 
+            \[
+                \config{ c, \trace_0} \to^{*} 
+                \config{\rprog_j, \trace_0 \tracecat \trace_j'} \to^*
+                \config{\eskip, \trace_0 \tracecat \trace_j' \tracecat \trace_j}
+                \land
+                 \config{rLB(\rprog_j),\trace_0 } \earrow v_j.
+            \]
+        By the soundness of the computation of $rLB(\rprog_j)$, 
+       i.e., the soundness of \textbf{Outside-In Algorithm} for the local reachability
+                  bound of the $\rprog_j$, we know 
+                  \[
+                    \vcounter(\vtrace_j, l) \leq v_j
+                    \]
+Then we have 
+\[
+    \vcounter(\vtrace_i, l) 
+    \leq \max_{ch \in rp\mathcal{C}(LOOP_i, \tpath)} 
+    \prod\limits_{\rprog_j \in ch}
+    \vcounter(\vtrace_j, l) \leq 
+    \max \left\{ \prod\limits_{\rprog_j \in ch}  v_j 
+        ~\middle\vert~ ch \in rp\mathcal{C}(LOOP_i, \tpath) \right\}
+    \]
+Since $ v_j \in \mathbb{N}$  and 
+$\trace_j', \trace_j \in \mathcal{T}$ are arbitrary natural number
+and evaluation traces satisfying the assumptions, we have this case proved.
+%
+        \subcaseL{$rpLB(LOOP_i, \tpath) = \bot$}
+        In this case, we know 
+        $lpRB(LOOP_i, \tpath) =
+        % \prod\limits_{\rprog_i \in lpchain(\tpath)}
+        \frac{lpInit(LOOP_i, \tpath) - rFinal(\tpath)}{lpInit(LOOP_i, \tpath) - lpNext(LOOP_i, \tpath)}$.
+        \\
+        This is a sound upper bound on execution times of 
+        transition path in while loop $\rprog_i$.
+        \\
+        By the alternative computation method 
+        $\kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ from \cite{GulwaniJK09},
+        we can also obtain a sound upper bound on the 
+        execution times of 
+        transition path $\tpath$ in while loop $\rprog_i$.
+        % \[
+        %     \begin{array}{l}
+        %     \forall (l, w_{t}) \in \exeRB(c),
+        %     % (x^l, w_{p}) \in \progV, 
+        %     \trace_0 \in \mathcal{T}_0(c), 
+        %     v \in \mathbb{N} \st
+        %     \config{psRB(l), \trace_0} \earrow v
+        %     \implies
+        %     % \right\} 
+        %     w_{t}(\trace_0) \leq v
+        %     \end{array}
+        %   \]        
+  \end{proof}
+
+  \begin{lem}[Uniqueness of the Nested Loop Chain]
+    \label{lem:lpch_unique}
+  \end{lem}

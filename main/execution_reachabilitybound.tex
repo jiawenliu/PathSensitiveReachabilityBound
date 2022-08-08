@@ -1,6 +1,6 @@
 %
 \begin{defn}[Execution Based Reachability Bound]
-\label{def:trace_graph}
+\label{def:exe_rb}
 Given a program ${c}$,
 its \emph{Execution-Base Reachability Bound} 
 $\exeRB({c})$ is defined as follows,
@@ -19,8 +19,9 @@ $\exeRB({c})$ is defined as follows,
   l \in \lvar(c) 
   \\ & &
   \land
-  \forall \trace \in \mathcal{T}_0(c), \trace' \in \mathcal{T} \st \config{{c}, \trace} \to^{*} \config{\eskip, \trace\tracecat\vtrace'} 
-  \implies w(\trace) = \vcounter(\vtrace', l) 
+  \forall \trace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} \st 
+  \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
+  \implies w(\trace_0) = \vcounter(\vtrace, l) 
 \}
 \end{array}
 \]

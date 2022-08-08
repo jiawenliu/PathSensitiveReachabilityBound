@@ -13,15 +13,14 @@ reachability times on every location of an arbitrary program $c$, as we define i
 In order to have the upper bound of the  reachability for every label of a program $c$, we design 
 a path sensitive reachability bound analysis framework {\THESYSTEM}.
 It can be divided as following steps: 
-\begin{figure}
-  \centering    
-\includegraphics[width=1.0\columnwidth]{adapfun.png}
-  \vspace{-0.3cm}
-  \caption{The overview of {\THESYSTEM}}
-  \label{fig:adaptfun}
-  \vspace{-0.5cm}
-\end{figure}
-% \subsubsection{Graph Estimation}
+% \begin{figure}
+%   \centering    
+% \includegraphics[width=1.0\columnwidth]{adapfun.png}
+%   \vspace{-0.3cm}
+%   \caption{The overview of {\THESYSTEM}}
+%   \label{fig:adaptfun}
+%   \vspace{-0.5cm}
+% \end{figure}
 %
 %
 \begin{enumerate}
@@ -717,6 +716,40 @@ $\absclr: \absevent \to \mathcal{A}_{\lin}$
 % Updating the weight of every vertex in the $\progG(c) = (\progV, \progE)$ for program $c$ generated from phase 1. 
 % For every $x^l \in \progV$, find the abstract event $\absevent \in \absflow(c)$ of the form $(l, \_, \_)$, updating the $\progW(x^l) $ by the transition closure of this event.
 % \\
+The \emph{Path-Insensitive Reachability Bound} 
+for a program $c$ is sound upper bound for every label $l$ in this program formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+%
+\begin{thm}[Soundness of the Path-Insensitive Reachability Bounds Estimation]
+  \label{thm:pathinsensitive_rb_soundness}
+Given a program ${c}$, for every label $l \in \lvar(c)$,
+its \emph{Path-Insensitive Reachability Bound} $w^p$ 
+ is a sound upper bound for its 
+ execution-based reachability bound $w^t$ 
+ where $(l, w^p) \in \absW(c)$ and  $(l, w^t) \in \exeRB(c)$.
+% $\traceG = (\traceV, \traceE, \traceW, \traceF)$, 
+% we have:
+  %
+  \[
+    \begin{array}{l}
+      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
+      \trace' \in \mathcal{T}, v \in \mathbb{N}
+      % , (v, n) \in \mathcal{VAR} \times \mathbb{N} \times \mathbb{N}
+       \st 
+      %  \\ \quad
+      (l, w_p) \in \absW(c)
+      \land 
+      (l, w_t) \in \exeRB(c)
+      \\ \quad
+      \land \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\vtrace'} 
+      \land 
+      \config{w_{p}, \trace_0} \earrow v
+      \implies
+      % \right\} 
+      w_{t}(\trace) \leq v
+    \end{array}
+    \]
+\end{thm}
+
 \subsubsection{Path-Sensitive Reachability Bound Analysis}
 \label{sec:path_sensitive_rb}
 Then, the analysis perform the \emph{Path-Sensitive Reachability Bound} analysis through following steps.
@@ -788,7 +821,7 @@ The \emph{Initial Refined Abstract State}: $rInit : \rprog \to \absstate $.
 % %   \right\}
 % %   \]
 % \\
-% The $rInit : \rprog \to \absstate $  can also be computed using $INIT(c, l_0, \absinit(\rprog))$ algorithm in \cite{towle1976control}. 
+% The $rInit : \rprog \to \absstate $  can also be computed using $INIT(c, l_0, \absinit(\rprog))$ algorithm in \cite{GulwaniJK09}. 
 % $INIT(c, l_0, \absinit(\rprog))$ computes the equivalent results.
 \\
 The \emph{Final Refined Abstract State} $rFinal : \rprog \to \absstate $.
@@ -808,7 +841,7 @@ $rLB(\rpchoose\{\rprog_i\}) =  \max\{rLB(\rprog_i)\}$
 \\
 $rLB(\rprepeat\{\rprog\}) =  \frac{rInit(\rprog) - rFinal(\rprog)}{varGD(\rprog)}$
 \\
-$rLB(\rprepeat\{\rprog\})$ can also be computed using the algorithm $ BOUNDFINDERD(INITD(c, l_0, \absinit(\rprog)), NEXTD(c, l_0, \absinit(\rprog), V_{\lin} )$ in paper \cite{towle1976control} with equivalent results.
+$rLB(\rprepeat\{\rprog\})$ can also be computed using the algorithm $ BOUNDFINDERD(INITD(c, l_0, \absinit(\rprog)), NEXTD(c, l_0, \absinit(\rprog), V_{\lin} )$ in paper \cite{GulwaniJK09} with equivalent results.
 \\
 $rLB(\rpseq(\rprog_1, \rprog_2)) =  rLB(\rprog_1)+ rLB( \rprog_2)$
 \\
@@ -833,7 +866,7 @@ are formally defined as follows,
   \right\}
   \]
 % \\
-The $rInit : \rprog \to \absstate $  can also be computed using $INIT(c, l_0, \absinit(\rprog))$ algorithm in \cite{towle1976control}. 
+The $rInit : \rprog \to \absstate $  can also be computed using $INIT(c, l_0, \absinit(\rprog))$ algorithm in \cite{GulwaniJK09}. 
 $INIT(c, l_0, \absinit(\rprog))$ computes the equivalent results.
 %
 \item  The program $\rprog$'s final refined abstract state $rFinal(\rprog) \in \mathcal{P}(\absstate) $ is computed as follows, 
@@ -1008,7 +1041,18 @@ $lpLB(LOOP_i, \tpath) = rpLB(LOOP_i, \tpath)$ if $rpLB(LOOP_i, \tpath) \neq \bot
 $lpLB(LOOP_i, \tpath) = 
 % \prod\limits_{\rprog_i \in lpchain(\tpath)}
 \frac{lpInit(LOOP_i, \tpath) - rFinal(\tpath)}{lpInit(LOOP_i, \tpath) - lpNext(LOOP_i, \tpath)}$
+% \\
+\begin{defn}
+  \label{def:nested_loop_bound}
+For each transition path in a refined program $\tpath \in \rprog$ and every loop $LOOP_i \in lpch(\tpath)$ where $lpch(\tpath)  \in rp\mathcal{C}(\tpath)$, 
+the \emph{Nested Loop Bound} $lpLB(LOOP_i, \tpath)$ is computed as follows,
 \\
+$lpLB(LOOP_i, \tpath) = rpLB(LOOP_i, \tpath)$ if $rpLB(LOOP_i, \tpath) \neq \bot$.
+\\
+$lpLB(LOOP_i, \tpath) = 
+% \prod\limits_{\rprog_i \in lpchain(\tpath)}
+\frac{lpInit(LOOP_i, \tpath) - rFinal(\tpath)}{lpInit(LOOP_i, \tpath) - lpNext(LOOP_i, \tpath)}$
+\end{defn}
 The computations of the operations: $lpInit(\rprog)$ and $rNext(\tpath)$
 are formally defined as follows,
 \begin{itemize}
@@ -1047,9 +1091,9 @@ For a transition path $\tpath \in \paths(\absG(c))$ and a refined program $\rpro
   \end{array}
 \]
 $lpInit(LOOP_i, \tpath)$, and $lpNext(LOOP_i, \tpath)$ can be computed using the 
-$INIT(c, i, \absinit(\tpath))$ and $NEXT(c, i, \absinit(\tpath))$ from paper \cite{towle1976control}.
+$INIT(c, i, \absinit(\tpath))$ and $NEXT(c, i, \absinit(\tpath))$ from paper \cite{GulwaniJK09}.
 \\
-The $lpLB(LOOP_i, \tpath)$ can also be computed using the algorithm $BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})$ from paper \cite{towle1976control} with the equivalent results.
+The $lpLB(LOOP_i, \tpath)$ can also be computed using the algorithm $\kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ from paper \cite{GulwaniJK09} with the equivalent results.
 \end{itemize}
 % $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
 % \\
@@ -1066,11 +1110,13 @@ The $lpLB(LOOP_i, \tpath)$ can also be computed using the algorithm $BOUNDFINDER
 For every transition path $\tpath \in \rprog$, its \emph{Global Loop Bound} $tRB(\tpath) \in \mathcal{A}_{in}$ is 
 % Compute 
 its path sensitive reachability bound globally. It is computed as follows,
-\\
+\begin{defn}
+  \label{def:global_loop_bound}
 $tRB(\tpath) = \max
 \left \{ \prod\limits_{LOOP \in l} rpLB(LOOP, \tpath)
 % lpRB(\rprog_i, \tpath) 
 ~ \middle\vert~ l \in lp\mathcal{C}(\tpath) \right\}$
+\end{defn}
 % For $chain \in rpchain(\tpath)$:
 % where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
 \end{enumerate}
@@ -1080,12 +1126,19 @@ $psRB : \ldom \to \mathcal{A}_{in}$
 For every label in a refined program $l \in \lvar(\rprog)$,
  $psRB(l)$ is its path sensitive reachability bound.
  \\
-Given a refined program $\rprog \in \mathcal{RP}$, for each of its transition path $\tpath \in \rprog$ 
-with the \emph{Global Loop Bound}
-computed as above, notated by $tRB(\tpath)$.
-$psRB(l)$ for each label $l \in \rprog$ is computed as follows,
+ \begin{defn}
+  \label{def:label_psrb}
+Given a refined program $\rprog \in \mathcal{RP}$ with 
+\emph{Global Loop Bound} $tRB(\tpath)$
+computed for its every transition path $\tpath \in \rprog$  notated by $tRB(\tpath)$,
+%  for each of its transition path $\tpath \in \rprog$ 
+% with the \emph{Global Loop Bound}
+% computed as above, notated by $tRB(\tpath)$.
+the $psRB(l)$ for each label $l \in \rprog$ is computed as follows,
 \\
-\[psRB(l) = \sum\limits_{l \in \tpath}RB(\tpath)\]
+\[ psRB(l) = \sum\limits_{\tpath \in \rprog \land 
+l \in \tpath} tRB(\tpath)\]
+ \end{defn}
 \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
   \label{thm:pathsensitiverb_soundness}
 Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
@@ -1109,5 +1162,6 @@ we have $ w(\trace_0) \leq v $.
 \]
 \end{thm}
 %
+Proof of this theorem is in Appendix~\ref{apdx:pathsensitive_rb_soundness}.
 \paragraph*{Path Sensitive Reachability Bound through An Example}
 \input{examples_psrb/whileSim}
