@@ -198,11 +198,13 @@ the vertices of this graph is the set of $c$'s labels with the exit label ${\lex
 %
 \paragraph*{Expression Abstraction}
 
-The expression assigned to the variable on the left hand of the assignment command is abstracted to an abstract value: (adopted from the expression abstraction method in paper \cite{sinn2017complexity}). The abstract value is expressed in the form of Difference constraint, denotated as $DC : \mathcal{VAR} \cup \constdom \to \mathcal{\mathcal{VAR} \times (\mathcal{VAR} \cup \constdom) } \times (\mathbb{Z} \cup \{\infty\})$.  $\constdom$ is called the Symbolic Constant defined as $\constdom \triangleq \mathbb{N} \cup \inpvar \cup \{\max{(\dbdom)}\} $, which consists of 
+The expression assigned to the variable on the left hand of the assignment command is abstracted to an abstract value: (adopted from the expression abstraction method in paper \cite{sinn2017complexity}). The abstract value is expressed in the form of Difference constraint, denotated as $DC : \mathcal{VAR} \cup \constdom \to \mathcal{\mathcal{VAR} \times (\mathcal{VAR} \cup \constdom) } \times (\mathbb{Z} \cup \{\infty\})$.  $\constdom$ is called the Symbolic Constant defined as $\constdom \triangleq \mathbb{N} \cup \inpvar$
+%  \cup \{\max{(\dbdom)}\} $, 
+which consists of 
 natural numbers $\mathbb{N}$,
-the program's input variables $\inpvar$  
-and a constant value $Q_m$ for estimating the upper bound of variables which are
-assigned by queries. 
+the program's input variables $\inpvar$. 
+% and a constant value $Q_m$ for estimating the upper bound of variables which are
+% assigned by queries. 
 
 Give an instance of difference constraint used here,
 $DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\}$ represents all the difference constraints over 
@@ -211,10 +213,9 @@ variable and symbolic constants.
 It is a set of the inequality of form $x \leq y + v$ where $x \in \mathcal{VAR} $, 
 $y \in \mathcal{VAR}  \cup \constdom$ and $v \in \mathbb{Z}$. 
 This difference constraint is defined in the same way as
-\cite{sinn2017complexity}. For concise, we use $\dcdom^{\top}$ to represent the $DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\}$ .
+\cite{sinn2017complexity}. For concise, we use $\dcdom^{\top}$ to represent the $DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\} \cup \mathcal{BEXPR}$.
 
-
-We show the expression abstraction $\absexpr : \expr \to \mathcal{VAR} \to DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\} $ below.
+We show the expression abstraction $\absexpr : \expr \to \mathcal{VAR} \to \dcdom^{\top} $ below.
 
 % We introduce the following notations and operations first
 % % an expression abstraction method based on the expression abstraction in paper \cite{sinn2017complexity}.
@@ -260,8 +261,10 @@ We show the expression abstraction $\absexpr : \expr \to \mathcal{VAR} \to DC(\m
       \absexpr(v, x)  = x' \leq v + 0  & x \in \grdvar \land v \in (\grdvar \cup \constdom) \\
       \absexpr(y + v, x)  = x' \leq y + v & \\
       \grdvar = \grdvar \cup \{y\} & x \in \grdvar \land v \in \mathbb{Z} \land y \notin (\grdvar \cup \constdom)  \\
-      \absexpr(\qexpr, x)  = x' \leq 0 + Q_m & x \in \grdvar \land \qexpr \text{ is a query expression}  \\
-      \absexpr(\bexpr, x) = x' \leq 0 + 1   & x \in \grdvar \land \bexpr \text{ is a boolean expression} \\
+      % \absexpr(\qexpr, x)  = x' \leq 0 + Q_m & x \in \grdvar \land \qexpr \text{ is a query expression}  \\
+      \absexpr(\bexpr, \top) = \bexpr   & \\
+      % \absexpr(y + v, x)  = x' \leq y + v & \\
+      \grdvar = \grdvar \cup FV(\bexpr) &  x \in \grdvar \land \bexpr \text{ is a boolean expression} \\
       \absexpr(\expr, x) = x' \leq \infty  &  x \in \grdvar \land \expr \text{ doesn't have any of the forms as above} \\
       \absexpr(\expr, x) = \top  &  x \notin \grdvar \\
     \end{array}
@@ -303,32 +306,16 @@ counter variable manipulation with more advanced expressions.
 % The boolean expression in the guard of $\ewhile$ command is normalized into form of $ x > 0$ where $x^l \in \lvar_c$ for some $l$.
 
 
-\paragraph{Program Event Abstraction}
-We show the abstract event definition, which is generated when computing its abstract execution trace.
-
-\begin{defn}[Abstract Event]
-  \label{def:abs_event}
-  Abstract Event: 
-  $\absevent \in $
-  $\ldom \times \dcdom^{\top} \times \ldom$
-  is a 
-  % pair of abstract initial state and final state.
-  triple where the first and third components are labels,
-  second component is a constraint from $\dcdom^{\top}$.
-  % the thrid % computed from program's abstract final and initial state, $\absfinal(c)$ and $\absinit(c)$ with formal definition, and algorithm detail in Appendix.
-  %  the constraint and the third corresponds to a final state.
-  \end{defn}
-  Specifically, in an abstract event, 
-  the first label correspond to an initial state, and 
-  the second label and the constraint correspond to an abstract final state.
- The abstract initial state is a label from $\ldom$.
-The abstract final state is a pair from $\ldom \times \dcdom^{\top}$,  
-where first component is a label from $\ldom$ and the second component is a constraint from $\dcdom^{\top}$.
+\paragraph{Abstract Initial and Final State}
 %
+Abstract initial state: $\absinit(c) \in \ldom$,
+Abstract Final State: $\absfinal(c) \in \mathcal{P}(\ldom \times \dcdom^{\top})$
 
-%
-Given a program $c$, its abstract initial state,
-and the set of its abstract final state is computed as follows,
+The \emph{Abstract initial state} for a program $c$ is the initial label of this program.
+This label corresponds to the first labeled command of this program 
+when executing this program.
+\\
+Given a program $c$, its abstract initial state is computed as follows,
 %
 \[
   \begin{array}{ll}
@@ -341,38 +328,74 @@ and the set of its abstract final state is computed as follows,
  \end{array}
  \]
 %
-Final State Abstraction: 
+
+The \emph{Abstract Final State} of the program $c$, 
+$\absfinal(c) \in \mathcal{P}(\ldom \times \dcdom^{\top})$
+is a set of pairs, with a label as first component and a constraint as the second component.
+Every pair in $\absfinal(c)$ corresponds to a labeled command of $c$,
+and the constraint in this pair is computed by $\absexpr$ in the first step.
+\\
+Given a program $c$, its final state is computed as follows,
 $\absfinal: \cdom \to \mathcal{P}(\ldom \times \dcdom^{\top})$,
-computes the set of Abstract Final State for the command. 
+% computes the set of Abstract Final State for the command. 
  \[
   \begin{array}{ll}
     \absfinal(\clabel{\assign{x}{\expr}}{}^l)  & = \{(l, \absexpr\eapp (\expr, x))\}  \\
-     \absfinal(\clabel{\assign{x}{\query(\qexpr)}}{}^l)  & = \{
-      (l, x' \leq 0 + Q_m )\}  \\
+    %  \absfinal(\clabel{\assign{x}{\query(\qexpr)}}{}^l)  & = \{
+    %   (l, x' \leq 0 + Q_m )\}  \\
      \absfinal(\clabel{\eskip}^{l})  
      & = \{(l, \top)\} \\
      \absfinal(\eif [b]^l \ethen c_1 \eelse c_2)  & = \absfinal(c_1) \cup \absfinal(c_2) \\
-     \absfinal(\ewhile [b]^l \edo c)  & = \{(l, \top)\} \\
+     \absfinal(\ewhile [b]^l \edo c)  & = \{(l, \absexpr(\bexpr, \top))\} \\
      \absfinal(c_1 ; c_2)  & =  \absfinal(c_2) \\
  \end{array}
  \]
  %
- \paragraph{Abstract Execution Trace}
- Now, we  extract the abstract execution trace  $\absflow(c)$ for a program, which computes the Abstract Execution Trace for program $c$, as a set of the abstract events $\absevent$.
+ \paragraph{Abstract Event and Execution Trace} 
+ \emph{Abstract Event}: 
+   $\absevent \in $
+   $\ldom \times \dcdom^{\top} \times \ldom$,
+   \emph{Abstract Execution Trace}: $\absflow \in \cdom \to \mathcal{P}( \ldom \times \dcdom^{\top} \times \ldom )$
+
+ The abstract event is generated during computing its abstract execution trace, its type is defined as follows,
+ \begin{defn}[Abstract Event]
+   \label{def:abs_event}
+   Abstract Event: 
+   $\absevent \in $
+   $\ldom \times \dcdom^{\top} \times \ldom$
+   is a 
+   % pair of abstract initial state and final state.
+   triple where the first and third components are labels,
+   second component is a constraint from $\dcdom^{\top}$.
+   % the thrid % computed from program's abstract final and initial state, $\absfinal(c)$ and $\absinit(c)$ with formal definition, and algorithm detail in Appendix.
+   %  the constraint and the third corresponds to a final state.
+   \end{defn}
+   Specifically, in an abstract event, 
+   the first label correspond to an initial state, and 
+   the second label and the constraint correspond to an abstract final state.
+  The abstract initial state is a label from $\ldom$.
+ The abstract final state is a pair from $\ldom \times \dcdom^{\top}$,  
+ where first component is a label from $\ldom$ and the second component is a constraint from $\dcdom^{\top}$.
+ %
+ For simplicity, we use $\mathcal{P}(\absevent)$ represent the power set of all abstract events, and we have $\absflow(c) \in \mathcal{P}(\absevent)$.
+
+%  Now, we  extract the abstract execution trace  $\absflow(c)$ for a program, which computes the 
+ The \emph{Abstract Execution Trace} for program $c$ is a set of the abstract events $\absevent$.
+ Its type is formally defined as follows in Definition~\ref{def:abs_trace}.
  %
  \begin{defn}[Abstract Execution Trace]
  \label{def:abs_trace}
-  $\absflow \in \cdom \to \mathcal{P}( \ldom \times DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\}) \times \ldom )$
+  $\absflow \in \cdom \to \mathcal{P}( \ldom \times \dcdom^{\top} \times \ldom )$
   \end{defn}
  %
-
- 
-  We now show how to compute the abstract execution trace. 
-  For simplicity, we use $\mathcal{P}(\absevent)$ represent the power set of all abstract events, and we have $\absflow(c) \in \mathcal{P}(\absevent)$.
- We first append a skip command with 
+ The \emph{Abstract Execution Trace} for program $c$ is computed as follows.
+ \\
+  % We now show how to compute the abstract execution trace. 
+ We first append a $\eskip$ command with 
 %  a symbolic label $l_e$, i.e., $\clabel{\eskip}^{l_e}$ at the end of the program $c$, and compute the $\absflow(c) = \absflow'(c')$ for $c'$, where $c' = c;\clabel{\eskip}^{l_e}$ as follows,
-the exist label $l_{ex}$, i.e., $\clabel{\eskip}^{l_{ex}}$ at the end of the program $c$, 
-and compute the $\absflow(c) = \absflow'(c')$ for $c'$, where $c' = c;\clabel{\eskip}^{l_{ex}}$ as follows,
+the label $\lex$, i.e., $\clabel{\eskip}^{l_{ex}}$ at the end of the program $c$, and construct 
+the program $c' = c;\clabel{\eskip}^{l_{ex}}$.
+Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
  %
  {\footnotesize
  \[
@@ -381,13 +404,13 @@ and compute the $\absflow(c) = \absflow'(c')$ for $c'$, where $c' = c;\clabel{\e
       \absflow'(\clabel{\assign{x}{\query(\qexpr)}}{}^l)  & = \emptyset  \\
       \absflow'([\eskip]^{l})  & = \emptyset \\
       \absflow'(\eif [b]^l \ethen c_t \eelse c_f)  & =  \absflow'(c_t) \cup \absflow'(c_f)
-      %   \\ & \quad 
-        \cup \{(l, \top,  \absinit(c_t) ) ,  (l, \top, \absinit(c_f)) \} \\
-       \absflow'(\ewhile [b]^l \edo c_w)  & =  \absflow'(c_w) \cup \{(l, \top, \absinit(c_w)) \} 
-      %  \\ & \quad 
+        \\ & \quad 
+        \cup \{(l, \absexpr(\bexpr, \top),  \absinit(c_t) ) ,  (l, \absexpr(\neg\bexpr, \top), \absinit(c_f)) \} \\
+       \absflow'(\ewhile [b]^l \edo c_w)  & =  \absflow'(c_w) \cup \{(l, \absexpr(\bexpr, \top), \absinit(c_w)) \} 
+       \\ & \quad 
        \cup \{(l', dc, l)| (l', dc) \in \absfinal(c_w) \} \\
        \absflow'(c_1 ; c_2)  & = \absflow'(c_1) \cup  \absflow'(c_2) 
-      %  \\ & \quad 
+       \\ & \quad 
        \cup \{ (l, dc, \absinit(c_2)) | (l, dc) \in \absfinal(c_1) \} \\
    \end{array}
    \]
@@ -460,7 +483,7 @@ its abstract control flow graph $\absG(c) =(\absV(c), \absE(c), \absW(c))$ is de
 \\
 $\absE(c) = \{(l_1, dc, l_2) | (l_1, dc, l_2) \in \absflow(c)\}$,
 \\
-$\absV(c) = labels(c)\cup\{l_{ex}\}$
+$\absV(c) = \lvar(c)\cup\{l_{ex}\}$
 \\
  $\absW(c) 
 \triangleq \left\{ (l, w) \in \mathbb{L} \times EXPR(\constdom) \right\}$.
@@ -469,10 +492,14 @@ $\absV(c) = labels(c)\cup\{l_{ex}\}$
 Notice we also define the $\absW(c)$ in this graph without giving an actual value.
 This $\absW(c)$ is the set of weight for every 
 % vertex 
-label. The weight is a symbolic expression over the symbolic constant, 
+label. The weight $w \in EXPR(\constdom)$ is a symbolic expression over the symbolic constant, 
 which is the estimated upper bound on the number of visiting time for every control location
 through the reachability bound analysis as follows.
 %
+$EXPR(\constdom)$ is the set of all the symbolic expressions 
+over $\constdom$, which is a subset of arithmetic expressions over $\mathbb{N}$ with input variables.
+For concise, $\mathcal{A}_{\lin}$ is used as the same meaning of $EXPR(\constdom)$ in the follows, to denote the arithmetic expression 
+over the symbolic variables, (i.e., $\mathbb{N}$ with input variables).
 \subsubsection{Abstract Control Flow Graph through an Example}
 
 % 
@@ -497,7 +524,7 @@ through the reachability bound analysis as follows.
 %
 \input{examples_psrb/whileSim_abscfg}
 %
-\subsection{\highlight{Path Sensitive Reachability Bound Analysis}}
+\subsection{\highlight{Reachability Bound Analysis}}
 \label{sec:alg_rbgen}
 %
 % In order to estimate weight for every vertex in $\progV(c)$,
@@ -522,19 +549,22 @@ through the reachability bound analysis as follows.
 %  the symbolic reachability bound of every commands corresponding to this transition. Specifically, this analysis can be performed in four steps:
 %   Variable Modification Tracking, Local Bounds Computation,
 %  Invariant Inference and Closure Generation, and Reachability Bound Computation,
-{In order to estimate weight for every vertex in the static analysis dependency graph($\progV(c)$), we want to find out the upper bound on 
-the number of times the labeled command (uniquely associated with a vertex in $\progV(c)$) may be executed when running the program.
-This information can be obtained by computing the reachability bound for every vertex in the abstract control flow graph ($\absW(c)$), because
-the vertices in the two graph share the same unique label, the line number. We can easily show that the reachability bound on one vertex of the abstract control flow graph is also the upper bound for the corresponding vertex in the static analysis dependency graph, both vertices share the same unique line number.}
-
-
-We perform the symbolic reachability bound analysis on the abstract control flow graph, 
-through the edges in $\absG(c)$, which correspond to $c$'s abstract transition between labels.
+% {In order to estimate weight for every vertex in the static analysis dependency graph($\progV(c)$), we want to find out the upper bound on 
+% the number of times the labeled command (uniquely associated with a vertex in $\progV(c)$) may be executed when running the program.
+% This information can be obtained by computing the reachability bound for every vertex in the abstract control flow graph ($\absW(c)$), because
+% the vertices in the two graph share the same unique label, the line number. We can easily show that the reachability bound on one vertex of the abstract control flow graph is also the upper bound for the corresponding vertex in the static analysis dependency graph, both vertices share the same unique line number.}
+In order to compute the \emph{Path-Sensitve Reachability Bound}, his analysis firstly compute the \emph{Path-Insensitive Reachability Bound} for every transition.
+\\
+\subsubsection{Path-Insensitive Reachability Bound Analysis}
+\label{sec:path_insensitive_rb}
+The \emph{Path-Insensitive Reachability Bound} analysis is performed on the abstract control flow graph, 
+through the edges in $\absG(c)$.
+Every edge in $\absG(c)$ corresponds to the program $c$'s abstract transition between a pair of two labels.
 We infer the invariant for every variable, and compute the transition closure for every abstract transition. By solving the closure
 with the invariants of variables involved in this closure for every transition, we compute
 the symbolic reachability bound of every commands corresponding to this transition. Specifically, this analysis can be performed in four steps:
  Variable Modification Tracking, Local Bounds Computation,
-Invariant Inference and Closure Generation, and Reachability Bound Computation,
+Variable Invariant Computation and Closure Generation, and Reachability Bound Computation,
 % 
 % We present the details of invariant, closure generation, and reachability bound computation as follows.
 with details as follows.
@@ -687,64 +717,135 @@ $\absclr: \absevent \to \mathcal{A}_{\lin}$
 % Updating the weight of every vertex in the $\progG(c) = (\progV, \progE)$ for program $c$ generated from phase 1. 
 % For every $x^l \in \progV$, find the abstract event $\absevent \in \absflow(c)$ of the form $(l, \_, \_)$, updating the $\progW(x^l) $ by the transition closure of this event.
 % \\
+\subsubsection{Path-Sensitive Reachability Bound Analysis}
+\label{sec:path_sensitive_rb}
+Then, the analysis perform the \emph{Path-Sensitive Reachability Bound} analysis through following steps.
+%
 \paragraph*{Program Rephrase through Path Collection on Abstract CFG}
-$\tpath \in \paths(\absG(c))$, 
+The transition path
+$\tpath \in \paths(\absG(c))$, is a simple path on this program's abstract control flow graph $\absG(c)$.
 \\
-For the part of the graph not in any SCC:
+% For the part of the graph not in any SCC:
 \\
 $p \triangleq \tpath $ if $\tpath \in \paths(\absG(c))$ and $\tpath \not\in SCC(\absG(c))$;
 \\
 $p \triangleq \rpchoose\{p_1, p_2 \}$ if $p_1$ and $p_2$ has the same head and end;
 \\
-For the part of the graph not in some SCCs:
-\\
-For every while loop with guard label $l$:
-\\
-$p \triangleq \tpath $ if $\tpath \in \paths(\absG(c))$
+$p \triangleq p_1; p_2$ if head of $p_1$ is the same as head of $p_2$ and either $p_1$ or $p_2$ isn't a simple path. 
+% \\
+% For the part of the graph not in some SCCs:
+% \\
+% For every while loop with guard label $l$:
+% \\
+% $p \triangleq \tpath $ if $\tpath \in \paths(\absG(c))$
 \\
 $p \triangleq LOOP_l : \rprepeat(\rpchoose\{p_1, \cdots, p_m\})$ if head and end of $p'$ are both $l$;
+% and end of $p'$ are both $l$;
 % \\
 %
-\paragraph*{While Loop Refinement} $\rprog \in \mathcal{RP}$.
+\paragraph*{Program Refinement} 
+Refined program:
+$\rprog \in \mathcal{RP}$.
 % For a Loop $L$,
 % computes all the transition Paths : $\tpath \in \absG(c)$
 % ->  $\rprog \in \mathcal{RP}$
 % in this loop and generate the refined statement.
 \\
-Given a rephrased program $p$, \\
+Given a rephrased program $p$, its refined program is computed as follows,
+\\
 $\rprog \triangleq \tpath $ if $p = \tpath$\\
 $\rprog \triangleq \rpchoose\{\rprog_1, \rprog_2 \}$ where $p \triangleq \rpchoose\{p_1, p_2 \}$ and 
   $\rprog_1$ and $\rprog_2$ are refined $p_1$ and $p_2$. 
   \\
-$\rprog \triangleq LOOP_l : \kw{refine(p_w)}$  if $p = \rprepeat(p_w)$ and  $\kw{refine(p_w)}$ is the algorithm in \cite{sinn2017complexity}.
+$\rprog \triangleq LOOP_l : \kw{REFINE(p_w)}$  if $p = \rprepeat(p_w)$ and  $\kw{REFINE(p_w)}$ is the algorithm in \\
+$\rprog \triangleq \kw{REFINE(p_1)}; \kw{REFINE(p_2)}$  if $p = p_1; p_2$ 
+\cite{sinn2017complexity}.
 % \\
 \paragraph*{Outside-In Algorithm}
-For a Loop $L$, with its refined statement $\rprog \in \mathcal{RP}$,
-compute refined local bound for the refined statement $\rprog$.
+For the refined program $\rprog \in \mathcal{RP}$, the \emph{Outside-In Algorithm}
+computes the path-sensitive local bound 
+% for the refined program $\rprog$ recursively 
+$rLB: \rprog \to \mathcal{A}_{in}$ as follows,
+% \\
+%  $rLB: \rprog \to \mathcal{A}_{in}$
 \\
- $rLB: \rprog \to \mathcal{A}_{in}$
+The \emph{Refined Abstract State}: 
+$\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of difference constraints.
 \\
-$\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of difference constraints, refined abstract state.
+The \emph{Initial Refined Abstract State}: $rInit : \rprog \to \absstate $.
+% % , computed as follows,
+% % \[
+% %   rInit(\rprog) \triangleq 
+% %   \bigwedge_{x \in VAR(\rprog)}
+% %   \left\{ 
+% %   x = v ~\middle\vert~ 
+% %   v = arg\max_{l_1}\left\{ 
+% %     v~\middle\vert~ 
+% %     (v, \absevent) \in \reset(x) 
+% %     \land \absevent = (l_1, dc, l_2)
+% %     \land l_1 \leq \absinit(rprog)
+% %     \right\}
+% %   \right\}
+% %   \]
+% \\
+% The $rInit : \rprog \to \absstate $  can also be computed using $INIT(c, l_0, \absinit(\rprog))$ algorithm in \cite{towle1976control}. 
+% $INIT(c, l_0, \absinit(\rprog))$ computes the equivalent results.
 \\
-$rInit : \rprog \to \absstate $ : initial refined abstract state;
+The \emph{Final Refined Abstract State} $rFinal : \rprog \to \absstate $.
+% \[
+%   rFinal(\rprog) \triangleq 
+%   \bigwedge_{x \in VAR(\rprog)}
+%   \left\{ 
+%     \varinvar(x)
+%   \right\} \land \neg Invariant(\rprog)
+%   \]
 \\
-$rFinal : \rprog \to \absstate $ : final refined abstract state;
+The \emph{Variable Grade Decedent}: $varGD : \rprog \to \mathcal{A}_{in}$, is the set of the variables' variation in one iteration;
 \\
-$varGD : \rprog \to \mathcal{A}_{in}$ : the variable grade decedent in one iteration;
-\\
-Given a refined program $\rprog$:
+Given a refined program $\rprog$, its path-sensitive local reachability bound is computed as follows,
 \\
 $rLB(\rpchoose\{\rprog_i\}) =  \max\{rLB(\rprog_i)\}$
 \\
 $rLB(\rprepeat\{\rprog\}) =  \frac{rInit(\rprog) - rFinal(\rprog)}{varGD(\rprog)}$
 \\
+$rLB(\rprepeat\{\rprog\})$ can also be computed using the algorithm $ BOUNDFINDERD(INITD(c, l_0, \absinit(\rprog)), NEXTD(c, l_0, \absinit(\rprog), V_{\lin} )$ in paper \cite{towle1976control} with equivalent results.
+\\
 $rLB(\rpseq(\rprog_1, \rprog_2)) =  rLB(\rprog_1)+ rLB( \rprog_2)$
 \\
 $rLB(\tpath) =  1$.
 \\
-The Variable Gradient Decent is computed as:
-\\
-Given a refined program $\rprog$:
+The computations of the operations: $rInit(\rprog)$,
+$rFinal(\rprog)$ and $rNext(\tpath)$
+are formally defined as follows,
+\begin{itemize}
+\item For a refined program $\rprog$, its initial refined abstract $rInit(\rprog) \in \mathcal{P}(\absstate)$ is computed as follows,
+\[
+  rInit(\rprog) \triangleq 
+  \bigwedge_{x \in VAR(\rprog)}
+  \left\{ 
+  x = v ~\middle\vert~ 
+  v = arg\max_{l_1}\left\{ 
+    v~\middle\vert~ 
+    (v, \absevent) \in \reset(x) 
+    \land \absevent = (l_1, dc, l_2)
+    \land l_1 \leq \absinit(rprog)
+    \right\}
+  \right\}
+  \]
+% \\
+The $rInit : \rprog \to \absstate $  can also be computed using $INIT(c, l_0, \absinit(\rprog))$ algorithm in \cite{towle1976control}. 
+$INIT(c, l_0, \absinit(\rprog))$ computes the equivalent results.
+%
+\item  The program $\rprog$'s final refined abstract state $rFinal(\rprog) \in \mathcal{P}(\absstate) $ is computed as follows, 
+\[
+  rFinal(\rprog) \triangleq 
+  \bigwedge_{x \in VAR(\rprog)}
+  \left\{ 
+    \varinvar(x)
+  \right\} \land \neg Invariant(\rprog)
+  \]
+  % \\
+  \item  The program $\rprog$'s Variable Gradient Decent set is computed as follows,
 \\
 $varGD(\rpchoose\{\rprog_i\}) =  \max\{varGD(\rprog_i)\}$
 \\
@@ -752,19 +853,45 @@ $varGD(\rprepeat\{\rprog\}) =  rLB(\rprepeat\{\rprog\}) \times {varGD(\rprog)}$
 \\
 $varGD(\rpseq(\rprog_1, \rprog_2)) =  varGD(\rprog_1)+ varGD( \rprog_2)$
 \\
-$varGD(\tpath) =  rInit(\tpath) - rFinal(\tpath)$
+$varGD(\tpath) =  rInit(\tpath) - rNext(\tpath)$
+\\
+\item  For a transition path $\tpath \in \paths(\absG(c))$, its $rNext(\tpath)$ is computed as follows,
+%
+\[
+  \begin{array}{l}
+  rNext(\tpath) \triangleq 
+  \bigwedge\limits_{x \in VAR(\rprog)}
+  \left\{ 
+    \begin{array}{l}
+  x =   \sum\limits_{(x, \absevent) \in \inc(x) }\left\{ 
+    \varinvar(y) + c ~\middle\vert~ \absevent = (l, (y, c), \_) \land l \in \lvar(\rprog)\right\}
+    \\ \qquad 
+    - \sum\limits_{(x, \absevent) \in dec(x) }\left\{ 
+      \varinvar(y) + c ~\middle\vert~ \absevent = (l, (y, c), \_) \land l \in \lvar(\rprog) \right\}
+    \end{array}
+  \right\}
+  \end{array}
+\]
+\end{itemize}
 %
 \paragraph*{Inside-Out Algorithm}
-\begin{enumerate}
-\item {Collect the Repeat Chain}
+For the refined program $\rprog \in \mathcal{RP}$, the \emph{Inside-Out Algorithm}
+computes the path-sensitive global bound for every transition path in this program $\rprog$ through following steps.
 
-For a refined while loop program $\rprog_{l} = LOOP_l : \rprog \in \mathcal{RP}$, 
+\begin{enumerate}
+  \item \emph{Local Repeat Chain Bound}.
+  \\
+  For every transition path $\tpath$, its \emph{Local Repeat Chain Bound} is the path sensitive local bound for it, inside its closet while loop.
+  It is computed as follows,
+  \begin{enumerate}
+\item \emph{Repeat Chain Set}
+% For a refined while loop program $\rprog_{l} = LOOP_l : \rprog \in \mathcal{RP}$, 
 % with its refined statement $\rprog \in \mathcal{RP}$,
 \\
-for each transition path in the refined program, $\tpath \in \rprog$ , 
-collect their repeat chain.
-% and loop chain.
-% from the head of the while loop.
+For each transition path in the refined program $\tpath \in \rprog$, 
+its repeat chain set $rp\mathcal{C}(LOOP, \tpath) \in \mathcal{P}(\mathcal{P}(\rprog))$
+ is a set of repeat chains. 
+ Every repeat chain is a list of refined program contained inside the same while loop $LOOP$ as the $\tpath$. It is computed as follows,
 \\
 % 1. collect the repeat chain: 
 $rp\mathcal{C}(LOOP_l, \tpath) \in \mathcal{P}(\mathcal{P}(\rprog))$
@@ -804,7 +931,9 @@ $rp\mathcal{C}(LOOP_l, \tpath) \in \mathcal{P}(\mathcal{P}(\rprog))$
 % % \prod\limits_{\rprog_i \in lpchain(\tpath)}
 % \frac{lpInit(\rprog_i, \tpath) - lpFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
 % \\
-\item  {Rp Local Bound on Repeat Chain}
+\item  \emph{Local Repeat Chain Bound}.
+\\
+For every transition path $\tpath$ in its closet while loop $LOOP$, the \emph{Local Repeat Chain Bound} $rpLB(LOOP, \tpath)$ is computed as follows,
 % $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
 % \\
 % For each transition path $\tpath \in \rprog$,
@@ -813,12 +942,15 @@ $rp\mathcal{C}(LOOP_l, \tpath) \in \mathcal{P}(\mathcal{P}(\rprog))$
 % \\
 % $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
 % \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
-Compute the local bound for every repeat chain as follows:
-\\
-$rpLB(L, \tpath) = \max \left\{ \prod\limits_{\rprog_i \in ch}  rLB(\rprog_i) 
-~\middle\vert~ ch \in rp\mathcal{C}(LOOP_l, \tpath) \right\}
-% \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}
-$.
+  \\
+  $rpLB(LOOP, \tpath) = \max \left\{ \prod\limits_{\rprog_i \in ch}  rLB(\rprog_i) 
+  ~\middle\vert~ ch \in rp\mathcal{C}(LOOP_l, \tpath) \right\}
+  $;
+  \\
+  $rpLB(LOOP, \tpath) = \bot
+  $ if $LOOP$ isn't the closest while loop containing $\tpath$.
+  %
+  \end{enumerate}
 % \\
 % \\
 % 2. Then compute the path sensitive reachability repeating bound for $\tpath$ as:
@@ -827,12 +959,21 @@ $.
 % % For $chain \in rpchain(\tpath)$:
 % where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
 %
-\item {Collect Loop Chains for Nested Loop}
-For a refined program $\rprog \in \mathcal{RP}$, 
-% with its refined statement $\rprog \in \mathcal{RP}$,
+\item \emph{Nested Loop Bound}.
 \\
-for each transition path in the refined program, $\tpath \in \rprog$ , 
-collect their loop chains: 
+For every transition path $\tpath \in \rprog$, 
+its \emph{Nested Loop Bound} $lpLB(LOOP_i, \tpath) \in \mathcal{A}_{\lin}$ is the global path-sensitive bound within each while loop $LOOp_i$ it is nested in.
+% {Collect Loop Chains for Nested Loop}
+It is computed as follows,
+\begin{enumerate}
+  \item \emph{Loop Chain Set}.
+  \\
+  For each transition path in the refined program, $\tpath \in \rprog$, its \emph{Loop Chain Set} ($lp\mathcal{C}(\tpath) \in \mathcal{P}(\mathcal{P}(\rprog))$) is the set of 
+  loop chains. Each loop chain $lpch(\tpath) \in \mathcal{P}(\rprog)$ is a list of nested loop label where 
+  $\tpath$ is contained inside.
+  \\
+For each transition path in the refined program $\tpath \in \rprog$, 
+its \emph{Loop Chain Set} is collected as follows: 
 % repeat chain.
 % then there is loop tree as follows for a program:
 % $P = \rprepeat^{L_n}(\cdots, \rprepeat^{L_{n'}}(\cdots), \cdots, \rprepeat^{L_{n''}}(\cdots))$.
@@ -851,7 +992,8 @@ LOOP_n \to LOOP_{n-1} \to \cdots \to \tpath$
 such that 
 $\rprog_{i}= LOOP_i : (\cdots, LOOP_{i - 1} : \rprog_{i-1}, \cdots)$ and
  there isn't any loop label (i.e., $LOOP'$) between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
-\item  {Nested Loop Bound on Loop Chain}
+\item  \emph{Nested Loop Bound}.
+\\
 For a refined program $\rprog \in \mathcal{RP}$, 
 % with its refined statement $\rprog \in \mathcal{RP}$,
 \\
@@ -865,8 +1007,50 @@ $lpLB(LOOP_i, \tpath) = rpLB(LOOP_i, \tpath)$ if $rpLB(LOOP_i, \tpath) \neq \bot
 \\
 $lpLB(LOOP_i, \tpath) = 
 % \prod\limits_{\rprog_i \in lpchain(\tpath)}
-\frac{lpInit(LOOP_i, \tpath) - lpFinal(LOOP_i, \tpath)}{varGD(LOOP_i, \tpath)}$
-% \\
+\frac{lpInit(LOOP_i, \tpath) - rFinal(\tpath)}{lpInit(LOOP_i, \tpath) - lpNext(LOOP_i, \tpath)}$
+\\
+The computations of the operations: $lpInit(\rprog)$ and $rNext(\tpath)$
+are formally defined as follows,
+\begin{itemize}
+\item For a transition path $\tpath \in \paths(\absG(c))$ and a refined program $\rprog_i$ with the loop label $LOOP_i: \rprog_i$, its abstract loop chain initial state $lpInit(LOOP_i, \tpath) \in \mathcal{P}(\absstate)$ is computed as follows,
+\[
+  lpInit(LOOP_i, \tpath) \triangleq 
+  \bigwedge_{x \in VAR(c)}
+  \left\{ 
+  x = arg\max_{l_1}
+  \left\{
+      \begin{array}{l}
+    (v, (l_1, dc, l_2)) \in \reset(x) 
+        \\ 
+    % \qquad
+    \land \absinit(\rprog_i) \leq l_1 \leq \absinit(\tpath)
+    \end{array}
+    \right\}
+  \right\}
+  \]
+\item
+For a transition path $\tpath \in \paths(\absG(c))$ and a refined program $\rprog_i$ with the loop label $LOOP_i: \rprog_i$, its $rNext(LOOP_i, \tpath)$ is computed as follows,
+%
+\[
+  \begin{array}{l}
+  lpNext(LOOP_i, \tpath) \triangleq 
+  \bigwedge\limits_{x \in VAR(\rprog)}
+  \left\{ 
+    \begin{array}{l}
+  x =   \sum\limits_{(x, \absevent) \in \inc(x) }\left\{ 
+    \varinvar(y) + c ~\middle\vert~ \absevent = (l, (y, c), \_) \land l \in \lvar(\rprog_i)\right\}
+    \\ \qquad 
+    - \sum\limits_{(x, \absevent) \in dec(x) }\left\{ 
+      \varinvar(y) + c ~\middle\vert~ \absevent = (l, (y, c), \_) \land l \in \lvar(\rprog_i) \right\}
+    \end{array}
+  \right\}
+  \end{array}
+\]
+$lpInit(LOOP_i, \tpath)$, and $lpNext(LOOP_i, \tpath)$ can be computed using the 
+$INIT(c, i, \absinit(\tpath))$ and $NEXT(c, i, \absinit(\tpath))$ from paper \cite{towle1976control}.
+\\
+The $lpLB(LOOP_i, \tpath)$ can also be computed using the algorithm $BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})$ from paper \cite{towle1976control} with the equivalent results.
+\end{itemize}
 % $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
 % \\
 % For each transition path $\tpath \in \rprog$,
@@ -876,8 +1060,12 @@ $lpLB(LOOP_i, \tpath) =
 % $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
 % \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{varGD(\rprog_i, \tpath)}$
 % \\
-\item 
-Compute the path sensitive reachability repeating bound for $\tpath$ as:
+\end{enumerate}
+\item \emph{Global Loop Bound}.
+\\
+For every transition path $\tpath \in \rprog$, its \emph{Global Loop Bound} $RB(\tpath)$ is 
+% Compute 
+its path sensitive reachability bound globally. It is computed as follows,
 \\
 $RB(\tpath) = \max
 \left \{ \prod\limits_{LOOP \in l} rpLB(LOOP, \tpath)

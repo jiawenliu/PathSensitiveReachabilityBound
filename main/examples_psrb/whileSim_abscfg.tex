@@ -54,12 +54,12 @@ The same way for the rest edges' constructions.
   % Control Flow Edges:
   \draw[ thick, -latex] (-6, 10)  -- node [above] {$a \leq 0$}(-0.5, 10);
   \draw[ thick, -latex] (0, 9.5)  -- node [left] {$j \leq k$} (0, 7.5) ;
-  \draw[ thick, -latex] (0, 6.5)  -- node [left] {$\top$}  (0, 4.5);
-  \draw[ thick, -latex] (0, 3.5)  -- node [right] {$x \leq Q_m$} (0, 1.5) ;
+  \draw[ thick, -latex] (0, 6.5)  -- node [left] {$j > 0$}  (0, 4.5);
+  \draw[ thick, -latex] (0, 3.5)  -- node [right] {$x \leq j$} (0, 1.5) ;
   \draw[ thick, -latex] (-0.5, 1)  -- node [above] {$j \leq j - 1$} (-6, 1) ;
-  \draw[ thick, -latex] (-6, 1.5)  -- node [left] {$a \leq a + x$} (-0.5, 7)  ;
-  \draw[ thick, -latex] (0.5, 7)  -- node [above] {$l \leq Q_m$}  (5.5, 7);
-  \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
+  \draw[ thick, -latex] (-6, 1.5)  -- node [left] {$a \leq x + a$} (-0.5, 7)  ;
+  \draw[ thick, -latex] (0.5, 7)  -- node [above] {$ j = k $}  (5.5, 7);
+  \draw[ thick, -latex] (6, 6.5)  -- node [right] {$l \leq k * a$} (6, 4.5) ;
   \end{tikzpicture}
   \caption{}
     \end{centering}
@@ -81,12 +81,12 @@ The same way for the rest edges' constructions.
     % Control Flow Edges:
   \draw[ thick, -latex] (-8, 10)  -- node [above] {$a \leq 0$}(-1.5, 10);
   \draw[ thick, -latex] (0, 9.5)  -- node [left] {$j \leq k$} (0, 7.5) ;
-  \draw[ thick, -latex] (0, 6.5)  -- node [left] {$\top$}  (0, 4.5);
-  \draw[ thick, -latex] (0, 3.5)  -- node [right] {$x \leq Q_m$} (0, 1.5) ;
+  \draw[ thick, -latex] (0, 6.5)  -- node [left] {$j > 0 $}  (0, 4.5);
+  \draw[ thick, -latex] (0, 3.5)  -- node [right] {$x \leq j$} (0, 1.5) ;
   \draw[ thick, -latex] (-1.5, 1)  -- node [above] {$j \leq j - 1$} (-8, 1) ;
-  \draw[ thick, -latex] (-8, 1.5)  -- node [left] {$a \leq a + x$} (-1.5, 7)  ;
-  \draw[ thick, -latex] (1.5, 7)  -- node [above] {$l \leq Q_m$}  (4.5, 7);
-  \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
+  \draw[ thick, -latex] (-8, 1.5)  -- node [left] {$a \leq x + a$} (-1.5, 7)  ;
+  \draw[ thick, -latex] (1.5, 7)  -- node [above] {$j = k $}  (4.5, 7);
+  \draw[ thick, -latex] (6, 6.5)  -- node [right] {$l \leq k * a$} (6, 4.5) ;
     \end{tikzpicture}
     \caption{}
       \end{centering}
