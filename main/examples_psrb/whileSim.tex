@@ -29,11 +29,41 @@
   \\
   Transition Paths:
   \\
-  $\tpath_0 = (0, 1), (1 \to 2)$
+  $\tpath_0 =  (0 \to 1), (1 \to 2)$
   \\
-  $\tpath_1 =  (2 \to 3), (3 \to 4), (4, \to 5), (5 \to 2)$
+  $\tpath_1 =  (2 \to 3), (3 \to 4), (4 \to 5), (5 \to 2)$
   \\
   $\tpath_2 = (2 \to 6 \to \lex)$
+  \\
+  For simplicity, I omitted the vertices sequence and the constraints for every edge in the transition path. 
+  In the following examples in Section~\ref{sec:example}, they 
+  are omitted as well. 
+  \\
+  In this example the complete transition paths are as follows,
+  \\
+  $\tpath_0 =  
+    \left\{ \begin{array}{l}
+    \text{Edges Sequence}: ((0, a \leq 0, 1), (1, j \leq k, 2))
+    \\
+    \text{Vertices Sequence}: (0, 1, 2)
+    \end{array}\right\}
+  $
+  \\
+  $\tpath_1 =  
+  \left\{ \begin{array}{l}
+    \text{Edges Sequence}: ((2, j > 0, 3), (3, x \leq j, 4), (4, j \leq j - 1, 5), (5, a \leq x + a, 2))
+    \\
+    \text{Vertices Sequence}: (2, 3, 4, 5, 2)
+    \end{array}\right\}
+  $
+  \\
+  $\tpath_2 = 
+  \left\{ \begin{array}{l}
+    \text{Edges Sequence}: ((2, j \geq 0, 6), (6, l \leq k*a, \lex))
+    \\
+    \text{Vertices Sequence}: (2, 6, \lex)
+    \end{array}\right\}
+    $
   \\
   Rephrased Program
   \[

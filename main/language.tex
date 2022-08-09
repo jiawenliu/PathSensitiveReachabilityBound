@@ -35,13 +35,13 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \\  
 %
 \mbox{Value} 
-& v & ::= & { n ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]}  
-\\ 
-&&&
-\highlight
-{
-~|~ (r, x_1, \ldots, x_n) := c
-}
+& v & ::= & { n ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]}  ~|~ (r, x_1, \ldots, x_n) := c
+% \\ 
+% &&&
+% \highlight
+% {
+% ~|~ (r, x_1, \ldots, x_n) := c
+% }
 \\
 %
 \mbox{Query Expression} 
@@ -141,14 +141,6 @@ We use following notations to represent the set of corresponding terms:
 }
 \end{array}
 \]
-$\lvar_c \in \mathcal{P}(\ldom)$,
-represents the set of labels
-% assigned variables and labeles variables 
-for a labeled command $c$,
-% defined in Definition~\ref{def:lvar} and 
-\ref{def:avar}.
-%
-\\
 $FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. To be precise,
 $FV(\aexpr)$, $FV(\bexpr)$ and $FV(\qexpr)$ represent the set of free variables in arithmetic
 expression $\aexpr$, boolean expression $\bexpr$ and query expression $\qexpr$ respectively.
@@ -189,11 +181,18 @@ showing up in $c$, which aren't defined before be used, are actually the input v
 % }
 % \end{defn}
 % %
-
+\\
+$\lvar_c \in \mathcal{P}(\ldom)$,
+represents the set of labels
+% assigned variables and labeles variables 
+for a labeled command $c$ defined as follows,
+% defined in Definition~\ref{def:lvar} and 
+% \ref{def:avar}.
+%
 \begin{defn}[Program Labels
 (
 % $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-$\lvar : \cdom \to \mathcal{P}(\mathcal{LV})$]
+$\lvar : \cdom \to \mathcal{P}(\ldom)$]
 \label{def:lvar}
 {\footnotesize
 $$
@@ -220,13 +219,13 @@ $$
 }
 \end{defn}
 %
-Every labeled variable in a program is unique, formally as follows with proof in Appendix~\ref{apdx:lemma_sec123}.
+Every label and every labeled command in a program is unique, formally as follows with proof in Appendix~\ref{apdx:lemma_sec123}.
 \begin{lem}[Uniqueness of the Program Labels]
-  \label{lem:lvar_unique}
-  For every program $c \in \cdom$ and every two labeled variables such that
-  $x^i, y^j \in \lvar(c)$, then $x^i \neq y^j$.
+  \label{lem:label_unique}
+  For every program $c \in \cdom$ and every two labels such that
+  $i, j \in \lvar(c)$, then $i \neq j$.
   \[
-    \forall c \in \cdom, x^i, y^j \in \mathcal{L} \st x^i, y^j \in \lvar(c)\implies x^i \neq y^j.
+    \forall c \in \cdom, i, j \in \ldom \st i, j \in \lvar(c)\implies i \neq j.
     \]
 \end{lem}
 %

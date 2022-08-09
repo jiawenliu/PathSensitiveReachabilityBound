@@ -7,11 +7,12 @@
 % In this section, we present our static program analysis for computing an upper bound on the adaptivity a program $c$
 % }
 In this section, we present our static program analysis for computing an upper bound on the 
-reachability times on every location of an arbitrary program $c$, as we define in last section.
+execution-based reachability times, for every label $l$ of an arbitrary program $c$, as defined in last section.
 %
-\subsection{A guide to the static program analysis framework}
-In order to have the upper bound of the  reachability for every label of a program $c$, we design 
-a path sensitive reachability bound analysis framework {\THESYSTEM}.
+\subsection{Algorithm Overview}
+\label{sec:alg_overview}
+In order to have the upper bound of the reachability for every label of a program $c$, we design 
+a path sensitive reachability bound analysis algorithm {\THESYSTEM}.
 It can be divided as following steps: 
 % \begin{figure}
 %   \centering    
@@ -24,19 +25,27 @@ It can be divided as following steps:
 %
 %
 \begin{enumerate}
-\item  construct an abstract control flow graph based on $c$, by computing an abstract transition 
-for every labeled command.
+\item  In Section~\ref{sec:abscfg}, we firstly construct an abstract control flow graph based on $c$, by computing an abstract transition 
+for every labeled command. 
+This graph is used in Section~\ref{sec:static_pathsensitiverb} for analyzing program's reachability bound.
 % see Section~\ref{sec:alg_vertexgen}
-\item estimate an accurate upper bound for every while loop command of $c$.
+\item The Section~\ref{sec:static_pathsensitiverb} computes program's reachability bound in two steps as follows.
+\begin{enumerate}
+\item The Section~\ref{sec:pathinsensitive_rb} estimates path-insensitive reachability upper bound for every while loop command in $c$.
 % Vertices are the assigned variables with unique labels, which is extracted directly from the program, 
 % Every vertex come with a weight, which tells the maximal times each vertex and edge can be visited in realistic execution. This weight is estimated by a reachability bound analysis on each vertex, See Section~\ref{sec:alg_weightgen}.
 % \item Each edge also vertices considers both control flow and data flow, See
 % Section~\ref{sec:alg_edgegen}
-\item for every while loop, refine this while loop program into a path sensitive program.
-\item perform the Outside-In and Inside-Out Algorithm on this path sensitive program, obtain 
+\item The Section~\ref{sec:pathsensitive_rb} estimates the path-sensitive reachability upper bound 
+for every while loop through four steps:
+\begin{enumerate}
+  \item {\THESYSTEM} firstly refines this while loop program into a rephrased and refined program.
+\item Then in the second and third steps, it performs the Outside-In and Inside-Out Algorithms on this refined program, obtain 
 accurate reachability bound for each path.
-\item compute the reachability bound for every label in this program $c$ by summarizing overal the reachability bound for
+\item At the last step, {\THESYSTEM} computes the reachability bound for every label in this program $c$ by summarizing overal the reachability bound for
 each path and each loop.
+\end{enumerate}
+\end{enumerate}
 % Finally, with all the ingredients ready, we construct the final approximated program-based dependency graph in Section~\ref{sec:alg_graphgen}
 \end{enumerate}
 
@@ -436,10 +445,10 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
    \end{array}
    \]
    \end{lem}
-%    This lemma is proved formally in Appendix~\ref{apdx:reachability_soundness}.
+%    This lemma is proved formally in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
 % For every event $\event$ with label $l$ in an execution trace $\trace$ of program $c$, 
 % there is an abstract event in program's abstract execution trace of form $(l, \_, \_)$. 
-This lemma is proved formally in Lemma~\ref{lem:abscfg_sound} in Appendix~\ref{apdx:reachability_soundness}.
+This lemma is proved formally in Lemma~\ref{lem:abscfg_sound} in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
 \\
 For every labeled variable in program $c$, $x^l \in \lvar_c$, 
 there is a unique abstract event in program's abstract execution trace $\absevent \in \absflow(c)$ of form $(l, \_, \_)$. 
@@ -459,7 +468,7 @@ Given a program ${c}$, we have:
 \]
 \end{lem}
 This lemma and proof is also 
-formalized in Lemma~\ref{lem:absevent_unique} in Appendix~\ref{apdx:reachability_soundness}.
+formalized in Lemma~\ref{lem:absevent_unique} in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
 
 Then, we build the edge for $c$'s abstract control flow graph as follos,
 \[
@@ -500,7 +509,7 @@ over $\constdom$, which is a subset of arithmetic expressions over $\mathbb{N}$ 
 For concise, $\mathcal{A}_{\lin}$ is used as the same meaning of $EXPR(\constdom)$ in the follows, to denote the arithmetic expression 
 over the symbolic variables, (i.e., $\mathbb{N}$ with input variables).
 \subsubsection{Abstract Control Flow Graph through an Example}
-
+\label{sec:abscfg_example}
 % 
 % Look at the two-round example again, its generated abstract control is shown as in Figure~\ref{fig:adapfun_tworound}(a).
 % In this abstract control flow graph, every vertex is a label,
@@ -533,7 +542,6 @@ over the symbolic variables, (i.e., $\mathbb{N}$ with input variables).
 %  then show how to compute the weight for every vertex in $\progV(c)$.
 %  \\
 %  Through the edges in $\absG(c)$, which correspond to $c$'s abstract transition between labels,
-
 %  \wq{In order to estimate weight for every vertex in the static analysis dependency graph($\progV(c)$), we want to find out the upper bound on 
 %  the number of times the labeled command (uniquely associated with a vertex in $\progV(c)$) may be executed when running the program.
 %  This information can be obtained by computing the reachability bound for every vertice in the abstract control flow graph ($\absW(c)$), because
@@ -552,10 +560,10 @@ over the symbolic variables, (i.e., $\mathbb{N}$ with input variables).
 % the number of times the labeled command (uniquely associated with a vertex in $\progV(c)$) may be executed when running the program.
 % This information can be obtained by computing the reachability bound for every vertex in the abstract control flow graph ($\absW(c)$), because
 % the vertices in the two graph share the same unique label, the line number. We can easily show that the reachability bound on one vertex of the abstract control flow graph is also the upper bound for the corresponding vertex in the static analysis dependency graph, both vertices share the same unique line number.}
-In order to compute the \emph{Path-Sensitve Reachability Bound}, his analysis firstly compute the \emph{Path-Insensitive Reachability Bound} for every transition.
-\\
+In order to compute the \emph{Path-Sensitive Reachability Bound}, this analysis firstly compute the \emph{Path-Insensitive Reachability Bound} for every transition.
+% \\
 \subsubsection{Path-Insensitive Reachability Bound Analysis}
-\label{sec:path_insensitive_rb}
+\label{sec:pathinsensitive_rb}
 The \emph{Path-Insensitive Reachability Bound} analysis is performed on the abstract control flow graph, 
 through the edges in $\absG(c)$.
 Every edge in $\absG(c)$ corresponds to the program $c$'s abstract transition between a pair of two labels.
@@ -755,7 +763,7 @@ its \emph{Path-Insensitive Reachability Bound} $w^p$
 \end{thm}
 
 \subsubsection{Path-Sensitive Reachability Bound Analysis}
-\label{sec:path_sensitive_rb}
+\label{sec:pathsensitive_rb}
 Then, the analysis perform the \emph{Path-Sensitive Reachability Bound} analysis through following steps.
 %
 \paragraph*{Program Rephrase through Path Collection on Abstract CFG}

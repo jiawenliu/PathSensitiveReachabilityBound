@@ -1,12 +1,13 @@
-\begin{lem}[Uniqueness of the Labeled Variables]
-    % \label{lem:lvar_unique}
-    For every program $c \in \cdom$ and every two labeled variables such that
-    $x^i, y^j \in \lvar(c)$, then $x^i \neq y^j$.
-    \[
-      \forall c \in \cdom, x^i, y^j \in \mathcal{L} \st x^i, y^j \in \lvar(c)\implies x^i \neq y^j.
-      \]
-  \end{lem}
+\begin{lem}[Uniqueness of the Program Labels]
+  % \label{lem:label_unique}
+  For every program $c \in \cdom$ and every two labels such that
+  $i, j \in \lvar(c)$, then $i \neq j$.
+  \[
+    \forall c \in \cdom, i, j \in \ldom \st i, j \in \lvar(c)\implies i \neq j.
+    \]
+\end{lem}
   \begin{proof}
+    The proof is trivially by induction on program $c$.
   \end{proof}
   \begin{lem}
     [Trace Non-Decreasing]
