@@ -1,5 +1,17 @@
 %
-
+A trace $\trace \in \mathcal{T} $ is a list of events, 
+collecting the events generated along the program execution. 
+\[
+\begin{array}{llll}
+\mbox{Trace} & \trace
+& ::= & [] ~|~ \trace :: \event
+\end{array}
+\]
+$\mathcal{T} $ represents the set of traces. 
+A trace can be regarded as the program history, 
+which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
+\\
+Below are some useful operators on trace.
   \begin{defn}[Trace Concatenation, $\tracecat: \mathcal{T} \to \mathcal{T} \to \mathcal{T}$]
 Given two traces $\trace_1, \trace_2 \in \mathcal{T}$, the trace concatenation operator 
 $\tracecat$ is defined as:
@@ -286,10 +298,12 @@ Its behavior is defined as follows,
 % \]
 % \begin{defn}
   The operator $\tlabel : \mathcal{T} \to \mathcal{P}{(\ldom)}$ gives the set of labels in every event belonging to 
-  a trace, whoes behavior is defined as follows,
+  a trace,
+  % , whoes behavior is 
+defined as follows,
 \[
   % \begin{array}{llll}
-\tlabel{(\trace  :: (\_, l, \_, \_)])} \triangleq \{l\} \cup \tlabel{(\trace )}
+\tlabel{(\trace  :: (\_, l, \_)])} \triangleq \{l\} \cup \tlabel{(\trace )}
 ~~~
 \tlabel({[ ]}) \triangleq \{\}
 % \end{array}

@@ -21,7 +21,7 @@
   \end{thm}
 Proof Summary:
 \begin{enumerate}
-\item Step 1 - 2: rely on soundness of path insensitive reachability bound by Theorem~\ref{thm:vertexweight_soundness}
+\item Step 1 - 2: rely on soundness of path insensitive reachability bound by Theorem~\ref{thm:pathinsensitive_rb_soundness}
 \\
 \item Step 3: Program Rephrase : soundness of Step - 1
 By the soundness of the abstract execution trace in Lemma~\ref{lem:abscfg_sound}
@@ -108,44 +108,120 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
           \config{\sum\limits_{\tpath \in TP} tRB(\tpath), \trace_0
           } \earrow v \implies  \vcounter(\vtrace, l) \leq v
           \]
-          %
+          For each transition path $\tpath \in TP$, let $\trace_t$ be the execution trace 
+          containing all the executions of $\tpath$
+          under initial trace $\trace_0$, then we know 
+          \[
+            \vcounter(\vtrace, l) \leq \sum_{\tpath \in TP} \vcounter(\vtrace_t, l) 
+          \]
+          Then it is sufficient to show 
+          \[
+          \forall v \in \mathbb{N} \st 
+          \config{\sum\limits_{\tpath \in TP} tRB(\tpath), \trace_0
+          } \earrow v \implies \sum_{\tpath \in TP} \vcounter(\vtrace_t, l) \leq v
+          \]
+          Taking arbitrary transition path $\tpath \in TP$, it is sufficient to show 
+          \[
+            \forall v \in \mathbb{N} \st 
+            \config{tRB(\tpath), \trace_0
+            } \earrow v \implies \vcounter(\vtrace_t, l) \leq v
+            \]
+                    %
           By the \emph{Global Loop Bound} computation and the uniqueness of the 
           nested loop chain from Lemma~\ref{lem:lpch_unique}, 
-          we have the only one loop chain $lpch(\tpath)$ for each 
-          transition path $\tpath \in TP$.
+          we have the only one loop chain $lpch(\tpath)$ for $\tpath$.
           \\
           Then it is sufficient to show 
           \[
             \forall v \in \mathbb{N} \st 
-          \config{\sum\limits_{\tpath \in TP} \prod_{LOOP_i \in lpch(\tpath)}lpRB(LOOP_i, \tpath), \trace_0
-          } \earrow v \implies  \vcounter(\vtrace, l) \leq v
+          \config{\prod_{LOOP_{t_i} \in lpch(\tpath)} lpRB(LOOP_{t_i}, \tpath), \trace_0
+          } \earrow v \implies  \vcounter(\vtrace_t, l) \leq v
         \]
         For each transition path $\tpath \in TP$, 
-        let $\{LOOP_n \to \cdots \to LOOP_i \to \tpath\}$
+        let $\{LOOP_{t_n} \to \cdots \to LOOP_{t_0} \to \tpath\}$
         be its loop chain $lpch(\tpath)$. 
-        Let $\rprog_i$ be the refined program for every while loop 
-        with label $LOOP_i \in lpch(\tpath)$ and $\trace_i, \trace_i' \in \mathcal{T}$ satisfying
+        Let $\rprog_{t_i}$ be the refined program for every while loop 
+        with label $LOOP_{t_i} \in lpch(\tpath)$ such that,
+        \[
+          \rprog_{t_{i}} = \cdots, LOOP_{t_{i - 1}}:\rprog_{t_{i - 1}}, i = n, \cdots, {1}.
+        \] 
+        Let $\trace_{t_i}, \trace_{t_i}' \in \mathcal{T}$ for $i = n, \cdots, t$ and $\trace' \in \mathcal{T}$ be the execution traces satisfying
         %
         \[
-            \config{c, \trace_0} \to^{*} \config{\rprog_n, \trace_0 \tracecat \trace_n'}
-        \to^{*} \config{\eskip, \trace_0 \tracecat \trace_n' \tracecat \trace_n}.
+          \begin{array}{l}
+          \config{c, \trace_0} \to^{*} \config{\rprog_{t_n};c', \trace_0 \tracecat \trace_{t_n}'}
+        \to^{*} \config{\rprog_{t_{n - 1}};c', \trace_0 \tracecat \trace_{t_n}' \tracecat \trace_{t_n}}
+        \to^{*} 
+        \\ \qquad 
+        \cdots \to^{*} \config{c', \trace_0 \tracecat \trace_{t_n}' \tracecat \cdots \tracecat
+        \trace_{t_0}'} \to^{*} \config{\eskip, \trace_0 \tracecat \trace_{t_n}' \tracecat \cdots 
+        \tracecat \trace_{t_0}' \tracecat \trace'}.
+          \end{array}
         \]
-        It is sufficient to show 
+        % It is sufficient to show 
+        % \[
+        %     \forall v \in \mathbb{N} \st
+        %     \config{
+        % %   \prod_{LOOP_i \in lpch(\tpath)}
+        % lpRB(LOOP_i, \tpath), \trace_0
+        %   } \earrow v \implies  \vcounter(\vtrace, l) \leq v
+        % \]        
+        By the label consistency and computation of the 
+        \emph{Nest Loop Chain}, we know
         \[
-            \forall v \in \mathbb{N} \st
-            \config{
-        %   \prod_{LOOP_i \in lpch(\tpath)}
-        lpRB(LOOP_i, \tpath), \trace_0
-          } \earrow v \implies  \vcounter(\vtrace, l) \leq v
-        \]        
-        By the label consistency, since $\trace = \trace_i' \tracecat \trace_i$, then
-        It is sufficient to show 
+          \vcounter(\vtrace_t, l) \leq \vcounter(\trace_{t_n}' \tracecat \cdots 
+          \tracecat \trace_{t_0}', l)
+          \] 
+          % $\trace_t = \trace_i' \tracecat \trace_i$, then
+        Then, it is sufficient to show 
         \[
-            \forall v \in \mathbb{N} \st
-            \config{
-        %   \prod_{LOOP_i \in lpch(\tpath)}
-          lpRB(LOOP_i, \tpath), \trace_0
-          } \earrow v \implies  \vcounter(\vtrace_i, l) \leq v
+          \forall v \in \mathbb{N} \st 
+        \config{\prod_{LOOP_{t_i} \in lpch(\tpath)} lpRB(LOOP_{t_i}, \tpath), \trace_0
+        } \earrow v 
+        \implies  \vcounter(\trace_{t_n}' \tracecat \cdots 
+        \tracecat \trace_{t_0}', l) \leq v
+      \]
+%
+Let $\trace_{t_i} \in \mathcal{T}$ for $i = n, \cdots, t$ 
+% and $\trace' \in \mathcal{T}$ 
+be the execution traces corresponds to the single execution of $\rprog_i$ under initial trace $\trace_0$.
+\\
+Since the evaluation results in different iterations doesn't change the program label,
+we know $\vcounter(\trace_{t_i}, l) = \vcounter(\trace_{t_i}', l)$ for two different iterations of $\rprog_i$.
+\\
+Then we know:
+\[
+  \vcounter(\vtrace_t, l) \leq 
+  \vcounter(\trace_{t_n}, l_{t_{n-1}}) \times \cdots 
+  \vcounter(\trace_{t_1}, l_{t_{0}}) \times \vcounter(\trace_{t_0}, l)
+  = \prod\limits_{LOOP_{t_i} \in lpch(\tpath)} \vcounter(\trace_{t_i}, l_{t_{i-1}})
+  \]
+%
+Then, it is sufficient to show 
+\[
+  \forall v \in \mathbb{N} \st 
+\config{\prod_{LOOP_{t_i} \in lpch(\tpath)} lpRB(LOOP_{t_i}, \tpath), \trace_0
+} \earrow v 
+\implies  
+\prod\limits_{LOOP_{t_i} \in lpch(\tpath)} \vcounter(\trace_{t_i}, l_{t_{i-1}})
+\]
+%
+Then taking arbitrary while loop $LOOP_i$ from $lpch(\tpath)$, it is sufficient to show
+% By the computation of \emph{Nested Loop Bound} in Definition~\ref{def:nested_loop_bound}, we know 
+% $lpRB(LOOP_{t_i}, \tpath)$ is the
+% bound for the number of $LOOP_{t_i}$'s execution iterations
+% %  will 
+% % bound the execution times of $LOOP_{t_0}$
+% % in each single execution of the $LOOP_{t_i}$ for every
+% such that, during these iterations, $LOOP_{t_0}$ will be executed. 
+% $LOOP_{t_i} \in lpch(\tpath)$.
+% 
+        \[
+          \forall v \in \mathbb{N} \st 
+          \config{lpRB(LOOP_i, \tpath), \trace_0
+          } \earrow v 
+          \implies  
+          \vcounter(\trace_i, l_{{i-1}})
         \]   
         By the computation of \emph{Nested Loop Bound} in Definition~\ref{def:nested_loop_bound},
         there are two cases:

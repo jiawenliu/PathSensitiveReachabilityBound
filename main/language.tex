@@ -1,13 +1,12 @@
 %
 %
 \subsection{Labeled Language}
-% \mg{It is ok to list all the operations in the appendix but for the main paper it is better to save space.}
 \[
 \begin{array}{llll}
 \mbox{Arithmetic Operators} 
 & \oplus_a & ::= & + ~|~ - ~|~ \times 
 %
-~|~ \div ~|~ \max ~|~ \min\\  
+~|~ \div ~|~ \emax ~|~ \emin\\  
 % ~|~ \div \\  
 \mbox{Boolean Operators} 
 & \oplus_b & ::= & \lor ~|~ \land
@@ -35,27 +34,12 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \\  
 %
 \mbox{Value} 
-& v & ::= & { n ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]}  ~|~ (r, x_1, \ldots, x_n) := c
-% \\ 
-% &&&
-% \highlight
-% {
-% ~|~ (r, x_1, \ldots, x_n) := c
-% }
-\\
+& v & ::= & { n ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
 %
-\mbox{Query Expression} 
-& {\qexpr} & ::= 
-& { \qval ~|~ \aexpr ~|~ \qexpr \oplus_a \qexpr ~|~ \chi[\aexpr]} 
-\\
-%
-\mbox{Query Value} & \qval & ::= 
-& {n ~|~ \chi[n] ~|~ \qval \oplus_a  \qval ~|~ n \oplus_a  \chi[n]
-    ~|~ \chi[n] \oplus_a  n}
-\\
 % \\%
 \mbox{Label} 
-& l & ::= & (n \in \mathbb{N} \cup \{\lin, \lex\}) ~|~ (l, n)
+& l & ::= & (n \in \mathbb{N} \cup \{\lin, \lex\}) 
+% ~|~ (l, n)
 \\ 
 %
 \mbox{Labeled Command} 
@@ -76,26 +60,11 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 % &&& 
 ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
 \\
-% &&& \text{\mg{I think it would be better to use quadruples for events, where the}}\\
-% &&& \text{\mg{first element is either a variable or a boolean expression and }}\\
-% &&& \text{\mg{the last is either a query value or some default value $\bullet$}}\\
-%
-% \mbox{Trace} & \trace
-% & ::= & \cdot | \trace \cdot \event | \trace \tracecat \trace 
-% \\
-%
 % \mbox{Trace} & \trace
 % & ::= & [] ~|~ \event:: \trace ~|~ \trace \tracecat \trace  \\
 \mbox{Trace} & \trace
-& ::= & [] ~|~ \trace :: \event\\
-% &&& \text{\mg{I don't understand why you need both :: and ++ as constructors.}}\\
-% &&& \text{\jl{Because append is to the left but we are adding element to the left in the OS}}\\
-% &&& \text{\jl{I was too sticky to the convention, it is a good idea to append to the left and just use $::$}}
-% %
-% \mbox{Event Signature} & \sig
-% & ::= & (x, l, n) | (x, l, n, \query) | (b, l, n)
-% \\
-% %
+& ::= & [] ~|~ \trace :: \event
+\\
 \end{array}
 \]
 % \todo{change trace notation into list, and update corresponding operator nations}
@@ -105,9 +74,9 @@ We use following notations to represent the set of corresponding terms:
 \[
 \begin{array}{lll}
 \mathcal{VAR} & : & \mbox{Set of Variables}  
-\\ 
-%
-\mathcal{VAL} & : & \mbox{Set of Values} 
+% \\ 
+% %
+% \mathcal{VAL} & : & \mbox{Set of Values} 
 % \\ 
 % %
 % \mathcal{QVAL} & : & \mbox{Set of Query Values} 
@@ -127,11 +96,6 @@ We use following notations to represent the set of corresponding terms:
 %
 \ldom  & : & \mbox{Set of Labels}  
 \\
-%%
-% \mathcal{VAL}  & : & \mbox{Set of Labeled Variables}  
-% \\
-%%
-% \dbdom  & : & \mbox{{Set of Databases}} 
 % \\
 %
 {\mathcal{T}} & : & \mbox{Set of Traces}
@@ -142,128 +106,54 @@ We use following notations to represent the set of corresponding terms:
 \end{array}
 \]
 $FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. To be precise,
-$FV(\aexpr)$, $FV(\bexpr)$ and $FV(\qexpr)$ represent the set of free variables in arithmetic
-expression $\aexpr$, boolean expression $\bexpr$ and query expression $\qexpr$ respectively.
-Labeled variables in $c$ is the set of assigned variables and all the free variables
-showing up in $c$ with a default label $in$. 
-The free variables
-showing up in $c$, which aren't defined before be used, are actually the input variables of this program.
+$FV(\aexpr)$ and $FV(\bexpr)$
+%  and $FV(\qexpr)$ 
+represent the set of free variables in arithmetic
+expression $\aexpr$ and boolean expression $\bexpr$
+%  and query expression $\qexpr$ 
+respectively.
 %
-% \begin{defn}[Assigned Variables (
-% % $\avar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-% $\avar : \cdom \to \mathcal{P}(\mathcal{VAR} \times \mathbb{N})$)]
-% % labelled Variables 
-% % (
-% % % $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-% % $\lvar : \cdom \to \mathcal{P}(\mathcal{VAR} \times \mathcal{L})$
-% \label{def:avar}
-% {\footnotesize
-% $$ \avar_{c} \triangleq
-%   \left\{
-%   \begin{array}{ll}
-%       \{{x}^l\}                   
-%       & {c} = [{\assign x e}]^{l} 
-%       \\
-%       \{{x}^l\}                   
-%       & {c} = [{\assign x \query(\qexpr)}]^{l} 
-%       \\
-%       \avar_{{c_1}} \cup \avar_{{c_2}}  
-%       & {c} = {c_1};{c_2}
-%       \\
-%       \avar_{{c}} \cup \avar_{{c_2}} 
-%       & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
-%       \\
-%       \avar_{{c}'}
-%       & {c}   = \ewhile ([\bexpr]^{l}, {c}')
-% \end{array}
-% \right.
-% $$
-% }
-% \end{defn}
-% %
-\\
-$\lvar_c \in \mathcal{P}(\ldom)$,
-represents the set of labels
-% assigned variables and labeles variables 
-for a labeled command $c$ defined as follows,
-% defined in Definition~\ref{def:lvar} and 
-% \ref{def:avar}.
-%
-\begin{defn}[Program Labels
-(
-% $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-$\lvar : \cdom \to \mathcal{P}(\ldom)$]
-\label{def:lvar}
-{\footnotesize
-$$
-  \lvar_{c} \triangleq
-  \left\{
-  \begin{array}{ll}
-      \{l\}                  
-      & {c} = [{\assign x e}]^{l} 
-      \\
-      \{l\}                
-      & {c} = [{\assign x \query(\qexpr)}]^{l} 
-      \\
-      \lvar_{{c_1}} \cup \lvar_{{c_2}}  \cup \{l\} 
-      & {c} = {c_1};{c_2}
-      \\
-      \lvar_{{c}} \cup \lvar_{{c_2}} \cup  \cup \{l\} 
-      & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
-      \\
-      \lvar_{{c}'} \cup \{l\} 
-      & {c}   = \ewhile ([\bexpr]^{l}, {c}')
-\end{array}
-\right.
-$$
-}
-\end{defn}
-%
-Every label and every labeled command in a program is unique, formally as follows with proof in Appendix~\ref{apdx:lemma_sec123}.
-\begin{lem}[Uniqueness of the Program Labels]
-  \label{lem:label_unique}
-  For every program $c \in \cdom$ and every two labels such that
-  $i, j \in \lvar(c)$, then $i \neq j$.
-  \[
-    \forall c \in \cdom, i, j \in \ldom \st i, j \in \lvar(c)\implies i \neq j.
-    \]
-\end{lem}
-%
-%
-% \subsection{Trace-based Operational Semantics for Language \mg{What is ``Language''?}}
 \subsection{{Trace-based Operational Semantics}}
-
-\subsubsection{Event}
+\label{sec:operational_semantics}
+% \subsubsection{Event and Trace}
+\paragraph*{Event}
+An event tracks useful information about each step of the evaluation, as a quadruple. Its first element is either 
+an assigned variable (from an assignment command) or a boolean expression (from the guard of if or while command), follows by 
+ the label associated to this event, the value evaluated either from the expression assigned to the variable,
+or the boolean expression in the guard.
+%
+\[
+\begin{array}{llll}
+  \mbox{Event} 
+  & \event & ::= & 
+  % ~|~ ({x}, l, v, \qval)
+  ({x}, l, v) ~ \mbox{Assignment Event} 
+  % \\
+  % &&& 
+  ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
+\end{array}
+\]
 Event projection operators $\pi_i$ projects the $i$th element from an event: 
 \\
 $\pi_i : 
-\eventset \to \mathcal{VAR}\cup \mbox{Boolean Expression}  \cup \mathbb{N} \cup \mathcal{VAL} \cup \mathcal{QVAL} $ 
-\\
-%
-Free Variables: $FV: \expr \to \mathcal{P}(\mathcal{VAR})$, 
-the set of free variables in an expression.
-\\
-$FV(\qexpr)$ is the set of free variables in the query expression $\qexpr$.
-
-\subsubsection{Trace}
+\eventset \to \mathcal{VAR}\cup \mbox{Boolean Expression}  \cup \mathbb{N} $
+% \subsubsection{Trace}
+\paragraph*{Trace}
 \input{trace}
-\subsubsection{Environment} $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to \mathcal{VAL} \cup \{\bot\}$
+%
+\paragraph{Environment} $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to( \mathbb{N} \cup \{\bot\})$
 \[
-\begin{array}{lll}
-\env(\trace  \traceadd (x, l, v, \bullet)) x \triangleq v
+\begin{array}{llll}
+\env(\trace  \traceadd (x, l, v)) x \triangleq v
 &
-\env(\trace \traceadd (y, l, v, \bullet)) x \triangleq \env(\trace) x, y \neq x
+\env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x, y \neq x
 &
-\env(\trace \traceadd (b, l, v, \bullet)) x \triangleq \env(\trace) x
-\\
-\env(\trace \traceadd (x, l, v, \qval)) x \triangleq v
-&
-\env(\trace \traceadd (y, l, v, \qval)) x \triangleq \env(\trace) x, y \neq x
+\env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
 &
 \env({[]} ) x \triangleq \bot
 \end{array}
 \]
-\subsubsection{Operational Semantics Rules}
+\paragraph{Operational Semantics Rules}
 {
 \begin{mathpar}
 \boxed{ \config{\trace,\aexpr} \aarrow v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
@@ -419,7 +309,7 @@ The trace based operational semantics rules are defined as follows,
 %
 \inferrule
 {
-\event = ({x}, l, v, \bullet)
+\event = ({x}, l, v)
 }
 {
 \config{[\assign{{x}}{\aexpr}]^{l},  \trace } 
@@ -433,7 +323,7 @@ The trace based operational semantics rules are defined as follows,
 {
   \config{\trace, b} \barrow \etrue
  \and 
- \event = (b, l, \etrue, \bullet)
+ \event = (b, l, \etrue)
 }
 {
 \config{{\ewhile [b]^{l} \edo c, \trace}}
@@ -451,7 +341,7 @@ c; \ewhile [b]^{l} \edo c,
 {
   \config{\trace, b} \barrow \efalse
  \and 
- \event = (b, l, \efalse, \bullet)
+ \event = (b, l, \efalse)
 }
 {
 \config{{\ewhile [b]^{l}, \edo c, \trace}}
@@ -499,7 +389,7 @@ c; \ewhile [b]^{l} \edo c,
 {
   \config{\trace, b} \barrow \etrue
  \and 
- \event = (b, l, \etrue, \bullet)
+ \event = (b, l, \etrue)
 }
 {
  \config{{
@@ -516,7 +406,7 @@ c; \ewhile [b]^{l} \edo c,
 {
  \config{\trace, b} \barrow \efalse
  \and 
- \event = (b, l, \efalse, \bullet)
+ \event = (b, l, \efalse)
 }
 {
 \config{{\eif([b]^{l}, c_1, c_2), \trace}}
