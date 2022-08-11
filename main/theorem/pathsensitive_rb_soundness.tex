@@ -42,9 +42,16 @@ by repeat chain
 \\
 By collecting loop chains.
 \\
-For every $LOOP_i$ on loop chain of $\tpath$, $lpRB(LOOP_i, LOOP_t)$ bound the execution times of $LOOP_t$ inside the $LOOP_i$
+For every $LOOP_i$ on loop chain of $\tpath$, $lpRB(LOOP_i, LOOP_t)$ bound 
+% the execution times of $LOOP_t$ inside the $LOOP_i$
+% bound for 
+the number of $LOOP_i$'s execution iterations
+        %  will 
+        % bound the execution times of $LOOP_{t_0}$
+        % in each single execution of the $LOOP_{t_i}$ for every
+        such that, during these iterations, $\tpath$ will be executed. 
 \\
-Then, $lRB(LOOP_t) = \prod_{LOOP_i} lpRB(LOOP_i, LOOP_t)$ is the bound of execution time for the $LOOP_t$ in program, globally.
+Then, $lRB(LOOP_t) = \prod\limits_{LOOP_i} lpRB(LOOP_i, LOOP_t)$ is the bound of execution time for the $LOOP_t$ in program, globally.
 \\
 $RB(\tpath) = lRB(LOOP_t) \times rpLB(LOOP_t, \tpath) $ is the bound of execution time for transition path $\tpath$ 
 in program globally.
@@ -206,6 +213,22 @@ Then, it is sufficient to show
 \prod\limits_{LOOP_{t_i} \in lpch(\tpath)} \vcounter(\trace_{t_i}, l_{t_{i-1}})
 \]
 %
+Let $r_n, \cdots, r_1$ be the number of iterations for each $LOOP_{t_n}, \cdots, LOOP_{t_0} \in lpch(\tpath)$, 
+such that
+during the execution,
+the $\tpath$ is executed in the $r_i$ iterations of loop $LOOP_{t_i}$.
+\\
+Then we know
+\[
+  \vcounter(\vtrace_t, l) \leq 
+  r_n \times \cdots 
+  r_1 \times \vcounter(\trace_{t_0}, l)
+  = 
+  % \vcounter(\trace_{t_0}, l) \times 
+  \prod\limits_{LOOP_{t_i} \in lpch(\tpath)} r_i
+  \]
+%  for each $LOOP_{t_n}, \cdots, LOOP_{t_0} \in lpch(\tpath)$ where 
+%
 Then taking arbitrary while loop $LOOP_i$ from $lpch(\tpath)$, it is sufficient to show
 % By the computation of \emph{Nested Loop Bound} in Definition~\ref{def:nested_loop_bound}, we know 
 % $lpRB(LOOP_{t_i}, \tpath)$ is the
@@ -219,26 +242,49 @@ Then taking arbitrary while loop $LOOP_i$ from $lpch(\tpath)$, it is sufficient 
         \[
           \forall v \in \mathbb{N} \st 
           \config{lpRB(LOOP_i, \tpath), \trace_0
-          } \earrow v 
+          } \earrow v_i 
           \implies  
-          \vcounter(\trace_i, l_{{i-1}})
+          r_i \leq v_i
         \]   
-        By the computation of \emph{Nested Loop Bound} in Definition~\ref{def:nested_loop_bound},
+  By the computation of \emph{Nested Loop Bound} in Definition~\ref{def:nested_loop_bound},
         there are two cases:
-        \subcaseL{$rpLB(LOOP_i, \tpath) \neq \bot$}
+  \\
+  Informal Proof Summary: 
+  \\
+  By the computation of \emph{Nested Loop Bound} in Definition~\ref{def:nested_loop_bound}, we know 
+$lpRB(LOOP_{t_i}, \tpath)$ is the
+bound for the number of $LOOP_{t_i}$'s execution iterations
+%  will 
+% bound the execution times of $LOOP_{t_0}$
+% in each single execution of the $LOOP_{t_i}$ for every
+such that, during these iterations, $LOOP_{t_0}$ will be executed. 
+$LOOP_{t_i} \in lpch(\tpath)$.
+%
+\subcaseL{$rpLB(LOOP_i, \tpath) \neq \bot$}
         In this case, we have $lpRB(LOOP_i, \tpath) = rpLB(LOOP_i, \tpath)$.
         \\
         By computation of \emph{Local Repeat Chain Bound}, we know 
-        $LOOP_i$ is the closest while loop containing transition path $\tpath$,
-        and it is sufficient to show:
+        $LOOP_i$ is the closest while loop containing transition path $\tpath$.
+        \\
+        Then we know $LOOP_i = LOOP_{t_0}$, and 
+        \[
+          r_0 = \vcounter(\trace_{t_0}, l)
+        \]
+    Since $\trace_{t_0}$ is the trace of a single execution of the while loop body $\rprog_{t_0}$ for $LOOP_{t_0}$,
+    it is equivalent to show that $rpLB(LOOP_{t_0}, \tpath)$ is the local bound for $\tpath$, i.e.,
+    % \\
+        % It is sufficient to show:
         \[
             \forall v \in \mathbb{N} \st
             \config{
         %   \prod_{LOOP_i \in lpch(\tpath)}
         \max \left\{ \prod\limits_{\rprog_j \in ch}  rLB(\rprog_j) 
-        ~\middle\vert~ ch \in rp\mathcal{C}(LOOP_i, \tpath) \right\}, \trace_0
-          } \earrow v \implies  \vcounter(\vtrace_i, l) \leq v
+        ~\middle\vert~ ch \in rp\mathcal{C}(LOOP_{t_0}, \tpath) \right\}, \trace_0
+          } \earrow v \implies  \vcounter(\vtrace_{t_0}, l) \leq v
         \]
+    % i.e., since $\trace_{t_0}$ is the trace of single execution of $\rprog_{t_0}$ for $LOOP_{t_0}$,
+    % it is equivalent to show that $rpLB(LOOP_{t_0}, \tpath)$ is the local bound for $\tpath$.
+    % \\
     For each $ch \in rp\mathcal{C}(LOOP_i, \tpath)$ and 
     every $\rprog_j \in ch$, let $ v_j \in \mathbb{N}$  and 
             $\trace_j', \trace_j \in \mathcal{T}$ be arbitrary natural number
@@ -258,7 +304,7 @@ Then taking arbitrary while loop $LOOP_i$ from $lpch(\tpath)$, it is sufficient 
                     \]
 Then we have 
 \[
-    \vcounter(\vtrace_i, l) 
+    \vcounter(\vtrace_{t_0}, l) 
     \leq \max_{ch \in rp\mathcal{C}(LOOP_i, \tpath)} 
     \prod\limits_{\rprog_j \in ch}
     \vcounter(\vtrace_j, l) \leq 
@@ -275,14 +321,40 @@ and evaluation traces satisfying the assumptions, we have this case proved.
         % \prod\limits_{\rprog_i \in lpchain(\tpath)}
         \frac{lpInit(LOOP_i, \tpath) - rFinal(\tpath)}{lpInit(LOOP_i, \tpath) - lpNext(LOOP_i, \tpath)}$.
         \\
-        This is a sound upper bound on execution times of 
-        transition path in while loop $\rprog_i$.
+        By the computation of the operators $lpInit$ and $lpNext$, and soundness of path-insensitive reachability bound 
+        in Theorem~\ref{thm:pathinsensitive_rb_soundness}, 
+        we know 
+        $lpRB(LOOP_i, \tpath)$ is the
+        bound for the number of $LOOP_i$'s execution iterations
+        %  will 
+        % bound the execution times of $LOOP_{t_0}$
+        % in each single execution of the $LOOP_{t_i}$ for every
+        such that, during these iterations, $LOOP_{t_0}$ will be executed. 
+        \\
+        Since $LOOP_{t_0}$ is the closest loop containing $\tpath$, so we know 
+        $lpRB(LOOP_i, \tpath)$  is also the sound bound for the number of $LOOP_i$'s execution iterations
+        %  will 
+        % bound the execution times of $LOOP_{t_0}$
+        % in each single execution of the $LOOP_{t_i}$ for every
+        such that, during these iterations, $\tpath$ will be executed. 
+        \\
+        Then we have
+        \[ 
+          r_i \leq lpRB(LOOP_i, \tpath) 
+          \]
+        Then this case is proved
+        % $LOOP_{t_i} \in lpch(\tpath)$.
         \\
         By the alternative computation method 
         $\kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ from \cite{GulwaniJK09},
-        we can also obtain a sound upper bound on the 
-        execution times of 
-        transition path $\tpath$ in while loop $\rprog_i$.
+        we can also obtain a sound upper bound on
+        % execution times of 
+        % transition path $\tpath$ in while loop $\rprog_i$.
+        the number of $LOOP_i$'s execution iterations
+        %  will 
+        % bound the execution times of $LOOP_{t_0}$
+        % in each single execution of the $LOOP_{t_i}$ for every
+        during which $\tpath$ is executed. 
         % \[
         %     \begin{array}{l}
         %     \forall (l, w_{t}) \in \exeRB(c),

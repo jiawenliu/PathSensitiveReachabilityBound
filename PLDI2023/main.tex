@@ -10,6 +10,9 @@
 %% For final camera-ready submission, w/ required CCS and ACM Reference
 %\documentclass[sigplan]{acmart}\settopmatter{}
 
+% \input{prelude}
+% \input{ldefs}
+% \newcommand{\highlight}[1]{\textcolor[rgb]{.0,0.0,1.0}{ #1}}
 
 %% Conference information
 %% Supplied to authors by publisher for camera-ready submission;
@@ -175,36 +178,173 @@ Text of abstract \ldots.
 
 
 \section{Introduction}
+Importance of analyzing the reachability bound.
+\\
+\textbf{Where it is required? How useful it can be? What impact it can bring?}
+\\
+\textbf{In one area: area-I}
+"One of the fundamental questions that needs to be answered for computing such resource bounds is: 
+How many times is a given control location inside the program that consumes these resources executed?"
+\\
+\textbf{In some other areas, II, III or ...}
+How many times is a given control location inside the program that performs certain operations executed?
+\\
+\textbf{Short Summary} of existing works and limitations
+\\
+\textbf{Short Summary} of the new technique/algorithm: major steps/technique used,  major outcome
+\\
+\textbf{Introduce} each step of the new technique/algorithm:
+\\
+\textbf{Introduce} new technique/ results or experimental results. 
+Summary of comparison with existing works. \cite{GulwaniJK09} \cite{Sumit2010rechability}, \cite{sinn2017complexity}
+\\
+\paragraph{Contributions}
+\begin{itemize}
+  \item New path-sensitive reachability bound algorithm
+  \item efficient bound computation method \cite{GulwaniJK09} 
+  \item implementation and good evaluation results
+\end{itemize}
+Outlines
+\section{Overview}
+\label{sec:overview}
+\textbf{Two Examples}
+\subsection{Multiple-Path While Loop}
+\textbf{The First Challenge/Problem from The Example, 
+and the Overview of the New Techniques Targeting This Problem}
+\subsection{Nested While Loop}
+\textbf{The Second Challenge/Problem from The Example,
+and the Overview of the New Techniques Targeting This Problem}
 
-Text of paper \ldots
+\section{{Program Model}}
+\label{sec:language}
+\subsection{Language}
+\subsection{Trace-Based Operational Semantics}
+% \input{language}
+% %
+% %
+\subsection{{Reachability Bound Formalization}}
+\label{sec:execution_rb}
+% \input{execution_reachabilitybound}
+% % 
+\section{Path Sensitive Reachability Bound Analysis}
+\label{sec:static_rb}
+% \input{static_reachabilitybound}
+% % % % 
+\subsection{Constraint Program}
+Constraint program is a directed labeled transition graph,
+\\
+Label: Difference Constraint $\cup$ Set of Boolean Expressions.
+\\
+Generating Steps: 
+\\
+Constraint Event : 1 edge of the Constraint Program, and 
+\\
+Constraint Execution Trace : the edge set of the Constraint Program.
+\\
+Soundness and Uniqueness.
+\\
+"Expressions"
+\subsection{Constraint Program Refinement}
+Algorithm Steps:
+\\
+Simple Transition Path from Constraint Program: "Path" with at most one simple loop.
+\\
+Choose annotation for two branches of if.
+\\
+Loop annotation for body of while.
+\\
+Refine the loop body by algorithm in \cite{GulwaniJK09}.
+%
+\subsection{Outside-In Algorithm}
+\label{sec:outsidein}
+Main Algorithm:
+\\
+Computation Operators Required by algorithm:
+\\
+Variable Constraint Collection:
+\\
+Initial Constraint State:
+\\
+=> Require Variable Resets.
+\\
+Final Constraint State:
+\\
+ => Require Variable Bound Computation.
+\\
+Variable Grade Decedent:
+\\
+ => Require Variable Decs and Incs.
+\\
+Operators Computation Details:
+\\
+Alternative/Equivalent Computation method from paper \cite{GulwaniJK09}.
+\subsection{Inside-Out Algorithm}
+\label{sec:insideout}
+Main Algorithm Steps:
+\\
+1. Local Repeat Chain Bound :
+\\
+=> Require : Repeat chain and Result from~\ref{sec:outsidein}.
+\\
+=> Compute : path sensitive local bound for every "Simple Transition Path", inside its closet while loop.
+\\
+2. Nested Loop Bound:
+\\
+=> Require : Loop Chain and Result from~\ref{sec:outsidein} and Step 1 above.
+\\
+=> Compute : For every "Simple Transition Path" the path-sensitive
+reachability bound for the number of the "Outside-Loop"'s execution iterations
+%  will 
+such that, during these iterations, the "Simple Transition Path" will be executed. 
+\\
+3. Global Loop Bound.
+\\
+=> Require : Result from~\ref{sec:outsidein}, Step 1 and Step 2 above.
+\\
+=> Compute : path sensitive reachability bound for every "Simple Transition Path".
+%
+\subsection{Path Sensitive Reachability Bound Computation}
+=> Require : Result from~\ref{sec:outsidein} and \ref{sec:insideout}.
+\\
+=> Compute : path sensitive reachability bound for every execution location (i.e., label).
+\section{Examples and Experimental Results}
+\label{sec:example}
 
 
 %% Acknowledgments
-\begin{acks}                            %% acks environment is optional
-                                        %% contents suppressed with 'anonymous'
-  %% Commands \grantsponsor{<sponsorID>}{<name>}{<url>} and
-  %% \grantnum[<url>]{<sponsorID>}{<number>} should be used to
-  %% acknowledge financial support and will be used by metadata
-  %% extraction tools.
-  This material is based upon work supported by the
-  \grantsponsor{GS100000001}{National Science
-    Foundation}{http://dx.doi.org/10.13039/100000001} under Grant
-  No.~\grantnum{GS100000001}{nnnnnnn} and Grant
-  No.~\grantnum{GS100000001}{mmmmmmm}.  Any opinions, findings, and
-  conclusions or recommendations expressed in this material are those
-  of the author and do not necessarily reflect the views of the
-  National Science Foundation.
+\begin{acks}                            
+  %% acks environment is optional
+  %% contents suppressed with 'anonymous'
+%% Commands \grantsponsor{<sponsorID>}{<name>}{<url>} and
+%% \grantnum[<url>]{<sponsorID>}{<number>} should be used to
+%% acknowledge financial support and will be used by metadata
+%% extraction tools.
+This material is based upon work supported by the
+\grantsponsor{GS100000001}{National Science
+Foundation}{http://dx.doi.org/10.13039/100000001} under Grant
+No.~\grantnum{GS100000001}{nnnnnnn} and Grant
+No.~\grantnum{GS100000001}{mmmmmmm}.  Any opinions, findings, and
+conclusions or recommendations expressed in this material are those
+of the author and do not necessarily reflect the views of the
+National Science Foundation.
 \end{acks}
-
 
 %% Bibliography
 %\bibliography{bibfile}
-
+\bibliography{main.bib}
 
 %% Appendix
 \appendix
 \section{Appendix}
+\subsection{Program Model Properties}
+\label{apdx:lemma_sec123}
+% \input{theorem/lem_section123}
 
-Text of appendix \ldots
+\subsection{Soundness of Path-Insensitive Reachability Bounds Estimation}
+\label{apdx:pathinsensitive_rb_soundness}
+% \input{theorem/pathinsensitive_rb_soundness}
+
+\subsection{Soundness of Path-Sensitive Reachability Bounds Estimation}
+\label{apdx:pathsensitive_rb_soundness}
 
 \end{document}
