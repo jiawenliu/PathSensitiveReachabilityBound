@@ -63,7 +63,12 @@
 \usepackage{subcaption} %% For complex figures with subfigures/subcaptions
                         %% http://ctan.org/pkg/subcaption
 
-
+\input{prelude}
+\input{ldefs}
+\newcommand{\highlight}[1]{\textcolor[rgb]{.0,0.0,1.0}{ #1}}
+\usetikzlibrary{shapes,arrows}
+\newcommand{\THESYSTEM}{\textsf{PsRB}}
+                        
 \begin{document}
 
 %% Title information
@@ -139,7 +144,23 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-Text of abstract \ldots.
+Goal: bound the number of visiting times for every program control location, i.e., Solve the 
+\emph{Reachability-Bound Program}.
+Motivation: State-of-Art Techniques 
+\\
+in paper~\cite{Sumit2010rechability,sinn2017complexity} : path-insensitive 
+\\
+in paper~\cite{GulwaniJK09} : path-sensitive and precise for estimating loop bounds, but over-approximate reachability times of control location with loop bound.
+\\
+in paper~\cite{ZulegerGSV11} : able to identify different paths from multiple-path loop, but aims to solve bounds for loop and path. They over-approximate reachability times of control location with loop bound.
+\\
+Contribution: 
+Solve the 
+\emph{Reachability-Bound Program} precisely /(improve accuracy),  in two challenging classes of programs: Program with Path-Sensitive Loops, and Program with Nested Loops 
+\\
+improve efficiency by abstracting program using the Difference Constraint-base method in \cite{sinn2017complexity}.
+\\
+Implementation.
 \end{abstract}
 
 
@@ -178,43 +199,11 @@ Text of abstract \ldots.
 
 
 \section{Introduction}
-Importance of analyzing the reachability bound.
-\\
-\textbf{Where it is required? How useful it can be? What impact it can bring?}
-\\
-\textbf{In one area: area-I}
-"One of the fundamental questions that needs to be answered for computing such resource bounds is: 
-How many times is a given control location inside the program that consumes these resources executed?"
-\\
-\textbf{In some other areas, II, III or ...}
-How many times is a given control location inside the program that performs certain operations executed?
-\\
-\textbf{Short Summary} of existing works and limitations
-\\
-\textbf{Short Summary} of the new technique/algorithm: major steps/technique used,  major outcome
-\\
-\textbf{Introduce} each step of the new technique/algorithm:
-\\
-\textbf{Introduce} new technique/ results or experimental results. 
-Summary of comparison with existing works. \cite{GulwaniJK09} \cite{Sumit2010rechability}, \cite{sinn2017complexity}
-\\
-\paragraph{Contributions}
-\begin{itemize}
-  \item New path-sensitive reachability bound algorithm
-  \item efficient bound computation method \cite{GulwaniJK09} 
-  \item implementation and good evaluation results
-\end{itemize}
-Outlines
+\label{sec:intro}
+\input{introduction}
 \section{Overview}
 \label{sec:overview}
-\textbf{Two Examples}
-\subsection{Multiple-Path While Loop}
-\textbf{The First Challenge/Problem from The Example, 
-and the Overview of the New Techniques Targeting This Problem}
-\subsection{Nested While Loop}
-\textbf{The Second Challenge/Problem from The Example,
-and the Overview of the New Techniques Targeting This Problem}
-
+\input{overview}
 \section{{Program Model}}
 \label{sec:language}
 \subsection{Language}

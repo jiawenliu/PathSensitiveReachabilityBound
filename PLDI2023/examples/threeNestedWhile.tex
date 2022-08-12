@@ -1,0 +1,53 @@
+    %
+    $N < m < n$\\
+    { \footnotesize
+    \begin{figure}
+    \centering
+    %
+    \begin{subfigure}{.3\textwidth}
+      \[
+        %
+        \begin{array}{l}
+            \kw{threeNestedWhile}(k, m, N) \triangleq \\
+            \clabel{ \assign{i}{0} }^{0} ; \\
+                \ewhile ~ \clabel{i < k}^{1} ~ \edo ~ \\
+                \qquad \Big(
+                 \highlight{\clabel{\assign{j}{i}}^{2}} ;\\
+                 \qquad \ewhile ~ \clabel{j > 0}^{3} ~ \edo ~ \\
+                 \qquad \qquad \Big(
+                  \clabel{\assign{j}{j-1}}^{4};
+                  \highlight{\clabel{\assign{w}{j}}^{5}};\\
+                  \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
+                  \Big(
+                    \clabel{\assign{w}{w + 1}}^{7}
+                      \Big); \\
+                      \qquad \qquad \clabel{\assign{i}{w}}^{8}
+                      \Big); \\
+                      \qquad \clabel{\assign{i}{i+1}}^{9}
+                  \Big)
+            \end{array}
+        \]
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \begin{centering}
+        \begin{tikzpicture}[scale=\textwidth/15cm,samples=200]
+    \end{tikzpicture}
+    \caption{}
+    \end{centering}
+    \end{subfigure}
+    %
+            \begin{subfigure}{.3\textwidth}
+                \begin{centering}
+                \begin{tikzpicture}[scale=\textwidth/11cm,samples=200]
+            % Variables Initialization
+             \end{tikzpicture}
+             \caption{}
+                \end{centering}
+                \end{subfigure}
+    \caption{
+    (a) An example of three nested loops with related iterator variables.
+    (b) The Constraint Program
+    (c) The Refined Program.}
+        \label{fig:threeWhile}
+    \end{figure}
+    }
