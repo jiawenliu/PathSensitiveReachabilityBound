@@ -146,21 +146,25 @@
 \begin{abstract}
 Goal: bound the number of visiting times for every program control location, i.e., Solve the 
 \emph{Reachability-Bound Program}.
+\\
 Motivation: State-of-Art Techniques 
 \\
 in paper~\cite{Sumit2010rechability,sinn2017complexity} : path-insensitive 
 \\
-in paper~\cite{GulwaniJK09} : path-sensitive and precise for estimating loop bounds, but over-approximate reachability times of control location with loop bound.
+in paper~\cite{GulwaniJK09} : path-sensitive and precise for estimating loop bounds,
+but over-approximate reachability times of control location as the loop bound.
 \\
 in paper~\cite{ZulegerGSV11} : able to identify different paths from multiple-path loop, but aims to solve bounds for loop and path. They over-approximate reachability times of control location with loop bound.
 \\
-Contribution: 
-Solve the 
-\emph{Reachability-Bound Program} precisely /(improve accuracy),  in two challenging classes of programs: Program with Path-Sensitive Loops, and Program with Nested Loops 
+Contributions: 
 \\
-improve efficiency by abstracting program using the Difference Constraint-base method in \cite{sinn2017complexity}.
+1. Solve the 
+\emph{Reachability-Bound Program} precisely /(improve accuracy),
+in two challenging classes of programs: Programs with Path-Sensitive Loops, and Programs with Nested Loops 
 \\
-Implementation.
+2. Improved efficiency by abstracting program using the Difference Constraint-base method in \cite{sinn2017complexity}.
+\\
+3. Efficient implementation and evaluation results.
 \end{abstract}
 
 

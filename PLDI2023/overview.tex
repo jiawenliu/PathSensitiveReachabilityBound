@@ -26,16 +26,17 @@ In this example,
 the precise reachability-bounds for control location $3$ and $4$ are both $\frac{k}{4}$,
 $\frac{k}{2}$ for location $2$, and $\frac{k}{2} + 1$ for location $1$.
 \\
-In order to know location $3$ and $4$ are executed $\frac{k}{4}$,
-we need to know location $3$ and $4$ is executed alternatively after each other.
-In other words, neither of them is executed twice in 2 consecutive iterations.
+In order to know the location $3$ and $4$ are executed $\frac{k}{4}$ times,
+we need to know the commands at line $3$ and $4$ are executed alternatively after each other
+during the iterations of the enclosed loop.
+In the other words, neither of them is executed twice in 2 consecutive iterations.
 \\
 However, by paper~\cite{Sumit2010rechability} where the \emph{reachability-bound} problem is defined,
-it can only derive the bound $k$ for location $3$ and $4$ by their path-insensitive method.
+it can only derive the bound $k$ for location $3$ and $4$ because of the path-insensitivity in their method.
 To best of my knowledge, there isn't any other later works solving the \emph{reachability-bound} problem.
 \\
 Among the works on loop bound analysis, \cite{GulwaniJK09} can compute the precise global
-loop bound (i.e., $\frac{k}{2}$) for this simple example in a path-sensitive way.
+loop bound (i.e., $\frac{k}{2}$) for this example path-sensitively.
 Using this global bound, we can compute the reachability-bound for location $1$ and $2$.
 However, reachability-bound for control location $3$ and $4$ are still unclear.
 % In order to know location $3$ and $4$ are executed $\frac{k}{4}$,
@@ -74,10 +75,10 @@ $2 \to 3 \to 1$
 $2 \to 4 \to 1$.
 \\
 \emph{Outside-In} computes the bound for every repeat pattern
-as $\frace{k}{4}$, $\frac{k}{4}$, $1$, and $1$ respectively.
+as $\frac{k}{4}$, $\frac{k}{4}$, $1$, and $1$ respectively.
 \\
 Then in the next step, we recover the \emph{reachability-bound} of location $3$ and $4$ globally from the
-repeat pattern through the \emph{Inside-Out} Algorithm.
+repeat pattern and the enclosed loops through the \emph{Inside-Out} Algorithm.
 \subsection{Nested Loops with Related Iterator}
 \label{sec:overview-nestedwhile}
 Figure~\ref{fig:threeWhile}(a) shows an example of the nested loops with related 
