@@ -240,19 +240,22 @@ Soundness and Uniqueness.
 \subsection{Constraint Program Refinement}
 Algorithm Steps:
 \\
-Simple Transition Path from Constraint Program: "Path" with at most one simple loop.
+Summarize the Cycle-Free Transition Paths from Constraint Program: "Path" with at most one simple loop.
 \\
-Choose annotation for two branches of if.
+Add $\rpchoose$ annotation for two branches of $\eif$.
 \\
-Loop annotation for body of while.
+Add Loop head annotation $LOOP_i$, and $\rprepeat$ annotation for the paths inside while body.
 \\
 Refine the loop body by algorithm in \cite{GulwaniJK09}.
 %
 \subsection{Outside-In Algorithm}
 \label{sec:outsidein}
-Main Algorithm:
+Main Algorithm Summary:
 \\
-Computation Operators Required by algorithm:
+compute local bound for every repeat pattern (i.e., $\rprepeat$) by a $\kw{dfs}$ strategy from the outside most $LOOP_i$, and $\rprepeat$
+to the innermost $\rprepeat$.
+\\
+Useful Computation Operators Required by the \emph{Outside-In} Algorithm:
 \\
 Variable Constraint Collection:
 \\
