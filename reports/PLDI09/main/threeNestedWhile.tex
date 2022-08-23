@@ -1,0 +1,305 @@
+\begin{example}[Nested Loop with Related Iterator]
+    \label{ex:threeNestedWhile}
+    %
+    %
+    { \small
+  \begin{figure}
+  \centering
+  \begin{subfigure}{.4\textwidth}
+    \begin{centering}
+    {\footnotesize
+    $
+    \begin{array}{l}
+        \kw{threeNestedWhile}(k, m, N) \triangleq \\
+        \clabel{ \assign{i}{0} }^{0} ; \\
+            \ewhile ~ \clabel{i < k}^{1} ~ \edo ~ \\
+            \qquad \Big(
+             \clabel{\assign{j}{0}}^{2} ;\\
+             \qquad \ewhile ~ \clabel{j < m}^{3} ~ \edo ~ \\
+             \qquad \qquad \Big(
+              \clabel{\assign{j}{j + 1}}^{4};
+              \clabel{\assign{w}{i}}^{5};\\
+              \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
+              \Big(
+                \clabel{\assign{w}{w + 1}}^{7}
+                  \Big); \\
+                  \qquad \qquad \clabel{\assign{i}{w}}^{8}
+                  \Big); \\
+                  \qquad \clabel{\assign{i}{i+1}}^{9}
+              \Big)
+        \end{array}
+    $
+    }
+    \caption{}
+    \end{centering}
+    \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \begin{centering}
+  %   \todo{abstract-cfg for two round}
+  \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
+  \draw[] (-7, 10) circle (0pt) node{{ $0$}};
+  \draw[] (0, 10) circle (0pt) node{{ $1$}};
+  \draw[] (6, 10) circle (0pt) node {{$\lex$}};
+  \draw[] (0, 7) circle (0pt) node{{$2$}};
+  \draw[] (0, 4) circle (0pt) node{{ $3$}};
+  \draw[] (-7, 4) circle (0pt) node{{ $9$}};
+  \draw[] (0, 1) circle (0pt) node{{ $4$}};
+  \draw[] (3, 1) circle (0pt) node{{ $5$}};
+  \draw[] (6, 1) circle (0pt) node{{ $6$}};
+  \draw[] (9, 1) circle (0pt) node{{ $7$}};
+  \draw[] (5, 6) circle (0pt) node{{ $8$}};
+  % Counter Variables
+  %
+  % Control Flow Edges:
+  \draw[ thick, -latex] (-6, 10)  -- (-0.5, 10);
+  \draw[ thick, -latex] (0, 9.5)  -- (0, 7.5) ;
+  \draw[ thick, -latex] (0, 6.5)  --  (0, 4.5) ;
+  \draw[ thick, -latex] (0, 3.5)  -- (0, 1.5) ;
+  \draw[ thick, -latex] (-0.5, 4)  -- (-6.5, 4) ;
+  \draw[ thick, -latex] (-6.5, 4.5)  to  [out=90,in=180]  (-0.5, 9.5);
+  \draw[ thick, -latex] (0.5, 10)  --  (5.5, 10);
+  \draw[ thick, -latex] (0.5, 1)  --  (2.5, 1);
+  \draw[ thick, -latex] (3.5, 1)  --  (5.5, 1);
+  \draw[ thick, -latex] (6.5, 1)  --  (8.5, 1);
+  \draw[ thick, -latex] (6, 1.5)  to [out=90,in=-60]  (5, 5.5);
+  \draw[ thick, -latex] (9, 1.5)  to  [out=120,in=30]  (6, 1.5);
+  \draw[ thick, -latex] (5, 6.5)  to  [out=120,in=0]  (0.5, 9.5);
+  % \draw[ thick, -latex] (-6, 10)  -- node [above] {$i \leq 0$}(-0.5, 10);
+  % \draw[ thick, -latex] (0, 9.5)  -- node [left] {$i < k$} (0, 7.5) ;
+  % \draw[ thick, -latex] (0, 6.5)  -- node [left] {$j \leq m$} (0, 4.5) ;
+  % \draw[ thick, -latex] (0, 3.5)  -- node [left] {$j > 0$} (0, 1.5) ;
+  % \draw[ thick, -latex] (-0.5, 4)  -- node [above] {$j \leq 0$} (-6.5, 4) ;
+  % \draw[ thick, -latex] (-6.5, 4.5)  to  [out=90,in=180]  node [left] {$i \leq i + 1$ }(-0.5, 9.5);
+  % \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (5.5, 10);
+  % \draw[ thick, -latex] (0.5, 1)  -- node [below] {$j \leq j - 1$}  (2.5, 1);
+  % \draw[ thick, -latex] (3.5, 1)  -- node [above] {$w \leq i$}  (5.5, 1);
+  % \draw[ thick, -latex] (6.5, 1)  -- node [below] {$w < N$}  (8.5, 1);
+  % \draw[ thick, -latex] (6, 1.5)  to [out=90,in=-60] node [left] {$w \geq N$}  (5, 5.5);
+  % \draw[ thick, -latex] (9, 1.5)  to  [out=120,in=30] node [above] {$w \leq w + 1$}  (6, 1.5);
+  % \draw[ thick, -latex] (5, 6.5)  to  [out=120,in=0]  node [right] {$i \leq i - 1$ }(0.5, 9.5);
+  \end{tikzpicture}
+  \caption{}
+    \end{centering}
+    \end{subfigure}
+  \caption{
+  (a) The Example of Nested Loop with Related Iterator
+    (b) The Standard Control Flow Graph}
+      \label{fig:threeNestedWhile}
+  \end{figure}
+  }
+\end{example}
+\newpage
+\begin{enumerate}
+    % \item  \textbf{The Abstract Execution Control Flow Graph} is generated in Figure~\ref{fig:threeNestedWhile}(b).
+    \item \textbf{Rewrite The Program into The Language Model in~\cite{GulwaniJK09}}
+    \[
+      \begin{array}{l}
+        \kw{threeNestedWhile}(k, m, N) \triangleq \\
+        \clabel{ \assign{i}{0} }^{0}; \\
+        \rprepeat(\rpasum(\clabel{i < k}^{1}); \clabel{\assign{j}{0}}^{2};\\
+        \qquad \rprepeat(\rpasum(\clabel{j < m}^{3}); \clabel{\assign{j}{j + 1}}^{4}; \clabel{\assign{w}{i}}^{5};\\
+        \qquad \qquad \rprepeat(\rpasum(\clabel{w < N}^{6}); \clabel{\assign{w}{w + 1}}^{7});\\
+        \qquad \qquad \rpasum(\clabel{w \geq N}^{6}); \clabel{\assign{i}{w}}^{8});\\
+        \qquad \rpasum(\clabel{j \geq m}^{3}); \clabel{\assign{i}{i+1}}^{9});\\
+        \rpasum(\clabel{i \geq k}^{1})
+        \end{array}
+      \]
+
+    \item \textbf{Program Refinement}.
+    \\
+    The refined program is as follows.
+    \[
+      \begin{array}{l}
+        \kw{threeNestedWhile}(k, m, N) \triangleq \\
+        \clabel{ \assign{i}{0} }^{0}; \\
+        \rpchoose\Big\{ \eskip, \\
+        \qquad \qquad \rprepeat(\rpasum(\clabel{i < k}^{1}); \clabel{\assign{j}{0}}^{2};\\
+        \qquad \qquad \qquad \qquad \rpchoose\Big\{ \eskip, 
+        \\ \qquad \qquad \qquad \qquad \qquad \qquad 
+        \rprepeat(\rpasum(\clabel{j < m}^{3}); \clabel{\assign{j}{j + 1}}^{4}; \clabel{\assign{w}{i}}^{5};
+        \\ \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+        \rpchoose\Big\{ \eskip,  \rprepeat(\rpasum(\clabel{w < N}^{6}); \clabel{\assign{w}{w + 1}}^{7})
+        \Big\}; 
+        \\ \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+          \rpasum(\clabel{w \geq N}^{6}); \clabel{\assign{i}{w}}^{8}) \Big\};
+          \\ \qquad \qquad \qquad \qquad 
+          \rpasum(\clabel{j \geq m}^{3}); \clabel{\assign{i}{i+1}}^{9}) 
+        \Big\};\\
+        \rpasum(\clabel{i \geq k}^{1})
+        \end{array}
+      \]
+    % \[
+    % \tpath_0 ; L_1: \rprepeat(\tpath_1; LOOP2: \rprepeat(\tpath_2; LOOP3 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
+    % \]
+Let
+$\begin{array}{l}
+ \text{ body1} = \rpasum(\clabel{i < k}^{1}); \clabel{\assign{j}{0}}^{2};
+% \qquad \qquad \qquad \qquad 
+\rpchoose\Big\{ \eskip, 
+% \\ 
+% \qquad \qquad \qquad \qquad \qquad \qquad 
+\rprepeat(\rpasum(\clabel{j < m}^{3}); \clabel{\assign{j}{j + 1}}^{4}; \clabel{\assign{w}{i}}^{5};
+\\ \qquad
+% \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+\rpchoose\Big\{ \eskip,  \rprepeat(\rpasum(\clabel{w < N}^{6}); \clabel{\assign{w}{w + 1}}^{7})
+\Big\}; 
+% \\ \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+  \rpasum(\clabel{w \geq N}^{6}); \clabel{\assign{i}{w}}^{8}) \Big\};
+  \\ \qquad
+  % \qquad \qquad \qquad \qquad 
+  \rpasum(\clabel{j \geq m}^{3}); \clabel{\assign{i}{i+1}}^{9}
+\end{array}
+$
+  \\
+, and $\begin{array}{l}
+    \text{ body2} = \rpasum(\clabel{j < m}^{3}); \clabel{\assign{j}{j + 1}}^{4}; \clabel{\assign{w}{i}}^{5};
+  %  \\ \qquad
+   % \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+   \rpchoose\Big\{ \eskip,  \rprepeat(\rpasum(\clabel{w < N}^{6}); 
+   \\ \qquad \qquad \clabel{\assign{w}{w + 1}}^{7})
+   \Big\}; 
+   % \\ \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+     \rpasum(\clabel{w \geq N}^{6}); \clabel{\assign{i}{w}}^{8}
+   \end{array}
+   $
+   \\
+, and $
+    \text{ body3} = \rpasum(\clabel{w < N}^{6}); \clabel{\assign{w}{w + 1}}^{7}
+   $
+       \item \textbf{Bound Computation} :
+    \\
+
+    $L_1$, $L_2$ and $L_3$ denote the while loop at location $1$, $3$ and $6$ respectively.
+    \\
+    Step-by-Step of the BOUND computation in Figure~5 in \cite{GulwaniJK09}.
+    \\
+    \newcommand{\BD}{\mathcal{B}}
+$\BD(\kw{threeNestedWhile})$
+    \[
+      \begin{array}{l}
+        \BD(\kw{threeNestedWhile})  \triangleq  (c_1 + c_2 + c_3, Z_1 \cup Z_2 \cup Z_3) 
+        \\ \qquad
+    \textbf{where} ~(c_1, Z_1) \triangleq  \BD(\clabel{ \assign{i}{0} }^{0})
+        \\ \qquad
+    \textbf{and} ~(c_2, Z_2) \triangleq  \BD( \rpchoose\Big\{\eskip, L_1: \rprepeat(\text{body1})\Big\})
+        \\ \qquad
+    \textbf{and} ~(c_3, Z_3) \triangleq  \BD(\rpasum(\clabel{i \geq k}^{1})) 
+        \\ \qquad = (3, \{(5 + (6 + 2 \times N) \times m, L_1)\})
+      \end{array}
+  \]
+  \[
+    \begin{array}{l}
+      \BD( \rpchoose\Big\{\eskip, L_1: \rprepeat(\text{body1}) \Big\})  \triangleq 
+      (\max\{c', c_1\}, Z' \cup Z_1) \\ \qquad
+      \textbf{where} ~ (c', Z')  \triangleq  \BD(\eskip)
+      \\ \qquad
+    \textbf{and} ~ (c_1, Z_1) \triangleq  \BD(L_1: \rprepeat(\text{body1}))
+      \\ \qquad = (1, \{(5 + (6 + 2 \times N) \times m, L_1)\})
+    \end{array}
+\]
+\[
+  \begin{array}{l}
+    \BD(L_1: \rprepeat(\text{body1}))  \triangleq (0, Z \cup (c_1, L_1)) \\ \qquad
+    \textbf{where} ~ c_1 = c' + \sum\limits_{(c'', L'') \in Z' \land L_1 = Parent(L'')}
+    % \text{Definition}
+    \\ \qquad
+    \textbf{and} ~
+    Z = \{(c'', L'') | (c'', L'') \in Z' \land L_1 \neq Parent(L'')\}
+    \\
+    \qquad
+    \textbf{and} ~ (c', Z') = \BD(\text{body1})
+    \\ \qquad = (0, \{(5 + (6 + 2 \times N) \times m, L_1)\})
+\end{array}
+\]
+This step calls the external 
+\\
+$BOUNDFINDERD(INIT(\kw{threeNestedWhile}, 1, 3), NEXT(\kw{threeNestedWhile}, 1, 3), \{k, m, n\})$.
+\\
+It computes the $I(L_2, L_1)$.
+$I(L_2, L_1)$ is the bound on total number of iterations of $L_2$ for each iteration of $L_1$.
+\\
+Assuming a perfect $BOUNDFINDERD$ computes this bound precisely, then we have $I(L_2, L_1) = m$.
+
+\[
+  \begin{array}{l}
+    \BD(\text{body1} )  \triangleq (1 + 1 + \max\{1, c_2\} + 1 + 1, \emptyset \cup Z_2) 
+    \\ \qquad
+    \textbf{where} ~ (c_2, Z_2) \land \BD(L_2 : \rprepeat(\text{body2}))
+    \\ \qquad = (5, \{( (6 + 2 \times N), L_2)\})
+\end{array}
+\]
+\[
+  \begin{array}{l}
+    \BD(L_2: \rprepeat(\text{body2}))  \triangleq (0, Z \cup (c_2, L_2)) \\ \qquad
+    \textbf{where} ~ c_2 = c' + \sum\limits_{(c'', L'') \in Z' \land L_2 = Parent(L'')}
+    % \text{Definition}
+    \\ \qquad
+    \textbf{and} ~
+    Z = \{(c'', L'') | (c'', L'') \in Z' \land L_2 \neq Parent(L'')\}
+    \\
+    \qquad
+    \textbf{and} ~ (c', Z') = \BD(\text{body2})
+    \\ \qquad = (0, \{(6 + 2 \times N), L_2\})
+\end{array}
+\]
+This step calls the external 
+\\
+$BOUNDFINDERD(INIT(\kw{threeNestedWhile}, 3, 6), NEXT(\kw{threeNestedWhile}, 3, 6), \{k, m, n\})$.
+\\
+$I(L_3, L_2)$ is the bound on total number of iterations of $L_3$ for each iteration of $L_2$.
+\\
+Assuming a perfect $BOUNDFINDERD$ computes this bound precisely, then we have the $I(L_3, L_2) = N$.
+
+\[
+  \begin{array}{l}
+    \BD(\text{body2} )  \triangleq (1 + 1 + 1 + \max\{1, c_3\} + 1 + 1, \emptyset \cup Z_3) 
+    \\ \qquad  
+    \textbf{where} ~  (c_3, Z_3) = \BD(L_3 : \rprepeat(\text{body3}))
+    \\ \qquad = (6, \{( 2, L_3)\})
+\end{array}
+\]
+\[
+  \begin{array}{l}
+    \BD(L_3 : \rprepeat(\text{body3}))  
+    \triangleq (0, Z \cup (c_3, L_3)) 
+    \\ \qquad
+    \textbf{where} ~ c_3 = c' + \sum\limits_{(c'', L'') \in Z' \land L_3 = Parent(L'')}
+    % \text{Definition}
+    \\ \qquad
+    \textbf{and} ~
+    Z = \{(c'', L'') | (c'', L'') \in Z' \land L_3 \neq Parent(L'')\}
+    \\
+    \qquad
+    \textbf{and} ~ (c', Z') = \BD(\text{body3})
+    \\ \qquad = (0, \{(2, L_3)\})
+\end{array}
+\]
+\[
+  \begin{array}{l}
+    \BD(\text{body3} = \rpasum(\clabel{w < N}^{6}); \clabel{\assign{w}{w + 1}}^{7})
+    \triangleq (c_1 + c_2, Z_1 \cup Z_2 ) 
+    \\ \qquad
+    \textbf{where} (c_1, Z_1) \triangleq  \BD( \rpasum(\clabel{w < N}^{6})) =  (1, \emptyset)
+    \\ \qquad
+    \textbf{and} (c_2, Z_2) \triangleq  \BD(\clabel{\assign{w}{w + 1}}^{7})  = (1, \emptyset)
+    \\ \qquad = (2, \emptyset)
+\end{array}
+\]
+BOUND($\kw{threeNestedWhile}$):
+\[
+  \begin{array}{l}
+    BOUND(\kw{threeNestedWhile})
+    \triangleq c + (c' \times T(L_1))
+    \\ \qquad  \textbf{where} ~
+    (c', L_1) \in \{(5 + (6 + 2 \times N) \times m, L_1)\}
+    \land c = 3 \land 
+    T(L_1) = n \land c' = 5 + (6 + 2 \times N) \times m
+    \\ \qquad = 3 + 5 \times n + 6 \times m \times n + 2 \times m \times n \times N
+\end{array}
+\]
+This step calls the perfect external
+\\
+$BOUNDFINDERD(INIT(L_1, 0, 1), NEXT(L_1, 0, 1), \{k, m, n\})$.
+It computes $T(L_1)$, which is the number of iterations for the while loop at location $1$.
+We assume that it perfectly computes the $T(L_1) = n$.
+\end{enumerate}

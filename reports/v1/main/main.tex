@@ -1,0 +1,58 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[table]{xcolor}
+
+
+
+\input{prelude}
+\input{ldefs}
+\newcommand{\highlight}[1]{\textcolor[rgb]{.0,0.0,1.0}{ #1}}
+
+\usetikzlibrary{shapes,arrows}
+\newcommand{\THESYSTEM}{\textsf{PsRB}}
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em]
+
+\begin{document}
+\title{Path-sensitive Reachability Bound}
+
+\author{}
+
+\date{}
+
+\maketitle
+%
+% \input{example_cousot}
+% \clearpage
+% %
+% % 
+\section{Path-sensitive Reachability Bound Algorithm}
+\label{sec:static_rb}
+\input{psrb-short-summary}
+% % % % 
+% \section{Examples}
+% \label{sec:example}
+\section{Example I: The Two Paths While Loop Example with Two Counters}
+\input{examples_psrb/whileTwoCounters}
+\section{Example II: Nested Loop with Related Iterator}
+\input{examples_psrb/threeNestedWhile}
+%
+% \clearpage
+% \appendix
+% \addcontentsline{toc}{section}{Appendices}
+% \section*{Appendices}
+
+
+\clearpage
+\bibliographystyle{plain}
+\bibliography{main.bib}
+\end{document}
+
+
+

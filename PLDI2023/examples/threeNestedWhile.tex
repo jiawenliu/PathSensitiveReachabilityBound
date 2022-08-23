@@ -1,5 +1,4 @@
     %
-    $N < m < n$\\
     { \footnotesize
     \begin{figure}
     \centering
@@ -8,16 +7,17 @@
       \[
         %
         \begin{array}{l}
+            N < m < n\\
             \kw{threeNestedWhile}(k, m, N) \triangleq \\
             \clabel{ \assign{i}{0} }^{0} ; \\
-                \ewhile ~ \clabel{i < k}^{1} ~ \edo ~ \\
+                L_1: \ewhile ~ \clabel{i < k}^{1} ~ \edo ~ \\
                 \qquad \Big(
                  \highlight{\clabel{\assign{j}{i}}^{2}} ;\\
-                 \qquad \ewhile ~ \clabel{j > 0}^{3} ~ \edo ~ \\
+                 L_3:  \qquad \ewhile ~ \clabel{j > 0}^{3} ~ \edo ~ \\
                  \qquad \qquad \Big(
                   \clabel{\assign{j}{j-1}}^{4};
                   \highlight{\clabel{\assign{w}{j}}^{5}};\\
-                  \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
+                  L_6:  \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
                   \Big(
                     \clabel{\assign{w}{w + 1}}^{7}
                       \Big); \\
@@ -36,14 +36,34 @@
     \end{centering}
     \end{subfigure}
     %
-            \begin{subfigure}{.3\textwidth}
-                \begin{centering}
-                \begin{tikzpicture}[scale=\textwidth/11cm,samples=200]
-            % Variables Initialization
-             \end{tikzpicture}
-             \caption{}
-                \end{centering}
-                \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \begin{centering}
+            $
+            \begin{array}{l}
+                0 \to 1 ; \\
+                L_1:\rprepeat(1 \to 2 \to 3 ; \\
+                \qquad L_2: \rprepeat(3 \to 4 \to 5 \to 6; \\
+                \qquad \qquad L_3 : \rprepeat(6 \to 7 \to 6); 6 \to 8 \to 3); \\
+                \qquad  3 \to 9 \to 1); 1 \to \lex
+    \end{array}
+    $
+     \caption{}
+        \end{centering}
+        \end{subfigure}
+\begin{subfigure}{.5\textwidth}    
+\begin{centering}
+    $
+    \begin{array}{l}
+        0 \to 1 ; \\
+        \rpchoose\{\eskip, L_1:\rprepeat(1 \to 2 \to 3 ; \\
+        \qquad \rpchoose\{\eskip, L_2: \rprepeat(3 \to 4 \to 5 \to 6; \\
+        \qquad \qquad \rpchoose\{\eskip, L_3 : \rprepeat(6 \to 7 \to 6)\}; 6 \to 8 \to 3)\}; \\
+        \qquad  3 \to 9 \to 1)\}; 1 \to \lex
+\end{array}
+$
+\caption{}
+\end{centering}
+\end{subfigure}
     \caption{
     (a) An example of three nested loops with related iterator variables.
     (b) The Constraint Program

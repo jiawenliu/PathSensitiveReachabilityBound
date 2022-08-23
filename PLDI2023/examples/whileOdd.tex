@@ -25,14 +25,35 @@
     \end{centering}
     \end{subfigure}
     %
-            \begin{subfigure}{.3\textwidth}
+\begin{subfigure}{.5\textwidth}
                 \begin{centering}
-                \begin{tikzpicture}[scale=\textwidth/11cm,samples=200]
-            % Variables Initialization
-             \end{tikzpicture}
+                    $
+                    % \begin{array}{l}
+    0 \to 1; 
+    \rprepeat(\rpchoose\{ 2 \to 3 \to 1, 2 \to 4 \to 1 \}); 
+    1 \to \lex
+            % \end{array}
+            $
              \caption{}
                 \end{centering}
                 \end{subfigure}
+\begin{subfigure}{.5\textwidth}    
+    \begin{centering}
+        $
+        \begin{array}{l}
+            0 \to 1; \\
+    \rpchoose\{
+        \eskip,\\
+        \qquad \rprepeat(\rprepeat(2 \to 3 \to 1); 2 \to 4 \to 1),
+        \\
+        \qquad \rprepeat(\rprepeat(2 \to 4 \to 1); 2 \to 3 \to 1)
+        \}; \\
+        1 \to \lex
+\end{array}
+$
+\caption{}
+\end{centering}
+\end{subfigure}
     \caption{
     (a) An example of multiple path while loop 
     (b) The Constraint Program
