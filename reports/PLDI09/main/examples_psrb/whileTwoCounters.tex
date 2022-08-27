@@ -1,0 +1,143 @@
+\begin{example}[Two Paths While Loop Example with Two Counters]
+  \label{ex:twoCountersWhile}
+  %
+  { \small
+  \begin{figure}
+  \centering
+  \begin{subfigure}{.4\textwidth}
+    \begin{centering}
+    {\small
+    $
+    \begin{array}{l}
+      \kw{twoCountersWhile}(n, m) \triangleq \\
+    \clabel{ \assign{i}{n} }^{0} ; \\
+    \clabel{ \assign{j}{0} }^{1} ; \\
+        \ewhile ~ \clabel{i > 0}^{2} ~ \edo ~ \\
+        \qquad \Big(
+          \eif(\clabel{j < m}^{3}, \\
+          \qquad \qquad \clabel{\assign{j}{j + 1}}^{4}; 
+          \clabel{\assign{i}{i - 1}}^{5},\\
+          \qquad \qquad \clabel{\assign{j}{0}}^{6});
+          \Big)
+        \end{array}
+        $
+    }
+    \caption{}
+    \end{centering}
+    \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \begin{centering}
+  %   \todo{abstract-cfg for two round}
+  \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
+  \draw[] (-8, 10) circle (0pt) node{{ $0$}};
+  \draw[] (-4, 10) circle (0pt) node{{ $1$}};
+  \draw[] (0, 10) circle (0pt) node{{ $2$}};
+  \draw[] (0, 7) circle (0pt) node{{$3$}};
+  \draw[] (-3, 4) circle (0pt) node{{ $4$}};
+  \draw[] (-8, 4) circle (0pt) node{{ $5$}};
+  \draw[] (4, 4) circle (0pt) node{{ $6$}};
+  % Counter Variables
+  \draw[] (6, 10) circle (0pt) node {\textbf{$\lex$}};
+  % \draw[] (6, 4) circle (0pt) node {{ $ex$}};
+  %
+  % Control Flow Edges:
+  \draw[ thick, -latex] (-7, 10)  -- node [above] {$i \leq n$}(-4.5, 10);
+  \draw[ thick, -latex] (-3, 10)  -- node [above] {$j \leq 0$}(-0.5, 10);
+  \draw[ thick, -latex] (0, 9.5)  -- node [left] {$i > 0$} (0, 7.5) ;
+  \draw[ thick, -latex] (0.5, 7)  -- node [below] {$ j \geq m $}  (4, 4.5);
+  \draw[ thick, -latex] (-7.5, 4.5)  to  [out=90,in=180]  node [left] {$i \leq i - 3$ }(-0.5, 9.5);
+  \draw[ thick, -latex] (4.5, 4)  to  [out=70,in=0]   node [right] {$j \leq 0 $}(0.5, 9.5);
+  \draw[ thick, -latex]  (-0.5, 7) -- node  {$j < m$}  (-3, 4.5) ;
+  \draw[ thick, -latex]  (-3.5, 4) -- node [above] {$j \leq j + 1$}  (-7, 4) ;
+  \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (5.5, 10);
+  % \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
+  \end{tikzpicture}
+  \caption{}
+    \end{centering}
+    \end{subfigure}
+  \caption{
+  (a) The Two Paths While Loop Example with Two Counters
+    (b) The Abstract Execution Control Flow Graph}
+      \label{fig:twoCountersWhile}
+  \end{figure}
+  }
+\end{example}
+
+\begin{enumerate}
+  \item  \textbf{The Abstract Execution Control Flow Graph} is generated in Figure~\ref{fig:twoCountersWhile}(b).
+
+  \item \textbf{Program Rephrase and Refinement}. 
+  \\
+  The loop free transition paths are computed as follows,
+  \[
+    \begin{array}{ll}
+\tpath_0 = (0 \to 1), (1 \to 2)
+&
+\tpath_2 = (2 \to 3), (3 \to 6), (6 \to 2)
+\\
+\tpath_1 = (2 \to 3), (3 \to 4), (4 \to 5), (5 \to 2)
+&
+\tpath_3 = (2 \to \lex)
+\end{array}
+\]
+\textbf{Rephrased Program}:
+\[
+\tpath_0 ; LOOP1: \rprepeat(\rpchoose\{\tpath_1, \tpath_2 \}); \tpath_3
+\]
+\textbf{Refined Program}:
+\[
+  \tpath_0 ; LOOP1: \rpchoose\{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , \rprepeat_1(\tpath_1) \}; \tpath_3
+  \]
+  \item \textbf{Outside-In Algorithm} : Compute Local Bound for Every program and sub programs.
+  \[
+    \begin{array}{l}
+        LB(\tpath_0) = 1
+        \\
+        LB(\rprepeat_1(\tpath_1)) = m 
+        \\
+        LB(\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor
+        \\
+        LB(LOOP1: \rpchoose(\rprepeat_2(\cdots), \rprepeat_1(\tpath_1))) 
+        = \max\{m, (m  + 1)\times \lfloor\frac{n}{m}\rfloor\}
+\end{array}
+\]
+\item \textbf{Inside-Out Algorithm}
+\begin{itemize}
+  \item \textbf{Repeat Chain Set}
+  \\
+  $rp\mathcal{C}(LOOP1, \tpath_1) = \{\rprepeat_1(\tpath_1), \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
+  $rp\mathcal{C}(LOOP1, \tpath_2) = \{\rprepeat_2(\cdots; \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
+  $rp\mathcal{C}(\_, \_) = \emptyset$ 
+  % \\
+  \item \textbf{{Local Repeat Chain Bound} }for Every Transition Path $\tpath$ on its Repeat Chain
+  \\
+  $rpLB(LOOP1, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \\
+  $rpLB(LOOP1, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
+  %
+  \item \textbf{Loop Chain} Set
+  \\
+  $lp\mathcal{C}(\tpath_0) = \{\tpath_0\}$ \qquad
+  $lp\mathcal{C}(\tpath_1) = \{LOOP1\to \tpath_1\}$ \\
+  $lp\mathcal{C}(\tpath_3) = \{\tpath_3\}$ \qquad
+  $lp\mathcal{C}(\tpath_2) = \{LOOP1\to \tpath_2\}$ 
+  \item \textbf{Nested Loop Bound }for Every Transition Path $\tpath$ on its Loop Chain
+  \\
+  $rpLB(LOOP1, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
+  $rpLB(LOOP1, \tpath_2) = \lfloor\frac{n}{m}\rfloor$  \\
+  $rpLB(\bot, \tpath_0) = 1$ \quad
+  $rpLB(\bot, \tpath_3) = 1$ 
+  \item \textbf{Path Sensitive Reachability Bound For Every Transition Path $\tpath$ }
+  \\
+  $psRB(\tpath_1) = n$ \quad
+  $psRB(\tpath_2) = \lfloor\frac{n}{m}\rfloor$ \quad
+  $psRB(\tpath_0) = 1$ \quad
+  $psRB(\tpath_3) = 1$ 
+\end{itemize}
+\item Step 7: Path Sensitive Reachability Bound Computation for Every Location
+\\
+$psRB(\{0, 1\}) = 1$ \qquad
+$psRB(\{\lex\}) = 1$ \qquad
+$psRB(\{6 \}) = \lfloor\frac{n}{m}\rfloor$ \\
+$psRB(\{4, 5 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
+$psRB(\{3, 2 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $ \\
+\end{enumerate}

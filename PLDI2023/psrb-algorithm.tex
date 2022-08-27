@@ -1,0 +1,349 @@
+\subsection{Constraint Program}
+\label{sec:abs_prog}
+% \textbf{Step 1: Program Abstract Execution Control Flow Graph}
+The Constraint program is an Abstract Transition Graph,
+% For a program $c$, this analysis first generates its abstract execution control flow graph notated as follows,
+\[\absG(c) =(\absV(c), \absE(c)).\]
+%
+$\absV(c)$ is the set of program $c$'s control location, each edge in $\absE(c)$ is a transition
+between two control locations if and only if there is a feasible control flow between the two locations.
+Each edge is annotated by a difference constraint \cite{sinn2017complexity} or a boolean expression
+from the set $\dcdom^{\top}$.
+% (denoted by $\dcdom^{\top}$).
+\\
+\textbf{Components:} 
+\\
+The Vertices Set $\absV(c) = \lvar(c)\cup\{{\lex}\}$, is the set of program $c$'s control locations.
+%  $\absV(c) = \lvar(c)\cup\{{\lex}\}$
+\\
+An edge $(l_1, dc, l_2) \in \ldom \times \dcdom^{\top} \times \ldom$, represents control flow from $l_1$ to $L_2$.
+% such that control flow from $l_1$ to $l_2$.
+\\
+An annotation $ dc: \dcdom^{\top}$,
+% Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
+describes the size change of the variables by executing commands from location $l_1$ to $l_2$.
+\\
+The annotation set $\dcdom^{\top}$: Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
+\\
+\textbf{Generating Steps:} 
+\\
+Step1: generating control flow edges $(l_1, \_, l_2)$ for all the locations $l_1, l_2 \in \lvar(c)$.
+\\
+Step2: computing annotation $dc$ for each edge $(l_1, \_, l_2)$.
+\\
+Input the commands from location $l_1$ to $l_2$.
+\\
+Output: a set of $\dcdom^{\top}$.
+\\
+% Constraint Event: 1 edge of the Constraint Program, and 
+% \\
+% Constraint Execution Trace : the edge set of the Constraint Program.
+\textbf{Theorem Guarantee:}
+Soundness and Uniqueness.
+\subsection{Constraint Program Refinement}
+\label{sec:refine}
+Algorithm Steps:
+\\
+\textbf{step1: Simple Transition Path Computation}.
+\\
+% Computes the Simple Transition Paths from Constraint Program,  
+% 
+Simple Transition Path: $\tpath \in \paths(\absG(c))$.
+\\
+For a constraint program $\absG(c)$,
+every \emph{simple transition path} $\tpath \in \paths(\absG(c))$,
+either contains one simple loop starting from a loop header $l$ and go back to the same loop header $l$;
+or doesn't constraint loop and starting from a loop header $l$ and go to a different loop header $l'$.
+\\
+\textbf{Step2: Repeat Pattern Computation}.
+\\
+% Repeat Pattern $\rprog \in \mathcal{P}({\absG(c)})$.
+% % \\
+A Repeat Pattern ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
+\[
+  \rprog := \tpath | \rprepeat(\tpath) | \rprog; \rprog
+\]
+Every $\rprog$ can consecutively execute at least twice, and
+ every sub-repeat patterns are distinct, i.e.,
+ $\rprog_i, \rprog_j \in \rprog_1; \cdots; \rprog_n$, $\rprog_i \neq \rprog_j$.
+ \\
+Through Path-Sensitive Refinement / Contextualization algorithm in \cite{GulwaniJK09, ZulegerGSV11},
+this step computes the repeat patterns over all \emph{simple transition path}s.
+% \\
+\textbf{Step3: Generate the Refined Programs}.
+\\
+For every loop $L$ with the header at location $l$,
+recursively 
+find all the repeat patterns $\rprog_l$ starting form $l$ and go back to $l$.
+\\
+Adding a loop head annotation $L$ on the beginning of every repeat pattern $L: \rprog_l$.
+\\
+Generating the set $\rpchoose(l) \triangleq \{ \rprog_l \} $
+for every loop. $\rpchoose(l) \in \mathcal{P}(\paths(\absG(c)))$.
+\\
+Generating the Refined Program,
+\\
+%
+$\rprog \triangleq \tpath_0; \rpchoose(l) ; \tpath_1; \cdots; \tpath_{\lex}$.
+%
+$\tpath_i$ is the simple path that is not in any while loop,
+and $\tpath_{\lex}$ is the simple path going to the program exit point.
+%  annotation for two branches of $\eif$.
+% them into
+%  of this loop header
+%s
+\\
+\textbf{Theorem Guarantee.}
+Soundness of the refinement,
+\subsection{Ranking / Local Bound Computation}
+\label{sec:ranking}
+Steps:
+\\
+\textbf{Step1: Variable Constraint Collection:}
+Identify the abstract events where each variable is increased, decreased and reset:
+\\
+$\inc: \mathcal{VAR} \to \mathcal{P}(\absE(c)) $
+the set of the abstract events where the variable increase.
+\\
+$\inc(x) = \{(e, c) | e = (l, x' \leq x + c, l') \land e \in \absE(c)\}$
+\\
+$\reset: \mathcal{VAR} \to \mathcal{P}(\absE(c)) $
+The set of the abstract events where the variable is reset.
+\\
+$\dec: \mathcal{VAR} \to \mathcal{P}(\absE(c)) $
+The set of abstract events where the variable decrease.
+\\
+\textbf{{Step2: Assign Ranks / Local Bound to Edges}}
+$\locbound: \absE(c) \to \mathcal{VAR} \cup \constdom$.
+ \\
+\textbf{Step3: Ranks / Local Bounds Estimation}
+Estimating the bounds on the (ranks'/ local bounds') maximum value.
+% , the 
+\\ 
+$ \varinvar: \mathcal{VAR} \cup \constdom \to \mathcal{A}_{\lin}$
+% \\
+% $\absclr: \absE(c) \to \mathcal{A}_{\lin}$
+\\
+$Incr(x) \triangleq \sum\limits_{(e, c) \in \inc(x)}\{\absclr(\absevent) \times v\}$
+\\
+Then estimate the bounds on the iteration times
+% of the ranks / local bounds 
+for each edge in a path-insensitive fashion.
+% \\
+% computing the loop bound in a path-insensitive way as the base step.
+% \\ 
+% $ \varinvar: \mathcal{VAR} \cup \constdom \to \mathcal{A}_{\lin}$
+\\
+$\absclr: \absevent \to \mathcal{A}_{\lin}$
+\\
+\textbf{Theorem Guarantee.}
+Soundness of the Path-Insensitive Local Bound / Rank Estimation.
+%  Require Variable Bound Computation.
+\subsection{Outside-In Algorithm}
+\label{sec:outinalg}
+\textbf{OutIn} algorithm computes the bound for iteration numbers of every repeat pattern $\rprog$,
+% (i.e., $\rprog$) 
+by a deep first search strategy from the outside most $\rprepeat$ annotation
+to the innermost one nested.
+\\
+This bound computation doesn't consider the influence of the outside $\rprog$
+when it computes the inner nested $\rprog'$.
+\\
+Necessary computation operators:
+%  Required by the \emph{Outside-In} Algorithm:
+\\
+The \emph{State}: 
+$\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of the edge annotations.
+%  constraints.
+\\
+The states of a refined program ($\rprog$):
+\\
+\emph{Initial State} ($\rfinit(\rprog)$), 
+\emph{Final State} ($\rffinal(\rprog)$), and \emph{Next State} ($\rfnext(\rprog)$)  $\in \absstate$.
+\\
+The \emph{Variable Grade Decedent}: $\varGD : \rprog \to \mathcal{A}_{in}$.
+% The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
+\\
+Computing the $\outinB$ bound for a refined program $\rprog$. 
+\\
+$\outinB(\rpchoose\{\rprog_i\}) =  \max\{\outinB(\rprog_i)\}$
+\\
+$\outinB(\rprepeat\{\rprog\}) =  \frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$
+\\
+$\outinB(\rpseq(\rprog_1, \rprog_2)) =  \outinB(\rprog_1)+ \outinB( \rprog_2)$
+\\
+$\outinB(\tpath) =  1$.
+\\
+The computations of the operations: $\rfinit(\rprog)$,
+$\rffinal(\rprog)$ $\rfnext(\tpath)$ and $\varGD : \rprog \to \mathcal{A}_{in}$ is in Appendix.
+Equivalent result can be computed for $\outinB(\rprepeat\{\rprog\})$ by alternative computation method from paper \cite{GulwaniJK09}.
+\subsection{Inside-Out Algorithm}
+\label{sec:inoutalg}
+Main Algorithm Steps:
+\\
+1. Repeat Chain Bound:
+\\
+=> Require : Repeat chain and $\outinB(\rprog)$ from~\ref{sec:outinalg}.
+\\
+=> Compute : path sensitive bound on the iteration numbers for every \emph{simple transition path} inside its closet while loop.
+\\
+Steps:
+\\
+\textbf{Repeat Chain} $\rpch(L, \tpath) \in \mathcal{P}(\rprog)$.
+\\
+$L, \tpath$ 
+repeat chain w.r.t a transition path
+is a list of repeat pattern $\rprog$ with loop header annotation $L$,
+and the $\tpath$ is contained by these repeat patterns recursively.
+% inside the same while loop $L$ as the $\tpath$. It is computed as follows,
+% For a refined while loop program $\rprog_{l} = L_l : \rprog \in \mathcal{RP}$, 
+% with its refined statement $\rprog \in \mathcal{RP}$,
+\\
+\textbf{Repeat chain set}.
+$\rpchset(L, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$.
+\\
+For each transition path in the refined program $\tpath \in \rprog$, 
+its repeat chain set 
+$\rpchset(L, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$
+ is a set of all the repeat chains for $L, \tpath \in \rprog$ in this program.
+\\
+\textbf{Repeat Chain Bound}. $\rpchB(L, \tpath, \rprog) \in \mathcal{A}_{in}$.
+\\
+For every transition path $\tpath$
+in its closet enclosed while loop $L$,
+% $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
+% \\
+% For each transition path $\tpath \in \rprog$,
+% \\
+% 1. First compute the path sensitive reachability choosing bound through their choose chain:
+% \\
+% $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
+% \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{\varGD(\rprog_i, \tpath)}$
+  \\
+  $\rpchB(L, \tpath,  \rprog) = \max \left\{ \prod\limits_{\rprog_i \in ch}  \outinB(\rprog_i) 
+  ~\middle\vert~ ch \in \rpchset(L_l, \tpath) \right\}
+  $
+  \\
+2. \emph{Related Loop Bound}:
+\\
+=> Require: $\rpchB(L, \tpath,  \rprog)$ from~\ref{sec:outinalg} and Step 1 above.
+\\
+=> Compute: For every \emph{simple transition path} the path-sensitive
+reachability bound for the \emph{parent loops}' iteration numbers
+such that, during these iterations, the \emph{simple transition path}'s closet enclosed loop will be executed. 
+\\
+%  will 
+\emph{Nested Loop Chain}.  $\lpch(\tpath, \rprog) \in \mathcal{P}(\rprog)$.
+\\
+  Each loop chain $\lpch(\tpath, \rprog) \in \mathcal{P}(\rprog)$ 
+  is a list of refined program $\rprog' \in \rprog$
+  $\tpath$ is nested in, and every $\rprog'$ has different loop header annotation.
+\\
+\highlight{
+\emph{Related Loop Bound}. ($\lpchB(L_i, \tpath, \rprog) \in \mathcal{A}_{\lin}$)
+\\
+Given a loop label $L_i \in \rprog$ and a transition path $\tpath \in \rprog$ in a refined program $\rprog$,
+the \emph{Related Loop Bound} $\lpchB(L_i, \tpath, \rprog)$ 
+the path-sensitive
+reachability bound on the number of $L_i$'s iteration numbers,
+such that, during these iterations, $\tpath$ will be executed. 
+%
+\begin{defn}[Related Loop Bound ]
+  \label{def:relatedloop_bound}
+For each transition path in a refined program $\tpath \in \rprog$
+and every loop $L_i \in \lpch(\tpath, \rprog)$,
+% where $\lpch(\tpath)  \in \rpchset(\tpath)$, 
+the \emph{Related Loop Bound} $\lpchB(L_i, \tpath, \rprog)$ is computed as follows,
+\\
+$\lpchB(L_i, \tpath, \rprog) = 
+\left\{
+\begin{array}{l}
+  \rpchB(L_i, \tpath, \rprog)  \\
+  \qquad \rpchB(L_i, \tpath) \neq \bot
+  \\
+  \frac{\lpinit(L_i, \tpath) - \rffinal(\tpath)}{\lpinit(L_i, \tpath) - \lpnext(L_i, \tpath)}
+  \\ \qquad o.w.
+\end{array}
+\right\}$ 
+% if $\rpchB(L_i, \tpath) \neq \bot$.
+% \\
+% $\lpchB(L_i, \tpath, \rprog) = 
+% % \prod\limits_{\rprog_i \in lpchain(\tpath)}
+% \frac{\lpinit(L_i, \tpath) - \rffinal(\tpath)}{\lpinit(L_i, \tpath) - \lpnext(L_i, \tpath)}$ o.w.
+\end{defn}
+}
+The computations of the operations $\lpinit(L_i, \tpath)$ and $\lpnext(L_i, \tpath)$ are in Appendix.
+%
+\\
+3. \emph{Inside-Out Bound}: $\inoutB(\tpath, \rprog) \in \mathcal{A}_{in}$.
+\\
+=> Require :
+$\outinB(\tpath)$ from~\ref{sec:outinalg}, $\rpchB(L, \tpath)$ from Step 1 and 
+$lp\mathcal{C}(\tpath)$
+Step 2 above.
+\\
+=> Compute : 
+For every transition path $\tpath \in \rprog$, its \emph{Inside-Out Loop Bound}
+ $\inoutB(\tpath, \rprog) \in \mathcal{A}_{in}$ is 
+% Compute 
+the path sensitive reachability bound on the iteration numbers of this path in this refined program $\rprog$. 
+%
+\begin{defn}[{Inside-Out Bound} ($\inoutB(\tpath, \rprog) \in \mathcal{A}_{in}$)]
+  \label{def:outin_bound}
+  Given a refined program $\rprog$, for every transition path $\tpath \in \rprog$, 
+  its \emph{Inside-Out Bound}
+  $\inoutB(\tpath, \rprog)$ is 
+ % Compute 
+ computed as follows,
+\[
+  \inoutB(\tpath, \rprog) =
+  \prod\limits_{L \in \lpch(\tpath, \rprog)} \rpchB(L, \tpath, \rprog)
+  \]
+\end{defn}
+\subsection{Path Sensitive Reachability Bound Computation}
+=> Require : $\outinB(\tpath, \rprog)$ and $\inoutB(\tpath, \rprog)$ from~\ref{sec:outinalg} and \ref{sec:inoutalg}.
+\\
+=> Compute : path sensitive reachability bound for every execution location (i.e., label).
+For every program control location $l \in \lvar(c)$, with $\rprog$ as its refined program,
+%  in a program $c$,
+%  refined program $l \in \lvar(\rprog)$,
+ $\psRB(l, \rprog)$ is its path sensitive reachability bound on the executing times of this location $l$.
+ \\
+ \begin{defn}
+  \label{def:label_psrb}
+Given a program $c$ with its refined program $\rprog \in \mathcal{RP}$
+%  with 
+% \emph{Global Loop Bound} $\inoutB(\tpath)$
+% computed for its every transition path $\tpath \in \rprog$  notated by $\inoutB(\tpath)$,
+%  for each of its transition path $\tpath \in \rprog$ 
+% with the \emph{Global Loop Bound}
+% computed as above, notated by $\inoutB(\tpath)$.
+the $\psRB(c, l)$ for every label $l \in \lvar(c)$ is computed as follows,
+\\
+\[ \psRB(c, l) = \sum\limits_{\tpath \in \rprog \land 
+l \in \tpath} \inoutB(\tpath)\]
+ \end{defn}
+\begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
+  \label{thm:pathsensitive_rb_soundness}
+Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
+and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
+% $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
+and $\config{\psRB(c, l), \trace_0} \earrow v$,
+% for some generated evaluation trace $\vtrace \in \mathcal{T}$,
+we have $ w(\trace_0) \leq v $.
+%
+\[
+  \begin{array}{l}
+  \forall (l, w_{t}) \in \exeRB(c),
+  % (x^l, w_{p}) \in \progV, 
+  \trace_0 \in \mathcal{T}_0(c), 
+  v \in \mathbb{N} \st
+  \config{\psRB(c, l), \trace_0} \earrow v
+  \implies
+  % \right\} 
+  w_{t}(\trace_0) \leq v
+  \end{array}
+\]
+\end{thm}
+%
+Proof of this theorem is in Appendix.

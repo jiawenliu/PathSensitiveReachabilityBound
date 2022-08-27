@@ -8,15 +8,15 @@
         %
         \begin{array}{l}
             N < m < n\\
-            \kw{threeNestedWhile}(k, m, N) \triangleq \\
+            \kw{threeNestedWhile}(n, m, N) \triangleq \\
             \clabel{ \assign{i}{0} }^{0} ; \\
-                L_1: \ewhile ~ \clabel{i < k}^{1} ~ \edo ~ \\
+                L_1: \ewhile ~ \clabel{i < n}^{1} ~ \edo ~ \\
                 \qquad \Big(
-                 \highlight{\clabel{\assign{j}{i}}^{2}} ;\\
-                 L_3:  \qquad \ewhile ~ \clabel{j > 0}^{3} ~ \edo ~ \\
+                 \highlight{\clabel{\assign{j}{0}}^{2}} ;\\
+                 L_3:  \qquad \ewhile ~ \clabel{j < m}^{3} ~ \edo ~ \\
                  \qquad \qquad \Big(
-                  \clabel{\assign{j}{j-1}}^{4};
-                  \highlight{\clabel{\assign{w}{j}}^{5}};\\
+                  \clabel{\assign{j}{j+1}}^{4};
+                  \highlight{\clabel{\assign{w}{i}}^{5}};\\
                   L_6:  \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
                   \Big(
                     \clabel{\assign{w}{w + 1}}^{7}
