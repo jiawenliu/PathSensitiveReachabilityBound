@@ -26,16 +26,16 @@ It can be summarized as the following steps:
 %
 %
 \begin{enumerate}
-\item  In Section~\ref{sec:abscfg}, we first construct an abstract control flow graph based on $c$, by computing an abstract transition 
+\item  In Section~\ref{sec:abscfg}, we first construct an abstract transition graph based on $c$, by computing an abstract transition 
 for every labeled command. 
 This graph is used in the following section from Section~\ref{sec:pathsensitive_rb-refine} to Section~\ref{sec:pathsensitive_rb-psrbcompute} for analyzing program's reachability bound.
 % see Section~\ref{sec:alg_vertexgen}
-\item Section~\ref{sec:pathsensitive_rb-refine} refines this program path sensitively, based on the abstract control flow graph.
+\item Section~\ref{sec:pathsensitive_rb-refine} refines this program path sensitively, based on the abstract transition graph.
 \item Section~\ref{sec:pathsensitive_rb-lbcompute} estimates path-insensitive reachability upper bound for every while loop command in $c$.
 \item Section~\ref{sec:pathsensitive_rb-outinalg} performs the Outside-In compute path-sensitive local bounds.
-\item Section~\ref{sec:pathsensitive_rb-inoutalg} computes path-sensitive reachability bound for each edge on the abstract control flow graph.
+\item Section~\ref{sec:pathsensitive_rb-inoutalg} computes path-sensitive reachability bound for each edge on the abstract transition graph.
 \item Section~\ref{sec:pathsensitive_rb-psrbcompute} computes the path-sensitive reachability bound for every label in this program $c$ by summarizing 
-the path-sensitive reachability bound of each edge on the abstract control flow graph.
+the path-sensitive reachability bound of each edge on the abstract transition graph.
 % \item The Section~\ref{sec:reachabilitybound_algorithm} computes program's reachability bound in two steps as follows.
 \end{enumerate}
 % Finally, with all the ingredients ready, we construct the final approximated program-based dependency graph in Section~\ref{sec:alg_graphgen}
@@ -96,11 +96,11 @@ the path-sensitive reachability bound of each edge on the abstract control flow 
 % \wq{To do: Add $\THESYSTEM$, a data flow analysis algorithm to scan the program and give a graph.}
 % {\THESYSTEM} consists of three phases: 
 % \begin{enumerate}
-%     \item Generating an abstract control flow graph with each edge representing an abstract event transiting between two command labels. 
+%     \item Generating an abstract transition graph with each edge representing an abstract event transiting between two command labels. 
 %     \item Computing the value bound invariant for each variable in the event and 
-%     the event transition closure over the abstract control flow graph,
+%     the event transition closure over the abstract transition graph,
 %     we get the reachability bound for each labeled command.
-%     \item Refining the abstract control flow graph with data-flow, by performing the reaching definition analysis, we generate a weighted data control flow graph.
+%     \item Refining the abstract transition graph with data-flow, by performing the reaching definition analysis, we generate a weighted data control flow graph.
 %     \item An algorithm to find the appropriate path in the weighted data control flow graph
 % \end{enumerate}
 
@@ -121,10 +121,10 @@ the path-sensitive reachability bound of each edge on the abstract control flow 
 % in spirit of some reachablility bound techiniques.
 
 
-% The edges and weight estimation are both performed on basis of an abstract control flow graph of the program, we first show how to generate this abstract execution control flow graph before the introduction of  the edge and weight estimation.  
+% The edges and weight estimation are both performed on basis of an abstract transition graph of the program, we first show how to generate this abstract transition graph before the introduction of  the edge and weight estimation.  
 
 % This analysis first 
-%  generate an abstract control flow graph
+%  generate an abstract transition graph
 %  over all program labels, 
 % in order to analyzing the data flow relations through variables assigned in every labeled command,
 % and the reaching time of each variable.
@@ -144,7 +144,7 @@ the path-sensitive reachability bound of each edge on the abstract control flow 
 % \begin{enumerate}
 %     % \item Generating 
 %     \item first generate 
-%     an abstract control flow graph
+%     an abstract transition graph
 %     %  over all labels,
 %     (remove?? with program's labels as vertices and abstract transitions as edges)
 %     in Section~\ref{sec:abscfg},
@@ -155,20 +155,22 @@ the path-sensitive reachability bound of each edge on the abstract control flow 
 
 %     % which are used as program's control locations,
 %     %
-%     \item then use the abstract control flow graph generated above, 
+%     \item then use the abstract transition graph generated above, 
 %     compute the weight of every vertex in $\progV(c)$ by computing a symbolic reachability bound for each label in Section~\ref{sec:alg_weightgen},
 %     % \\
 %     \item and then use the same graph again to estimate the edges between every vertex in $\progV(c)$ by computing the feasible data flow relation between every labeled variables in Section~\ref{sec:alg_edgegen}.
   
 % \end{enumerate}
 
-\subsection{Abstract Execution Control Flow Graph}
+\subsection{Constraint Program (Abstract Transition Graph)}
 \label{sec:abscfg}
 
-This estimation is performed on basis of an abstract control flow graph of the program, 
-we first show how to generate this abstract execution control flow graph before the introduction of  the edge and weight estimation.  
+This path-sensitive reachability-bound algorithm
+is performed on basis of a \emph{Constraint Program}.
+A constraint program is an abstract transition graph.
+We first show how to generate this abstract transition graph before the introduction of  the edge and weight estimation.  
 We discuss the vertices and edge of the
-abstract control flow graph for a program $c$, $\absG(c)$.
+abstract transition graph for a program $c$, $\absG(c)$.
 
 \subsubsection{Vertices Construction}
 \label{sec:abscfg-vertex}
@@ -184,92 +186,44 @@ the vertices of this graph is the set of $c$'s labels with the exit label ${\lex
 
 \subsubsection{Edge Construction}
 \label{sec:abscfg-edge}
-  Overall, the vertices can be easily collected and the key point of construction of the abstract execution
-  control flow graph for a program is the abstract execution trace, 
-  which relies on the abstraction of expression and abstract transition (we also call it abstract event).
-  To make it easy to understand, abstract control flow graph is a control flow graph, with annotations on every edge.
-It is generated as follows.
-  % The edge in the abstract control flow graph comes from the abstract execution trace of the program. 
+  The vertices can be easily collected and the key point of construction of the abstract
+  transition graph for a program is the edge.
+  It relies on the control flow analysis and the abstraction of the program's each command.
+  %  and abstract transition (we also call it abstract event).
+  To make it easy to understand, it
+  is a control flow graph, with annotations on every edge.
+  The annotation of each edge is generated by abstracting the program's every command.
+It is computed as follows.
+  % The edge in the abstract transition graph comes from the abstract execution trace of the program. 
   % The abstract execution trace, an abstract representation of the execution, consists of a set of abstract events. 
-%   The edge in the abstract control flow graph comes from the program's abstract events set $\absflow(c)$.
+%   The edge in the abstract transition graph comes from the program's abstract events set $\absflow(c)$.
 %   Each abstract event $(l_1, dc, l_2)$ in this set represents an edge in $\absE(c)$.
-%   % Then, every abstract transition in the abstraction execution trace corresponds to an edge in the abstract control flow graph. In another word, the edge $(l_1, dc, l_2)$ in the abstract control flow graph, represents an abstract transition 
+%   % Then, every abstract transition in the abstraction execution trace corresponds to an edge in the abstract transition graph. In another word, the edge $(l_1, dc, l_2)$ in the abstract transition graph, represents an abstract transition 
 % %  from $l_1$ to $l_2$, with a set of difference constraints $dc$. 
 %  Also notice, the difference constraints generated during the abstract transition appears in the edge as annotation.
 %
-\paragraph{Constraint Computation}
+\paragraph{Constraint}
 The constraint is computed for every expression in the program through expression abstraction.
-\\
-Operator: $\absexpr : \mathcal{A} \cup \mathcal{B} \to DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\}$
-\\
-Constraints $\dcdom^{\top}: DC(\mathcal{VAR}  \cup \constdom) \cup \booldom \cup \top$ .
-\\
-Difference Constraints $DC(\mathcal{VAR}  \cup \constdom)$: 
-\\
-% The norms $\vnorm = \mathcal{VAR}  \cup \constdom $
-The Symbolic Variables $\constdom = \mathbb{N} \cup \inpvar$, Boolean Expressions $\booldom$ and infinity $\top$.
-\\
-The set of all the inequality of form $x \leq y + v$ where $x \in \mathcal{VAR} $, 
+
+\highlight{Notations / Formal Definitions:}
+\begin{itemize}
+\item Operator: $\absexpr : \mathcal{A} \cup \mathcal{B} \to DC(\mathcal{VAR}  \cup \constdom)\cup \booldom \cup \{\top\}$
+%
+\item Constraints $\dcdom^{\top}: DC(\mathcal{VAR}  \cup \constdom) \cup \booldom \cup \top$  contains:
+%
+\begin{itemize}
+\item Difference Constraints $DC(\mathcal{VAR}  \cup \constdom)$ is the set of all the inequality of form $x \leq y + v$ where $x \in \mathcal{VAR} $, 
 $y \in \mathcal{VAR}$ and $v \in \constdom$.
-\\
-% $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
-% The expression assigned to the variable on the left hand of the assignment command is abstracted to an abstract value: (adopted from the expression abstraction method in paper \cite{sinn2017complexity}). The abstract value is expressed in the form of Difference constraint, denotated as $DC : \mathcal{VAR} \cup \constdom \to \mathcal{\mathcal{VAR} \times (\mathcal{VAR} \cup \constdom) } \times (\mathbb{Z} \cup \{\infty\})$.  $\constdom$ is called the Symbolic Constant defined as $\constdom \triangleq \mathbb{N} \cup \inpvar$
-% %  \cup \{\max{(\dbdom)}\} $, 
-% which consists of 
-% natural numbers $\mathbb{N}$,
-% the program's input variables $\inpvar$. 
-% % and a constant value $Q_m$ for estimating the upper bound of variables which are
-% % assigned by queries. 
+The \emph{Symbolic Variables} $\constdom = \mathbb{N} \cup \inpvar$ is the set of natural number and input variables. 
+%
+\item The Boolean Expressions $\booldom$
+%
+\item The infinity $\top$.
+\end{itemize}
+\end{itemize}
 
-% Give an instance of difference constraint used here,
-% $DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\}$ represents all the difference constraints over 
-% variable and symbolic constants. 
-% % The difference constraint $DC$ over $\mathcal{VAR} \cup \constdom$ 
-% It is a set of the inequality of form $x \leq y + v$ where $x \in \mathcal{VAR} $, 
-% $y \in \mathcal{VAR}  \cup \constdom$ and $v \in \mathbb{Z}$. 
-% This difference constraint is defined in the same way as
-% \cite{sinn2017complexity}. For concise, we use $\dcdom^{\top}$ to represent the $DC(\mathcal{VAR}  \cup \constdom) \cup \{\top\} \cup \mathcal{BEXPR}$.
-
-% We show the expression abstraction $\absexpr : \expr \to \mathcal{VAR} \to \dcdom^{\top} $ below.
-
-% We introduce the following notations and operations first
-% % an expression abstraction method based on the expression abstraction in paper \cite{sinn2017complexity}.
-% \\
-% % is enriched into $\constdom \triangleq \mathbb{N} \cup \inpvar \cup \{\max{(\dbdom)}\} $.
-% T
-% \\
-
-% represents the set of inequality over all $\mathcal{VAR}  \cup \constdom$. 
-
-% The symbolic constant is enriched into $\constdom \triangleq \mathbb{N} \cup \inpvar \cup \{\max{(\dbdom)}\} $.
-% It consists of 
-% natural number $\mathbb{N}$,
-% the symbolic constants $\inpvar$ (i.e., the set of the program's input variables), 
-% and a constant value $Q_m$ for estimating the upper bound of variables which are
-% assigned by queries.
-% \\
-% The symbolic constant is enriched into $\constdom \triangleq \mathbb{N} \cup \inpvar \cup \{\max{(\dbdom)}\} $.
-% \\
-
-% % $ \absdom: \mathcal{P}(DC(\mathcal{VAR}  \cup \constdom) \cup \{\top \})$:
-% \\
-% $\constdom: \mathbb{N} \cup \inpvar \cup \{\max{(\dbdom)}\} $ 
-% The  constant 
-% \\
-% % $DC(\mathcal{VAR}  \cup \constdom)$ represents the set of inequality over all $\mathcal{VAR}  \cup \constdom$.
-% \\
-
-% \[
-%   \begin{array}{ll} 
-%     \absexpr(y + c, x)  = x' \leq y + c  & c \in \mathbb{N} \land y \in (VAR \cup \constdom) \\
-%     \absexpr(y - c, x)  = x' \leq y - c  & c \in \mathbb{N} \land y \in (VAR \cup \constdom) \\
-%     \absexpr(v, x)  = x' \leq v + 0  & v \in (VAR \cup \constdom) \\
-%     \absexpr(\aexpr, x) = x' \leq 0 + \infty   & \aexpr \text{ doesn't have any of the forms as above} \\
-%     \absexpr(\qexpr, x)  = x' \leq 0 + Q_m & \qexpr \text{ is a query expression}  \\
-%     \absexpr(\bexpr, x) = x' \leq 0 + 1   & \bexpr \text{ is a boolean expression} \\
-%   \end{array}
-%   \]
-\begin{defn}{Expression Abstraction}
+\highlight{Computation Steps:}
+\begin{defn}{Constraint Computation}
   \[
     \begin{array}{ll} 
       \absexpr(x - v, x)  = x' \leq x - v  & x \in \grdvar \land v \in \mathbb{N} \\
@@ -329,13 +283,20 @@ over $\constdom$.
 \end{defn}
 The symbolic expression set is a subset of arithmetic expressions over $\mathbb{N}$ with input variables, 
 i.e., $\mathcal{A}_{S} \subseteq \mathcal{A}_{\lin}$.
-\subsubsection{Abstract Control Flow Graph through an Example}
-\paragraph{Abstract Initial and Final State}
-%
-The abstract initial state: $\absinit(c) \in \ldom$,
-The abstract Final State: $\absfinal(c) \in \mathcal{P}(\ldom \times \dcdom^{\top})$
+% \subsubsection{Abstract Transition Graph through an Example}
+\paragraph{Abstract Initial and Final State} are enriched program's initial and final states from the standard control flow analysis.
 
-The \emph{Abstract initial state} for a program $c$ is the initial label of this program.
+%
+\highlight{Notations / Formal Definitions:}
+\begin{itemize}
+\item The abstract initial state: $\absinit(c) \in \ldom$.
+%
+\item The abstract Final State: $\absfinal(c) \in \mathcal{P}(\ldom \times \dcdom^{\top})$
+\end{itemize}
+
+\highlight{Computation Steps:}
+\begin{itemize}
+  \item The \emph{Abstract initial state} for a program $c$ is the initial label of this program.
 This label corresponds to the first labeled command of this program 
 when executing this program.
 \\
@@ -352,8 +313,8 @@ Given a program $c$, its abstract initial state is computed as follows,
  \end{array}
  \]
 %
-
-The \emph{Abstract Final State} of the program $c$, 
+%
+\item The \emph{Abstract Final State} of the program $c$, 
 $\absfinal(c) \in \mathcal{P}(\ldom \times \dcdom^{\top})$
 is a set of pairs, with a label as first component and a constraint as the second component.
 Every pair in $\absfinal(c)$ corresponds to a labeled command of $c$,
@@ -375,15 +336,17 @@ $\absfinal: \cdom \to \mathcal{P}(\ldom \times \dcdom^{\top})$,
  \end{array}
  \]
  %
- \paragraph{Abstract Event} 
- \emph{Abstract Event}: 
-   $\absevent \in $
-   $\ldom \times \dcdom^{\top} \times \ldom$
-  % \emph{Abstract Execution Trace}: $\absflow \in \cdom \to \mathcal{P}( \ldom \times \dcdom^{\top} \times \ldom )$
-
- The abstract event is computed for w.r.t the program in Definition~\ref{def:absevent_compute}, 
-%  generated during computing its abstract execution trace, 
-its type is defined as follows,
+\end{itemize}
+ \paragraph{Abstract Event} is the edge between control locations in the abstract transition graph.
+ 
+ \highlight{Notations / Formal Definitions:}
+ \begin{itemize}
+  \item \emph{Abstract Event}: 
+  $\absevent \in $
+  $\ldom \times \dcdom^{\top} \times \ldom$
+  \item \emph{Abstract Event Computation}: $\absflow \in \cdom \to \mathcal{P}( \ldom \times \dcdom^{\top} \times \ldom )$
+ \end{itemize}
+ Its type is defined as follows,
  \begin{defn}[Abstract Event]
    \label{def:abs_event}
    Abstract Event: 
@@ -404,8 +367,12 @@ its type is defined as follows,
  where first component is a label from $\ldom$ and the second component is a constraint from $\dcdom^{\top}$.
  %
  For simplicity, we use $\mathcal{P}(\absevent)$ represent the power set of all abstract events.
-%  , and we have $\absflow(c) \in \mathcal{P}(\absevent)$.
 
+ \highlight{Computation Steps:}
+\\
+The abstract event is computed for w.r.t the program in Definition~\ref{def:absevent_compute}, 
+%  generated during computing its abstract execution trace, 
+%  , and we have $\absflow(c) \in \mathcal{P}(\absevent)$.
 %  Now, we  extract the abstract execution trace  $\absflow(c)$ for a program, which computes the 
 %  The \emph{Abstract Execution Trace} for program $c$ is a s
 The set of the abstract events $\absflow(c)$ for a program $c$
@@ -413,7 +380,7 @@ The set of the abstract events $\absflow(c)$ for a program $c$
 %  Its type is formally defined 
 is computed as follows in Definition~\ref{def:absevent_compute}.
  %
- \begin{defn}[Computing Abstract Events]
+ \begin{defn}[Abstract Event Computation]
  \label{def:absevent_compute}
   $\absflow \in \cdom \to \mathcal{P}( \ldom \times \dcdom^{\top} \times \ldom )$
   \end{defn}
@@ -449,8 +416,8 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
    For every event $\event$ with label $l$ in an execution trace $\trace$ of program $c$, 
    there is an abstract event in program's abstract execution trace of form $(l, \_, \_)$.  
    We also show the soundness of the abstract events computation in Appendix.
-  %  which says 
-  %  \wq{...}
+
+ \highlight{Theorem Guarantee:}
    \begin{lem}[Soundness of the Abstract Events Computation]
      \label{lem:abscfg_sound}
    Given a program ${c}$, we have:
@@ -492,28 +459,27 @@ This lemma and proof is also
 formalized in Lemma~\ref{lem:absevent_unique} in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
 
   \paragraph{Edge Construction}
-  we build the edge for $c$'s abstract control flow graph as follos,
+  we build the edge for $c$'s abstract transition graph as follos,
   \[
     \absE(c) = \{(l_1, dc, l_2) | (l_1, dc, l_2) \in \absflow(c)\}
     \]
-    The edge in the abstract control flow graph comes from the program's abstract events set $\absflow(c)$.
+    The edge in the abstract transition graph comes from the program's abstract events set $\absflow(c)$.
   Each abstract event $(l_1, dc, l_2)$ in this set represents an edge in $\absE(c)$.
-  % Then, every abstract transition in the abstraction execution trace corresponds to an edge in the abstract control flow graph. In another word, the edge $(l_1, dc, l_2)$ in the abstract control flow graph, represents an abstract transition 
+  % Then, every abstract transition in the abstraction execution trace corresponds to an edge in the abstract transition graph. In another word, the edge $(l_1, dc, l_2)$ in the abstract transition graph, represents an abstract transition 
 %  from $l_1$ to $l_2$, with a set of difference constraints $dc$. 
- Also notice, the difference constraints generated during the abstract transition appears in the edge as annotation.
+ The constraints generated in the abstract event appears in the edge as annotation.
 % We have a pre-processing algorithm to go through the programs and returns the list of labels associating with a loop and whose visiting times need to be analyzed.
 %
-\subsubsection{Abstract Control Flow Graph} 
-With the vertices $\absV(c)$ and edges $\absE(c)$ ready, we construct the abstract control flow graph, formally 
-% Through a program $c$'s abstract events computation, its abstract control flow graph is computed 
+\subsubsection{Constraint Program (Abstract Transition Graph) Construction} 
+With the vertices $\absV(c)$ and edges $\absE(c)$ ready, we construct the abstract transition graph, formally 
+% Through a program $c$'s abstract events computation, its abstract transition graph is computed 
 defined in 
 Definition~\ref{def:abs_cfg}.
 %
-\begin{defn}[Abstract Control Flow Graph]
+\begin{defn}[Abstract Transition Graph (Constraint Program)]
 \label{def:abs_cfg}
 Given a program $c$, 
-with its abstract control flow $\absflow(c)$
-its abstract control flow graph $\absG(c) =(\absV(c), \absE(c), \absW(c))$ is defined as follows,
+its \emph{abstract transition graph} (\emph{constraint program}) $\absG(c) =(\absV(c), \absE(c))$ is defined as follows,
 \\
 $\absE(c) = \{(l_1, dc, l_2) | (l_1, dc, l_2) \in \absflow(c)\}$,
 \\
@@ -535,11 +501,11 @@ $\absV(c) = \lvar(c)\cup\{l_{ex}\}$
 % over $\constdom$, which is a subset of arithmetic expressions over $\mathbb{N}$ with input variables.
 % For concise, $\mathcal{A}_{\lin}$ is used as the same meaning of $EXPR(\constdom)$ in the follows, to denote the arithmetic expression 
 % over the symbolic variables, (i.e., $\mathbb{N}$ with input variables).
-\subsubsection{Abstract Control Flow Graph through an Example}
+\subsubsection{Constraint Program (Abstract Transition Graph) through An Example}
 \label{sec:abscfg_example}
 % 
 % Look at the two-round example again, its generated abstract control is shown as in Figure~\ref{fig:adapfun_tworound}(a).
-% In this abstract control flow graph, every vertex is a label,
+% In this abstract transition graph, every vertex is a label,
 % corresponding to a label command in the program.
 % Each directed 
 % edge represents an abstract transition 
@@ -561,23 +527,33 @@ $\absV(c) = \lvar(c)\cup\{l_{ex}\}$
 %
 \subsection{\highlight{Program Refinement}}
 \label{sec:pathsensitive_rb-refine}
-In order to analyze the reachability bound path-sensitively, we first rewrite this program through two steps.
-
-  \paragraph{Simple Transition Path Computation}
+In order to analyze the reachability bound path-sensitively, we first refine the constraint program through two steps.
 %
-Every \emph{simple transition path},
-either contains one simple loop starting from a loop header $l$ and go back to the same loop header $l$;
-or doesn't constraint loop and starting from a loop header $l$ and go to a different loop header $l'$.
+  \paragraph{Simple Transition Path}
+%
+A \emph{simple transition path} is a path of a constraint program, $\tpath \in \paths(\absG(c))$.
+It either
+\begin{itemize}
+  \item contains only one loop (without any nested loop) starting from a loop header at location $l$ and go back to the same $l$;
+  \item or doesn't contain a loop, starting from a loop header $l$ (or the program entrance $l_0$)
+and ending with different loop header $l'$ (or the program exist $\lex$).
+\end{itemize}
   \begin{defn}[Simple Tansition Path]
   A simple transition path
-  $\tpath \in \paths(\absG(c))$, is a path on this program's abstract control flow graph $\absG(c)$ with 
-  \\
-  vertices sequence $(l_1 \to \cdots \to l_n)$ and
-  \\
-  edge sequence $(l_i, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, \cdots, n-1$,
-  \\
-  satisfying $l_i \neq l_j$ for all $l_i, l_j \in (l_1 \to \cdots \to l_{n - 1})$,
-  and $l_1, l_n$ are both the control locations of loop headers.
+  $\tpath \in \paths(\absG(c))$, is a path on this program's abstract transition graph $\absG(c)$ with 
+  \begin{itemize}
+  \item vertices sequence $(l_1 \to \cdots \to l_n)$ and
+  %
+  \item edge sequence $(l_i, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 1, \cdots, n-1$,
+  \end{itemize}
+  %
+  satisfying:
+  \begin{itemize}
+    \item $l_1 \to \cdots \to l_n \in \lvar(c)$,
+    \item $l_i \neq l_j$ for all $l_i\in (l_1 \to \cdots \to l_{n})$ and $l_j \in (l_1 \to \cdots \to l_{n - 1})$,
+    \item $l_1$ is the control location of a loop header or $l_1 = l_0$,
+    \item and $l_n$ is the control location of a loop header or $l_n = \lex$.
+  \end{itemize}
   \end{defn}
 
   % For the part of the graph not in any SCC:
@@ -586,114 +562,257 @@ or doesn't constraint loop and starting from a loop header $l$ and go to a diffe
   % \\
   %
 % \item 
-\paragraph{Repeat Pattern Computation}
-A Repeat Pattern ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
+\paragraph{Repeat Pattern}
+A \emph{Repeat Pattern} ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns of this program $c$. 
 \[
-  \rprog := \tpath | \rprepeat(\tpath) | \rprog; \rprog
+  \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
 \]
-Every $\rprog$ can consecutively execute at least twice, and
- every sub-repeat patterns are distinct.
+Every $\rprog'$ with the annotation $\rprepeat$, (for example, $\rpattern = \rprepeat(\rpattern')$)
+can consecutively execute at least twice.
+Every two sub-repeat patterns following each other in a $\rprog$ can execute in sequence, for example in $\rpattern = \rpattern_1; \rpattern_2$,
+$\rpattern_2$ can execute after $\rpattern_1$.
+Every sub-repeat patterns in the sequence are distinct.
 %  , i.e.,
 % $rprog_i, rprog_j \in \rprog_1; \cdots; \rprog_n$, $\rprog_i \neq \rprog_j$.
 % \\
-\begin{defn}[Repeat Pattern]
-  A simple path or sequence of repeat patterns
-  $$
-  \rprog := \tpath | \rprog; \rprepeat(\tpath) | \rprepeat(\tpath); \rprog
-  $$ 
-  satisfying,
-  \\
-  $\rprog$ can consecutively execute at least twice, and
-  \\
-  for every 
-  $\rprog_i, \rprog_j \in \rprog_1; \cdots; \rprog_n$, $\rprog_i \neq \rprog_j$.
+% \begin{defn}[Repeat Pattern]
+%   A \emph{Repeat Pattern} is a simple path or a sequence of \emph{Repeat Pattern}
+%   \[
+%     \rprog := \tpath ~|~ \rprepeat(\rprog) ~|~ \rprog; \rprog
+%   \] 
+%   satisfying,
+%   \begin{itemize}
+%   \item $\rprog$ can consecutively execute at least twice, and
+%   \item
+%   for every 
+%   $\rprog_i, \rprog_j \in \rprog_1; \cdots; \rprog_n$, $\rprog_i \neq \rprog_j$.
+%   \end{itemize}
+% \end{defn}
+%
+
+\highlight{\textbf{Formal Definition:}}
+\begin{defn}[Repeat Pattern of A Program]
+  Given a constraint program $\absG(c)$,
+  $\rpattern(c)$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, it is a simple path or
+  a sequence of \emph{repeat pattern}
+  has the following syntax
+  \[
+    \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
+  \] 
+  and satisfying,
+  \begin{itemize}
+  \item every sub-repeat pattern $\rpattern' \in \rpattern(c)$ with the annotation $\rpattern$
+  can consecutively execute twice
+  %  when executing this program $c$ 
+  w.r.t. some initial trace,
+  \item every sub-repeat patter in a sequence is distinct, i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and 
+  $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, $\rpattern_i \neq \rpattern_j$,
+  \item and every two continuous sub-repeat patters in a sequence can execute after each other w.r.t some initial trace,
+  i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and 
+  $\rpattern_{i - 1}, \rpattern_{i} \in \rpattern_1; \cdots; \rpattern_n$, 
+  $\rpattern_2$ can execute after $\rpattern_1$ under some initial trace.
+  \end{itemize}
 \end{defn}
 %
-Computation Steps:
+\highlight{\textbf{Computation Steps Summary:}}
+\begin{enumerate}
+  \item Checking the precondition and post-condition of every simple transition path,
+  \item 
+Recursively checking the precondition and post-condition of every $\rpattern$ in the output set.
+Append a pattern to another if the execution condition of the first one
+is true after the previous's executing condition is false.
+\item Repeating the two steps until the output set is stabilized.
+\end{enumerate}
+
+\highlight{\textbf{Pseudocode:}}
+\begin{algorithm}
+\caption{
+{Repeat Pattern Computation}
+\label{alg:repeat-pattern}
+}
+\begin{algorithmic}[1]
+\REQUIRE the constraint program $\absG(c)$
+% the target while loop with label $l$.
+\STATE  \textbf{Init} $R(c) = \emptyset$
 \\
-Through Path-Sensitive Refinement / Contexturalization algorithm \cite{GulwaniJK09, ZulegerGSV11},
-this step computes the repeat patterns over all \emph{simple transition path}s.
+\qquad Finding all simple transition paths $ \tpath_1, \cdots, \tpath_m \in \absG(c)$.
+\STATE  
+\textbf{For} every simple transition paths $\tpath_1, \cdots, \tpath_m$:
+%  having the same starting and ending label:
 \\
-  Refined program:
-  $\rprog \in \mathcal{RP}$.
-  % For a Loop $L$,
-  % computes all the transition Paths : $\tpath \in \absG(c)$
-  % ->  $\rprog \in \mathcal{RP}$
-  % in this loop and generate the refined statement.
-  \\
-  $p \triangleq \tpath $ if $\tpath \in \paths(\absG(c))$ and $\tpath \not\in SCC(\absG(c))$;
-  \\
-  $p \triangleq \rpchoose\{p_1, p_2 \}$ if $p_1$ and $p_2$ has the same head and end;
-  \\
-  $p \triangleq p_1; p_2$ if head of $p_1$ is the same as head of $p_2$ and either $p_1$ or $p_2$ isn't a simple path. 
-  % \\
-  % For the part of the graph not in some SCCs:
-  % \\
-  % For every while loop with guard label $l$:
-  % \\
-  % $p \triangleq \tpath $ if $\tpath \in \paths(\absG(c))$
-  \\
-  $p \triangleq L_l : \rprepeat(\rpchoose\{p_1, \cdots, p_m\})$ if head and end of $p'$ are both $l$;
-  
-  Given a rephrased program $p$, its refined program is computed as follows,
-  \\
-  $\rprog \triangleq \tpath $ if $p = \tpath$\\
-  $\rprog \triangleq \rpchoose\{\rprog_1, \rprog_2 \}$ where $p \triangleq \rpchoose\{p_1, p_2 \}$ and 
-    $\rprog_1$ and $\rprog_2$ are refined $p_1$ and $p_2$. 
-    \\
-  $\rprog \triangleq L_l : \kw{REFINE(p_w)}$  if $p = \rprepeat(p_w)$ and  $\kw{REFINE(p_w)}$ is the algorithm in \\
-  $\rprog \triangleq \kw{REFINE(p_1)}; \kw{REFINE(p_2)}$  if $p = p_1; p_2$ 
-\paragraph{Step3: Generate the Refined Program}.
-\\
-For every loop $L$ with the header at location $l$,
-recursively 
-find all the repeat patterns $\rprog_l$ starting form $l$ and go back to $l$.
-\\
-Adding a loop head annotation $L$ on the beginning of every repeat pattern $L: \rprog_l$.
-\\
-Generating the repeat pattern set $\rpchoose(l) \in \mathcal{P}(\paths(\absG(c)))$
-for every loop $L$ with the header at location $l$,
-$$\rpchoose(l) \triangleq \{ \rprog_l \}.$$
-% \\%
-Generating the Refined Program,
-%
-$$\rprog \triangleq \tpath_0; \rpchoose(l) ; \tpath_1; \cdots; \tpath_{\lex}.$$
-%
-$\tpath_i$ is the simple path that is not in any while loop,
-and $\tpath_{\lex}$ is the simple path going to the program exit point.
-% \end{enumerate}
-%
-% In order to estimate weight for every vertex in $\progV(c)$,
-%  we first show how to compute the reachability bound for every label in $c$
-%  % (i.e., every vertex in $\absV(c)$)
-%  (i.e., the $\absW(c)$), 
-%  then show how to compute the weight for every vertex in $\progV(c)$.
-%  \\
-%  Through the edges in $\absG(c)$, which correspond to $c$'s abstract transition between labels,
-%  \wq{In order to estimate weight for every vertex in the static analysis dependency graph($\progV(c)$), we want to find out the upper bound on 
-%  the number of times the labeled command (uniquely associated with a vertex in $\progV(c)$) may be executed when running the program.
-%  This information can be obtained by computing the reachability bound for every vertice in the abstract control flow graph ($\absW(c)$), because
-%  the vertices in the two graph share the same unique label, the line number. We can easily show that the reachability bound on one vertex of the actract control flow graph is also the upper bound for the corresponding vertex in the static analysis dependency graph, both vertices share the same unique line number.}
-%  We perform the symbolic reachability bound anaysis on the abstract control flow graph, 
-%  through the edges in $\absG(c)$, which correspond to $c$'s abstract transition between labels.
-%  we infer the invariant for every variable, and compute the transition closure for every abstract transition. By solving the closure
-%  with the invariants of variables involved in this closure for every transition, we compute
-%  the symbolic reachability bound of every commands corresponding to this transition.
-%  \\
-%  Specifically in four steps, Variable Modification Tracking, Local Bounds Computation,
-%  the symbolic reachability bound of every commands corresponding to this transition. Specifically, this analysis can be performed in four steps:
-%   Variable Modification Tracking, Local Bounds Computation,
-%  Invariant Inference and Closure Generation, and Reachability Bound Computation,
-% {In order to estimate weight for every vertex in the static analysis dependency graph($\progV(c)$), we want to find out the upper bound on 
-% the number of times the labeled command (uniquely associated with a vertex in $\progV(c)$) may be executed when running the program.
-% This information can be obtained by computing the reachability bound for every vertex in the abstract control flow graph ($\absW(c)$), because
-% the vertices in the two graph share the same unique label, the line number. We can easily show that the reachability bound on one vertex of the abstract control flow graph is also the upper bound for the corresponding vertex in the static analysis dependency graph, both vertices share the same unique line number.}
-% In order to compute the \emph{Path-Sensitive Reachability Bound}, this analysis firstly compute the \emph{Path-Insensitive Reachability Bound} for every transition.
+\quad Generating
+$\rpattern_{i} = (\tpath_i)$ and add into $R(c)$.
+%  otherwise $\rpattern_i = \tpath_i$.
 % \\
+% \quad Adding $\rpattern_{i}$ into $R(c)$.
+\STATE  \textbf{Loop} until there isn't new repeat patterns generated, i.e., $R(c)$ is stabilized.
+\STATE  \quad \textbf{For} every repeat pattern $\rpattern_i \in R(c)$ having the same starting and ending label:
+\STATE  \quad \quad Generating $\rpattern_{i}' = \rprepeat(\rpattern_i)$ if $\rpattern_i$ can consecutively execute twice.
+\STATE  \quad \textbf{For} every repeat pattern $\rpattern_1, \cdots, \rpattern_m \in R(c)$
+\STATE \quad \quad  Generate $\rpattern' = \rpattern_{i}; \rpattern_{j} $ 
+if the execution condition of $\rpattern_{j}$
+is true after $\rpattern_{j}$'s executing condition is false.
+\RETURN $R(c)$
+\end{algorithmic}
+\end{algorithm}
+% \\
+% % Through Path-Sensitive Refinement / Contextualization algorithm \cite{GulwaniJK09, ZulegerGSV11},
+% % this step computes the repeat patterns over all \emph{simple transition path}s.
+% \\
+%   $\rprog \in \mathcal{RP}$.
+%   % For a Loop $L$,
+%   % computes all the transition Paths : $\tpath \in \absG(c)$
+%   % ->  $\rprog \in \mathcal{RP}$
+%   % in this loop and generate the refined statement.
+%   \\
+%   $p \triangleq \tpath $ if $\tpath \in \paths(\absG(c))$ and $\tpath \not\in SCC(\absG(c))$;
+%   \\
+%   $p \triangleq \rpchoose\{p_1, p_2 \}$ if $p_1$ and $p_2$ has the same head and end;
+%   \\
+%   $p \triangleq p_1; p_2$ if head of $p_1$ is the same as head of $p_2$ and either $p_1$ or $p_2$ isn't a simple path. 
+%   % \\
+%   % For the part of the graph not in some SCCs:
+%   % \\
+%   % For every while loop with guard label $l$:
+%   % \\
+%   % $p \triangleq \tpath $ if $\tpath \in \paths(\absG(c))$
+%   \\
+%   $p \triangleq L_l : \rprepeat(\rpchoose\{p_1, \cdots, p_m\})$ if head and end of $p'$ are both $l$;
+%   Given a rephrased program $p$, its refined program is computed as follows,
+%   \\
+%   $\rprog \triangleq \tpath $ if $p = \tpath$\\
+%   $\rprog \triangleq \rpchoose\{\rprog_1, \rprog_2 \}$ where $p \triangleq \rpchoose\{p_1, p_2 \}$ and 
+%     $\rprog_1$ and $\rprog_2$ are refined $p_1$ and $p_2$. 
+%     \\
+%   $\rprog \triangleq L_l : \kw{REFINE(p_w)}$  if $p = \rprepeat(p_w)$ and  $\kw{REFINE(p_w)}$ is the algorithm in \\
+%   $\rprog \triangleq \kw{REFINE(p_1)}; \kw{REFINE(p_2)}$  if $p = p_1; p_2$ 
+\paragraph{Refined Program}
+A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
+is a set of repeat patterns, or sequence of sets of  repeat patterns
+% ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
+\[
+  \rprog :=  \rpchoose{\rpattern}| \rprog; \rprog.
+\]
+It satisfies,
+\begin{itemize}
+  \item every repeat pattern in the same set starts and ends with the same label
+  \item and for every two repeat patterns in two continuous sets in a sequence, the first repreat pattern has the same ending label
+    as the starting label of the second repeat pattern.
+    For example if
+    $\rprog = \rprog_0; \cdots; \rprog_n$, $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
+    then $\rpattern_1$ ends with the same label as $\rpattern_2$'s starting label.
+\end{itemize}
+%
+
+\highlight{\textbf{Formal Definition:}}
+\begin{defn}[Refined Program of A Program]
+  Given a constraint program $\absG(c)$,
+  its \emph{Refined Program} is either a set of repeat patterns, or a sequence of sets of  repeat patterns.
+  $$
+  \rprog := \{\rpattern\} | \rprog; \rprog
+  $$ 
+  satisfying, $\rprog = \rprog_1, \cdots; \rprog_n$ where for every $i$
+  $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
+  \begin{itemize}
+  \item every $ \in \rprog_i$ has the same starting and ending label,
+  \item
+  and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
+  $\rpattern_1$ ends with the same label as $\rpattern_2$'s starting label.
+  \end{itemize}
+\end{defn}
+%
+\highlight{\textbf{Computation Steps Summary:}}
+\begin{itemize}
+\item Computing the repeat pattern set $RP(c)$ by Algorithm~\ref{alg:repeat-pattern}.
+% 
+\item For all patterns which is a simple transition path and not in any SCC,
+generating a repeat pattern set for all
+repeat patterns starting and ending with the same label.
+\[
+  \rprog_{s} \triangleq 
+  \rpchoose{
+  \rpattern ~|~ l_1, l_2 \in \lvar(c) \land 
+  \rpattern = l_1 \to \cdots \to l_2 \in RP(c) 
+  \land  \rpattern \notin SCC
+    }
+\]
+%
+\item 
+For every \emph{outermost loop} with the header at location $l$,
+recursively 
+find all the repeat patterns $\rpattern_{i}, \cdots, \rpattern_{m}$ starting form $l$ and go back to $l$, where $m \in \mathbb{N}$.
+\\
+Adding a loop head annotation $l$ on the beginning of every repeat pattern $l: \rpattern$.
+\\
+% For every \emph{outermost loop} with the header at location $l$ as follows ,
+Generating a repeat pattern set for this loop recursively,
+\[
+  \rprog_l \triangleq 
+  \rpchoose{
+   l: \rpattern_{i}, \cdots, l: \rpattern_{m}
+  }
+\]
+% \\%
+\item
+Generating the \emph{refined program} $\rprog$ as a sequence of repeat pattern sets.
+%
+\[
+\rprog \triangleq \rprog_0; \cdots; \rprog_{\lex}
+\]
+%
+% $\tpath_0$ is the simple path with the program entrance as the starting point
+% and $\tpath_{\lex}$ is the simple path going to the program exit point.
+% \\
+Each repeat pattern set in $\rprog$ is either a set of simple transition paths $\rprog_{s}$ not in any while loop computed from step 1,
+or a set of repeat patterns for a while loop $\rprog_l$.
+\\
+$\rprog_0$ contains the repeat patterns with the program entrance as the starting point
+and $\rprog_{\lex}$ contains the repeat patterns going to the program exit point.
+%
+\end{itemize}
+%
+
+\highlight{\textbf{Pseudocode:}}
+% \todo{algorithm} 
+\begin{algorithm}
+\caption{
+{Program Refinement}
+\label{alg:prog_refine}
+}
+\begin{algorithmic}[1]
+\REQUIRE the constraint program $\absG(c)$
+\STATE  compute repeat pattern set $PR(c)$ by Algorithm~\ref{alg:repeat-pattern}
+% \\
+\STATE  \textbf{For} $\rpattern \in RP(c)$:
+\\ \quad 
+$\rprog_{s} \triangleq 
+  \rpchoose{
+  \rpattern ~|~ l_1, l_2 \in \lvar(c) \land 
+  \rpattern = l_1 \to \cdots \to l_2 \in RP(c) 
+  \land  \rpattern \notin SCC
+    }
+$
+\STATE \textbf{For} $\rpattern \in RP(c)$:
+\\ \quad
+$\rprog_l \triangleq 
+\rpchoose{
+ l: \rpattern_{i} ~|~ \rpattern \in RP(c) \land \text{ head and ending of } \rpattern \text{ are both } l.
+}$
+\STATE \textbf{For} every $\rprog_{s}$ and $\rprog_l$:
+\\ \quad
+      if any of them has a starting label equal to the ending label of another one,
+put them into a sequence.
+\\ 
+$\rprog \triangleq \rprog_0; \cdots; \rprog_{\lex}$.
+\RETURN $\rprog$
+\end{algorithmic}
+\end{algorithm}
+%
+%
 \subsection{\highlight{Ranking Function / Local Bound Computation}}
 \label{sec:pathsensitive_rb-lbcompute}
 % The \emph{Path-Insensitive Reachability Bound} analysis is performed 
-Ranking Function / Local Bound is computed on the abstract control flow graph, 
+Ranking Function / Local Bound is computed on the abstract transition graph, 
 through the edges in $\absG(c)$.
 Every edge in $\absG(c)$ corresponds to the program $c$'s abstract transition between a pair of two labels.
 We infer the invariant for every variable, and compute the transition closure for every abstract transition. By solving the closure
@@ -735,7 +854,7 @@ The set of the chain of abstract events where the variable is reset through the 
 \paragraph*{Assign Ranks / Local Bound to Edges}
 \begin{defn}[Ranks / Local Bounds Generatation]
   \label{def:lbgen}
-Given a program $c$ with its abstract control flow graph 
+Given a program $c$ with its abstract transition graph 
 $\absG(c) = (\absV, \absE)$
 \\
 Local Bounds Computation:

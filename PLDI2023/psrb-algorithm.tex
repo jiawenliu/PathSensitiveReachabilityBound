@@ -7,7 +7,7 @@ The Constraint program is an Abstract Transition Graph,
 %
 $\absV(c)$ is the set of program $c$'s control location, each edge in $\absE(c)$ is a transition
 between two control locations if and only if there is a feasible control flow between the two locations.
-Each edge is annotated by a difference constraint \cite{sinn2017complexity} or a boolean expression
+Each edge is annotated by a constraint
 from the set $\dcdom^{\top}$.
 % (denoted by $\dcdom^{\top}$).
 \\
@@ -19,12 +19,11 @@ The Vertices Set $\absV(c) = \lvar(c)\cup\{{\lex}\}$, is the set of program $c$'
 An edge $(l_1, dc, l_2) \in \ldom \times \dcdom^{\top} \times \ldom$, represents control flow from $l_1$ to $L_2$.
 % such that control flow from $l_1$ to $l_2$.
 \\
-An annotation $ dc: \dcdom^{\top}$,
+An annotation is a constraint from $\dcdom^{\top}$: Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
+\\
+A difference constraint $dc: \dcdom^{\top}$,
 % Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
-describes the size change of the variables by executing commands from location $l_1$ to $l_2$.
-\\
-The annotation set $\dcdom^{\top}$: Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
-\\
+describes the size changes of all the program variables by executing commands from location $l_1$ to $l_2$.
 \textbf{Generating Steps:} 
 \\
 Step1: generating control flow edges $(l_1, \_, l_2)$ for all the locations $l_1, l_2 \in \lvar(c)$.
@@ -44,55 +43,58 @@ Soundness and Uniqueness.
 \label{sec:refine}
 Algorithm Steps:
 \\
-\textbf{step1: Simple Transition Path Computation}.
+\textbf{Step1: Simple Transition Path}.
 \\
 % Computes the Simple Transition Paths from Constraint Program,  
 % 
 Simple Transition Path: $\tpath \in \paths(\absG(c))$.
 \\
-For a constraint program $\absG(c)$,
-every \emph{simple transition path} $\tpath \in \paths(\absG(c))$,
-either contains one simple loop starting from a loop header $l$ and go back to the same loop header $l$;
-or doesn't constraint loop and starting from a loop header $l$ and go to a different loop header $l'$.
-\\
+% For a constraint program $\absG(c)$,
+A \emph{simple transition path} is a path of a constraint program, $\tpath \in \paths(\absG(c))$.
+It either
+\begin{itemize}
+  \item contains only one loop (without any nested loop) starting from a loop header at location $l$ and go back to the same $l$;
+  \item or doesn't contain a loop, starting from a loop header $l$ (or the program entrance $l_0$)
+and ending with different loop header $l'$ (or the program exist $\lex$).
+\end{itemize}
+%
 \textbf{Step2: Repeat Pattern Computation}.
 \\
-% Repeat Pattern $\rprog \in \mathcal{P}({\absG(c)})$.
-% % \\
-A Repeat Pattern ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
+A \emph{Repeat Pattern} ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns of this program $c$. 
 \[
-  \rprog := \tpath | \rprepeat(\tpath) | \rprog; \rprog
+  \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
 \]
-Every $\rprog$ can consecutively execute at least twice, and
- every sub-repeat patterns are distinct, i.e.,
- $\rprog_i, \rprog_j \in \rprog_1; \cdots; \rprog_n$, $\rprog_i \neq \rprog_j$.
+Every $\rprog'$ with the annotation $\rprepeat$, (for example, $\rpattern = \rprepeat(\rpattern')$)
+can consecutively execute at least twice.
+Every two sub-repeat patterns following each other in a $\rprog$ can execute in sequence, for example in $\rpattern = \rpattern_1; \rpattern_2$,
+$\rpattern_2$ can execute after $\rpattern_1$.
+Every sub-repeat patterns in the sequence are distinct.
  \\
 Through Path-Sensitive Refinement / Contextualization algorithm in \cite{GulwaniJK09, ZulegerGSV11},
 this step computes the repeat patterns over all \emph{simple transition path}s.
 % \\
 \textbf{Step3: Generate the Refined Programs}.
 \\
-For every loop $L$ with the header at location $l$,
-recursively 
-find all the repeat patterns $\rprog_l$ starting form $l$ and go back to $l$.
-\\
-Adding a loop head annotation $L$ on the beginning of every repeat pattern $L: \rprog_l$.
-\\
-Generating the set $\rpchoose(l) \triangleq \{ \rprog_l \} $
-for every loop. $\rpchoose(l) \in \mathcal{P}(\paths(\absG(c)))$.
-\\
-Generating the Refined Program,
-\\
+A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
+is a set of repeat patterns, or sequence of sets of  repeat patterns
+% ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
+\[
+  \rprog :=  \rpchoose{\rpattern}| \rprog; \rprog.
+\]
+It satisfies,
+\begin{itemize}
+  \item every repeat pattern in the same set starts and ends with the same label
+  \item and for every two repeat patterns in two continuous sets in a sequence, the first repreat pattern has the same ending label
+    as the starting label of the second repeat pattern.
+    For example if
+    $\rprog = \rprog_0; \cdots; \rprog_n$, $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
+    then $\rpattern_1$ ends with the same label as $\rpattern_2$'s starting label.
+\end{itemize}
 %
-$\rprog \triangleq \tpath_0; \rpchoose(l) ; \tpath_1; \cdots; \tpath_{\lex}$.
-%
-$\tpath_i$ is the simple path that is not in any while loop,
-and $\tpath_{\lex}$ is the simple path going to the program exit point.
 %  annotation for two branches of $\eif$.
 % them into
 %  of this loop header
 %s
-\\
 \textbf{Theorem Guarantee.}
 Soundness of the refinement,
 \subsection{Ranking / Local Bound Computation}
