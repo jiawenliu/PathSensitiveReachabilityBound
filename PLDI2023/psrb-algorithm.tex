@@ -24,7 +24,8 @@ An annotation is a constraint from $\dcdom^{\top}$: Difference Constraints $\cup
 A difference constraint $dc: \dcdom^{\top}$,
 % Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
 describes the size changes of all the program variables by executing commands from location $l_1$ to $l_2$.
-\textbf{Generating Steps:} 
+\\
+\textbf{Computation Steps:} 
 \\
 Step1: generating control flow edges $(l_1, \_, l_2)$ for all the locations $l_1, l_2 \in \lvar(c)$.
 \\
@@ -75,20 +76,19 @@ this step computes the repeat patterns over all \emph{simple transition path}s.
 % \\
 \textbf{Step3: Generate the Refined Programs}.
 \\
-A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
-is a set of repeat patterns, or sequence of sets of  repeat patterns
+A \emph{Refined Program} for a program $c$
+% ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
+is either a repeat pattern, or a set of refined program, or sequence of refined program
 % ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
 \[
-  \rprog :=  \rpchoose{\rpattern}| \rprog; \rprog.
+  \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
 \]
 It satisfies,
 \begin{itemize}
-  \item every repeat pattern in the same set starts and ends with the same label
-  \item and for every two repeat patterns in two continuous sets in a sequence, the first repreat pattern has the same ending label
-    as the starting label of the second repeat pattern.
-    For example if
-    $\rprog = \rprog_0; \cdots; \rprog_n$, $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
-    then $\rpattern_1$ ends with the same label as $\rpattern_2$'s starting label.
+  \item every refined program in the same set starts and ends with the same label
+  \item and for every two sub-refined programs following each other in a sequence,
+    the first refined program's ending label is the same 
+    as the starting label of the second refined program.
 \end{itemize}
 %
 %  annotation for two branches of $\eif$.
@@ -222,8 +222,12 @@ in its closet enclosed while loop $L$,
 % $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
 % \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{\varGD(\rprog_i, \tpath)}$
   \\
-  $\rpchB(L, \tpath,  \rprog) = \max \left\{ \prod\limits_{\rprog_i \in ch}  \outinB(\rprog_i) 
+  $
+  \begin{array}{l}
+    \rpchB(L, \tpath,  \rprog) = \\
+    \max \left\{ \prod\limits_{\rprog_i \in ch}  \outinB(\rprog_i) 
   ~\middle\vert~ ch \in \rpchset(L_l, \tpath) \right\}
+  \end{array}
   $
   \\
 2. \emph{Related Loop Bound}:
@@ -340,12 +344,13 @@ we have $ w(\trace_0) \leq v $.
   % (x^l, w_{p}) \in \progV, 
   \trace_0 \in \mathcal{T}_0(c), 
   v \in \mathbb{N} \st
+  \\ \quad
   \config{\psRB(c, l), \trace_0} \earrow v
   \implies
   % \right\} 
   w_{t}(\trace_0) \leq v
   \end{array}
-\]
+  \]
 \end{thm}
 %
 Proof of this theorem is in Appendix.

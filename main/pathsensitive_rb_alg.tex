@@ -203,7 +203,9 @@ It is computed as follows.
 %  Also notice, the difference constraints generated during the abstract transition appears in the edge as annotation.
 %
 \paragraph{Constraint}
-The constraint is computed for every expression in the program through expression abstraction.
+Given a program $c$,
+every expression in an assignment command or in the guard of a $\eif$ or $\ewhile$ command
+is transformed into a constraint.
 
 \highlight{Notations / Formal Definitions:}
 \begin{itemize}
@@ -527,7 +529,7 @@ $\absV(c) = \lvar(c)\cup\{l_{ex}\}$
 %
 \subsection{\highlight{Program Refinement}}
 \label{sec:pathsensitive_rb-refine}
-In order to analyze the reachability bound path-sensitively, we first refine the constraint program through two steps.
+In order to analyze the reachability bound path-sensitively, we first refine the constraint program.
 %
   \paragraph{Simple Transition Path}
 %
@@ -688,18 +690,21 @@ is true after $\rpattern_{j}$'s executing condition is false.
 %   $\rprog \triangleq \kw{REFINE(p_1)}; \kw{REFINE(p_2)}$  if $p = p_1; p_2$ 
 \paragraph{Refined Program}
 A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
-is a set of repeat patterns, or sequence of sets of  repeat patterns
+is either a repeat pattern, or a set of refined program, or sequence of refined program
 % ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
 \[
-  \rprog :=  \rpchoose{\rpattern}| \rprog; \rprog.
+  \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
 \]
 It satisfies,
 \begin{itemize}
-  \item every repeat pattern in the same set starts and ends with the same label
-  \item and for every two repeat patterns in two continuous sets in a sequence, the first repreat pattern has the same ending label
-    as the starting label of the second repeat pattern.
+  \item every refined program in the same set starts and ends with the same label
+  \item and for every two sub-refined programs following each other in a sequence,
+    the first refined program's ending label is the same 
+    as the starting label of the second refined program.
     For example if
-    $\rprog = \rprog_0; \cdots; \rprog_n$, $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
+    $\rprog = \rprog_0; \cdots; \rprog_n$,
+    $\rpattern_1 \in \rprog_i$
+    and $\rpattern_2 \in \rprog_{i + 1}$,
     then $\rpattern_1$ ends with the same label as $\rpattern_2$'s starting label.
 \end{itemize}
 %
@@ -707,17 +712,21 @@ It satisfies,
 \highlight{\textbf{Formal Definition:}}
 \begin{defn}[Refined Program of A Program]
   Given a constraint program $\absG(c)$,
-  its \emph{Refined Program} is either a set of repeat patterns, or a sequence of sets of  repeat patterns.
-  $$
-  \rprog := \{\rpattern\} | \rprog; \rprog
-  $$ 
-  satisfying, $\rprog = \rprog_1, \cdots; \rprog_n$ where for every $i$
-  $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
+  its \emph{Refined Program} is either a repeat pattern, or a set of refined program, or sequence of refined program has
+  the following syntax,
+  \[
+    \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
+  \]
+  It satisfies that for every sub refined program $\rprog' \in \rprog$
+  % $\rprog = \rprog_1, \cdots; \rprog_n$ and
+  % $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
   \begin{itemize}
-  \item every $ \in \rprog_i$ has the same starting and ending label,
-  \item
-  and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
-  $\rpattern_1$ ends with the same label as $\rpattern_2$'s starting label.
+  \item if
+   $\rprog' = \rpchoose{\rprog_1, \cdots, \rprog_m}$,
+   then all the $\rprog_1, \cdots, \rprog_m$ have the same starting and ending label,
+  \item if $\rprog' = \rprog_1; \rprog_2$, then
+  % and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
+  $\rprog_1$'s ending label is the same label as $\rprog_2$'s starting label.
   \end{itemize}
 \end{defn}
 %
