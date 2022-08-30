@@ -594,6 +594,7 @@ Every sub-repeat patterns in the sequence are distinct.
 
 \highlight{\textbf{Formal Definition:}}
 \begin{defn}[Repeat Pattern of A Program]
+  \label{def:repeat-pattern}
   Given a constraint program $\absG(c)$,
   $\rpattern(c)$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, it is a simple path or
   a sequence of \emph{repeat pattern}
@@ -608,11 +609,11 @@ Every sub-repeat patterns in the sequence are distinct.
   %  when executing this program $c$ 
   w.r.t. some initial trace,
   \item every sub-repeat patter in a sequence is distinct, i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and 
-  $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, $\rpattern_i \neq \rpattern_j$,
+  % $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, 
+  $\rpattern_i \neq \rpattern_j$ for every $i, j = 1, \cdots, n$,
   \item and every two continuous sub-repeat patters in a sequence can execute after each other w.r.t some initial trace,
-  i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and 
-  $\rpattern_{i - 1}, \rpattern_{i} \in \rpattern_1; \cdots; \rpattern_n$, 
-  $\rpattern_2$ can execute after $\rpattern_1$ under some initial trace.
+  i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and for every $i = 1, \cdots, n$,
+  $\rpattern_i$ can execute after $\rpattern_{i - 1}$ under some initial trace.
   \end{itemize}
 \end{defn}
 %
@@ -629,34 +630,144 @@ is true after the previous's executing condition is false.
 \highlight{\textbf{Pseudocode:}}
 \begin{algorithm}
 \caption{
-{Repeat Pattern Computation}
+{Repeat Pattern Computation - Efficient}
 \label{alg:repeat-pattern}
 }
 \begin{algorithmic}[1]
 \REQUIRE the constraint program $\absG(c)$
 % the target while loop with label $l$.
-\STATE  \textbf{Init} $R(c) = \emptyset$
-\\
-\qquad Finding all simple transition paths $ \tpath_1, \cdots, \tpath_m \in \absG(c)$.
-\STATE  
-\textbf{For} every simple transition paths $\tpath_1, \cdots, \tpath_m$:
-%  having the same starting and ending label:
-\\
-\quad Generating
-$\rpattern_{i} = (\tpath_i)$ and add into $R(c)$.
+\STATE  \textbf{Init} $W(c) = \{\tpath_1, \cdots, \tpath_m\}$ is initialized as a set of all the simple transition paths in $\absG(c)$.
+% \\
+% \qquad Finding all simple transition paths $\tpath_1, \cdots, \tpath_m \in \absG(c)$.
+% \STATE  
+% \textbf{For} every simple transition paths $\tpath_1, \cdots, \tpath_m$:
+% %  having the same starting and ending label:
+% \\
+% \quad Generating
+% $\rpattern_{i} = \tpath_i$ and add into $R(c)$.
 %  otherwise $\rpattern_i = \tpath_i$.
 % \\
 % \quad Adding $\rpattern_{i}$ into $R(c)$.
-\STATE  \textbf{Loop} until there isn't new repeat patterns generated, i.e., $R(c)$ is stabilized.
-\STATE  \quad \textbf{For} every repeat pattern $\rpattern_i \in R(c)$ having the same starting and ending label:
-\STATE  \quad \quad Generating $\rpattern_{i}' = \rprepeat(\rpattern_i)$ if $\rpattern_i$ can consecutively execute twice.
-\STATE  \quad \textbf{For} every repeat pattern $\rpattern_1, \cdots, \rpattern_m \in R(c)$
-\STATE \quad \quad  Generate $\rpattern' = \rpattern_{i}; \rpattern_{j} $ 
-if the execution condition of $\rpattern_{j}$
-is true after $\rpattern_{j}$'s executing condition is false.
+\STATE  \textbf{Loop} until $W(c)$ is empty.
+\STATE    \quad Find all $\rpattern_i \in W(c)$ having the same starting and ending control location $l$,
+      \\  \quad \quad Generating a set $RP(l) = \{\rpattern ~|~ \rpattern \in R(c) \land \rpattern = l \to \cdots \to l\}$
+\STATE    \quad \quad Compute Loop Closure $LRP(l)$ from Algorithm~\ref{alg:loop-repeat-pattern}
+% \STATE  \quad \quad Generating $\rpattern_{i}' = \rprepeat(\rpattern_i)$ if $\rpattern_i$ can consecutively execute twice.
+\STATE  \quad \quad Updating $W(c) = (W(c) \setminus RP(l)) \cup \{\rpattern_i \to \rpattern_j\} \setminus \{\rpattern_i, \rpattern_j\}$ 
+ \\ \quad \quad if $\rpattern_i$ ending at $l$ and $\rpattern_j$ starting at $l$.
+% \STATE  \quad \textbf{For} every repeat pattern $\rpattern_1, \cdots, \rpattern_m \in R(c)$
+% \STATE \quad \quad  Generate $\rpattern' = \rpattern_{i}; \rpattern_{j} $ 
+% if the execution condition of $\rpattern_{j}$
+% is true after $\rpattern_{j}$'s executing condition is false.
 \RETURN $R(c)$
 \end{algorithmic}
 \end{algorithm}
+%
+\begin{algorithm}
+  \caption{
+{Repeat Pattern Computation -- Accurate}
+\label{alg:repeat-pattern-complete}
+}
+\begin{algorithmic}[1]
+\REQUIRE the constraint program $\absG(c)$
+% the target while loop with label $l$.
+\STATE  \textbf{Init} $W(c) = \{\tpath_1, \cdots, \tpath_m\}$ is initialized as a set of all the simple transition paths in $\absG(c)$.
+% \\
+\STATE  \textbf{Loop} until $W(c)$ is stabilized.
+\STATE    \quad Find all $\rpattern_i \in W(c)$ having the same starting and ending control location $l$,
+      \\  \quad \quad Generating a set $RP(l) = \{\rpattern ~|~ \rpattern \in R(c) \land \rpattern = l \to \cdots \to l\}$
+\STATE    \quad \quad Compute Loop Closure $LRP(l)$ from Algorithm~\ref{alg:loop-repeat-pattern}
+% \STATE  \quad \quad Generating $\rpattern_{i}' = \rprepeat(\rpattern_i)$ if $\rpattern_i$ can consecutively execute twice.
+\STATE    \quad \quad \textbf{For} every $\rpattern_l \in LRP(l)$:
+\STATE  \quad \quad \quad  Updating $W(c) = (W(c) \setminus RP(l)) \cup \{\rpattern_i + \rpattern_l + \rpattern_j\} \setminus \{\rpattern_i, \rpattern_j\}$ 
+  \\ \quad \quad \quad if $\rpattern_i$ ending at $l$ and $\rpattern_j$ starting at $l$.
+% \STATE  \quad \textbf{For} every repeat pattern $\rpattern_1, \cdots, \rpattern_m \in R(c)$
+% \STATE \quad \quad  Generate $\rpattern' = \rpattern_{i}; \rpattern_{j} $ 
+% if the execution condition of $\rpattern_{j}$
+% is true after $\rpattern_{j}$'s executing condition is false.
+\RETURN $LRP(l)$ for every loop header $l$ and the $W(c)$.
+\end{algorithmic}
+\end{algorithm}
+%
+
+\highlight{\textbf{Theorem Guarantee:}}
+\begin{enumerate}
+  \item
+Algorithm~\ref{alg:repeat-pattern}:
+The accuracy and soundness discussion on the step $5$ in Algorithm~\ref{alg:repeat-pattern}.
+\\
+This step doesn't unfold the nested loop when it generates multiple paths for the outer loop.
+Specifically, this step connects  $\rpattern_i +\rpattern_j$ directly
+instead of $\rpattern_i + \rpattern_l + \rpattern_j$ for the nested $\rpattern_l \in LRP(l)$. 
+This step reduces the algorithm complexity.
+This step is sound because every nested $\rpattern_l$
+has the same invariant given they are all in the same loop starting from and ending at the same location $l$.
+But this step is inaccurate because different nested $\rpattern_l$ can result in different repeat patterns of the outside loop.
+\\
+The program refinement algorithm in paper~\cite{GulwaniJK09} uses this strategy as well in refining each while loop without unfolding the nested loop.
+Specifically in their Flatten operation in Definition~4.1.
+\item
+Algorithm~\ref{alg:repeat-pattern-complete}: 
+The accuracy and inefficiency discussion on the step $6$ in Algorithm~\ref{alg:repeat-pattern-complete}.
+\\
+In this version, the loop at line $5$ unfolds the nested loop.
+\\
+This step generates multiple paths for outer loops by connecting $\rpattern_i + \rpattern_l + \rpattern_j$ for every nested $\rpattern_l \in LRP(l)$. 
+It increases the algorithm complexity.
+But it increases accuracy because every nested repeat pattern $\rpattern_l$ will be checked by concatenate with the outer loop.
+% has the same invariant given they are all in the same loop starting from and ending at the same location $l$.
+% But this step is incomplete because different $\rpattern_l$ can result in different iteration numbers of the outside loop.
+\item Algorithm~\ref{alg:loop-repeat-pattern}: The accuracy and termination discussion.
+\\
+This algorithm terminates.
+\\
+Step $4$ and $7$ are two steps where the output set $R(c)$ is added with new elements.
+\\
+In step $4$, $R(c)$ is added a new pattern and removed a pattern in the same time. So the size of $R(c)$ doesn't change.
+\\
+In step $7$, $R(c)$ is added one new pattern and removed. So the size of $R(c)$ increases by 1. 
+It is sufficient to show step $7$ will not add the same pattern into $R(c)$ twice.
+\\
+If a new pattern $\rpattern'$ is added into $R(c)$ at step $7$, 
+then step $4$ will check if $\rpattern'$ can consecutively execute twice.
+\\
+If it can, then step $4$ will add $\rprepeat(\rpattern')$ into $R(c)$ and remove $\rpattern'$ from $R(c)$.
+In this case, the step $7$ identifies the pattern $\rpattern'$ again, but $\rpattern'$ will not be added into $R(c)$ because
+it is a sub pattern of $\rprepeat(\rpattern')$.
+\\
+If it cannot, then step $4$ will not update the $R(c)$. 
+In this case, when step $7$ identifies $\rpattern'$ again, $\rpattern'$ will not be added into $R(c)$ because
+it is already there.
+\end{enumerate}
+%
+\highlight{\textbf{Pseudocode:}}
+\begin{algorithm}
+\caption{
+{Loop Repeat Patterns Closure Computation}
+\label{alg:loop-repeat-pattern}
+}
+\begin{algorithmic}[1]
+\REQUIRE $l$, the control location of a loop header
+\\ \quad
+$RP(l)$, the set of the repeat patterns starting from control location $l$ and ending at $l$.
+\STATE  \textbf{Init} $R = \emptyset$
+\STATE  \textbf{Loop} until there isn't new repeat patterns generated, i.e., $R$ is stabilized.
+\STATE  \quad \textbf{For} every repeat pattern $\rpattern_i \in R(c)$ without the annotation $\rprepeat$:
+% \STATE  \quad \quad Generating $\rpattern_{i}' = \rprepeat(\rpattern_i)$ if $\rpattern_i$ can consecutively execute twice.
+\STATE  \quad \quad Updating $R(c) = (R(c) \setminus \{\rpattern_{i}\}) \cup \{\rprepeat(\rpattern_i)\}$
+if $\rpattern_i$ can consecutively execute twice.
+\STATE  \quad \textbf{For} every repeat pattern $\rpattern_1, \cdots, \rpattern_m \in R(c)$
+\STATE \quad \quad  Generate $\rpattern' = \rpattern_{i}; \rpattern_{j} $ 
+if the execution condition of $\rpattern_{j}$
+is true after $\rpattern_{j}$'s executing condition is false, 
+and $\rpattern_{i}; \rpattern_{j}$ are not sub-pattern of each other
+%  and $\rpattern' \notin R(c)$,
+and for every $\rpattern \in R(l)$, $\rpattern'$ and $\rpattern$ are not sub-pattern of each other.
+\STATE  \quad \quad Updating $R(c) = (R(c) \cup \{\rpattern'\}$
+\RETURN $R$
+\end{algorithmic}
+\end{algorithm}
+%
 % \\
 % % Through Path-Sensitive Refinement / Contextualization algorithm \cite{GulwaniJK09, ZulegerGSV11},
 % % this step computes the repeat patterns over all \emph{simple transition path}s.
@@ -690,22 +801,22 @@ is true after $\rpattern_{j}$'s executing condition is false.
 %   $\rprog \triangleq \kw{REFINE(p_1)}; \kw{REFINE(p_2)}$  if $p = p_1; p_2$ 
 \paragraph{Refined Program}
 A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
-is either a repeat pattern, or a set of refined program, or sequence of refined program
+is either a repeat pattern, or a set of refined programs, or sequence of refined program
 % ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
 \[
-  \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
+  \rprog :=  \rpattern ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
 \]
 It satisfies,
 \begin{itemize}
-  \item every refined program in the same set starts and ends with the same label
+  \item every sub-refined program in a same set with annotation $\rpchoose{\cdots}$ starts and ends with the same control location,
   \item and for every two sub-refined programs following each other in a sequence,
-    the first refined program's ending label is the same 
-    as the starting label of the second refined program.
+    the first refined program's ending control location is the same 
+    as the starting control location of the second refined program.
     For example if
     $\rprog = \rprog_0; \cdots; \rprog_n$,
     $\rpattern_1 \in \rprog_i$
     and $\rpattern_2 \in \rprog_{i + 1}$,
-    then $\rpattern_1$ ends with the same label as $\rpattern_2$'s starting label.
+    then $\rpattern_1$ ends with the same control location as $\rpattern_2$'s starting location.
 \end{itemize}
 %
 
@@ -730,13 +841,16 @@ It satisfies,
   \end{itemize}
 \end{defn}
 %
-\highlight{\textbf{Computation Steps Summary:}}
+\highlight{\textbf{Computation Steps:}}
 \begin{itemize}
-\item Computing the repeat pattern set $RP(c)$ by Algorithm~\ref{alg:repeat-pattern}.
+\item Computing the repeat pattern sets $LRP(l)$ and the set of remaining repeat patterns $W(c)$ by Algorithm~\ref{alg:repeat-pattern}.
 % 
-\item For all patterns which is a simple transition path and not in any SCC,
-generating a repeat pattern set for all
-repeat patterns starting and ending with the same label.
+\item For all remaining repeat patterns in $W(c)$, 
+generating $\rprog_{s}$ if there
+are two repeat patterns starts and ending from the same control location.
+% patterns which is a simple transition path and not in any SCC,
+% generating a repeat pattern set for all
+% repeat patterns starting and ending with the same label.
 \[
   \rprog_{s} \triangleq 
   \rpchoose{
@@ -745,23 +859,30 @@ repeat patterns starting and ending with the same label.
   \land  \rpattern \notin SCC
     }
 \]
+Otherwise, generating $\rprog_{a} = \rpattern$.
 %
 \item 
-For every \emph{outermost loop} with the header at location $l$,
-recursively 
-find all the repeat patterns $\rpattern_{i}, \cdots, \rpattern_{m}$ starting form $l$ and go back to $l$, where $m \in \mathbb{N}$.
-\\
-Adding a loop head annotation $l$ on the beginning of every repeat pattern $l: \rpattern$.
-\\
-% For every \emph{outermost loop} with the header at location $l$ as follows ,
-Generating a repeat pattern set for this loop recursively,
+For every \emph{outermost loop} with the header at location $l$, 
+generating the refined program $\rprog_l$,
 \[
   \rprog_l \triangleq 
   \rpchoose{
    l: \rpattern_{i}, \cdots, l: \rpattern_{m}
   }
 \]
-% \\%
+by 
+recursively generating $\rprog_{l'}$ for the nested loop with loop header at $l'$,
+\[
+  \rprog_{l'} \triangleq 
+\rpchoose{
+ l': \rpattern_{i}, \cdots, l': \rpattern_{m}
+}
+\]
+and inserting the $\rprog_{l'}$ at the location $l'$ in the $\rpattern_l \in LRP(l)$.
+% find all the repeat patterns $\rpattern_{i}, \cdots, \rpattern_{m}$ starting form $l$ and go back to $l$, where $m \in \mathbb{N}$.
+\\
+In the same time, adding a loop head annotation $l$ on the beginning of every repeat pattern $l: \rpattern$.
+% % For every \emph{outermost loop} with the header at location $l$ as follows ,
 \item
 Generating the \emph{refined program} $\rprog$ as a sequence of repeat pattern sets.
 %
@@ -789,34 +910,38 @@ and $\rprog_{\lex}$ contains the repeat patterns going to the program exit point
 \label{alg:prog_refine}
 }
 \begin{algorithmic}[1]
-\REQUIRE the constraint program $\absG(c)$
-\STATE  compute repeat pattern set $PR(c)$ by Algorithm~\ref{alg:repeat-pattern}
+\REQUIRE The repeat pattern sets $RP(l)$ for every loop header $l$ and $W(c)$ for patterns not in any loop
 % \\
-\STATE  \textbf{For} $\rpattern \in RP(c)$:
+\STATE  \textbf{For} $\rpattern_1, \rpattern_2 \in W(c)$:
 \\ \quad 
 $\rprog_{s} \triangleq 
   \rpchoose{
-  \rpattern ~|~ l_1, l_2 \in \lvar(c) \land 
-  \rpattern = l_1 \to \cdots \to l_2 \in RP(c) 
-  \land  \rpattern \notin SCC
-    }
+  \rpattern_1, \rpattern_2 ~|~ l_1, l_2 \in \lvar(c) \land 
+  \rpattern_1 = l_1 \to \cdots \to l_2 \land \rpattern_2 = l_1 \to \cdots \to l_2
+  }
 $
-\STATE \textbf{For} $\rpattern \in RP(c)$:
+\\ \quad 
+$ W(c) \setminus \{\rpattern_1, \rpattern_2\} $
+\STATE  \textbf{For} $\rpattern, \rpattern_2 \in W(c)$:
+\\ \quad 
+$\rprog_{a} \triangleq  \rpattern$
+\STATE \textbf{For} $\rpattern \in RP(l)$:
 \\ \quad
 $\rprog_l \triangleq 
 \rpchoose{
- l: \rpattern_{i} ~|~ \rpattern \in RP(c) \land \text{ head and ending of } \rpattern \text{ are both } l.
+ l: \rpattern_{i} ~|~ \rpattern \in RP(l) \land \text{ head and ending of } \rpattern \text{ are both } l.
 }$
-\STATE \textbf{For} every $\rprog_{s}$ and $\rprog_l$:
+\STATE \textbf{For} every $\rprog_a$, $\rprog_{s}$ and $\rprog_l$:
 \\ \quad
-      if any of them has a starting label equal to the ending label of another one,
-put them into a sequence.
-\\ 
-$\rprog \triangleq \rprog_0; \cdots; \rprog_{\lex}$.
-\RETURN $\rprog$
+$\rprog' \triangleq \rprog_i; \rprog_{j}$
+ if $\rprog_{j}$ has the starting location equal to the ending location of $\rprog_i$
+%  \\ 
+% $\rprog \triangleq \rprog_0; \cdots; \rprog_{\lex}$.
+\RETURN $\rprog \triangleq \rprog_0; \cdots; \rprog_{\lex}$
 \end{algorithmic}
 \end{algorithm}
 %
+
 %
 \subsection{\highlight{Ranking Function / Local Bound Computation}}
 \label{sec:pathsensitive_rb-lbcompute}
@@ -1034,11 +1159,15 @@ its \emph{Path-Insensitive Rank Bound} $w^p$
 \label{sec:pathsensitive_rb-outinalg}
 %
 % \\
-For the refined program $\rprog \in \mathcal{RP}$, the \emph{Outside-In Algorithm}
-computes the path-sensitive local bound 
-% for the refined program $\rprog$ recursively 
-$\outinB: \rprog \to \mathcal{A}_{in}$ as follows,
+For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Outside-In Algorithm} ($\outinB: \rprog \to \mathcal{A}_{in}$)
+computes the \emph{OutIn} bound on the iteration numbers of every repeat pattern in this program.
+\\
+It is called \emph{OutIn} bound because for a repeat pattern $\rpattern$ nested
+in another repeat pattern $\rpattern' = \rprepeat(\rpattern)$,
+this value only bounds the iteration number of $\rpattern$ inside $\rpattern'$ by assuming $\rpattern'$ executes once.
 % \\
+
+\highlight{\textbf{Notations / Operators:}}
 \\
 The \emph{State}: 
 $\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of the edge annotations.
@@ -1051,21 +1180,38 @@ For a refined program ($\rprog$), there are the
 % The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
 \\
 The \emph{Variable Grade Decedent}: $\varGD : \rprog \to \mathcal{A}_{in}$, is the set of the variables' variation in one iteration;
+
+\highlight{\textbf{Computation Steps:}}
+\begin{itemize}
+  \item \emph{OutIn} Bound ($\outinB: \rprog \to \mathcal{A}_{in}$)
+  \\
+Given a refined program $\rprog$, the $\outinB(\rprog)$ bound is computed recursively for every nested repeat patterns in $\rprog$,
 \\
-Given a refined program $\rprog$, its path-sensitive local reachability bound is computed as follows,
+$\outinB(\rpchoose{\rprog_1, \cdots, \rprog_m}) =  \max\{\outinB(\rprog_1), \cdots, \outinB(\rprog_m)\}$
 \\
-$\outinB(\rpchoose\{\rprog_i\}) =  \max\{\outinB(\rprog_i)\}$
+$\outinB(l: \rprepeat({\rprog})) =  \frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$
 \\
-$\outinB(\rprepeat\{\rprog\}) =  \frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$
-\\
-$\outinB(\rpseq(\rprog_1, \rprog_2)) =  \outinB(\rprog_1)+ \outinB( \rprog_2)$
+$\outinB(\rprog_1; \rprog_2) =  \outinB(\rprog_1)+ \outinB( \rprog_2)$
 \\
 $\outinB(\tpath) =  1$.
 \\
-$\outinB(\rprepeat\{\rprog\})$ can also be computed using the algorithm
+\highlight{
+  \textbf{Improvement Discussion:}
 \\
-$\kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprog)), NEXTD(c, l_0, \absinit(\rprog), V_{\lin} )}$ 
-in paper~\cite{GulwaniJK09} with equivalent results.
+Because $l: \rprepeat(\rprog)$ has the same semantics and syntax as the refined program in paper~\cite{GulwaniJK09},
+$\outinB(l: \rprepeat({\rprog}))$ can be computed by 
+\\
+$T(l) = \kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprog)), NEXTD(c, l_0, \absinit(\rprog), V_{\lin} )}$ 
+% in paper~\cite{GulwaniJK09} 
+with equivalent results.
+\\
+However, $\kw{BOUNDFINDERD}$ in paper~\cite{GulwaniJK09} is an arbitrary interface computing the bound on iteration numbers of $l$
+separately.
+The efficiency and accuracy of their algorithm fully depend on this arbitrary interface.
+\\
+In comparison to them, below I provide an efficient and accurate bound computation method using the
+ranks computed in Definition~\ref{def:transition_closure} over the constraint program $\absG(c)$.
+}
 \\
 % Formally defined as follows,
 % \begin{defn}[Path-Sensitive Local Reachability Bound]
@@ -1073,8 +1219,8 @@ in paper~\cite{GulwaniJK09} with equivalent results.
 % \end{defn}
 The computations of the operations: $\rfinit(\rprog)$,
 $\rffinal(\rprog)$ $\rfnext(\tpath)$ and $\varGD : \rprog \to \mathcal{A}_{in}$
-are formally defined as follows,
-\begin{itemize}
+are formally defined as follows.
+
 \item \emph{Initial State} ($\rfinit(\rprog)$).
 \\
  For a refined program $\rprog$, its initial refined abstract $\rfinit(\rprog) \in \mathcal{P}(\absstate)$ is computed as follows,
@@ -1095,7 +1241,8 @@ are formally defined as follows,
 The $\rfinit : \rprog \to \absstate $  can also be computed using $INIT(c, l_0, \absinit(\rprog))$ algorithm in \cite{GulwaniJK09}. 
 $INIT(c, l_0, \absinit(\rprog))$ computes the equivalent results.
 %
-\item  \emph{Final State} $\rffinal(\rprog) \in \absstate$.\\
+\item  \todo{\emph{Final State} $\rffinal(\rprog) \in \absstate$. }
+\\
 The program $\rprog$'s final refined abstract state $\rffinal(\rprog) \in \mathcal{P}(\absstate) $ is computed as follows, 
 \[
   \rffinal(\rprog) \triangleq 
@@ -1126,9 +1273,9 @@ The program $\rprog$'s final refined abstract state $\rffinal(\rprog) \in \mathc
 \]
 \item  The program $\rprog$'s Variable Gradient Decent set is computed as follows,
 \\
-$\varGD(\rpchoose\{\rprog_i\}) =  \max\{\varGD(\rprog_i)\}$
+$\varGD(\rpchoose{\rprog_1, \cdots, \rprog_m}) =  \max\left\{\varGD(\rprog_1), \cdots, \varGD(\rprog_m) \right\}$
 \\
-$\varGD(\rprepeat\{\rprog\}) =  \outinB(\rprepeat\{\rprog\}) \times {\varGD(\rprog)}$
+\todo{$\varGD(\rprepeat\{\rprog\}) =  \outinB(\rprepeat\{\rprog\}) \times {\varGD(\rprog)}$}
 \\
 $\varGD(\rpseq(\rprog_1, \rprog_2)) =  \varGD(\rprog_1)+ \varGD( \rprog_2)$
 \\
@@ -1138,58 +1285,70 @@ $\varGD(\tpath) =  \rfinit(\tpath) - \rfnext(\tpath)$
 %
 \subsection{Inside-Out Algorithm}
 \label{sec:pathsensitive_rb-inoutalg}
-For the refined program $\rprog \in \mathcal{RP}$, the \emph{Inside-Out Algorithm}
-computes the path-sensitive bound on the iteration numbers for every simple transition path in this program $\rprog$,
+For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Inside-Out Algorithm}
+computes the reachability-bound on the execution numbers for every simple transition path $\tpath$ in this program $\rprog$,
 through following steps.
 
 \begin{enumerate}
-  \item \emph{Local Repeat Chain Bound}.
+  \item \emph{Repeat Chain Bound}.
   \\
-  For every transition path $\tpath$, its \emph{Local Repeat Chain Bound} is the 
-  path sensitive local bound for it, inside its closet while loop.
-  It is computed as follows,
+  For every transition path $\tpath$ in a refined program $\rprog$,
+  its \emph{Repeat Chain Bound} is the
+  bound on its execution numbers inside its closet while loop.
   \begin{enumerate}
-\item \emph{Repeat Chain Set}
+\item \emph{Repeat Chain} $\rpch(l, \tpath, \rprog) \in \mathcal{P}(\rprog)$.
 \\
-\emph{Repeat Chain} $\rpch(L, \tpath) \in \mathcal{P}(\rprog)$.
-\\
-$L, \tpath$ 
-repeat chain w.r.t a transition path
-is a list of repeat pattern $\rprog$ with loop header annotation $L$,
-and the $\tpath$ is contained by these repeat patterns recursively.
-% inside the same while loop $L$ as the $\tpath$. It is computed as follows,
-% For a refined while loop program $\rprog_{l} = L_l : \rprog \in \mathcal{RP}$, 
-% with its refined statement $\rprog \in \mathcal{RP}$,
-\\
-\emph{Repeat chain set}
-$\rpchset(L, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$.
-\\
-For each transition path in the refined program $\tpath \in \rprog$, 
-its repeat chain set 
-$\rpchset(L, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$
- is a set of all the repeat chains for $L, \tpath \in \rprog$ in this program.
+For every transition path in the refined program $\tpath \in \rprog$, 
+its repeat chain set % 
+is a list of repeat patterns nested inside each other, formally defined as follows.
+%  with loop header annotation $L$,
+% and the $\tpath$ is contained by these repeat patterns recursively.
+% % inside the same while loop $L$ as the $\tpath$. It is computed as follows,
+% % For a refined while loop program $\rprog_{l} = L_l : \rprog \in \mathcal{RP}$, 
+% % with its refined statement $\rprog \in \mathcal{RP}$,
+% \\
+% \emph{Repeat chain set}
+% $\rpchset(l, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$.
+% \\
+% For each transition path in the refined program $\tpath \in \rprog$, 
+% its repeat chain set 
+% $\rpchset(l, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$
+%  is a set of all the repeat chains for $l, \tpath \in \rprog$ in this program.
  %
- \begin{defn}[Repeat China ($\rpch(L, \tpath) \in \mathcal{P}(\rprog)$)]
+%  \highlight{\textbf{Computation Steps:}}
+ \begin{defn}[Repeat Chain ($\rpch(l, \tpath, \rprog) \in \mathcal{P}(\rprog)$)]
   \label{def:repeatchain}
- Every repeat chain is a list of refined program contained inside the same while loop $L$ as the $\tpath$. It is computed as follows,
-\\
+For a refined program $\rprog$ and a simple transition path $\tpath$,
+a \emph{Repeat Chain} $\rpch(l, \tpath, \rprog)$
+is a list of repeat patterns nested in a repeat pattern with loop header annotation $l$.
+%  efined program contained inside the same while loop $L$ as the $\tpath$. 
+% It is computed as follows,
   % $\rpch(L_l, \tpath) \in \mathcal{P}(\rprog)$\\
-  $\rpch(L, \tpath) \triangleq \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath $
- such that 
- $\rprog_{i}= L : \rprepeat(\cdots, \rprog_{i - 1}, \cdots)$ and
- there isn't any loop label (i.e., $L'$) or $\rprepeat_i$ between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
+\[
+  \rpch(l, \tpath, \rprog) \triangleq \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath
+\]
+It satisfies
+ $\rprog_{i}= l : \rprepeat(\cdots, \rprog_{i - 1}, \cdots)$ and
+ there isn't any nested loop header ($l'$) or $\rprepeat$ annotation between $\rprog_{i}$ and $\rprog_{i - 1}$
+ for every $i = n, \cdots, 1$.
 \end{defn}
 %
 %
-%
-\begin{defn}[Repeat China Set ($\rpchset(L, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$)]
-  \label{def:repeatchainset}
- Every repeat chain is a list of refined program contained inside the same while loop $L$ as the $\tpath$. It is computed as follows,
+\item \emph{Repeat Chain Set}
+$\rpchset(l, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$.
 \\
- $\rpchset(L_l, \tpath, \rprog) \triangleq 
- \{\rpch(L, \tpath) ~|~  
- \forall \rprog' \in \rpch(L, \tpath) \st \rprog' \in \rprog \}$
-%  \rprepeat(\rprog) \in \rpchoose() \rprepeat(\rprog) = \rpch(L_l, \tpath) \} \mathcal{P}(\rpch(L_l, \tpath))$
+For every transition path in the refined program $\tpath \in \rprog$, 
+its repeat chain set 
+$\rpchset(l, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$
+ is a set of all the repeat chains for $l, \tpath \in \rprog$.
+%
+\begin{defn}[Repeat Chain Set ($\rpchset(l, \tpath, \rprog, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$)]
+  \label{def:repeatchainset}
+  For a refined program $\rprog$ and a simple transition path $\tpath$, the \emph{Repeat China Set} is the set of 
+  all repeat chains for $\rprog$ and $\tpath$.
+  \[
+    \rpchset(l, \tpath, \rprog) \triangleq \left\{\rpch(l, \tpath, \rprog) \right\}
+ \]
 \end{defn}
  % \\
 % 2. 
@@ -1199,12 +1358,12 @@ $\rpchset(L, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$
 % $lpchain(\tpath) = \rprog_n \to \rprog_{n-1} \to \cdots \to \tpath$
 % % such that there is at least a $\rpchoose$ and isn't consecutive repeats $\rprepeat$ (i.e., at most one 
 % % $\rprepeat$) between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
-% $\rprog_{i}= \rprepeat^{L_i}(\cdots, \rprog_{i - 1}, \cdots)$ and
+% $\rprog_{i}= \rprepeat^{l}(\cdots, \rprog_{i - 1}, \cdots)$ and
 %  there isn't any loop (i.e., $\rprepeat^{L}$) between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
 % \\
 % 2. Compute the local bound for every repeat chain as follows:
 % \\
-% $\rpchB(L, \tpath) = \prod\limits_{\rprog_i \in rpchain(\tpath)}
+% $\rpchB(l, \tpath, \rprog) = \prod\limits_{\rprog_i \in rpchain(\tpath)}
 % % \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{\varGD(\rprog_i, \tpath)}
 % \outinB(\rprog_i)$
 % % \\
@@ -1217,11 +1376,11 @@ $\rpchset(L, \tpath, \rprog) \in \mathcal{P}(\mathcal{P}(\rprog))$
 % % \prod\limits_{\rprog_i \in lpchain(\tpath)}
 % \frac{\lpinit(\rprog_i, \tpath) - lpFinal(\rprog_i, \tpath)}{\varGD(\rprog_i, \tpath)}$
 % \\
-\item  \emph{Local Repeat Chain Bound}.
+\item  \emph{Repeat Chain Bound}.
 \\
 For every transition path $\tpath$
-in its closet enclosed while loop $L$,
-the \emph{Local Repeat Chain Bound} $\rpchB(L, \tpath) \in \mathcal{A}_{in}$ is computed as follows,
+in its \highlight{closet enclosed} while loop $l$,
+the \emph{Repeat Chain Bound} $\rpchB(l, \tpath, \rprog) \in \mathcal{A}_{in}$ is computed as follows,
 % $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
 % \\
 % For each transition path $\tpath \in \rprog$,
@@ -1231,11 +1390,11 @@ the \emph{Local Repeat Chain Bound} $\rpchB(L, \tpath) \in \mathcal{A}_{in}$ is 
 % $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
 % \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{\varGD(\rprog_i, \tpath)}$
   \\
-  $\rpchB(L, \tpath) = \max \left\{ \prod\limits_{\rprog_i \in ch}  \outinB(\rprog_i) 
-  ~\middle\vert~ ch \in \rpchset(L_l, \tpath) \right\}
-  $;
+  $\rpchB(l, \tpath, \rprog) = \max \left\{ \prod\limits_{\rprog_i \in ch}  \outinB(\rprog_i) 
+  ~\middle\vert~ ch \in \rpchset(l, \tpath, \rprog) \right\}
+  $,
   \\
-  $\rpchB(L, \tpath) = \bot$ if $L$ isn't the closest while loop containing $\tpath$.
+  $\rpchB(l, \tpath, \rprog) = \bot$ if $l$ isn't the closest while loop containing $\tpath$.
   %
   \end{enumerate}
 % \\
@@ -1246,88 +1405,107 @@ the \emph{Local Repeat Chain Bound} $\rpchB(L, \tpath) \in \mathcal{A}_{in}$ is 
 % % For $chain \in rpchain(\tpath)$:
 % where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
 %
-\item \emph{Related Loop Bound}.
+\item \emph{Relative Loop Bound:} $\lpchB(l, \tpath, \rprog) \in \mathcal{A}_{\lin}$.
 \\
-For every transition path $\tpath \in \rprog$, 
-the \emph{Nested Loop Bound} $\lpchB(L_i, \tpath, \rprog) \in \mathcal{A}_{\lin}$ is computed as follows.
+For every simple transition path $\tpath$
+and a loop header at location $l$ in a refined program $\rprog$,
+the \emph{Relative Loop Bound} $\lpchB(l, \tpath, \rprog) \in \mathcal{A}_{\lin}$ is a symbolic expression in $\mathcal{A}_{\lin}$.
+\\
+This expression is a sound bound on the iteration numbers of loop $l$ relative to the simple transition path $\tpath$.
+This $\tpath$'s closest enclosing loop has the loop header at $l'$ and $l'$ is nested inside the loop $l$.
+\\
+It estimates the iteration numbers of loop $l$ such that during these iterations, the nested loop $l'$ is executed.
+%  is
+% the computed as follows.
 \begin{enumerate}
-  \item \emph{Nested Loop Chain}.
-  Each loop chain $\lpch(\tpath, \rprog) \in \mathcal{P}(\rprog)$ 
-  is a list of refined program $\rprog' \in \rprog$
-  $\tpath$ is nested in, and every $\rprog'$ has different loop header annotation.
+  \item \emph{Loop Chain:} $\lpch(\tpath, \rprog) \in \mathcal{P}(\rprog)$ 
   \\
-For each transition path in the refined program $\tpath \in \rprog$, 
-its \emph{Loop Chain} is computed as follows,
-% repeat chain.
-% then there is loop tree as follows for a program:
-% $P = \rprepeat^{L_n}(\cdots, \rprepeat^{L_{n'}}(\cdots), \cdots, \rprepeat^{L_{n''}}(\cdots))$.
-% \\
-% For each transition path $\tpath$, we:
-% from the head of the while loop.
-% 1. firstly collect the loop chain: 
-% $lp\mathcal{C}(\tpath) \in \mathcal{P}(\mathcal{P}(\rprog)) \triangleq \mathcal{P}(\lpch(\tpath))$
-\begin{defn}[Nested Loop Chain]
+  For every simple transition path in a refined program $\tpath \in \rprog$,
+  its loop chain $\lpch(\tpath, \rprog) \in \mathcal{P}(\rprog)$ 
+  is a list of sub-refined program $\rprog_1, \cdots, \rprog_n \in \rprog$.
+  Each of the $\rprog_i$ has a loop header $l_i$ and
+ each loop $l_{i}$ is nested inside the loop with header $l_{i+1}$. It is formally defined as follows.
+  % $\tpath$ is nested in, and every $\rprog'$ has different loop header annotation.
+\begin{defn}[Loop Chain ($\lpch(\tpath, \rprog) \in \mathcal{P}(\rprog)$)]
   \label{def:loopchain}
-$\lpch(\tpath, \rprog) \in \mathcal{P}(\rprog) \triangleq 
-L_n \to L_{n-1} \to \cdots \to \tpath$
-\\
+For a refined program $\rprog$ and a simple transition path $\tpath$ in this program, the loop chain of
+$\tpath$ in this program is
+%
+\[ 
+  \lpch(\tpath, \rprog) 
+  \triangleq 
+\rprog_n \to \rprog_{n-1} \to \cdots \to \tpath
+\]
 % such that there is at least a $\rpchoose$ and isn't consecutive repeats $\rprepeat$ (i.e., at most one 
 % $\rprepeat$) between any $\rprog_{i - 1}$ and $\rprog_{i}$ for $i = n, \cdots, 1$.
 such that 
-$\rprog_{i}= L_i : (\cdots, L_{i - 1} : \rprog_{i-1}, \cdots)$ and
- there isn't any loop label (i.e., $L'$) between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
+$\rprog_{i}= l_i : (\cdots, l_{i - 1} : \rprog_{i-1}, \cdots)$ and
+ there isn't any nested loop annotation (i.e., $l'$) between $\rprog_{i}$ and $\rprog_{i - 1}$ for $i = n, \cdots, 1$.
 \end{defn}
-\item  \emph{Related Loop Bound}.
-$\lpchB(L_i, \tpath, \rprog) \in \mathcal{A}_{\lin}$.
+%
+\highlight{Theorem Guarantee: }
+Every transition path in a refined program $\tpath \in \rprog$ has a unique loop chain.
+%
+%
+%
+\item  \highlight{\emph{\textbf{Relative Loop Bound:}}
+$\lpchB(l, \tpath, \rprog) \in \mathcal{A}_{\lin}$}.
 \\
-Given a loop label $L_i \in \rprog$ and a transition path $\tpath \in \rprog$ in a refined program $\rprog$,
-the \emph{Related Loop Bound} $\lpchB(L_i, \tpath, \rprog)$ is a symbolic expression in $\mathcal{A}_{\lin}$.
+For a loop label $l$ and a transition path $\tpath$ in a refined program $\rprog$,
+the \emph{Relative Loop Bound} $\lpchB(l, \tpath, \rprog)$ is a symbolic expression in $\mathcal{A}_{\lin}$.
 \\
-This expression is the path-sensitive
-reachability bound on the number of $L_i$'s iteration numbers,
+This expression is the 
+reachability-bound on the number of $l$'s iteration numbers,
 %  will 
 % bound the execution times of $L_{t_0}$
 % in each single execution of the $L_{t_i}$ for every
-such that, during these iterations, $\tpath$ will be executed. 
-%  bound of $\tpath$ in the while loop with loop label $L_i$.
-\\
-For a refined program $\rprog$, 
-% with its refined statement $\rprog \in \mathcal{RP}$,
+such that during these iterations, the closest loop $l'$ enclosing $\tpath$ will be executed.
+It is formally computed as follows.
+%  bound of $\tpath$ in the while loop with loop label $l$.
 % \\
-% for 
-each transition path in this refined program, $\tpath \in \rprog$ with its loop chain set $\rpchset(\tpath)$,
-\\
-and every loop label $L_i \in \lpch(\tpath) $ and $\lpch(\tpath)  \in \rpchset(\tpath)$:
+% For a refined program $\rprog$, 
+% % with its refined statement $\rprog \in \mathcal{RP}$,
+% % \\
+% % for 
+% each transition path in this refined program, $\tpath \in \rprog$ with its loop chain set $\rpchset(\tpath)$,
 % \\
-% $(L_i, \tpath)$ such that $L_i \in \lpch(\tpath)$,
-\\
-$\lpchB(L_i, \tpath, \rprog) = \rpchB(L_i, \tpath, \rprog)$ if $\rpchB(L_i, \tpath, \rprog) \neq \bot$.
-\\
-$\lpchB(L_i, \tpath, \rprog) = 
-% \prod\limits_{\rprog_i \in lpchain(\tpath)}
-\frac{\lpinit(L_i, \tpath) - \rffinal(\tpath)}{\lpinit(L_i, \tpath) - \lpnext(L_i, \tpath)}$
+% and every loop label $l \in \lpch(\tpath) $ and $\lpch(\tpath)  \in \rpchset(\tpath)$:
+% % \\
+% % $(l, \tpath)$ such that $l \in \lpch(\tpath)$,
 % \\
-\begin{defn}[Related Loop Bound ($\lpchB(L_i, \tpath, \rprog) \in \mathcal{A}_{\lin}$)]
+% $\lpchB(l, \tpath, \rprog) = \rpchB(l, \tpath, \rprog)$ if $\rpchB(l, \tpath, \rprog) \neq \bot$.
+% \\
+% $\lpchB(l, \tpath, \rprog) = 
+% % \prod\limits_{\rprog_i \in lpchain(\tpath)}
+% \frac{\lpinit(l, \tpath) - \rffinal(\tpath)}{\lpinit(l, \tpath) - \lpnext(l, \tpath)}$
+% \\
+\begin{defn}[Relative Loop Bound ($\lpchB(l, \tpath, \rprog) \in \mathcal{A}_{\lin}$)]
   \label{def:relatedloop_bound}
-For each transition path in a refined program $\tpath \in \rprog$
-and every loop $L_i \in \lpch(\tpath, \rprog)$,
+For every simple transition path in a refined program $\tpath \in \rprog$
+and every loop $l \in \lpch(\tpath, \rprog)$,
 % where $\lpch(\tpath)  \in \rpchset(\tpath)$, 
-the \emph{Related Loop Bound} $\lpchB(L_i, \tpath, \rprog)$ is computed as follows,
-\\
-$\lpchB(L_i, \tpath, \rprog) = \rpchB(L_i, \tpath, \rprog)$ if $\rpchB(L_i, \tpath) \neq \bot$.
-\\
-$\lpchB(L_i, \tpath, \rprog) = 
-% \prod\limits_{\rprog_i \in lpchain(\tpath)}
-\frac{\lpinit(L_i, \tpath) - \rffinal(\tpath)}{\lpinit(L_i, \tpath) - \lpnext(L_i, \tpath)}$
+the \emph{Relative Loop Bound} $\lpchB(l, \tpath, \rprog)$ is computed as follows,
+\[
+  \lpchB(l, \tpath, \rprog)
+  \left\{
+  \begin{array}{ll}
+    \rpchB(l, \tpath, \rprog)  
+    & \qquad \rpchB(l, \tpath) \neq \bot
+    \\
+    \frac{\lpinit(l, \tpath) - \rffinal(\tpath)}{\lpinit(l, \tpath) - \lpnext(l, \tpath)}
+    & \qquad o.w.
+  \end{array}
+  \right\}
+  \]
 \end{defn}
-The computations of the operations $\lpinit(L_i, \tpath)$ and $\lpnext(L_i, \tpath)$
+The computations of the operations $\lpinit(l, \tpath)$ and $\lpnext(l, \tpath)$
 are formally computed as follows,
 \begin{itemize}
-\item For a transition path $\tpath \in \paths(\absG(c))$ and a loop label $L_i$ in this transition path's loop chain.
-Let $\rprog_i$ be the refined program with this loop label $L_i$, i.e., $L_i: \rprog_i \in \rprog$, 
-the abstract loop chain initial state $\lpinit(L_i, \tpath) \in \mathcal{P}(\absstate)$ is computed as follows,
+\item For a transition path $\tpath \in \paths(\absG(c))$ and a loop label $l$ in this transition path's loop chain.
+Let $\rprog_i$ be the refined program with this loop label $l$, i.e., $l: \rprog_i \in \rprog$, 
+the abstract loop chain initial state $\lpinit(l, \tpath) \in \mathcal{P}(\absstate)$ is computed as follows,
 \[
-  \lpinit(L_i, \tpath) \triangleq 
+  \lpinit(l, \tpath) \triangleq 
   \bigwedge_{x \in VAR(c)}
   \left\{ 
   x = arg\max_{l_1}
@@ -1342,11 +1520,11 @@ the abstract loop chain initial state $\lpinit(L_i, \tpath) \in \mathcal{P}(\abs
   \right\}
   \]
 \item
-For a transition path $\tpath \in \paths(\absG(c))$ and a refined program $\rprog_i$ with the loop label $L_i: \rprog_i$, its $\rfnext(L_i, \tpath)$ is computed as follows,
+For a transition path $\tpath \in \paths(\absG(c))$ and a refined program $\rprog_i$ with the loop label $l: \rprog_i$, its $\rfnext(l, \tpath)$ is computed as follows,
 %
 \[
   \begin{array}{l}
-  \lpnext(L_i, \tpath) \triangleq 
+  \lpnext(l, \tpath) \triangleq 
   \bigwedge\limits_{x \in VAR(\rprog)}
   \left\{ 
     \begin{array}{l}
@@ -1359,12 +1537,34 @@ For a transition path $\tpath \in \paths(\absG(c))$ and a refined program $\rpro
   \right\}
   \end{array}
 \]
-$\lpinit(L_i, \tpath)$, and $\lpnext(L_i, \tpath)$ can be computed using the 
-$INIT(c, i, \absinit(\tpath))$ and $NEXT(c, i, \absinit(\tpath))$ from paper \cite{GulwaniJK09}.
-% \\
-The $\lpchB(L_i, \tpath)$ can also be computed using the algorithm 
-$\kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$
-from paper \cite{GulwaniJK09} with the equivalent result.
+%
+\highlight{
+  \textbf{Improvement Discussion:}
+  \\
+  $\lpinit(l, \tpath)$, and $\lpnext(l, \tpath)$ can be computed using the 
+  $\kw{INIT}(c, i, \absinit(\tpath))$ and $\kw{NEXT}(c, i, \absinit(\tpath))$ from paper \cite{GulwaniJK09}.
+  % \\
+Then, based on the same semantics and syntax,
+the $\lpchB(l, \tpath)$ can be computed as
+\\
+$I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$.
+% from paper \cite{GulwaniJK09}.
+\\
+There are two improvements comparing to their method.
+\\
+1. $I(l, l')$ is the bound on iteration numbers of the inner loop $l'$ in each iteration of outside loop.
+This is equivalent to the OutIn bound of $l'$ if $l$ is the closest enclosing loop of $l'$.
+By multiplying $I(l, l')$ with $\outinB(l')$
+ they assume $l'$ is executed in every $l$'s iteration.
+ In this sense, they over-approximate the iteration numbers of the inner loop $l'$.
+ \\
+2. However, $\kw{BOUNDFINDERD}$ in paper~\cite{GulwaniJK09} is an arbitrary interface computing the bound on iteration numbers of $l$
+separately.
+The efficiency and accuracy of their algorithm fully depend on this arbitrary interface.
+\\
+In comparison to them, I also provide an efficient and accurate bound computation method using the
+ranks computed in Definition~\ref{def:transition_closure} over the constraint program $\absG(c)$.
+ }
 \end{itemize}
 % $rpRB: \tpath \to \mathcal{A}_{in}$, $chsRB: (\rprog \times \tpath) \to \mathcal{A}_{in}$
 % \\
@@ -1378,23 +1578,24 @@ from paper \cite{GulwaniJK09} with the equivalent result.
 \end{enumerate}
 \item The \emph{Inside-Out Bound} ($\inoutB(\tpath, \rprog) \in \mathcal{A}_{in}$).
 \\
-For every transition path $\tpath \in \rprog$, its \emph{Inside-Out Loop Bound}
+For every simple transition path $\tpath \in \rprog$,
+its \emph{Inside-Out Loop Bound}
  $\inoutB(\tpath, \rprog) \in \mathcal{A}_{in}$ is 
 % Compute 
-the path sensitive reachability bound on the iteration numbers of this path in this refined program $\rprog$. 
-It is computed in Definition~\ref{def:outin_bound}.
+the path sensitive reachability-bound on $\tpath$'s execution numbers,
+computed as follows.
 \begin{defn}[{Inside-Out Loop Bound} ($\inoutB(\tpath, \rprog) \in \mathcal{A}_{in}$)]
   \label{def:outin_bound}
   Given a refined program $\rprog$, for every transition path $\tpath \in \rprog$, 
   its \emph{Inside-Out Loop Bound}
   $\inoutB(\tpath, \rprog)$ is 
  % Compute 
- computed as follows,
-$\inoutB(\tpath, \rprog) =
-  \prod\limits_{L \in \lpch(\tpath, \rprog)} \rpchB(L, \tpath, \rprog)
+\[
+  \inoutB(\tpath, \rprog) =
+  \prod\limits_{L \in \lpch(\tpath, \rprog)} \rpchB(l, \tpath, \rprog).
 % lpRB(\rprog_i, \tpath) 
 % ~ \middle\vert~ l \in lp\mathcal{C}(\tpath) \right
-$
+\]
 \end{defn}
 % For $chain \in rpchain(\tpath)$:
 % where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
@@ -1402,16 +1603,13 @@ $
 %
 \subsection{Path Sensitive Reachability Bound Computation for Every Location}
 \label{sec:pathsensitive_rb-psrbcompute}
-$psRB(c, l) \in \mathcal{A}_{in}$
-\\
 For every program control location $l \in \lvar(c)$, with $\rprog$ as its refined program,
 %  in a program $c$,
-%  refined program $l \in \lvar(\rprog)$,
- $\psRB(l, \rprog)$ is its path sensitive reachability bound on the executing times of this location $l$.
- \\
+its path-sensitive reachability-bound ($\psRB(l, \rprog)$) is a symbolic sound bound on the executing times of $l$.
+%
  \begin{defn}
   \label{def:label_psrb}
-Given a program $c$ with its refined program $\rprog \in \mathcal{RP}$
+Given a program $c$ with the refined program $\rprog \in \mathcal{RP}$
 %  with 
 % \emph{Global Loop Bound} $\inoutB(\tpath)$
 % computed for its every transition path $\tpath \in \rprog$  notated by $\inoutB(\tpath)$,
@@ -1419,9 +1617,11 @@ Given a program $c$ with its refined program $\rprog \in \mathcal{RP}$
 % with the \emph{Global Loop Bound}
 % computed as above, notated by $\inoutB(\tpath)$.
 the $\psRB(c, l)$ for every label $l \in \lvar(c)$ is computed as follows,
-\\
-\[ \psRB(c, l) = \sum\limits_{\tpath \in \rprog \land 
-l \in \tpath} \inoutB(\tpath)\]
+% \\
+\[ 
+  \psRB(c, l) = \sum\limits_{\tpath \in \rprog \land 
+l \in \tpath} \inoutB(\tpath, \rprog)
+\]
  \end{defn}
 \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
   \label{thm:pathsensitive_rb_soundness}
