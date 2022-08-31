@@ -1,5 +1,5 @@
-\begin{example}[Nested Loop with Related Iterator]
-  \label{ex:threeNestedWhile}
+\begin{example}[A Simplified Nested Loop with Related Iterator Example]
+  \label{ex:relatedNestedWhileSim}
   %
   %
   { \small
@@ -10,22 +10,17 @@
   {\footnotesize
   $
   \begin{array}{l}
-      \kw{relatedNestedWhile}(n, m, N) \triangleq \\
+      \kw{relatedNestedWhileSim}(n, m, N) \triangleq \\
       \clabel{ \assign{i}{0} }^{0} ; \\
           \ewhile ~ \clabel{i < n}^{1} ~ \edo ~ \\
           \qquad \Big(
-           \clabel{\assign{j}{m}}^{2} ;\\
-           \qquad \ewhile ~ \clabel{j > 0}^{3} ~ \edo ~ \\
-           \qquad \qquad \Big(
-            \clabel{\assign{j}{j-1}}^{4};
-            \clabel{\assign{w}{i}}^{5};\\
-            \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
+            \clabel{\assign{w}{i}}^{2};\\
+            \qquad \ewhile ~ \clabel{w < N}^{3} ~ \edo ~
             \Big(
-              \clabel{\assign{w}{w + 1}}^{7}
+              \clabel{\assign{w}{w + 1}}^{4}
                 \Big); \\
-                \qquad \qquad \clabel{\assign{i}{w}}^{8}
-                \Big); \\
-                \qquad \clabel{\assign{i}{i+1}}^{9}
+                \qquad \clabel{\assign{i}{w}}^{5};
+                \clabel{\assign{i}{i+1}}^{6}
             \Big)
       \end{array}
   $
@@ -69,9 +64,9 @@
   \end{centering}
   \end{subfigure}
 \caption{
-(a) The Example of Nested Loop with Related Iterator
+(a) The Simplified Example of Nested Loop with Related Iterator
   (b) The Abstract Execution Control Flow Graph}
-    \label{fig:threeNestedWhile}
+    \label{fig:relatedNestedWhileSim}
 \end{figure}
 }
 \end{example}
@@ -88,94 +83,68 @@
           &
           \tpath_1 = (1 \to 2), (2 \to 3)
           &           
-          \tpath_2 = (3 \to 4), (4 \to 5), (5 \to 6)
+          \tpath_2 = (3 \to 4), (4 \to 3)
           &
-          \tpath_3 = (6 \to 7), (7 \to 6)
+          \tpath_3 = (3 \to 5), (5 \to 6), (6 \to 1)
           \\
-          \tpath_6 = (1 \to \lex)
-          &
-          \tpath_4 = (6 \to 8), (8 \to 3)
-          &
-          \tpath_5 = (3 \to 9), (9 \to 1)
+          \tpath_4 = (1 \to \lex)
       \end{array}
       \]
   \textbf{Refined Program}:
   \[
-  \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
+  \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3); \tpath_4
   \]
   \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
   \\
 $\outinB(\tpath_0) = 1$
 \quad
-$\outinB(\tpath_6) = 1$
-\quad
-$\outinB(6 : \rprepeat(\tpath_3)) = N $
+$\outinB(3: \rprepeat(\tpath_2)) = N $
 \\
-$\outinB(3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4)) = m $
-\\
-$\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5)) = n - N $
+$\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)) = n - N $
 \item \textbf{Inside-Out Algorithm}
 \begin{itemize}
   \item \textbf{Repeat Chain Set}
   \\
-  $\rpchset(1, \tpath_1) = \{1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5)\}$
-  \\
-  $\rpchset(1, \tpath_5) = \{1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5)\}$
-  \\
-  $\rpchset(3, \tpath_2) = \{3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4)\}$
-  \\
-  $\rpchset(3, \tpath_4) = \{3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4)\}$
-  \\
-  $\rpchset(6, \tpath_3) = \{6: \rprepeat(\tpath_3)\}$
-  \\
+  $\rpchset(1, \tpath_1) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$ \quad
+  $\rpchset(1, \tpath_3) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$ \\
+  $\rpchset(3, \tpath_2) = \{\rprepeat(\tpath_2)\}$ \quad
   $\rpchset(_, \_) = \emptyset$ 
   % \\
   \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
   \\
   $\rpchB(1, \tpath_1) = n - N$ \quad
-  $\rpchB(1, \tpath_5) = n - N$ \quad
-  $\rpchB(3, \tpath_2) = m$ \\
-  $\rpchB(3, \tpath_4) = m$ \quad
-  $\rpchB(6, \tpath_3) = N$ \quad \quad 
+  $\rpchB(1, \tpath_3) = n - N$ \quad
+  $\rpchB(3, \tpath_2) = N$ \quad
   $\rpchB(_, \_) = \bot $ 
   %
   \item \textbf{Loop Chain}
   \\
   $\lpch(\tpath_1) = 1\to \tpath_1$ \quad
-  $\lpch(\tpath_2) = 1 \to 3 \to \tpath_2$ \\
-  $\lpch(\tpath_5) = 1\to \tpath_5$ \quad
-  $\lpch(\tpath_4) = 1 \to 3 \to \tpath_4$ \\
-  \highlight
-  {$\lpch(\tpath_3) = 1 \to 3 \to 5 \to \tpath_3$ }\\
-  $\lpch(\tpath_0) = \tpath_0$ \quad
-  $\lpch(\tpath_6) = \tpath_6$ 
+  \highlight{$\lpch(\tpath_2) = \{1 \to 3 \to \tpath_2\}$} \quad
+  $\lpch(\tpath_3) = \{1 \to \tpath_3\}$ \\
+  $\lpch(\tpath_0) = \{\tpath_0\}$ \quad
+  $\lpch(\tpath_4) = \{\tpath_4\}$
   \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
   \\
-  $\rpchB(1, \tpath_1) = n - N$ \\
-  $\rpchB(1, \tpath_5) = n - N$ \\
-  $\rpchB(1, \tpath_2) = n$; \quad $\rpchB(3, \tpath_2) = m$; \\
-  $\rpchB(1, \tpath_4) = n$; \quad $\rpchB(3, \tpath_4) = m$ \\
-  \highlight{$\rpchB(1, \tpath_3) = 1$; \quad $\rpchB(3, \tpath_3) = 1$; \quad $\rpchB(5, \tpath_3) = N$} \\
-  $\rpchB(_, \_) = \bot $ 
+  $\rpchB(1, \tpath_1) = n - N$ \quad
+  $\rpchB(1, \tpath_3) = n - N$ \quad
+  \highlight{$\rpchB(1, \tpath_2) = 1$} \quad
+  $\rpchB(3, \tpath_2) = N$ \quad
+  $\rpchB(_, \_) = 1 $ 
   \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
   \\
   $\inoutB(\tpath_1) = n - N$ \quad
-  $\inoutB(\tpath_2) = n \times m$ \quad
+  $\inoutB(\tpath_2) = N$ \quad
   $\inoutB(\tpath_0) = 1$ 
   \\
-  $\inoutB(\tpath_5) = n - N$ \quad
-  $\inoutB(\tpath_4) = n \times m$ \quad
-  $\inoutB(\tpath_6) = 1$ 
-  \\
-  $\inoutB(\tpath_3) = N$ \quad
-\end{itemize}
+  \highlight{ $\inoutB(\tpath_3) = n - N$} \quad
+  $\inoutB(\tpath_4) = 1$ 
+  \end{itemize}
 \item \textbf{Path Sensitive Reachability-Bound} on every program control location
 \\
 $\psRB(\{0, \lex\}) = 1$ \quad
 $\psRB(\{1\}) = n - N + 1$ \quad
-$\psRB(\{2, 9\}) = n - N$ \quad
-$\psRB(\{3\}) = n - N + n \times m$ \quad
-$\psRB(\{4, 5, 8\}) = n \times m$ \quad
-$\psRB(\{7\}) = N$ \quad
-$\psRB(\{6\}) = N + n \times m$ 
+$\psRB(\{2, 5, 6\}) = n - N$ \\
+\highlight{$\psRB(\{3\}) = N + 1 + n - N = n + 1$} \quad
+$\psRB(\{4\}) = N$
 \end{enumerate}

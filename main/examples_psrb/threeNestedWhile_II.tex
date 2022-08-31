@@ -1,7 +1,7 @@
-\begin{example}[Three Nested While II]
+\begin{example}[A Variation of The Nested Loop with Related Iterator]
     \label{ex:threeNestedWhileII}
-    %
-    $N < m < n$\\
+    
+    % $N < m < n$\\
     %
     % \[
     % %
@@ -33,22 +33,22 @@
     {\small
     $
     \begin{array}{l}
-        \kw{threeNestedWhileII}(k, m, N) \triangleq \\
+        \kw{relatedNestedWhileII}(n, m, N) \triangleq \\
         \clabel{ \assign{i}{0} }^{0} ; \\
-            \ewhile ~ \clabel{i < k}^{1} ~ \edo ~ \\
+            \ewhile ~ \clabel{i < n}^{1} ~ \edo ~ \\
             \qquad \Big(
-             \highlight{\clabel{\assign{j}{i}}^{4}} ;\\
-             \qquad \ewhile ~ \clabel{j > 0}^{5} ~ \edo ~ \\
+             \highlight{\clabel{\assign{j}{i}}^{2}} ;\\
+             \qquad \ewhile ~ \clabel{j > 0}^{3} ~ \edo ~ \\
              \qquad \qquad \Big(
-              \clabel{\assign{j}{j-1}}^{6};
-              \highlight{\clabel{\assign{w}{j}}^{6}};\\
-              \qquad \qquad \ewhile ~ \clabel{w < N}^{5} ~ \edo ~
+              \clabel{\assign{j}{j-1}}^{4};
+              \highlight{\clabel{\assign{w}{j}}^{5}};\\
+              \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
               \Big(
-                \clabel{\assign{w}{w + 1}}^{6}
+                \clabel{\assign{w}{w + 1}}^{7}
                   \Big); \\
-                  \qquad \qquad \clabel{\assign{i}{w}}^{3}
+                  \qquad \qquad \clabel{\assign{i}{w}}^{8}
                   \Big); \\
-                  \qquad \clabel{\assign{i}{i+1}}^{3}
+                  \qquad \clabel{\assign{i}{i+1}}^{9}
               \Big)
       \end{array}
     $
@@ -60,43 +60,51 @@
     \begin{centering}
   %   \todo{abstract-cfg for two round}
   \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
-  \draw[] (-7, 10) circle (0pt) node{{ $0$}};
-  \draw[] (0, 10) circle (0pt) node{{ $1$}};
-  \draw[] (0, 7) circle (0pt) node{\textbf{$2$}};
-  \draw[] (4, 4) circle (0pt) node{{ $3$}};
-  % \draw[] (0, 1) circle (0pt) node{{ $4$}};
-  \draw[] (-4, 4) circle (0pt) node{{ $4$}};
-  % Counter Variables
-  \draw[] (6, 10) circle (0pt) node {\textbf{$\lex$}};
-  % \draw[] (6, 4) circle (0pt) node {{ $ex$}};
-  %
-  % Control Flow Edges:
-  \draw[ thick, -latex] (-6, 10)  -- node [above] {$a \leq 0$}(-0.5, 10);
-  \draw[ thick, -latex] (0, 9.5)  -- node [left] {$i \geq 0$} (0, 7.5) ;
-  \draw[ thick, -latex] (0.5, 7)  -- node [below] {$ i \% 2 == 0 $}  (4, 4.5);
-  \draw[ thick, -latex] (-4.5, 4)  to  [out=110,in=180]  node [left] {$i \leq i - 3$ }(-0.5, 9.5);
-  \draw[ thick, -latex] (4.5, 4)  to  [out=70,in=0]   node [right] {$i \leq i - 1$ }(0.5, 9.5);
-  \draw[ thick, -latex]  (-0.5, 7) -- node  {$i \% 2 \neq 0$}  (-4, 4.5) ;
-  \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (5.5, 10);
-  % \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
-  \end{tikzpicture}
+    \draw[] (-7, 10) circle (0pt) node{{ $0$}};
+    \draw[] (0, 10) circle (0pt) node{{ $1$}};
+    \draw[] (6, 10) circle (0pt) node {{$\lex$}};
+    \draw[] (0, 7) circle (0pt) node{{$2$}};
+    \draw[] (0, 4) circle (0pt) node{{ $3$}};
+    \draw[] (-7, 4) circle (0pt) node{{ $9$}};
+    \draw[] (0, 1) circle (0pt) node{{ $4$}};
+    \draw[] (3, 1) circle (0pt) node{{ $5$}};
+    \draw[] (6, 1) circle (0pt) node{{ $6$}};
+    \draw[] (9, 1) circle (0pt) node{{ $7$}};
+    \draw[] (5, 6) circle (0pt) node{{ $8$}};
+    % Counter Variables
+    %
+    % Control Flow Edges:
+    \draw[ thick, -latex] (-6, 10)  -- node [above] {$i' \leq 0$}(-0.5, 10);
+    \draw[ thick, -latex] (0, 9.5)  -- node [left] {$i' \leq n$} (0, 7.5) ;
+    \draw[ thick, -latex] (0, 6.5)  -- node [left] {\highlight{$j' \leq i$}} (0, 4.5) ;
+    \draw[ thick, -latex] (0, 3.5)  -- node [left] {$j > 0$} (0, 1.5) ;
+    \draw[ thick, -latex] (-0.5, 4)  -- node [below] {$j \leq 0$} (-6.5, 4) ;
+    \draw[ thick, -latex] (-6.5, 4.5)  to  [out=90,in=180]  node [left] {$i' \leq i + 1$ }(-0.5, 9.5);
+    \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \geq n$}  (5, 10);
+    \draw[ thick, -latex] (0.5, 1)  -- node [below] {$j' \leq j - 1$}  (2.5, 1);
+    \draw[ thick, -latex] (3.5, 1)  -- node [above] {\highlight{$w' \leq j$}}  (5.5, 1);
+    \draw[ thick, -latex] (6.5, 1)  -- node [below] {$w < N$}  (8.5, 1);
+    \draw[ thick, -latex] (6, 1.5)  to [out=90,in=-60] node [right] {$w \geq N$}  (5, 5.5);
+    \draw[ thick, -latex] (9, 1.5)  to  [out=120,in=30] node [right] {$w' \leq w + 1$}  (6, 1.5);
+    \draw[ thick, -latex] (5, 5.5)  to  node [above] {$i' \leq k$ }(0.5, 4);
+    \end{tikzpicture}
   \caption{}
     \end{centering}
     \end{subfigure}
   \caption{
-  (a) The Simple While Loop Example with Two Paths
+  (a) The Variation Example of Nested Loop with Related Iterator
     (b) The Abstract Execution Control Flow Graph}
-      \label{fig:whileOdd}
+      \label{fig:threeNestedWhileII}
   \end{figure}
   }
 \end{example}
 
 \begin{enumerate}
-    \item Step 1: Abstract Transition Graph:
+  \item  \textbf{The Constraint Program (Abstract Control Flow Graph)} is generated in Figure~\ref{fig:threeNestedWhileII}(b).
 
-\item Step 2: Path Insensitive Transition Bound Computation
-
-\item Step 3: Program Rephrase through Path Collection on Abstract CFG
+  \item \textbf{Program Refinement}
+\\
+The loop free simple transition paths are computed as follows,
 \\
 $\tpath_0 = (0 \to 1)$
 \\
@@ -112,81 +120,82 @@ $\tpath_5 = (3 \to 9), (9 \to 1)$
 \\
 $\tpath_6 = (1 \to \lex)$
 \\
-Rephrased Program
+\textbf{Refined Program}:
 \[
-\tpath_0 ; LOOP1: \rprepeat(\tpath_1; LOOP2: \rprepeat(\tpath_2; LOOP3 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
+  \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
 \]
-\item Step 4: While Loop Refinement:
-\[
-\tpath_0 ; LOOP1: \rprepeat(\tpath_1; LOOP2: \rprepeat(\tpath_2; LOOP3 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
-\]
-\item Step 5: Outside-In Algorithm
+\item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
 \\
-$LB(\tpath_0) = 1$
+$\outinB(\tpath_0) = 1$
 \\
-$LB(LOOP3 : \rprepeat(\tpath_3)) = N $
+$\outinB(6 : \rprepeat(\tpath_3)) = N $
 \\
-$LB(LOOP2: \rprepeat(\tpath_2; \cdots)) = m $
+$\outinB(3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4)) = m $
 \\
-$LB(LOOP1: \rprepeat(\tpath_1; \cdots)) = n - N $
-\\
-\item Step 6: Inside-Out Algorithm
+$\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5)) = n - N $
+\item \textbf{Inside-Out Algorithm}
 \begin{itemize}
     \item \textbf{Repeat Chain Set}
     \\
-    $rp\mathcal{C}(LOOP1, \tpath_1) = \{\rprepeat(\tpath_1; \cdots)\}$ \\
-    $rp\mathcal{C}(LOOP1, \tpath_5) = \{\rprepeat(\tpath_1; \cdots)\}$ \\
-    $rp\mathcal{C}(LOOP2, \tpath_2) = \{\rprepeat(\tpath_2; \cdots)\}$ \\
-    $rp\mathcal{C}(LOOP2, \tpath_4) = \{\rprepeat(\tpath_2; \cdots)\}$ \\
-    $rp\mathcal{C}(LOOP3, \tpath_3) = \{\rprepeat(\tpath_3)\}$ \\
-    $rp\mathcal{C}(_, \_) = \emptyset$ 
-    % \\
-    \item \textbf{{Local Repeat Chain Bound} for Every Transition Path $\tpath$ on its Repeat Chain}
+    $\rpchset(1, \tpath_1) = \{1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5)\}$
     \\
-    $rpLB(LOOP1, \tpath_1) = n - N$ \\
-    $rpLB(LOOP1, \tpath_5) = n - N$ \\
-    $rpLB(LOOP2, \tpath_2) = m$ \\
-    $rpLB(LOOP2, \tpath_4) = m$ \\
-    $rpLB(LOOP3, \tpath_3) = N$ \\
-    $rpLB(_, \_) = \bot $ 
+    $\rpchset(1, \tpath_5) = \{1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5)\}$
+    \\
+    $\rpchset(3, \tpath_2) = \{3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4)\}$
+    \\
+    $\rpchset(3, \tpath_4) = \{3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4)\}$
+    \\
+    $\rpchset(6, \tpath_3) = \{6: \rprepeat(\tpath_3)\}$
+    \\
+    $\rpchset(_, \_) = \emptyset$ 
+      % \\
+    \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
+    \\
+    $\rpchB(1, \tpath_1) = n - N$ \\
+    $\rpchB(1, \tpath_5) = n - N$ \\
+    $\rpchB(3, \tpath_2) = m$ \\
+    $\rpchB(3, \tpath_4) = m$ \\
+    $\rpchB(6, \tpath_3) = N$ \\
+    $\rpchB(_, \_) = \bot $ 
     %
-    \item \textbf{Loop Chain Set}
+    \item \textbf{Loop Chain}
     \\
-    $lp\mathcal{C}(\tpath_1) = \{LOOP1\to \tpath_1\}$ \\
-    $lp\mathcal{C}(\tpath_5) = \{LOOP1\to \tpath_5\}$ \\
-    $lp\mathcal{C}(\tpath_2) = \{LOOP1 \to LOOP2 \to \tpath_2\}$ \\
-    $lp\mathcal{C}(\tpath_4) = \{LOOP1 \to LOOP2 \to \tpath_4\}$ \\
-    $lp\mathcal{C}(\tpath_3) = \{LOOP1 \to LOOP2 \to LOOP3 \to \tpath_3\}$ \\
-    $lp\mathcal{C}(\tpath_0) = \{\tpath_0\}$ \\
-    $lp\mathcal{C}(\tpath_6) = \{\tpath_6\}$ 
-    \item \textbf{Nested Loop Bound for Every Transition Path $\tpath$ on its Loop Chain}
+    $\lpch(\tpath_1) = 1\to \tpath_1$ \quad
+    $\lpch(\tpath_2) = 1 \to 3 \to \tpath_2$ \\
+    $\lpch(\tpath_5) = 1\to \tpath_5$ \quad
+    $\lpch(\tpath_4) = 1 \to 3 \to \tpath_4$ \\
+    \highlight
+    {$\lpch(\tpath_3) = 1 \to 3 \to 5 \to \tpath_3$ }\\
+    $\lpch(\tpath_0) = \tpath_0$ \quad
+    $\lpch(\tpath_6) = \tpath_6$ 
+      \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
     \\
-    $rpLB(LOOP1, \tpath_1) = n - N$ \\
-    $rpLB(LOOP1, \tpath_5) = n - N$ \\
-    $rpLB(LOOP1, \tpath_2) = m - N$;  $rpLB(LOOP2, \tpath_2) = m$; \\
-    $rpLB(LOOP1, \tpath_4) = m - N$; $rpLB(LOOP2, \tpath_4) = m$ \\
-    $rpLB(LOOP1, \tpath_3) = 1$; $rpLB(LOOP2, \tpath_3) = N$; $rpLB(LOOP3, \tpath_3) = N$ \\
-    $rpLB(_, \_) = \bot $ 
-    \item \textbf{Path Sensitive Reachability Bound For Every Transition Path $\tpath$ }
+    $\rpchB(1, \tpath_1) = n - N$ \\
+    $\rpchB(1, \tpath_5) = n - N$ \\
+    $\rpchB(1, \tpath_2) = m - N$;  $\rpchB(3, \tpath_2) = m$; \\
+    $\rpchB(1, \tpath_4) = m - N$; $\rpchB(3, \tpath_4) = m$ \\
+    $\rpchB(1, \tpath_3) = 1$; $\rpchB(3, \tpath_3) = N$; $\rpchB(6, \tpath_3) = N$ \\
+    $\rpchB(_, \_) = \bot $ 
+    \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
     \\
-    $psRB(\tpath_1) = n - N$ \\
-    $psRB(\tpath_5) = n - N$ \\
+    $\inoutB(\tpath_1) = n - N$ \\
+    $\inoutB(\tpath_5) = n - N$ \\
     \highlight{    
-    $psRB(\tpath_2) = (m - N) \times m$ \\
-    $psRB(\tpath_4) = (m - N) \times m$ \\}
-    $psRB(\tpath_3) = N^2$ \\
-    $psRB(\tpath_0) = 1$ \\
-    $psRB(\tpath_6) = 1$ 
+    $\inoutB(\tpath_2) = (m - N) \times m$ \\
+    $\inoutB(\tpath_4) = (m - N) \times m$ \\}
+    $\inoutB(\tpath_3) = N^2$ \\
+    $\inoutB(\tpath_0) = 1$ \\
+    $\inoutB(\tpath_6) = 1$ 
 \end{itemize}
-\item Step 7: Path Sensitive Reachability Bound Computation for Every Location
+\item \textbf{Path Sensitive Reachability-Bound} on every program control location
 \\
-$psRB(\{0, 1\}) = 1$ \\
-$psRB(\{2, 3\}) = n - N$ \\
+$\psRB(\{0, \lex\}) = 1$ \\
+$\psRB(\{1\}) = n - N + 1$ \\
+$\psRB(\{2, 9\}) = n - N$ \\
 \highlight{
-$psRB(\{4, 5, 6\}) = (m - N) \times m$ \\
-$psRB(\{7, 6\}) = N^2$ \\
-$psRB(\{8, 3\}) = (m - N) \times m$ \\
+$\psRB(\{7\}) = N^2$ \\
+$\psRB(\{4, 5, 8\}) = (m - N) \times m$ \\
+$\psRB(\{ 6\}) = (m - N) \times m + N^2$ \\
+$\psRB(\{3\}) = (m - N) \times m + n - N$ \\
 }
-$psRB(\{9, 1\}) = n - N$ \\
-$psRB(\{\lex\}) = 1$ 
 \end{enumerate}
