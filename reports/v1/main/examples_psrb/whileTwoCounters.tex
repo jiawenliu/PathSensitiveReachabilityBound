@@ -1,4 +1,4 @@
-\begin{example}[Two Paths While Loop Example with Two Counters]
+\begin{example}[While with Two Counters]
   \label{ex:twoCountersWhile}
   %
   { \small
@@ -56,7 +56,7 @@
     \end{centering}
     \end{subfigure}
   \caption{
-  (a) The Two Paths While Loop Example with Two Counters
+  (a) The Two Paths While Loop Example with Two Coutners
     (b) The Abstract Execution Control Flow Graph}
       \label{fig:twoCountersWhile}
   \end{figure}
@@ -68,7 +68,7 @@
 
   \item \textbf{Program Rephrase and Refinement}. 
   \\
-  The loop free transition paths are computed as follows,
+  The loop free simple transition paths are computed as follows,
   \[
     \begin{array}{ll}
 \tpath_0 = (0 \to 1), (1 \to 2)
@@ -80,24 +80,20 @@
 \tpath_3 = (2 \to \lex)
 \end{array}
 \]
-\textbf{Rephrased Program}:
-\[
-\tpath_0 ; LOOP1: \rprepeat(\rpchoose\{\tpath_1, \tpath_2 \}); \tpath_3
-\]
 \textbf{Refined Program}:
 \[
-  \tpath_0 ; LOOP1: \rpchoose\{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , \rprepeat_1(\tpath_1) \}; \tpath_3
+  \tpath_0 ; 2: \rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , \rprepeat_1(\tpath_1) }; \tpath_3
   \]
-  \item \textbf{Outside-In Algorithm} : Compute Local Bound for Every program and sub programs.
+  \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
   \[
     \begin{array}{l}
-        LB(\tpath_0) = 1
+        \outinB(\tpath_0) = 1
         \\
-        LB(\rprepeat_1(\tpath_1)) = m 
+        \outinB(\rprepeat_1(\tpath_1)) = m 
         \\
-        LB(\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor
+        \outinB(\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor
         \\
-        LB(LOOP1: \rpchoose(\rprepeat_2(\cdots), \rprepeat_1(\tpath_1))) 
+        \outinB(2: \rpchoose(\rprepeat_2(\cdots), \rprepeat_1(\tpath_1))) 
         = \max\{m, (m  + 1)\times \lfloor\frac{n}{m}\rfloor\}
 \end{array}
 \]
@@ -105,39 +101,39 @@
 \begin{itemize}
   \item \textbf{Repeat Chain Set}
   \\
-  $rp\mathcal{C}(LOOP1, \tpath_1) = \{\rprepeat_1(\tpath_1), \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
-  $rp\mathcal{C}(LOOP1, \tpath_2) = \{\rprepeat_2(\cdots; \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
-  $rp\mathcal{C}(\_, \_) = \emptyset$ 
+  $\rpchset(2, \tpath_1) = \{\rprepeat_1(\tpath_1), \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
+  $\rpchset(2, \tpath_2) = \{\rprepeat_2(\cdots; \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
+  $\rpchset(\_, \_) = \emptyset$ 
   % \\
-  \item \textbf{{Local Repeat Chain Bound} }for Every Transition Path $\tpath$ on its Repeat Chain
+  \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
   \\
-  $rpLB(LOOP1, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \\
-  $rpLB(LOOP1, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
+  $\rpchB(2, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \\
+  $\rpchB(2, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
   %
-  \item \textbf{Loop Chain} Set
+  \item \textbf{Loop Chain}
   \\
-  $lp\mathcal{C}(\tpath_0) = \{\tpath_0\}$ \qquad
-  $lp\mathcal{C}(\tpath_1) = \{LOOP1\to \tpath_1\}$ \\
-  $lp\mathcal{C}(\tpath_3) = \{\tpath_3\}$ \qquad
-  $lp\mathcal{C}(\tpath_2) = \{LOOP1\to \tpath_2\}$ 
-  \item \textbf{Nested Loop Bound }for Every Transition Path $\tpath$ on its Loop Chain
+  $\lpch(\tpath_0) = \{\tpath_0\}$ \qquad
+  $\lpch(\tpath_1) = \{2\to \tpath_1\}$ \\
+  $\lpch(\tpath_3) = \{\tpath_3\}$ \qquad
+  $\lpch(\tpath_2) = \{2\to \tpath_2\}$ 
+  \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
   \\
-  $rpLB(LOOP1, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
-  $rpLB(LOOP1, \tpath_2) = \lfloor\frac{n}{m}\rfloor$  \\
-  $rpLB(\bot, \tpath_0) = 1$ \quad
-  $rpLB(\bot, \tpath_3) = 1$ 
-  \item \textbf{Path Sensitive Reachability Bound For Every Transition Path $\tpath$ }
+  $\rpchB(2, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
+  $\rpchB(2, \tpath_2) = \lfloor\frac{n}{m}\rfloor$  \\
+  $\rpchB(\bot, \tpath_0) = 1$ \quad
+  $\rpchB(\bot, \tpath_3) = 1$ 
+  \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
   \\
-  $psRB(\tpath_1) = n$ \quad
-  $psRB(\tpath_2) = \lfloor\frac{n}{m}\rfloor$ \quad
-  $psRB(\tpath_0) = 1$ \quad
-  $psRB(\tpath_3) = 1$ 
+  $\inoutB(\tpath_1) = n$ \quad
+  $\inoutB(\tpath_2) = \lfloor\frac{n}{m}\rfloor$ \quad
+  $\inoutB(\tpath_0) = 1$ \quad
+  $\inoutB(\tpath_3) = 1$ 
 \end{itemize}
 \item Step 7: Path Sensitive Reachability Bound Computation for Every Location
 \\
-$psRB(\{0, 1\}) = 1$ \qquad
-$psRB(\{\lex\}) = 1$ \qquad
-$psRB(\{6 \}) = \lfloor\frac{n}{m}\rfloor$ \\
-$psRB(\{4, 5 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
-$psRB(\{3, 2 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $ \\
+$\psRB(\{0, 1\}) = 1$ \qquad
+$\psRB(\{\lex\}) = 1$ \qquad
+$\psRB(\{6 \}) = \lfloor\frac{n}{m}\rfloor$ \\
+$\psRB(\{4, 5 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
+$\psRB(\{3, 2 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $ \\
 \end{enumerate}
