@@ -1,4 +1,4 @@
-\begin{example}[Nested Loop with Related Iterator]
+\begin{example}[Nested Loop with Related Iterators]
   \label{ex:threeNestedWhile}
   %
   %
@@ -52,7 +52,7 @@
 %
 % Control Flow Edges:
 \draw[ thick, -latex] (-6, 10)  -- node [above] {$i' \leq 0$}(-0.5, 10);
-\draw[ thick, -latex] (0, 9.5)  -- node [left] {$i' \leq n$} (0, 7.5) ;
+\draw[ thick, -latex] (0, 9.5)  -- node [left] {$i < n$} (0, 7.5) ;
 \draw[ thick, -latex] (0, 6.5)  -- node [left] {$j' \leq m$} (0, 4.5) ;
 \draw[ thick, -latex] (0, 3.5)  -- node [left] {$j > 0$} (0, 1.5) ;
 \draw[ thick, -latex] (-0.5, 4)  -- node [below] {$j \leq 0$} (-6.5, 4) ;
@@ -69,7 +69,7 @@
   \end{centering}
   \end{subfigure}
 \caption{
-(a) The Example of Nested Loop with Related Iterator
+(a) The Example of Nested Loop with Related Iterators
   (b) The Abstract Execution Control Flow Graph}
     \label{fig:threeNestedWhile}
 \end{figure}

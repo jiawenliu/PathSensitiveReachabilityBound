@@ -75,7 +75,7 @@
     %
     % Control Flow Edges:
     \draw[ thick, -latex] (-6, 10)  -- node [above] {$i' \leq 0$}(-0.5, 10);
-    \draw[ thick, -latex] (0, 9.5)  -- node [left] {$i' \leq n$} (0, 7.5) ;
+    \draw[ thick, -latex] (0, 9.5)  -- node [left] {$i' < n$} (0, 7.5) ;
     \draw[ thick, -latex] (0, 6.5)  -- node [left] {\highlight{$j' \leq i$}} (0, 4.5) ;
     \draw[ thick, -latex] (0, 3.5)  -- node [left] {$j > 0$} (0, 1.5) ;
     \draw[ thick, -latex] (-0.5, 4)  -- node [below] {$j \leq 0$} (-6.5, 4) ;
@@ -172,9 +172,9 @@ $\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); 
     \\
     $\rpchB(1, \tpath_1) = n - N$ \\
     $\rpchB(1, \tpath_5) = n - N$ \\
-    $\rpchB(1, \tpath_2) = m - N$;  $\rpchB(3, \tpath_2) = m$; \\
-    $\rpchB(1, \tpath_4) = m - N$; $\rpchB(3, \tpath_4) = m$ \\
-    $\rpchB(1, \tpath_3) = 1$; $\rpchB(3, \tpath_3) = N$; $\rpchB(6, \tpath_3) = N$ \\
+    \highlight{$\rpchB(1, \tpath_2) = m - N$;} \quad  $\rpchB(3, \tpath_2) = m$; \\
+    \highlight{$\rpchB(1, \tpath_4) = m - N$;} \quad $\rpchB(3, \tpath_4) = m$ \\
+    \highlight{ $\rpchB(1, \tpath_3) = 1$;} \quad $\rpchB(3, \tpath_3) = N$; \quad $\rpchB(6, \tpath_3) = N$ \\
     $\rpchB(_, \_) = \bot $ 
     \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
     \\
@@ -195,7 +195,7 @@ $\psRB(\{2, 9\}) = n - N$ \\
 \highlight{
 $\psRB(\{7\}) = N^2$ \\
 $\psRB(\{4, 5, 8\}) = (m - N) \times m$ \\
-$\psRB(\{ 6\}) = (m - N) \times m + N^2$ \\
+$\psRB(\{ 6\}) = (m - N) \times m + N^2 + 1$ \\
 $\psRB(\{3\}) = (m - N) \times m + n - N$ \\
 }
 \end{enumerate}

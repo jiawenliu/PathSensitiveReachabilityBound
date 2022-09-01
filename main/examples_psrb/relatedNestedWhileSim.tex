@@ -37,28 +37,21 @@
 \draw[] (6, 10) circle (0pt) node {{$\lex$}};
 \draw[] (0, 7) circle (0pt) node{{$2$}};
 \draw[] (0, 4) circle (0pt) node{{ $3$}};
-\draw[] (-7, 4) circle (0pt) node{{ $9$}};
-\draw[] (0, 1) circle (0pt) node{{ $4$}};
-\draw[] (3, 1) circle (0pt) node{{ $5$}};
-\draw[] (6, 1) circle (0pt) node{{ $6$}};
-\draw[] (9, 1) circle (0pt) node{{ $7$}};
-\draw[] (5, 6) circle (0pt) node{{ $8$}};
+\draw[] (-7, 4) circle (0pt) node{{ $6$}};
+\draw[] (-3, 4) circle (0pt) node{{ $5$}};
+\draw[] (4, 4) circle (0pt) node{{ $4$}};
 % Counter Variables
 %
 % Control Flow Edges:
 \draw[ thick, -latex] (-6, 10)  -- node [above] {$i' \leq 0$}(-0.5, 10);
-\draw[ thick, -latex] (0, 9.5)  -- node [left] {$i' \leq n$} (0, 7.5) ;
-\draw[ thick, -latex] (0, 6.5)  -- node [left] {$j' \leq m$} (0, 4.5) ;
-\draw[ thick, -latex] (0, 3.5)  -- node [left] {$j > 0$} (0, 1.5) ;
-\draw[ thick, -latex] (-0.5, 4)  -- node [below] {$j \leq 0$} (-6.5, 4) ;
+\draw[ thick, -latex] (0, 9.5)  -- node [left] {$i < n$} (0, 7.5) ;
+\draw[ thick, -latex] (0, 6.5)  -- node [left] {$w' \leq i$} (0, 4.5) ;
+\draw[ thick, -latex] (-0.5, 4)  -- node [below] {$w \geq N$} (-2.5, 4) ;
+\draw[ thick, -latex] (-3.5, 4)  -- node [below] {$i' \leq w$} (-6.5, 4) ;
 \draw[ thick, -latex] (-6.5, 4.5)  to  [out=90,in=180]  node [left] {$i' \leq i + 1$ }(-0.5, 9.5);
 \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \geq n$}  (5, 10);
-\draw[ thick, -latex] (0.5, 1)  -- node [below] {$j' \leq j - 1$}  (2.5, 1);
-\draw[ thick, -latex] (3.5, 1)  -- node [above] {$w' \leq i$}  (5.5, 1);
-\draw[ thick, -latex] (6.5, 1)  -- node [below] {$w < N$}  (8.5, 1);
-\draw[ thick, -latex] (6, 1.5)  to [out=90,in=-60] node [right] {$w \geq N$}  (5, 5.5);
-\draw[ thick, -latex] (9, 1.5)  to  [out=120,in=30] node [right] {$w' \leq w + 1$}  (6, 1.5);
-\draw[ thick, -latex] (5, 5.5)  to  node [above] {$i' \leq k$ }(0.5, 4);
+\draw[ thick, -latex] (4, 4.5)  to  [out=120,in=30] node [above] {$w' \leq w + 1$}  (0.5, 4.5);
+\draw[ thick, -latex] (0.5, 4)  -- node [below] {$w < N$}  (3.5, 4);
 \end{tikzpicture}
 \caption{}
   \end{centering}
@@ -94,7 +87,7 @@
   \[
   \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3); \tpath_4
   \]
-  \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
+  \item \textbf{Outside-In Algorithm}: The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
   \\
 $\outinB(\tpath_0) = 1$
 \quad
@@ -105,8 +98,10 @@ $\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)) = n - N $
 \begin{itemize}
   \item \textbf{Repeat Chain Set}
   \\
-  $\rpchset(1, \tpath_1) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$ \quad
-  $\rpchset(1, \tpath_3) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$ \\
+  $\rpchset(1, \tpath_1) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$
+  \\
+  $\rpchset(1, \tpath_3) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$
+  \\
   $\rpchset(3, \tpath_2) = \{\rprepeat(\tpath_2)\}$ \quad
   $\rpchset(_, \_) = \emptyset$ 
   % \\
@@ -120,10 +115,10 @@ $\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)) = n - N $
   \item \textbf{Loop Chain}
   \\
   $\lpch(\tpath_1) = 1\to \tpath_1$ \quad
-  \highlight{$\lpch(\tpath_2) = \{1 \to 3 \to \tpath_2\}$} \quad
-  $\lpch(\tpath_3) = \{1 \to \tpath_3\}$ \\
-  $\lpch(\tpath_0) = \{\tpath_0\}$ \quad
-  $\lpch(\tpath_4) = \{\tpath_4\}$
+  \highlight{$\lpch(\tpath_2) = 1 \to 3 \to \tpath_2$} \quad
+  $\lpch(\tpath_3) = 1 \to \tpath_3$ \\
+  $\lpch(\tpath_0) = \tpath_0$ \quad
+  $\lpch(\tpath_4) = \tpath_4$
   \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
   \\
   $\rpchB(1, \tpath_1) = n - N$ \quad

@@ -1,5 +1,5 @@
 \begin{example}[While with Two Paths]
-  \label{ex:twoCountersWhile}
+  \label{ex:twoPathsWhile}
   %
   { \small
   \begin{figure}
@@ -9,7 +9,7 @@
     {\small
     $
     \begin{array}{l}
-      \kw{twoCountersWhile}(n, m) \triangleq \\
+      \kw{twoPathsWhile}(n, m) \triangleq \\
     \clabel{ \assign{i}{n} }^{0} ; \\
     \clabel{ \assign{j}{0} }^{1} ; \\
         \ewhile ~ \clabel{i > 0}^{2} ~ \edo ~ \\
@@ -41,14 +41,14 @@
   % \draw[] (6, 4) circle (0pt) node {{ $ex$}};
   %
   % Control Flow Edges:
-  \draw[ thick, -latex] (-7, 10)  -- node [above] {$i \leq n$}(-4.5, 10);
-  \draw[ thick, -latex] (-3, 10)  -- node [above] {$j \leq 0$}(-0.5, 10);
+  \draw[ thick, -latex] (-7, 10)  -- node [above] {$i' \leq n$}(-4.5, 10);
+  \draw[ thick, -latex] (-3, 10)  -- node [above] {$j' \leq 0$}(-0.5, 10);
   \draw[ thick, -latex] (0, 9.5)  -- node [left] {$i > 0$} (0, 7.5) ;
   \draw[ thick, -latex] (0.5, 7)  -- node [below] {$ j \geq m $}  (4, 4.5);
-  \draw[ thick, -latex] (-7.5, 4.5)  to  [out=90,in=180]  node [left] {$i \leq i - 3$ }(-0.5, 9.5);
-  \draw[ thick, -latex] (4.5, 4)  to  [out=70,in=0]   node [right] {$j \leq 0 $}(0.5, 9.5);
+  \draw[ thick, -latex] (-7.5, 4.5)  to  [out=90,in=180]  node [left] {$i' \leq i - 1$ }(-0.5, 9.5);
+  \draw[ thick, -latex] (4.5, 4)  to  [out=70,in=0]   node [right] {$j' \leq 0 $}(0.5, 9.5);
   \draw[ thick, -latex]  (-0.5, 7) -- node  {$j < m$}  (-3, 4.5) ;
-  \draw[ thick, -latex]  (-3.5, 4) -- node [above] {$j \leq j + 1$}  (-7, 4) ;
+  \draw[ thick, -latex]  (-3.5, 4) -- node [above] {$j' \leq j + 1$}  (-7, 4) ;
   \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (5.5, 10);
   % \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
   \end{tikzpicture}
@@ -58,13 +58,13 @@
   \caption{
   (a) The Two Paths While Loop Example
     (b) The Abstract Execution Control Flow Graph}
-      \label{fig:twoCountersWhile}
+      \label{fig:twoPathsWhile}
   \end{figure}
   }
 \end{example}
 
 \begin{enumerate}
-  \item  \textbf{The Abstract Execution Control Flow Graph} is generated in Figure~\ref{fig:twoCountersWhile}(b).
+  \item  \textbf{The Abstract Execution Control Flow Graph} is generated in Figure~\ref{fig:twoPathsWhile}(b).
 
   \item \textbf{Program Rephrase and Refinement}. 
   \\
@@ -82,18 +82,19 @@
 \]
 \textbf{Refined Program}:
 \[
-  \tpath_0 ; 2: \rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , \rprepeat_1(\tpath_1) }; \tpath_3
+  \tpath_0 ; \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
+  2: \rprepeat_1(\tpath_1) }; \tpath_3
   \]
   \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
   \[
     \begin{array}{l}
         \outinB(\tpath_0) = 1
         \\
-        \outinB(\rprepeat_1(\tpath_1)) = m 
+        \outinB(2: \rprepeat_1(\tpath_1)) = m 
         \\
-        \outinB(\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor
+        \outinB(2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor
         \\
-        \outinB(2: \rpchoose(\rprepeat_2(\cdots), \rprepeat_1(\tpath_1))) 
+        \outinB(\rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2), \rprepeat_1(\tpath_1) })
         = \max\{m, (m  + 1)\times \lfloor\frac{n}{m}\rfloor\}
 \end{array}
 \]
@@ -102,7 +103,7 @@
   \item \textbf{Repeat Chain Set}
   \\
   $\rpchset(2, \tpath_1) = \{\rprepeat_1(\tpath_1), \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
-  $\rpchset(2, \tpath_2) = \{\rprepeat_2(\cdots; \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
+  $\rpchset(2, \tpath_2) = \{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
   $\rpchset(\_, \_) = \emptyset$ 
   % \\
   \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
@@ -112,10 +113,10 @@
   %
   \item \textbf{Loop Chain}
   \\
-  $\lpch(\tpath_0) = \{\tpath_0\}$ \qquad
-  $\lpch(\tpath_1) = \{2\to \tpath_1\}$ \\
-  $\lpch(\tpath_3) = \{\tpath_3\}$ \qquad
-  $\lpch(\tpath_2) = \{2\to \tpath_2\}$ 
+  $\lpch(\tpath_0) = \tpath_0$ \qquad
+  $\lpch(\tpath_1) = 2\to \tpath_1$ \\
+  $\lpch(\tpath_3) = \tpath_3$ \qquad
+  $\lpch(\tpath_2) = 2\to \tpath_2$ 
   \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
   \\
   $\rpchB(2, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
@@ -129,10 +130,9 @@
   $\inoutB(\tpath_0) = 1$ \quad
   $\inoutB(\tpath_3) = 1$ 
 \end{itemize}
-\item Step 7: Path Sensitive Reachability Bound Computation for Every Location
+\item \textbf{Path Sensitive Reachability-Bound} on every program control location
 \\
-$\psRB(\{0, 1\}) = 1$ \qquad
-$\psRB(\{\lex\}) = 1$ \qquad
+$\psRB(\{0, 1, \lex\}) = 1$ \qquad
 $\psRB(\{6 \}) = \lfloor\frac{n}{m}\rfloor$ \\
 $\psRB(\{4, 5 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
 $\psRB(\{3, 2 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $ \\

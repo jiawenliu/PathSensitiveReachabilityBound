@@ -1,12 +1,12 @@
 \subsection{Constraint Program}
 \label{sec:abs_prog}
 % \textbf{Step 1: Program Abstract Execution Control Flow Graph}
-The Constraint program is an Abstract Transition Graph,
+Given a program $c$, the \emph{constraint program} of $c$ is an \emph{Abstract Transition Graph},
 % For a program $c$, this analysis first generates its abstract execution control flow graph notated as follows,
 \[\absG(c) =(\absV(c), \absE(c)).\]
 %
 $\absV(c)$ is the set of program $c$'s control location, each edge in $\absE(c)$ is a transition
-between two control locations if and only if there is a feasible control flow between the two locations.
+between two control locations if and only if there is a control flow between the two locations.
 Each edge is annotated by a constraint
 from the set $\dcdom^{\top}$.
 \subsection{Constraint Program Refinement}
@@ -16,12 +16,12 @@ Three sub-steps:
 \textbf{Step1: Simple Transition Path}. $\tpath \in \paths(\absG(c))$.
 \\
 % For a constraint program $\absG(c)$,
-A \emph{simple transition path} is a path of a constraint program, $\tpath \in \paths(\absG(c))$.
+A \emph{simple transition path} of a constraint program is a path in the graph $\absG(c)$, $\tpath \in \paths(\absG(c))$.
 It either
 \begin{itemize}
   \item contains only one loop (without any nested loop) starting from a loop header at location $l$ and go back to the same $l$;
-  \item or doesn't contain a loop, starting from a loop header $l$ (or the program entrance $l_0$)
-and ending with different loop header $l'$ (or the program exist $\lex$).
+  \item or doesn't contain any loop, and starts from a loop header $l$ (or the program entrance $l_0$),
+and ends with different loop header $l'$ (or the program exist $\lex$).
 \end{itemize}
 %
 \textbf{Step2: Repeat Pattern}.
@@ -164,20 +164,20 @@ It is called \emph{OutIn} bound because for a repeat pattern $\rpattern$ nested
 in another repeat pattern $\rpattern' = \rprepeat(\rpattern)$,
 this value only bounds the iteration number of $\rpattern$ inside $\rpattern'$ by assuming $\rpattern'$ executes once.
 
-\highlight{\textbf{Notations / Operators:}}
-\\
-The \emph{State}: 
-$\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of the edge annotations.
-%  constraints.
-\\
-For a refined program ($\rprog$), there are the 
-\\
-\emph{Initial State} ($\rfinit(\rprog)$), 
-\emph{Final State} ($\rffinal(\rprog)$), and \emph{Next State} ($\rfnext(\rprog)$)  $\in \absstate$.
-% The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
-\\
-The \emph{Variable Grade Decedent}: $\varGD : \rprog \to \mathcal{A}_{in}$, is the set of the variables' variation in one iteration;
-% The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
+% \highlight{\textbf{Notations / Operators:}}
+% \\
+% The \emph{State}: 
+% $\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of the edge annotations.
+% %  constraints.
+% \\
+% For a refined program ($\rprog$), there are the 
+% \\
+% \emph{Initial State} ($\rfinit(\rprog)$), 
+% \emph{Final State} ($\rffinal(\rprog)$), and \emph{Next State} ($\rfnext(\rprog)$)  $\in \absstate$.
+% % The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
+% \\
+% The \emph{Variable Grade Decedent}: $\varGD : \rprog \to \mathcal{A}_{in}$, is the set of the variables' variation in one iteration;
+% % The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
 
 \subsection{Inside-Out Algorithm}
 \label{sec:inoutalg}
@@ -210,7 +210,7 @@ its \emph{Inside-Out Loop Bound}
 % Compute 
 the path sensitive reachability-bound on $\tpath$'s execution numbers.
 
-\highlight{\textbf{Omitted Computations:}}
+% \highlight{\textbf{Omitted Computations:}}
 \begin{defn}[{Inside-Out Loop Bound}]
   \label{def:outin_bound}
   Given a refined program $\rprog$, for every transition path $\tpath \in \rprog$, 
