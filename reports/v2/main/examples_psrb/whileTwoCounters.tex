@@ -85,7 +85,16 @@
   \tpath_0 ; \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
   2: \rprepeat_1(\tpath_1) }; \tpath_3
   \]
-  \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
+  \item \textbf{Ranks}:
+  The ranking bounds for every simple transition path:
+  \\
+  $\absclr(\tpath_0) = 1$ 
+  $\absclr(\tpath_1) = n $ \quad
+  $\absclr(\tpath_2) = n $ \quad
+  $\absclr(\tpath_3) = 1$
+  % \\
+  % $\bot$ means the algorithm fails in inferring the ranking bound.
+    \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
   \[
     \begin{array}{l}
         \outinB(\tpath_0) = 1

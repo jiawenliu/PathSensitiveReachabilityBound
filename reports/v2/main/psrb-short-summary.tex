@@ -1,40 +1,89 @@
-\subsection{Constraint Program}
+\subsection{Abstract Transition Graph}
 \label{sec:abs_prog}
 % \textbf{Step 1: Program Abstract Execution Control Flow Graph}
 Given a program $c$, the \emph{constraint program} of $c$ is an \emph{Abstract Transition Graph},
 % For a program $c$, this analysis first generates its abstract execution control flow graph notated as follows,
 \[\absG(c) =(\absV(c), \absE(c)).\]
 %
-$\absV(c)$ is the set of program $c$'s control location, each edge in $\absE(c)$ is a transition
-between two control locations if and only if there is a control flow between the two locations.
+$\absV(c)$ is the set of $c$'s all program points,
+each edge in $\absE(c)$ is a transition
+between two control locations if and only if there is a control flow between two program points.
 Each edge is annotated by a constraint
 from the set $\dcdom^{\top}$.
-\subsection{Constraint Program Refinement}
+The constraint set contains the different constraints and the boolean expressions. 
+A different constraint is an inequality of form $x \leq y + v$ where 
+$x, y$ are program variables and $v$ is either a 
+% $y \in \mathcal{VAR}$ and $v \in \constdom$.
+% The \emph{Symbolic Variables} $\constdom = \mathbb{N} \cup \inpvar$ is the 
+% set of 
+natural number, the infinity or an input variable. 
+\subsection{Abstract Transition Graph Refinement}
 \label{sec:refine}
 Three sub-steps:
 \\
 \textbf{Step1: Simple Transition Path}. $\tpath \in \paths(\absG(c))$.
 \\
 % For a constraint program $\absG(c)$,
-A \emph{simple transition path} of a constraint program is a path in the graph $\absG(c)$, $\tpath \in \paths(\absG(c))$.
-It either
+A simple transition path, $\tpath \in \paths(\absG(c))$ for a program c is a path in the abstract transition graph of $c$ that it is either:
 \begin{itemize}
-  \item contains only one loop (without any nested loop) starting from a loop header at location $l$ and go back to the same $l$;
-  \item or doesn't contain any loop, and starts from a loop header $l$ (or the program entrance $l_0$),
-and ends with different loop header $l'$ (or the program exist $\lex$).
+  \item a simple cyclic path, which starts and ends at the same loop header at location $l$, 
+  and visits only locations inside the natural loop of $l$;
+  %  only one loop (without any nested loop) starting from a loop header at location $l$ and go back to the same $l$;
+  \item or an acyclic path, which starts from a loop header $l$ 
+  % (or the program entrance $l_0$)
+and ends with different loop header $l'$;
+%  (or the program's exists $\lex$).
+\item or an acyclic path, which starts from a loop header $l$ 
+% (or the program entrance $l_0$)
+and ends the program exists $\lex$;
+%  (or the program's exists $\lex$).
+\item or an acyclic path, which starts from the program entrance $l_0$
+% (or the program entrance $l_0$)
+and ends with a loop header $l$;
+%  (or the program's exists $\lex$).
+\item or an acyclic path, which starts from the program entrance $l_0$
+% (or the program entrance $l_0$)
+and ends the program exists $\lex$;
+%  (or the program's exists $\lex$).
 \end{itemize}
 %
 \textbf{Step2: Repeat Pattern}.
 \\
-A \emph{Repeat Pattern} ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns of this program $c$. 
-\[
-  \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
-\]
-Every $\rprog'$ with the annotation $\rprepeat$, (for example, $\rpattern = \rprepeat(\rpattern')$)
-can consecutively execute at least twice.
-Every two sub-repeat patterns following each other in a $\rprog$ can execute in sequence, for example in $\rpattern = \rpattern_1; \rpattern_2$,
-$\rpattern_2$ can execute after $\rpattern_1$.
-Every sub-repeat patterns in the sequence are distinct.
+% A \emph{Repeat Pattern} ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns of this program $c$. 
+% \[
+%   \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
+% \]
+% Every $\rprog'$ with the annotation $\rprepeat$, (for example, $\rpattern = \rprepeat(\rpattern')$)
+% can consecutively execute at least twice.
+% Every two sub-repeat patterns following each other in a $\rprog$ can execute in sequence, for example in $\rpattern = \rpattern_1; \rpattern_2$,
+% $\rpattern_2$ can execute after $\rpattern_1$.
+% Every sub-repeat patterns in the sequence are distinct.
+A \emph{Repeat Pattern},
+  $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a program $c$
+% is either a simple path or sequence of repeat patterns of this program $c$. 
+  % is a sequence of simple transition paths with annotations $\rprepeat$
+  % it is a simple path or
+  is either a simple transition paths $\tpath$,
+  or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
+  or a sequence of sub \emph{repeat pattern}s $\rpattern_1; \cdots; \rpattern_n$ satisfying,
+  % \[
+%   \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
+% \]
+\begin{itemize}
+\item If $\rpattern$ has the annotation $\rprepeat$, i.e., $\rprepeat(\rpattern)$,
+then can consecutively execute at least twice w.r.t. some initial trace.
+\item
+If $\rpattern$ is a sequence of sub-repeat patterns,
+i.e.,  $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
+then every two sub-repeat patterns following each other in this sequence
+% i.e., $\rpattern_1; \rpattern_2$, 
+can execute after each other,
+% can execute in sequence, for example in ,
+i.e., 
+$\rpattern_i$ can execute after $\rpattern_{i - 1}$ for every $i = 1, \cdots, n$.
+% $\rpattern_2$ can execute after $\rpattern_1$.
+\item Every sub-repeat pattern in a sequence is distinct.
+\end{itemize}
 % \begin{defn}[Repeat Pattern of A Program]
 %   \label{def:repeat-pattern}
 %   Given a constraint program $\absG(c)$,
@@ -59,26 +108,44 @@ Every sub-repeat patterns in the sequence are distinct.
 %   \end{itemize}
 % \end{defn}
 %
-\\
 \textbf{Step3: Refined Program}.
 \\
-A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
-is either a repeat pattern, or a set of refined programs, or sequence of refined program
-% ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
-\[
-  \rprog :=  \rpattern ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
-\]
-It satisfies,
+% A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
+% is either a repeat pattern, or a set of refined programs, or sequence of refined program
+% % ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
+% \[
+%   \rprog :=  \rpattern ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
+% \]
+% It satisfies,
+% \begin{itemize}
+%   \item every sub-refined program in a same set with annotation $\rpchoose{\cdots}$ starts and ends with the same control location,
+%   \item and for every two sub-refined programs following each other in a sequence,
+%     the first refined program's ending control location is the same 
+%     as the starting control location of the second refined program.
+%     For example if
+%     $\rprog = \rprog_0; \cdots; \rprog_n$,
+%     $\rpattern_1 \in \rprog_i$
+%     and $\rpattern_2 \in \rprog_{i + 1}$,
+%     then $\rpattern_1$ ends with the same control location as $\rpattern_2$'s starting location.
+% \end{itemize}
+A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
+is either a repeat pattern $\rpattern$,
+or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
+satisfying,
 \begin{itemize}
-  \item every sub-refined program in a same set with annotation $\rpchoose{\cdots}$ starts and ends with the same control location,
+  \item every refined 
+  programs in a same set, $\rpchoose{ \cdots }$
+  %  with annotation $\rpchoose{\cdots}$ 
+  starts and ends with the same control location,
   \item and for every two sub-refined programs following each other in a sequence,
     the first refined program's ending control location is the same 
     as the starting control location of the second refined program.
-    For example if
+    i.e., if
     $\rprog = \rprog_0; \cdots; \rprog_n$,
-    $\rpattern_1 \in \rprog_i$
-    and $\rpattern_2 \in \rprog_{i + 1}$,
-    then $\rpattern_1$ ends with the same control location as $\rpattern_2$'s starting location.
+    % $\rpattern_1 \in \rprog_i$
+    % and $\rpattern_2 \in \rprog_{i + 1}$,
+    then all the transition paths in $\rprog_i$ ends with the same control location as 
+    the $rprog_{i + 1}$'s transition paths' starting location.
 \end{itemize}
 % \\
 % \begin{defn}[Refined Program of A Program]

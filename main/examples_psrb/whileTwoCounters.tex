@@ -85,7 +85,35 @@
   \tpath_0 ; \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
   2: \rprepeat_1(\tpath_1) }; \tpath_3
   \]
-  \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
+  \item \textbf{Ranks}:
+  The rank assigned to each edge
+  \\  $\locbound(0 \to 1) = 1$ \quad
+      $\locbound(1 \to 2) = 1$ \quad
+      $\locbound(2 \to \lex) = 1$ 
+      \quad $\locbound(2 \to 3) = i$ 
+      \quad $\locbound(3 \to 6) = i$ 
+      \quad $\locbound(3 \to 4) = i$ 
+      \quad $\locbound(4 \to 5) = i$ 
+      \quad $\locbound(5 \to 2) = i$ 
+      \quad $\locbound(6 \to 2) = i$ 
+  \\
+  The bound on the maximum value of each rank:
+  \\
+  $\varinvar(i) = n$
+  \\
+  The ranking bounds for each edge
+  \\  $\absclr(0 \to 1) = 1$ \quad
+      $\absclr(1 \to 2) = 1$ \quad
+      $\absclr(2 \to \lex) = 1$ 
+      \quad $\absclr(2 \to 3) = n$ 
+      \quad $\absclr(3 \to 6) = n$ 
+      \quad $\absclr(3 \to 4) = n$ 
+      \quad $\absclr(4 \to 5) = n$ 
+      \quad $\absclr(5 \to 2) = n$ 
+      \quad $\absclr(6 \to 2) = n$ 
+  % \\
+  % $\bot$ means the algorithm fails in inferring the ranking bound.
+    \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
   \[
     \begin{array}{l}
         \outinB(\tpath_0) = 1
