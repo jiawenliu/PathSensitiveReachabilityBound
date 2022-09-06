@@ -58,32 +58,70 @@ and ends the program exists $\lex$;
 % Every two sub-repeat patterns following each other in a $\rprog$ can execute in sequence, for example in $\rpattern = \rpattern_1; \rpattern_2$,
 % $\rpattern_2$ can execute after $\rpattern_1$.
 % Every sub-repeat patterns in the sequence are distinct.
-A \emph{Repeat Pattern},
-  $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a program $c$
+% A \emph{Repeat Pattern},
+%   $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a program $c$
+% % is either a simple path or sequence of repeat patterns of this program $c$. 
+%   % is a sequence of simple transition paths with annotations $\rprepeat$
+%   % it is a simple path or
+%   is either a simple transition paths $\tpath$,
+%   or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
+%   or a sequence of sub \emph{repeat pattern}s $\rpattern_1; \cdots; \rpattern_n$ satisfying,
+%   % \[
+% %   \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
+% % \]
+% \begin{itemize}
+% \item If $\rpattern$ has the annotation $\rprepeat$, i.e., $\rprepeat(\rpattern)$,
+% then can consecutively execute at least twice w.r.t. some initial trace.
+% \item
+% If $\rpattern$ is a sequence of sub-repeat patterns,
+% i.e.,  $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
+% then every two sub-repeat patterns following each other in this sequence
+% % i.e., $\rpattern_1; \rpattern_2$, 
+% can execute after each other,
+% % can execute in sequence, for example in ,
+% i.e., 
+% $\rpattern_i$ can execute after $\rpattern_{i - 1}$ for every $i = 1, \cdots, n$.
+% % $\rpattern_2$ can execute after $\rpattern_1$.
+% \item Every sub-repeat pattern in a sequence is distinct.
+% \end{itemize}
+\highlight{
+  A \emph{Repeat Pattern},
+  $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a program $c$ is
 % is either a simple path or sequence of repeat patterns of this program $c$. 
-  % is a sequence of simple transition paths with annotations $\rprepeat$
-  % it is a simple path or
-  is either a simple transition paths $\tpath$,
-  or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
-  or a sequence of sub \emph{repeat pattern}s $\rpattern_1; \cdots; \rpattern_n$ satisfying,
-  % \[
+% is a sequence of simple transition paths with annotations $\rprepeat$
+% it is a simple path or
+\\
+ ==> 
+a sequence of simple transition paths $\tpath$ with annotation $\rprepeat$ on certain sub-sequences
+% or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
+% or a sequence of sub \emph{repeat pattern}s $\rpattern_1; \cdots; \rpattern_n$ 
+satisfying,
+% \[
 %   \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
 % \]
-\begin{itemize}
-\item If $\rpattern$ has the annotation $\rprepeat$, i.e., $\rprepeat(\rpattern)$,
-then can consecutively execute at least twice w.r.t. some initial trace.
-\item
-If $\rpattern$ is a sequence of sub-repeat patterns,
-i.e.,  $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
-then every two sub-repeat patterns following each other in this sequence
-% i.e., $\rpattern_1; \rpattern_2$, 
-can execute after each other,
-% can execute in sequence, for example in ,
-i.e., 
-$\rpattern_i$ can execute after $\rpattern_{i - 1}$ for every $i = 1, \cdots, n$.
+\\
+1. If a sub-sequence $\rpattern'$ has the annotation $\rprepeat$, i.e., $\rprepeat(\rpattern')$,
+then \highlight{it must consecutively execute without being interleaved until its invariant is false};
+% can consecutively execute at least twice w.r.t. some initial trace.
+\\
+2. In a repeat pattern $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
+%  $\rpattern$ is a sequence of sub-repeat patterns,
+% i.e.,  $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
+% then 
+every $\rpattern_i$ in this sequence can execute
+after the previous $\rpattern_{i - 1}$'s iteration is finished.
+% \todo{ ==> iterated until end}.
+%  following each other in this sequence
+% % i.e., $\rpattern_1; \rpattern_2$, 
+% can execute after each other,
+% % can execute in sequence, for example in ,
+% i.e., 
+% $\rpattern_i$ can execute after $\rpattern_{i - 1}$ for every $i = 1, \cdots, n$.
 % $\rpattern_2$ can execute after $\rpattern_1$.
-\item Every sub-repeat pattern in a sequence is distinct.
-\end{itemize}
+\\
+3. Every sub-sequence is distinct.
+}
+\\
 % \begin{defn}[Repeat Pattern of A Program]
 %   \label{def:repeat-pattern}
 %   Given a constraint program $\absG(c)$,

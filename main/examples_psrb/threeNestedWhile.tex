@@ -104,37 +104,46 @@
   \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6 : \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
   \]
   \item \textbf{Ranks}:
-  The rank assigned to each edge
-  \\  $\locbound(0 \to 1) = 1$ \quad
-      $\locbound(1 \to \lex) = 1$ \quad $\locbound(1 \to 2) = i$ \quad $\locbound(2 \to 3) = i$ 
+    The rank (local bound) assigned to each edge:
+      \\  
+      $\locbound(0 \to 1) = 1$ 
+      \quad $\locbound(1 \to \lex) = 1$
+      \quad $\locbound(1 \to 2) = i$
+      \quad $\locbound(2 \to 3) = i$ 
       \quad $\locbound(3 \to 9) = i$ 
       \quad $\locbound(9 \to 1) = i$ 
-      \quad $\locbound(3 \to 4) = j$ \quad $\locbound(4 \to 5) = j$ 
+      \quad $\locbound(3 \to 4) = j$
+      \quad $\locbound(4 \to 5) = j$ 
       \quad $\locbound(5 \to 6) = j$ 
       \quad $\locbound(6 \to 8) = j$ 
       \quad $\locbound(8 \to 3) = j$ 
       %%%
-      \quad $\locbound(6 \to 7) = w$ 
-      \quad $\locbound(7 \to 6) = w$ 
+      \quad $\locbound(6 \to 7) = w - n + N$ 
+      \quad $\locbound(7 \to 6) = w - n + N$ 
   \\
   The bound on the maximum value of each rank:
   \\
   $\varinvar(i) = n$  \quad
-  $\varinvar(j) = m * $  \quad
-  $\varinvar(w) = N$ 
+  $\varinvar(j) = m * n$  \quad
+  $\varinvar(w) = n$  \quad
+  $\varinvar(w - n + N) = N$ 
   \\
-  The ranking bounds for every simple transition path:
+  The ranking bound for each edge:
   \\
-  $\absclr(\tpath_0) = 1$ \quad
-  $\absclr(\tpath_1) = \bot $ \quad
-  $\absclr(\tpath_2) = \bot $ \quad
-  $\absclr(\tpath_3) = \bot $
-  \\
-  $\absclr(\tpath_4) = \bot $ \quad
-  $\absclr(\tpath_5) = \bot $ \quad
-  $\absclr(\tpath_6) = 1$ 
-  \\
-  $\bot$ means the algorithm fails in inferring the ranking bound.
+  $\absclr(0 \to 1) = 1$ 
+  \quad $\absclr(1 \to \lex) = 1$
+  \quad $\absclr(1 \to 2) = n$
+  \quad $\absclr(2 \to 3) = n$ 
+  \quad $\absclr(3 \to 9) = n$ 
+  \quad $\absclr(9 \to 1) = n$ 
+  \quad $\absclr(3 \to 4) = m * n$
+  \quad $\absclr(4 \to 5) = m * n$ 
+  \quad $\absclr(5 \to 6) = m * n$ 
+  \quad $\absclr(6 \to 8) = m * n$ 
+  \quad $\absclr(8 \to 3) = m * n$ 
+  %%%
+  \quad $\absclr(6 \to 7) = N$ 
+  \quad $\absclr(7 \to 6) = N$ 
   \item \textbf{Outside-In Algorithm}: The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
   \\
 $\outinB(\tpath_0) = 1$
