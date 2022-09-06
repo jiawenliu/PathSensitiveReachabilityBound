@@ -1,7 +1,7 @@
 \begin{example}[The Abstract Control Flow Graph for A Simple While Loop Program]
   \label{ex:whileSim_abscfg}
     For the simple while loop example program, 
-its generated abstract control flow graph is shown as in Figure~\ref{fig:whileSim_abscfg}(b).
+its abstract control flow graph is shown as in Figure~\ref{fig:whileSim_abscfg}(b).
 For example, the edge $(0, a' \leq 0, 1)$ on the top, tells us the command 
 $\clabel{\assign{a}{0}}^0$ is executed with next continuation location $1$,
 where the 
@@ -49,7 +49,7 @@ The same way for the rest edges' constructions.
   \draw[] (-7, 1) circle (0pt) node{{ $5$}};
   % Counter Variables
   \draw[] (6, 7) circle (0pt) node {\textbf{$6$}};
-  \draw[] (6, 4) circle (0pt) node {{ $ex$}};
+  \draw[] (6, 4) circle (0pt) node {{ $\lex$}};
   %
   % Control Flow Edges:
   \draw[ thick, -latex] (-6, 10)  -- node [above] {$a' \leq 0$}(-0.5, 10);
@@ -76,7 +76,7 @@ The same way for the rest edges' constructions.
     \draw[] (-10, 1) circle (0pt) node{{ $5: k$}};
     % Counter Variables
     \draw[] (6, 7) circle (0pt) node {\textbf{$6: 1$}};
-    \draw[] (6, 4) circle (0pt) node {{ $ex: 1$}};
+    \draw[] (6, 4) circle (0pt) node {{ $\lex: 1$}};
     %
     % Control Flow Edges:
   \draw[ thick, -latex] (-8, 10)  -- node [above] {$a' \leq 0$}(-1.5, 10);

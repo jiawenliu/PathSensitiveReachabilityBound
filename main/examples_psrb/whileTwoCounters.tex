@@ -64,12 +64,15 @@
 \end{example}
 
 \begin{enumerate}
-  \item  \textbf{The Abstract Execution Control Flow Graph} is generated in Figure~\ref{fig:twoPathsWhile}(b).
+  \item  \textbf{The Abstract Control Flow Graph} is generated in Figure~\ref{fig:twoPathsWhile}(b).
 
-  \item \textbf{Program Rephrase and Refinement}. 
+  \item \textbf{Program Refinement}. 
   \\
-  The loop free simple transition paths are computed as follows,
-  \[
+  The \textbf{simple transition paths\footnote{For concise, the vertices sequence and the constraint for each edge in each transition path is omitted.
+  The examples with sequences and annotations that are fully spelled out is in the full paper.}} are
+  %  are computed as follows,
+  \\
+$
     \begin{array}{ll}
 \tpath_0 = (0 \to 1), (1 \to 2)
 &
@@ -79,15 +82,29 @@
 &
 \tpath_3 = (2 \to \lex)
 \end{array}
-\]
-\textbf{Refined Program}:
-\[
+$
+\\
+The \textbf{repeat patterns}
+for the loop that its header is
+% the repeat pattern for the loop that its header is at the program point 
+% loop with header 
+at the program point 
+$2$ are:
+\\
+$\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) $
+and $\rprepeat_1(\tpath_1)$; 
+\\
+The \textbf{refined program\footnote{$\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
+For concise, it is omitted since all the arguments in the following computations are referring to the same $\rprog$.}} is
+\\
+$
   \tpath_0 ; \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
   2: \rprepeat_1(\tpath_1) }; \tpath_3
-  \]
-  \item \textbf{Ranks}:
-  The rank assigned to each edge
-      \\  
+$
+\item \textbf{Ranking Function Computation}:
+\\
+  The \textbf{ranking function / (local bound)}  assigned to each edge is as follows,
+    \\  
       $\locbound(0 \to 1) = 1$ 
       \quad
       $\locbound(1 \to 2) = 1$ 
@@ -100,24 +117,25 @@
       \quad $\locbound(5 \to 2) = i$ 
       \quad $\locbound(6 \to 2) = i$ 
       \\
-  The bound on the maximum value of each rank:
+  The bound on the maximum value of the ranking function $i$, i.e., the \textbf{ranking function bound} is
+    $\varinvar(i) = n$.
     \\
-    $\varinvar(i) = n$
-    \\
-  The ranking bounds for each edge
-      \\  
+    The \textbf{path-insensitive transition bound} for each edge:
+    \\  
       $\absclr(0 \to 1) = 1$
       \quad $\absclr(1 \to 2) = 1$
       \quad $\absclr(2 \to \lex) = 1$ 
       \quad $\absclr(2 \to 3) = n$ 
       \quad $\absclr(3 \to 6) = n$ 
+      \\
       \quad $\absclr(3 \to 4) = n$ 
       \quad $\absclr(4 \to 5) = n$ 
       \quad $\absclr(5 \to 2) = n$ 
       \quad $\absclr(6 \to 2) = n$ 
   % \\
   % $\bot$ means the algorithm fails in inferring the ranking bound.
-    \item \textbf{Outside-In Algorithm} :The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
+  \item \textbf{Outside-In Algorithm}:\\
+  The \textbf{Outside-In} bound for every $\rpattern$ w.r.t. the refined program $\rprog$ is as follows,
   \[
     \begin{array}{l}
         \outinB(\tpath_0) = 1
@@ -134,11 +152,12 @@
 \begin{itemize}
   \item \textbf{Repeat Chain Set}
   \\
-  $\rpchset(2, \tpath_1) = \{\rprepeat_1(\tpath_1), \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
-  $\rpchset(2, \tpath_2) = \{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1)\}$ \\
+  $\rpchset(2, \tpath_1) = \{\rprepeat_1(\tpath_1) \to \tpath_1, \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to \rprepeat_1(\tpath_1) \to \tpath_1\}$ \\
+  $\rpchset(2, \tpath_2) = \{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) \to  \tpath_2\}$ \\
   $\rpchset(\_, \_) = \emptyset$ 
   % \\
-  \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
+  \item \textbf{Repeat Chain Bound}
+  %  for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
   \\
   $\rpchB(2, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \\
   $\rpchB(2, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
@@ -149,23 +168,29 @@
   $\lpch(\tpath_1) = 2\to \tpath_1$ \\
   $\lpch(\tpath_3) = \tpath_3$ \qquad
   $\lpch(\tpath_2) = 2\to \tpath_2$ 
-  \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
+  \item \textbf{{Relative Loop Bound}}
+  %  for every simple transition path $\tpath$ through its \emph{Loop Chain}
   \\
   $\rpchB(2, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
   $\rpchB(2, \tpath_2) = \lfloor\frac{n}{m}\rfloor$  \\
   $\rpchB(\bot, \tpath_0) = 1$ \quad
   $\rpchB(\bot, \tpath_3) = 1$ 
-  \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
+  \item \textbf{Inside-Out Bound}
   \\
   $\inoutB(\tpath_1) = n$ \quad
   $\inoutB(\tpath_2) = \lfloor\frac{n}{m}\rfloor$ \quad
   $\inoutB(\tpath_0) = 1$ \quad
   $\inoutB(\tpath_3) = 1$ 
 \end{itemize}
-\item \textbf{Path Sensitive Reachability-Bound} on every program control location
+\item \textbf{Path-sensitive Reachability-Bound} on every program control location
 \\
-$\psRB(\{0, 1, \lex\}) = 1$ \qquad
-$\psRB(\{6 \}) = \lfloor\frac{n}{m}\rfloor$ \\
-$\psRB(\{4, 5 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
-$\psRB(\{3, 2 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $ \\
+$\psRB(0) = \psRB(1) = \psRB(\lex) = 1$ \qquad
+$\psRB(4) = \psRB(5) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ 
+\\
+$\psRB(3) = \psRB(2) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $
+\quad $\psRB(6) = \lfloor\frac{n}{m}\rfloor$ 
+% $\psRB(\{0, 1, \lex\}) = 1$ \qquad
+% $\psRB(\{6 \}) = \lfloor\frac{n}{m}\rfloor$ \\
+% $\psRB(\{4, 5 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
+% $\psRB(\{3, 2 \}) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $ \\
 \end{enumerate}
