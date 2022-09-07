@@ -1,8 +1,8 @@
-\begin{example}[The Abstract Control Flow Graph for A Simple While Loop Program]
+\begin{example}[The Abstract Control Flow Graph for The Simple While Loop Example Program]
   \label{ex:whileSim_abscfg}
     For the simple while loop example program, 
 its abstract control flow graph is shown as in Figure~\ref{fig:whileSim_abscfg}(b).
-For example, the edge $(0, a' \leq 0, 1)$ on the top, tells us the command 
+For example, the edge $(0 \xrightarrow{a' \leq 0} 1)$ on the top, tells us the command 
 $\clabel{\assign{a}{0}}^0$ is executed with next continuation point $1$,
 where the 
 command $\clabel{\assign{j}{k}}^1$ will be executed next.
@@ -13,12 +13,14 @@ The difference constraint is an inequality relation,
 the left-hand side of the inequality $x'$ denotes the variable $x$
 after executing the command at $l$
 and the right-hand side describes the variable $x$ in the state before the execution. 
-Look at the $a' < a+x $ on the edge $5$ to $2$, which describes the execution of the command at line $5$, 
-which is an assignment $a' = a+x$. The $a'$ on the left side of $a' < a+x$ represents the value of $a$ after the assignment,
+For example, the constraint $a' \leq a+x $ on edge $5 \xrightarrow{a' \leq a + x } 2$ describes the execution of
+ the command at line $5$, 
+$\clabel{\assign{a}{x + a}}^{5}$. 
+The $a'$ on the left side of $a' \leq a+x$ represents the value of $a$ after the assignment,
 while the right-hand side $a$ stores the value before the assignment. 
 % $top$ means there is no assignment executed, for example, 
-I have 
-The boolean constraint $j \leq 0 $ on the edge $2 \to 6$, 
+% I have 
+The boolean constraint $j \leq 0 $ on the edge $2 \xrightarrow{j \leq 0} 6$, 
 represents the negation of the testing guard $j > 0$
 in the $\ewhile$ command with loop header at line $2$.
 %
