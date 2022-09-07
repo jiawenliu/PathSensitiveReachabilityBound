@@ -1,7 +1,8 @@
 \subsection{Abstract Transition Graph}
 \label{sec:abs_prog}
 % \textbf{Step 1: Program Abstract Execution Control Flow Graph}
-The \emph{Abstract Transition Graph} for a program $c$ is $\absG(c) =(\absV(c), \absE(c))$.
+An \emph{Abstract Transition Graph}, $\absG(c) =(\absV(c), \absE(c))$ for a program $c$ is composed of
+a vertex set $\absV(c)$ and an edge set $\absE(c)$.
 % For a program $c$, this analysis first generates its abstract execution control flow graph notated as follows,
 % \[\absG(c) =(\absV(c), \absE(c))\]
 %
@@ -11,11 +12,11 @@ vertex $l \in \absV(c)$ corresponds to a program point, which is a unique
 label $l$ of a command in this program.
 % $\absV(c)$ is the set of $c$'s all program points,
 \\
-Each edge in $\absE(c)$ is an abstract transition
-between two program points $l, l'$ if and only if
+Each edge $(l, dc, l') \in \absE(c)$ is an abstract transition
+between two program points $l, l'$. There is an edge from $l$ to $l'$ if and only if
 the command with label $l'$ can execute after the execution of the command with label $l$.
 % if and only if there is a control flow between two program points.
-Each edge is annotated by a constraint generated for the command with label $l$.
+Each edge is annotated by a constraint $dc$ generated from the command with label $l$.
 % from the set $\dcdom^{\top}$.
 % The constraint set contains the different constraints and the boolean expressions. 
 % A different constraint is an inequality of form $x \leq y + v$ where 
