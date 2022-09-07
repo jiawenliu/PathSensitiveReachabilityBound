@@ -334,15 +334,38 @@ on the execution times of this edge in $c$.
 %  Require Variable Bound Computation.
 \subsection{Outside-In Algorithm}
 \label{sec:outinalg}
-For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Outside-In Algorithm} ($\outinB: \rprog \to \mathcal{A}_{in}$)
-computes the \emph{OutIn} bound on the iteration numbers of every repeat pattern in this program.
-\\
-It is called \emph{OutIn} bound because for a repeat pattern $\rpattern$ nested
-in another repeat pattern $\rpattern' = \rprepeat(\rpattern)$,
-this value only bounds the iteration number of $\rpattern$ inside $\rpattern'$ by assuming $\rpattern'$ executes once.
-
-% \highlight{\textbf{Notations / Operators:}}
+% For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Outside-In Algorithm} ($\outinB: \rprog \to \mathcal{A}_{in}$)
+% computes the \emph{OutIn} bound on the iteration numbers of every repeat pattern in this program.
 % \\
+% It is called \emph{OutIn} bound because for a repeat pattern $\rpattern$ nested
+% in another repeat pattern $\rpattern' = \rprepeat(\rpattern)$,
+% this value only bounds the iteration number of $\rpattern$ inside $\rpattern'$ by assuming $\rpattern'$ executes once.
+For every repeat pattern $\rpattern$ in a refined program $\rprog$, 
+this algorithm
+computes the \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ on its iteration numbers locally.
+%  of every repeat pattern 
+\\
+$\outinB(\rprog, \rpattern)$ is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ in the sense that
+% for a repeat pattern 
+if $\rpattern$ is nested
+in another repeat pattern, i.e., $\rpattern' = \rprepeat(\rpattern)$,
+it only bounds $\rpattern$'s iteration number within $\rpattern'$ by assuming that $\rpattern'$ executes once.
+% \highlight{\textbf{Notations / Operators:}}
+\\ \highlight{Computation:}
+\\
+The \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$
+for a repeat pattern $\rpattern$ in a refined program $\rprog$
+is computed recursively as follows,
+% for every nested repeat patterns in $\rprog$,
+% \\
+% $\outinB(\rpchoose{\rprog_1, \cdots, \rprog_m}) =  \max\{\outinB(\rprog_1), \cdots, \outinB(\rprog_m)\}$
+\\
+$\outinB(\rprog, \rprepeat({\rpattern})) =  \frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$
+\\
+$\outinB(\rprog, \rpattern_1; \rpattern_2) =  \outinB(\rprog, \rpattern_1)+ \outinB(\rprog,  \rpattern_2)$
+\\
+$\outinB(\rprog, \tpath) =  1$.
+\\
 % The \emph{State}: 
 % $\absstate \in \mathcal{P}(\dcdom^{\top})$ : conjunctions of the edge annotations.
 % %  constraints.
@@ -355,11 +378,21 @@ this value only bounds the iteration number of $\rpattern$ inside $\rpattern'$ b
 % \\
 % The \emph{Variable Grade Decedent}: $\varGD : \rprog \to \mathcal{A}_{in}$, is the set of the variables' variation in one iteration;
 % % The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
-
+The computations for $\rfinit(\rprog, \rpattern)$,
+$\rffinal(\rprog, \rpattern)$, $\rfnext(\rprog, \rpattern)$ and $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
+are in the full version.
 \subsection{Inside-Out Algorithm}
 \label{sec:inoutalg}
-For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Inside-Out Algorithm}
-computes the reachability-bound on the execution numbers for every simple transition path $\tpath$ in this program $\rprog$,
+% For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Inside-Out Algorithm}
+% computes the reachability-bound on the execution numbers for every simple transition path $\tpath$ in this program $\rprog$,
+% through the following steps.
+For every simple transition path $\tpath$ in a refined program $\rprog$, 
+this algorithm
+computes the \textbf{Inside-Out} bound, $\outinB(\rprog, \tpath) \in \mathcal{A}_{in}$
+%  on its iteration numbers locally.
+% computes the bound
+on the execution numbers of $\tpath$ path-sensitively
+% for every simple transition path $\tpath$ in this program $\rprog$,
 through the following steps.
 %
 \begin{enumerate}
@@ -376,7 +409,7 @@ the \emph{Relative Loop Bound} $\lpchB(l, \tpath, \rprog) \in \mathcal{A}_{\lin}
 \\
 This expression is a sound bound on the iteration numbers of loop $l$ relative to the simple transition path $\tpath$.
 This $\tpath$'s closest enclosing loop has the loop header at $l'$ and $l'$ is nested inside the loop $l$.
-\\
+% \\
 It estimates the iteration numbers of loop $l$ such that during these iterations, the nested loop $l'$ is executed.
 %
 \item The \emph{Inside-Out Bound} ($\inoutB(\tpath, \rprog) \in \mathcal{A}_{in}$).
