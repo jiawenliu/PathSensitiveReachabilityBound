@@ -265,11 +265,20 @@ and ends the program exists $\lex$;
 % Soundness of the refinement.
 \subsection{Ranking Function/ Local Bound Computation}
 \label{sec:ranking}
-It estimates the bounds on the maximum value of counter variables, and
-the iteration times
-% of the ranks / local bounds 
-for each edge in the constraint program $\absG(c)$, using the method in \cite{sinn2017complexity}.
-There are three sub-steps as follows.
+% It estimates the bounds on the maximum value of counter variables, and
+% the iteration times
+% % of the ranks / local bounds 
+% for each edge in the constraint program $\absG(c)$, using the method in \cite{sinn2017complexity}.
+% There are three sub-steps as follows.
+This step computes a 
+\textbf{ranking function / local bound
+\footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
+and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
+We refer to the two names as the same meaning in this paper.}}
+for each edge in the abstract transition graph $\absG(c)$ of a program $c$.
+Then it estimates the bound on the maximum value of each ranking function / local bound as well as
+% , and
+the bound on the execution times of the corresponding edge in a path-insensitive manner.
 \\
 For each edge $\absevent \in \absG(c)$,
 $\locbound(\absevent)$ is the \textbf{Ranking Function} assigned to $\absevent$.
