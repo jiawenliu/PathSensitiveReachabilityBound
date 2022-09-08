@@ -25,37 +25,55 @@ Each edge is annotated by a constraint $dc$ generated from the command with labe
 % % The \emph{Symbolic Variables} $\constdom = \mathbb{N} \cup \inpvar$ is the 
 % % set of 
 % natural number, the infinity or an input variable. 
-\subsection{Abstract Transition Graph Refinement}
+\subsection{Program Refinement}
 \label{sec:refine}
 Three sub-steps:
-\\
-\textbf{Step1: Simple Transition Path}. $\tpath \in \paths(\absG(c))$.
-\\
+\begin{enumerate}
+\item \textbf{Simple Transition Path}  This step computes the set of all \emph{simple transition paths} for a program $c$.
+% \\
+% $\tpath \in \paths(\absG(c))$.
+% \\
 % For a constraint program $\absG(c)$,
-A simple transition path, $\tpath \in \paths(\absG(c))$ for a program c is a path in the abstract transition graph of $c$ that it is either:
-\begin{itemize}
-  \item a simple cyclic path, which starts and ends at the same loop header at location $l$, 
-  and visits only locations inside the natural loop of $l$;
-  %  only one loop (without any nested loop) starting from a loop header at location $l$ and go back to the same $l$;
-  \item or an acyclic path, which starts from a loop header $l$ 
-  % (or the program entrance $l_0$)
-and ends with a different loop header $l'$;
-%  (or the program's exists $\lex$).
-\item or an acyclic path, which starts from a loop header $l$ 
-% (or the program entrance $l_0$)
-and ends the program exists $\lex$;
-%  (or the program's exists $\lex$).
-\item or an acyclic path, which starts from the program entrance $l_0$
-% (or the program entrance $l_0$)
-and ends with a loop header $l$;
-%  (or the program's exists $\lex$).
-\item or an acyclic path, which starts from the program entrance $l_0$
-% (or the program entrance $l_0$)
-and ends the program exists $\lex$;
-%  (or the program's exists $\lex$).
-\end{itemize}
+% A simple transition path, $\tpath \in \paths(\absG(c))$ for a program c is a path in the abstract transition graph of $c$ that it is either:
+% \begin{itemize}
+%   \item a simple cyclic path, which starts and ends at the same loop header at location $l$, 
+%   and visits only locations inside the natural loop of $l$;
+%   %  only one loop (without any nested loop) starting from a loop header at location $l$ and go back to the same $l$;
+%   \item or an acyclic path, which starts from a loop header $l$ 
+%   % (or the program entrance $l_0$)
+% and ends with a different loop header $l'$;
+% %  (or the program's exists $\lex$).
+% \item or an acyclic path, which starts from a loop header $l$ 
+% % (or the program entrance $l_0$)
+% and ends the program exists $\lex$;
+% %  (or the program's exists $\lex$).
+% \item or an acyclic path, which starts from the program entrance $l_0$
+% % (or the program entrance $l_0$)
+% and ends with a loop header $l$;
+% %  (or the program's exists $\lex$).
+% \item or an acyclic path, which starts from the program entrance $l_0$
+% % (or the program entrance $l_0$)
+% and ends the program exists $\lex$;
+% %  (or the program's exists $\lex$).
+% \end{itemize}
+\begin{defn}[Simple Tansition Path]
+  A simple transition path
+  $\tpath \in \paths(\absG(c))$, is a path on this program's abstract transition graph $\absG(c)$ with 
+  \begin{itemize}
+  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \lvar(c)$ for every $i = 0, \cdots, n$ and
+  %
+  \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
+  \end{itemize}
+  %
+  satisfying:
+  \begin{itemize}
+    \item $l_i \neq l_j$ for every $l_i = l_0, \cdots, l_n$ and $l_j = l_0, \cdots, l_{n - 1}$,
+    \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+    \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
+  \end{itemize}
+  \end{defn}
 %
-\textbf{Step2: Repeat Pattern}.
+\item \textbf{Repeat Pattern} This step computes the set of all the \emph{repeat patterns} for every while loop in a program $c$.
 % \\
 % A \emph{Repeat Pattern} ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns of this program $c$. 
 % \[
@@ -92,32 +110,80 @@ and ends the program exists $\lex$;
 % % $\rpattern_2$ can execute after $\rpattern_1$.
 % \item Every sub-repeat pattern in a sequence is distinct.
 % \end{itemize}
-\begin{defn}[Repeat Pattern of A Program]
+% \begin{defn}[Repeat Pattern of A Program]
+%   \label{def:repeat-pattern}
+%   % Given a abstract transition graph $\absG(c)$,
+%   % $\rpattern$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, 
+%   A \emph{Repeat Pattern},
+%   $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a program $c$
+% % is either a simple path or sequence of repeat patterns of this program $c$. 
+%   is 
+%   % \todo{
+%   % % it is a simple path or
+%   % is either a simple transition paths $\tpath$,
+%   % or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
+%   % or a sequence of sub \emph{repeat pattern}s $\rpattern_0; \cdots; \rpattern_n$ ==> }
+%   \highlight{a sequence of simple transition paths $\tpath$ with annotation $\rprepeat$ on certain sub-sequence}
+%   % a sequence of \emph{repeat pattern}
+%   % has the following forms,
+%   % \[
+%   %   \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
+%   % \] 
+%   % and 
+%   satisfying,
+%   \begin{itemize}
+%   \item every sub-sequence is distinct, 
+%   i.e., if $\rpattern = \rpattern_1; \cdots; \rpattern_n$, then
+%   % $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, 
+%   $\rpattern_i \neq \rpattern_j$ for every $i, j = 1, \cdots, n$;
+%   \item 
+%   % \todo{every sub pattern with the annotation $\rprepeat$
+%   % can consecutively execute at least twice in $c$
+%   % %  when executing this program $c$ 
+%   % w.r.t. some initial trace, i.e., 
+%   % if $\rpattern = \rprepeat(\rpattern')$, 
+%   % then $\rpattern'$ can consecutively execute at least twice in $c$
+%   % under some initial traces, ==> }
+%   % \\
+%   \highlight{every sub-sequence $\rpattern'$ that has the annotation $\rprepeat$,
+%   i.e., $\rprepeat(\rpattern')$
+%   % if and only if
+%   {must consecutively execute without being interleaved until its invariant is false};}
+%   \item 
+%   \highlight{
+%     % In a repeat pattern $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
+%   every sub-sequence $\rpattern_i$ in $\rpattern$, where  $\rpattern = \rpattern_0; \cdots; \rpattern_n$ can execute
+%   after the previous $\rpattern_{i - 1}$'s execution is finished.}
+%   \end{itemize}
+% \end{defn}
+\begin{defn}[Repeat Pattern]
   \label{def:repeat-pattern}
   % Given a abstract transition graph $\absG(c)$,
   % $\rpattern$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, 
   A \emph{Repeat Pattern},
-  $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a program $c$
+  $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a while loop in a program $c$
 % is either a simple path or sequence of repeat patterns of this program $c$. 
-  is 
+  is
   % \todo{
   % % it is a simple path or
   % is either a simple transition paths $\tpath$,
   % or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
   % or a sequence of sub \emph{repeat pattern}s $\rpattern_0; \cdots; \rpattern_n$ ==> }
-  \highlight{a sequence of simple transition paths $\tpath$ with annotation $\rprepeat$ on certain sub-sequence}
+  \highlight{a sequence of simple transition paths $\tpath$ with annotations $\rprepeat$ on certain sub-sequences,
+  $\rpattern = \rpattern_0; \cdots; \rpattern_n$
+  }
   % a sequence of \emph{repeat pattern}
   % has the following forms,
   % \[
   %   \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
   % \] 
   % and 
-  satisfying,
+  satisfying that,
   \begin{itemize}
   \item every sub-sequence is distinct, 
-  i.e., if $\rpattern = \rpattern_1; \cdots; \rpattern_n$, then
+  % i.e., if $\rpattern = \rpattern_0; \cdots; \rpattern_n$, then
   % $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, 
-  $\rpattern_i \neq \rpattern_j$ for every $i, j = 1, \cdots, n$;
+  $\rpattern_i \neq \rpattern_j$ for every $i, j = 0, \cdots, n$;
   \item 
   % \todo{every sub pattern with the annotation $\rprepeat$
   % can consecutively execute at least twice in $c$
@@ -125,19 +191,69 @@ and ends the program exists $\lex$;
   % w.r.t. some initial trace, i.e., 
   % if $\rpattern = \rprepeat(\rpattern')$, 
   % then $\rpattern'$ can consecutively execute at least twice in $c$
-  % under some initial traces, ==> }
+  % under some initial traces,}
   % \\
   \highlight{every sub-sequence $\rpattern'$ that has the annotation $\rprepeat$,
   i.e., $\rprepeat(\rpattern')$
   % if and only if
-  {must consecutively execute without being interleaved until its invariant is false};}
+  always executes consecutively without being interleaved until its invariant is false under all possible initial traces;}
   \item 
+  % and every two sub patterns following each other in this sequence can execute after each other w.r.t some initial trace,
+  % i.e., if $\rpattern = \rpattern_0; \cdots; \rpattern_n$, then for every $i = 1, \cdots, n$,
+  % $\rpattern_i$ can execute after $\rpattern_{i - 1}$ under some initial trace.
+  % \\
   \highlight{
     % In a repeat pattern $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
-  every sub-sequence $\rpattern_i$ in $\rpattern$, where  $\rpattern = \rpattern_0; \cdots; \rpattern_n$ can execute
-  after the previous $\rpattern_{i - 1}$'s execution is finished.}
+  every sub-sequence $\rpattern_i \in \rpattern$ can execute
+  after the previous $\rpattern_{i - 1}$'s execution (or iteration) is finished.}
   \end{itemize}
 \end{defn}
+% \begin{defn}[Repeat Pattern of A Program]
+%   \label{def:repeat-pattern}
+%   % Given a abstract transition graph $\absG(c)$,
+%   % $\rpattern$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, 
+%   A \emph{Repeat Pattern},
+%   $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a program $c$
+% % is either a simple path or sequence of repeat patterns of this program $c$. 
+%   is 
+%   % \todo{
+%   % % it is a simple path or
+%   % is either a simple transition paths $\tpath$,
+%   % or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
+%   % or a sequence of sub \emph{repeat pattern}s $\rpattern_0; \cdots; \rpattern_n$ ==> }
+%   \highlight{a sequence of simple transition paths $\tpath$ with annotation $\rprepeat$ on certain sub-sequence}
+%   % a sequence of \emph{repeat pattern}
+%   % has the following forms,
+%   % \[
+%   %   \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
+%   % \] 
+%   % and 
+%   satisfying,
+%   \begin{itemize}
+%   \item every sub-sequence is distinct, 
+%   i.e., if $\rpattern = \rpattern_1; \cdots; \rpattern_n$, then
+%   % $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, 
+%   $\rpattern_i \neq \rpattern_j$ for every $i, j = 1, \cdots, n$;
+%   \item 
+%   % \todo{every sub pattern with the annotation $\rprepeat$
+%   % can consecutively execute at least twice in $c$
+%   % %  when executing this program $c$ 
+%   % w.r.t. some initial trace, i.e., 
+%   % if $\rpattern = \rprepeat(\rpattern')$, 
+%   % then $\rpattern'$ can consecutively execute at least twice in $c$
+%   % under some initial traces, ==> }
+%   % \\
+%   \highlight{every sub-sequence $\rpattern'$ that has the annotation $\rprepeat$,
+%   i.e., $\rprepeat(\rpattern')$
+%   % if and only if
+%   {must consecutively execute without being interleaved until its invariant is false};}
+%   \item 
+%   \highlight{
+%     % In a repeat pattern $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
+%   every sub-sequence $\rpattern_i$ in $\rpattern$, where  $\rpattern = \rpattern_0; \cdots; \rpattern_n$ can execute
+%   after the previous $\rpattern_{i - 1}$'s execution is finished.}
+%   \end{itemize}
+% \end{defn}
 % \begin{defn}[Repeat Pattern of A Program]
 %   \label{def:repeat-pattern}
 %   Given a constraint program $\absG(c)$,
@@ -162,8 +278,27 @@ and ends the program exists $\lex$;
 %   \end{itemize}
 % \end{defn}
 %
-\textbf{Step3: Refined Program\footnote{For concise, the annotation $\rpchoose{}$ is omitted if there is only one repeat pattern in this set.}}.
+\item \textbf{Refined Program\footnote{For concise, the annotation $\rpchoose{}$ is omitted if there is only one repeat pattern in this set.}}.
 % \\
+% This step computes the refined program for a program $c$ by composing the
+% repeat pattern set of every while loop and the simple transition paths not in any loop.
+This step computes the refined program for a program $c$ by composing the
+repeat pattern set of every while loop and the simple transition paths not in any loop.
+\\
+% A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
+% is either a repeat pattern , or a set of refined programs, or sequence of refined program
+% % ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
+% \[
+%   \rprog :=  \rpattern ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
+% \]
+A \emph{Refined Program} for a program $c$, $\rprog$
+%  ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
+% \todo{is either a repeat pattern $\rpattern$,
+% or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
+% ==>}
+has the form $\rprog = \rprog_0; \cdots; \rprog_n$ where each sub-refined program $\rprog_i \in \rprog$
+is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$.
+It is guaranteed to have certain properties by the computation algorithm in the full version.
 % % A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
 % % is either a repeat pattern, or a set of refined programs, or sequence of refined program
 % % % ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
@@ -201,41 +336,41 @@ and ends the program exists $\lex$;
 %     then all the transition paths in $\rprog_i$ ends with the same control location as 
 %     the $rprog_{i + 1}$'s transition paths' starting location.
 % \end{itemize}
-\begin{defn}[Refined Program of A Program]
-  % Given a abstract transition graph $\absG(c)$,
-  % its \emph{Refined Program} is either a repeat pattern, or a set of refined program, or sequence of refined program has
-  % the following syntax,
-  % \[
-  %   \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
-  % \]
-  A \emph{Refined Program} for a program $c$, $\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$
-  is 
-  % \todo{either a repeat pattern $\rpattern$,
-  % or a set of sub-refined programs $\{\rprog_1, \cdots, \rprog_m\}$ with annotation $\kw{choose}$,
-  % or a sequence of sub-refined program $\rprog; \rprog$.
-  % It satisfies that for every sub-refined program $\rprog' \in \rprog$ ==>}
-  \highlight{a sequence of sets of repeat patterns with annotation $\kw{choose}$ satisfying}
-  % $\rprog = \rprog_1, \cdots; \rprog_n$ and
-  % $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
-  \begin{itemize}
-    \item $\rprog$ has the form $\rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$.
-  \item 
-  % \todo{every
-  %  $\rpattern, \rpattern' \in \rpchoose{\rprog_1, \cdots, \rprog_m}$,
-  %  then all the $\rprog_1, \cdots, \rprog_m$ have the same starting and ending label,==>}
-   \highlight{Every $\rpattern$ in the same set,
-   $\rpattern \in \rpchoose{\rprog_1, \cdots, \rprog_m}$ 
-   starts from the same program point $l$ and ends at the same program point $l'$ for $l, l' \in \lvar(c)$.}
-  \item 
-  % \todo{if $\rprog' = \rprog_1; \rprog_2$, then
-  % % and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
-  % $\rprog_1$'s ending label is the same label as $\rprog_2$'s starting label. ==>}
-  If two repeat patterns from two different sets following each other in the sequence,
-  $\rpattern \in \rpchoose{\rpattern_1, \cdots}$, $\rpattern' \in \rpchoose{\rpattern_1', \cdots}$ and
-  $\rprog = \cdots, \rpchoose{\rpattern_1, \cdots}; \rpchoose{\rpattern_1', \cdots}, \cdots$,
-  then $\rpattern$ ends at the program point $l$ from which $\rpattern'$ starts.
-  \end{itemize}
-\end{defn}
+% \begin{defn}[Refined Program of A Program]
+%   % Given a abstract transition graph $\absG(c)$,
+%   % its \emph{Refined Program} is either a repeat pattern, or a set of refined program, or sequence of refined program has
+%   % the following syntax,
+%   % \[
+%   %   \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
+%   % \]
+%   A \emph{Refined Program} for a program $c$, $\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$
+%   is 
+%   % \todo{either a repeat pattern $\rpattern$,
+%   % or a set of sub-refined programs $\{\rprog_1, \cdots, \rprog_m\}$ with annotation $\kw{choose}$,
+%   % or a sequence of sub-refined program $\rprog; \rprog$.
+%   % It satisfies that for every sub-refined program $\rprog' \in \rprog$ ==>}
+%   \highlight{a sequence of sets of repeat patterns with annotation $\kw{choose}$ satisfying}
+%   % $\rprog = \rprog_1, \cdots; \rprog_n$ and
+%   % $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
+%   \begin{itemize}
+%     \item $\rprog$ has the form $\rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$.
+%   \item 
+%   % \todo{every
+%   %  $\rpattern, \rpattern' \in \rpchoose{\rprog_1, \cdots, \rprog_m}$,
+%   %  then all the $\rprog_1, \cdots, \rprog_m$ have the same starting and ending label,==>}
+%    \highlight{Every $\rpattern$ in the same set,
+%    $\rpattern \in \rpchoose{\rprog_1, \cdots, \rprog_m}$ 
+%    starts from the same program point $l$ and ends at the same program point $l'$ for $l, l' \in \lvar(c)$.}
+%   \item 
+%   % \todo{if $\rprog' = \rprog_1; \rprog_2$, then
+%   % % and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
+%   % $\rprog_1$'s ending label is the same label as $\rprog_2$'s starting label. ==>}
+%   If two repeat patterns from two different sets following each other in the sequence,
+%   $\rpattern \in \rpchoose{\rpattern_1, \cdots}$, $\rpattern' \in \rpchoose{\rpattern_1', \cdots}$ and
+%   $\rprog = \cdots, \rpchoose{\rpattern_1, \cdots}; \rpchoose{\rpattern_1', \cdots}, \cdots$,
+%   then $\rpattern$ ends at the program point $l$ from which $\rpattern'$ starts.
+%   \end{itemize}
+% \end{defn}
 % \\
 % \begin{defn}[Refined Program of A Program]
 %   Given a constraint program $\absG(c)$,
@@ -263,6 +398,7 @@ and ends the program exists $\lex$;
 %s
 % \textbf{Theorem Guarantee.}
 % Soundness of the refinement.
+\end{enumerate}
 \subsection{Ranking Function/ Local Bound Computation}
 \label{sec:ranking}
 % It estimates the bounds on the maximum value of counter variables, and
@@ -436,7 +572,7 @@ $
 % For $chain \in rpchain(\tpath)$:
 % where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
 \end{enumerate}
-\subsection{Path-sensitive Reachability Bound Computation}
+\subsection{Path-sensitive Reachability-Bound Computation}
 
 For every program control location $l \in \lvar(c)$, with $\rprog$ as its refined program,
 %  in a program $c$,
