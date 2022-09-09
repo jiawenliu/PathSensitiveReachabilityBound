@@ -485,12 +485,15 @@ this algorithm
 computes the \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ on its iteration numbers locally.
 %  of every repeat pattern 
 \\
-$\outinB(\rprog, \rpattern)$ is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ in the sense that
+$\outinB(\rprog, \rpattern)$
+computes the bound locally
+% is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ 
+in the sense that
 % for a repeat pattern 
 if $\rpattern$ is nested
 in another repeat pattern, i.e., $\rpattern' = \rprepeat(\rpattern)$,
 it only bounds $\rpattern$'s iteration number within $\rpattern'$ by assuming that $\rpattern'$ executes once.
-% \highlight{\textbf{Notations / Operators:}}
+% \\% \highlight{\textbf{Notations / Operators:}}
 \\ \highlight{Computation:}
 \\
 The \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$
@@ -528,10 +531,11 @@ are in the full version.
 % through the following steps.
 For every simple transition path $\tpath$ in a refined program $\rprog$, 
 this algorithm
-computes the \textbf{Inside-Out} bound, $\outinB(\rprog, \tpath) \in \mathcal{A}_{in}$
+computes a bound, $\outinB(\rprog, \tpath) \in \mathcal{A}_{in}$
 %  on its iteration numbers locally.
 % computes the bound
-on the execution numbers of $\tpath$ path-sensitively
+on its execution numbers globally and path-sensitively.
+This bound is called \textbf{Inside-Out} bound and computed
 % for every simple transition path $\tpath$ in this program $\rprog$,
 through the following steps.
 %

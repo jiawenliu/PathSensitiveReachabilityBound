@@ -1657,7 +1657,10 @@ this algorithm
 computes the \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ on its iteration numbers locally.
 %  of every repeat pattern 
 \\
-$\outinB(\rprog, \rpattern)$ is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ in the sense that
+$\outinB(\rprog, \rpattern)$
+computes the bound locally
+% is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ 
+in the sense that
 % for a repeat pattern 
 if $\rpattern$ is nested
 in another repeat pattern, i.e., $\rpattern' = \rprepeat(\rpattern)$,
@@ -1827,7 +1830,7 @@ this algorithm
 computes the \textbf{Inside-Out} bound, $\outinB(\rprog, \tpath) \in \mathcal{A}_{in}$
 %  on its iteration numbers locally.
 % computes the bound
-on the execution numbers of $\tpath$ path-sensitively
+on the execution numbers of $\tpath$ path-sensitively and globally
 % for every simple transition path $\tpath$ in this program $\rprog$,
 through the following steps.
 

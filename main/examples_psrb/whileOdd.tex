@@ -13,9 +13,11 @@
       \clabel{ \assign{i}{k} }^{0} ; \\
           \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
           \qquad \Big(
-            \eif(\clabel{i \% 2 = 0 }^{2}, \\
-            \qquad \qquad \clabel{\assign{i}{i - 1}}^{3},\\
-            \qquad \qquad \clabel{\assign{i}{i - 3}}^{4});
+            \eif(\clabel{i \% 2 = 0 }^{2},
+            % \qquad \qquad 
+            \clabel{\assign{i}{i - 1}}^{3},
+            % \qquad \qquad 
+            \clabel{\assign{i}{i - 3}}^{4});
             \Big)
       \end{array}
     $
