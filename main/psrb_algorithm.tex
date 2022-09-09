@@ -1082,15 +1082,19 @@ repeat pattern set of every while loop and the simple transition paths not in an
 % \[
 %   \rprog :=  \rpattern ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
 % \]
-A \emph{Refined Program} for a program $c$, $\rprog$
+A \emph{Refined Program} for a program $c$, $\rprog$ is a sequence of
+sub-refined program which
 %  ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
 % \todo{is either a repeat pattern $\rpattern$,
 % or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
 % ==>}
-has the form $\rprog = \rprog_0; \cdots; \rprog_n$ where each sub-refined program
-$\rprog_i \in \rprog$
+has the form $\rprog = \rprog_0; \cdots; \rprog_n$.
+Each sub-refined program
+$\rprog_i \in \rprog$ is
 % is either a simple transition path, or 
 a set of repeat patterns or simple transition paths with annotation $\kw{choose}$.
+For example, $\rprog_i = \rpchoose{\tpath_1, \cdots}$ or
+$\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
 % This sequence satisfies,
 % \begin{itemize}
 %   \item 
@@ -1122,7 +1126,6 @@ a set of repeat patterns or simple transition paths with annotation $\kw{choose}
 % \end{itemize}
 % \highlight{For concise, the annotation $\rpchoose{}$ is omitted if there is only one repeat pattern in this set.}
 %
-
 \highlight{\textbf{Property of the Refined Program:}}
 \\
 We guarantee from the algorithm that the refined program $\rprog$ for $c$ has the following property.
@@ -1708,14 +1711,24 @@ $\outinB(\rprog, \tpath) =  1$.
 \highlight{
   \textbf{Improvement Discussion:}
 \\
-The $\outinB(\rprepeat({\rpattern}))$ in the first case
-can be computed by 
+The computation of $\outinB(\rprepeat({\rpattern}))$ 
+as below is more efficient and accurate than existing techniques.
+% in the first case
+% can be computed  as follows
 \\
-$T(c, l) = \kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprepeat({\rpattern}))),
-NEXTD(c, l_0, \absinit(\rprepeat({\rpattern})), V_{\lin} )}$ based on
+The method $T(c, l)$ in \cite{GulwaniJK09} can also compute a
+bound on the iteration numbers of $\rprepeat({\rpattern})$ locally based on
 % $\rprepeat(\rpattern)$ with loop header $l$
 % has the 
 the same semantics and syntax.
+Specifically, $T(c, l)$ call the $\kw{BOUNDFINDERD}$ function as follows:
+\\
+$\kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprepeat({\rpattern}))),
+NEXTD(c, l_0, \absinit(\rprepeat({\rpattern})), V_{\lin} )}$
+% based on
+% % $\rprepeat(\rpattern)$ with loop header $l$
+% % has the 
+% the same semantics and syntax.
 %  as the refined program in paper~\cite{GulwaniJK09},
 % in paper~\cite{GulwaniJK09} 
 % with equivalent results.
@@ -1731,7 +1744,7 @@ ranks computed in Definition~\ref{def:edge_pathinsensitivebound} over the abstra
 % \begin{defn}[Path-Sensitive Local Reachability Bound]
 %   \label{def:pathsensitive_lrb}
 % \end{defn}
-The computations for $\rfinit(\rprog, \rpattern)$,
+The computations of $\outinB(\rprepeat({\rpattern}))$ and $\rfinit(\rprog, \rpattern)$,
 $\rffinal(\rprog, \rpattern)$, $\rfnext(\rprog, \rpattern)$ and $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
 are formally presented as follows.
 \item The \emph{Initial State}, $\rfinit(\rprog, \rpattern)$ for the repeat pattern $\rpattern$ of a refined program $\rprog$ is computed as follows,

@@ -291,13 +291,17 @@ repeat pattern set of every while loop and the simple transition paths not in an
 % \[
 %   \rprog :=  \rpattern ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
 % \]
-A \emph{Refined Program} for a program $c$, $\rprog$
+A \emph{Refined Program} for a program $c$, $\rprog$ is a sequence of
+sub-refined program which
 %  ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
 % \todo{is either a repeat pattern $\rpattern$,
 % or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
 % ==>}
-has the form $\rprog = \rprog_0; \cdots; \rprog_n$ where each sub-refined program $\rprog_i \in \rprog$
-is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$.
+has the form $\rprog = \rprog_0; \cdots; \rprog_n$.
+Each sub-refined program
+$\rprog_i \in \rprog$ is
+% is either a simple transition path, or 
+a set of repeat patterns or simple transition paths with annotation $\kw{choose}$.
 It is guaranteed to have certain properties by the computation algorithm in the full version.
 % % A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
 % % is either a repeat pattern, or a set of refined programs, or sequence of refined program
