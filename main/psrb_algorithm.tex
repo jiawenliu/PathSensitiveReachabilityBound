@@ -907,50 +907,99 @@ In this sense, their method is imprecise in the same case as the contextualizati
 \begin{enumerate}
   \item
 Algorithm~\ref{alg:repeat-pattern}:
-The accuracy and soundness discussion on the step $5$ in Algorithm~\ref{alg:repeat-pattern}.
 \\
-This step doesn't unfold the nested loop when it generates multiple paths for the outer loop.
-Specifically, this step connects  $\rpattern_i +\rpattern_j$ directly
-instead of $\rpattern_i + \rpattern_l + \rpattern_j$ for the nested $\rpattern_l \in LRP(l)$. 
-This step reduces the algorithm complexity.
+\emph{Soundness}
+% on the step $5$ in Algorithm~\ref{alg:repeat-pattern}.
+% \\
+% This step doesn't unfold the nested loop when it generates multiple paths for the outer loop.
+% Specifically, this 
+% The step in line:5 step connects  $\rpattern_i +\rpattern_j$ directly
+% instead of $\rpattern_i + \rpattern_l + \rpattern_j$ for the nested $\rpattern_l \in LRP(l)$. 
+% This step reduces the algorithm complexity.
+% This step is sound because every nested $\rpattern_l$
+% has the same invariant given they are all in the same loop starting from and ending at the same location $l$.
+% But this step is inaccurate because different nested $\rpattern_l$ can result in different repeat patterns of the outside loop.
+There are two steps which generate new repeat patterns.
+The step in line:5 step connects  $\rpattern_i +\rpattern_j$ directly
+% instead of $\rpattern_i + \rpattern_l + \rpattern_j$ for the nested $\rpattern_l \in LRP(l)$. 
+% This step reduces the algorithm complexity.
 This step is sound because every nested $\rpattern_l$
 has the same invariant given they are all in the same loop starting from and ending at the same location $l$.
-But this step is inaccurate because different nested $\rpattern_l$ can result in different repeat patterns of the outside loop.
+The step in line:6 generates sequence of two sub repeat patterns if they execute after each other.
+This step is also sound because by checking their invariant we can compute this soundly.
+% But this step is inaccurate because different nested $\rpattern_l$ can result in different repeat patterns of the outside loop.
+% \\
+\emph{Over-Approximation}
+The step in line:5 of Algorithm~\ref{alg:repeat-pattern} doesn't unfold the nested loop when it generates multiple paths for the outer loop.
+Specifically, this step connects  $\rpattern_i +\rpattern_j$ directly
+instead of $\rpattern_i + \rpattern_l + \rpattern_j$ for the nested $\rpattern_l \in LRP(l)$. 
+In this sense, it over-approximate the repeat patterns.
+Because different nested $\rpattern_l$ can result in different repeat patterns of the outside loop.
+\\
+\emph{Efficiency}
+Again the step in line:5 increases the efficiency because it reduces the unfolding the recursion.
 \\
 The program refinement algorithm in paper~\cite{GulwaniJK09} uses this strategy as well in refining each while loop without unfolding the nested loop.
 Specifically in their Flatten operation in Definition~4.1.
 \item
 Algorithm~\ref{alg:repeat-pattern-complete}: 
-The accuracy and inefficiency discussion on the step $6$ in Algorithm~\ref{alg:repeat-pattern-complete}.
 \\
-In this version, the loop at line $5$ unfolds the nested loop.
+\emph{Soundness}
+This version guarantee the soundness in the same way as Algorithm 1.
+\emph{Reduce the Over-Approximation}
+The step in line:6
+unfolds the nested loop.
+% \\
+Then it generates multiple paths for outer loops by connecting $\rpattern_i + \rpattern_l + \rpattern_j$ for every nested $\rpattern_l \in LRP(l)$. 
+% It increases the algorithm complexity because it unfolds the nested loop.
+It increases accuracy because every nested repeat pattern $\rpattern_l$
+will be refined by concatenating with the outer loop.
 \\
-This step generates multiple paths for outer loops by connecting $\rpattern_i + \rpattern_l + \rpattern_j$ for every nested $\rpattern_l \in LRP(l)$. 
-It increases the algorithm complexity.
-But it increases accuracy because every nested repeat pattern $\rpattern_l$ will be checked by concatenate with the outer loop.
+\emph{Inefficiency}
+The step in line:6 increases the algorithm complexity because it unfolds the nested loop.
+% The program refinement algorithm in paper~\cite{GulwaniJK09} uses this strategy as well in refining each while loop without unfolding the nested loop.
+% Specifically in their Flatten operation in Definition~4.1.
+% The accuracy and inefficiency discussion on the step $6$ in Algorithm~\ref{alg:repeat-pattern-complete}.
+% In this version, the loop at line $5$ unfolds the nested loop.
+% \\
+% This step generates multiple paths for outer loops by connecting $\rpattern_i + \rpattern_l + \rpattern_j$ for every nested $\rpattern_l \in LRP(l)$. 
+% It increases the algorithm complexity because it unfolds the nested loop.
+% But it increases accuracy because every nested repeat pattern $\rpattern_l$ will be checked by concatenate with the outer loop.
 % has the same invariant given they are all in the same loop starting from and ending at the same location $l$.
 % But this step is incomplete because different $\rpattern_l$ can result in different iteration numbers of the outside loop.
-\item Algorithm~\ref{alg:loop-repeat-pattern}: The accuracy and termination discussion.
+\item Algorithm~\ref{alg:loop-repeat-pattern}: 
+% The accuracy and termination discussion.
 \\
-This algorithm terminates.
+\emph{Termination}
+% \\
+Line: $4$ and $7$ are the two steps where the output set $R(c)$ increases
+% is added with new elements.
 \\
-Step $4$ and $7$ are two steps where the output set $R(c)$ is added with new elements.
+In step $4$, a new pattern is added and the old one is removed in the same time.
+So the size of $R(c)$ doesn't change.
 \\
-In step $4$, $R(c)$ is added a new pattern and removed a pattern in the same time. So the size of $R(c)$ doesn't change.
-\\
-In step $7$, $R(c)$ is added one new pattern and removed. So the size of $R(c)$ increases by 1. 
-It is sufficient to show step $7$ will not add the same pattern into $R(c)$ twice.
-\\
-If a new pattern $\rpattern'$ is added into $R(c)$ at step $7$, 
-then step $4$ will check if $\rpattern'$ can consecutively execute twice.
-\\
-If it can, then step $4$ will add $\rprepeat(\rpattern')$ into $R(c)$ and remove $\rpattern'$ from $R(c)$.
-In this case, the step $7$ identifies the pattern $\rpattern'$ again, but $\rpattern'$ will not be added into $R(c)$ because
+Line $7$ adds a new pattern into the output set and increases $R(c)$'s size by 1. 
+It is sufficient to show that this step
+% $7$ will not 
+doesn't add the same pattern into $R(c)$ twice.
+We first assume a new pattern $\rpattern'$ is added into $R(c)$ at step $7$, 
+%
+% If a new pattern $\rpattern'$ is added into $R(c)$ at step $7$, 
+then line $4$ will check if $\rpattern'$ will always consecutively iterating to the end.
+% \\%
+There are two cases.
+If ``yes'', then line $4$ will add $\rprepeat(\rpattern')$ into $R(c)$ and remove $\rpattern'$ from $R(c)$.
+In this case, line $7$ will not add $\rprepeat(\rpattern')$ in any sequence that it shows up.
+Because when it identifies the pattern $\rpattern'$ again, but $\rpattern'$ will not be added into $R(c)$ because
 it is a sub pattern of $\rprepeat(\rpattern')$.
+% \\%
+If ``no'', then line $4$ will not update the $R(c)$. 
+In this case, the lin $7$ will not identify any new repeat patterns. So the output set will not change and the algorithm terminates.
+%  $\rpattern'$ again, $\rpattern'$ will not be added into $R(c)$ because
+% it is already there.
 \\
-If it cannot, then step $4$ will not update the $R(c)$. 
-In this case, when step $7$ identifies $\rpattern'$ again, $\rpattern'$ will not be added into $R(c)$ because
-it is already there.
+\emph{Soundness} 
+
 \end{enumerate}
 %
 \highlight{\textbf{Pseudocode:}}
