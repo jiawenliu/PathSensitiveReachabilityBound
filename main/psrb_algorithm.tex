@@ -823,6 +823,8 @@ In this sense, their method is imprecise in the same case as the contextualizati
 }
 \\
 %
+We aim to compute the repeat patterns for every while loop in a program soundly.
+\\
 \highlight{\textbf{Computation Steps Summary:}}
 \begin{enumerate}
   \item Checking the invariant (precondition and post-condition) of every simple transition path,
@@ -928,7 +930,7 @@ has the same invariant given they are all in the same loop starting from and end
 The step in line:6 generates sequence of two sub repeat patterns if they execute after each other.
 This step is also sound because by checking their invariant we can compute this soundly.
 % But this step is inaccurate because different nested $\rpattern_l$ can result in different repeat patterns of the outside loop.
-% \\
+\\
 \emph{Over-Approximation}
 The step in line:5 of Algorithm~\ref{alg:repeat-pattern} doesn't unfold the nested loop when it generates multiple paths for the outer loop.
 Specifically, this step connects  $\rpattern_i +\rpattern_j$ directly
@@ -937,7 +939,7 @@ In this sense, it over-approximate the repeat patterns.
 Because different nested $\rpattern_l$ can result in different repeat patterns of the outside loop.
 \\
 \emph{Efficiency}
-Again the step in line:5 increases the efficiency because it reduces the unfolding the recursion.
+Again the step in line:5 increases the efficiency because it avoids the unfolding and reduces  the recursion.
 \\
 The program refinement algorithm in paper~\cite{GulwaniJK09} uses this strategy as well in refining each while loop without unfolding the nested loop.
 Specifically in their Flatten operation in Definition~4.1.
@@ -946,6 +948,7 @@ Algorithm~\ref{alg:repeat-pattern-complete}:
 \\
 \emph{Soundness}
 This version guarantee the soundness in the same way as Algorithm 1.
+\\
 \emph{Reduce the Over-Approximation}
 The step in line:6
 unfolds the nested loop.
@@ -989,17 +992,20 @@ then line $4$ will check if $\rpattern'$ will always consecutively iterating to 
 % \\%
 There are two cases.
 If ``yes'', then line $4$ will add $\rprepeat(\rpattern')$ into $R(c)$ and remove $\rpattern'$ from $R(c)$.
-In this case, line $7$ will not add $\rprepeat(\rpattern')$ in any sequence that it shows up.
-Because when it identifies the pattern $\rpattern'$ again, but $\rpattern'$ will not be added into $R(c)$ because
-it is a sub pattern of $\rprepeat(\rpattern')$.
+In this case, line $7$ will not add the same $\rpattern'$ again because it is a sub-sequence of $\rprepeat(\rpattern')$.
+% in any sequence that it shows up.
+% Because when it identifies the pattern $\rpattern'$, but $\rpattern'$ will not be added into $R(c)$ because
+% it is a sub pattern of $\rprepeat(\rpattern')$.
 % \\%
 If ``no'', then line $4$ will not update the $R(c)$. 
-In this case, the lin $7$ will not identify any new repeat patterns. So the output set will not change and the algorithm terminates.
+In this case, the line $7$ will not identify any new repeat patterns. So the output set will not change and the algorithm terminates.
 %  $\rpattern'$ again, $\rpattern'$ will not be added into $R(c)$ because
 % it is already there.
 \\
 \emph{Soundness} 
-
+The soundness is guaranteed by line:4 and line:7 as well.
+The two lines add all the qualified repeat patterns into the output set.
+% However, the two steps rely on an external invariant generation tool.
 \end{enumerate}
 %
 \highlight{\textbf{Pseudocode:}}
@@ -1081,7 +1087,10 @@ A \emph{Refined Program} for a program $c$, $\rprog$
 % \todo{is either a repeat pattern $\rpattern$,
 % or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
 % ==>}
-has the form $\rprog = \rprog_0; \cdots; \rprog_n$ where each sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$.
+has the form $\rprog = \rprog_0; \cdots; \rprog_n$ where each sub-refined program
+$\rprog_i \in \rprog$
+% is either a simple transition path, or 
+a set of repeat patterns or simple transition paths with annotation $\kw{choose}$.
 % This sequence satisfies,
 % \begin{itemize}
 %   \item 
@@ -1115,46 +1124,46 @@ has the form $\rprog = \rprog_0; \cdots; \rprog_n$ where each sub-refined progra
 %
 
 \highlight{\textbf{Property of the Refined Program:}}
+\\
 We guarantee from the algorithm that the refined program $\rprog$ for $c$ has the following property.
-\todo{ 
-  \todo{It is a sequence of simple transition paths and sets of repeat patterns with annotation $\kw{choose}$,} 
-is a sequence of sub-refined program, $\rprog = \rprog_0; \cdots; \rprog_n$.
-Every 
-sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$.
-%  $\rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$.
-}
-
-If $\rprog = \rprog_0; \cdots; \rprog_n$ is the refined program of $c$, then
+% \todo{ 
+%   \todo{It is a sequence of simple transition paths and sets of repeat patterns with annotation $\kw{choose}$,} 
+% is a sequence of sub-refined program, $\rprog = \rprog_0; \cdots; \rprog_n$.
 % Every 
-\begin{itemize}
-  \item every sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$. sequence satisfies,
-  \item 
-  % \todo{Every refined 
-  % programs in a same set, $\rpattern \in \rpchoose{ \cdots }$
-  % %  with annotation $\rpchoose{\cdots}$ 
-  % starts and ends with the same program point, ==>}
-  \highlight{every repeat pattern that comes from 
-  the same set, $\rpattern \in \rpchoose{ \cdots }$
-  starts from the same program point $l$ and ends at the same program point $l'$ too,
-  (if $l = l'$, then we know this $\rpchoose{ \cdots }$ contains the repeat patterns of the while loop at program point $l$.),}
-  \item 
-  % \todo{and for every two sub-refined programs following each other in the sequence,
-  %   the first refined program's ending program point is the same 
-  %   as the starting program point of the second refined program. ==>}
-  %   \\
-    \highlight{every two repeat patterns that come from two different sets, i.e.,
-    $\rpattern \in \rpchoose{\rpattern_1, \cdots}$ and $\rpattern' \in \rpchoose{\rpattern_1', \cdots}$,
-    if the two sets follow each other in $\rprog$, i.e.,
-    $\rprog = \cdots, \rpchoose{\rpattern_1, \cdots}; \rpchoose{\rpattern_1', \cdots}, \cdots$,
-    then $\rpattern$ ends at the program point from which $\rpattern'$ starts.
-     }
-  % \todo{i.e., if
-  % $\rprog = \rprog_0; \cdots; \rprog_n$,
-  % % $\rpattern_1 \in \rprog_i$
-  % % and $\rpattern_2 \in \rprog_{i + 1}$,
-  % then all the transition paths in $\rprog_i$ ends with the same program point as 
-  % the $\rprog_{i + 1}$'s transition paths' starting location.}
-\end{itemize}
+% sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$.
+% %  $\rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$.
+% }
+% If $\rprog = \rprog_0; \cdots; \rprog_n$ is the refined program of $c$, then
+% % Every 
+% \begin{itemize}
+%   \item every sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$. sequence satisfies,
+%   \item 
+%   % \todo{Every refined 
+%   % programs in a same set, $\rpattern \in \rpchoose{ \cdots }$
+%   % %  with annotation $\rpchoose{\cdots}$ 
+%   % starts and ends with the same program point, ==>}
+%   \highlight{every repeat pattern that comes from 
+%   the same set, $\rpattern \in \rpchoose{ \cdots }$
+%   starts from the same program point $l$ and ends at the same program point $l'$ too,
+%   (if $l = l'$, then we know this $\rpchoose{ \cdots }$ contains the repeat patterns of the while loop at program point $l$.),}
+%   \item 
+%   % \todo{and for every two sub-refined programs following each other in the sequence,
+%   %   the first refined program's ending program point is the same 
+%   %   as the starting program point of the second refined program. ==>}
+%   %   \\
+%     \highlight{every two repeat patterns that come from two different sets, i.e.,
+%     $\rpattern \in \rpchoose{\rpattern_1, \cdots}$ and $\rpattern' \in \rpchoose{\rpattern_1', \cdots}$,
+%     if the two sets follow each other in $\rprog$, i.e.,
+%     $\rprog = \cdots, \rpchoose{\rpattern_1, \cdots}; \rpchoose{\rpattern_1', \cdots}, \cdots$,
+%     then $\rpattern$ ends at the program point from which $\rpattern'$ starts.
+%      }
+%   % \todo{i.e., if
+%   % $\rprog = \rprog_0; \cdots; \rprog_n$,
+%   % % $\rpattern_1 \in \rprog_i$
+%   % % and $\rpattern_2 \in \rprog_{i + 1}$,
+%   % then all the transition paths in $\rprog_i$ ends with the same program point as 
+%   % the $\rprog_{i + 1}$'s transition paths' starting location.}
+% \end{itemize}
 
 \begin{lem}[Properties of A Refined Program]
   % Given a abstract transition graph $\absG(c)$,
@@ -1177,7 +1186,7 @@ If $\rprog = \rprog_0; \cdots; \rprog_n$ is the refined program of $c$, then
   % $\rprog = \rprog_1, \cdots; \rprog_n$ and
   % $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
   \begin{itemize}
-    \item every sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$. sequence satisfies,
+    % \item every sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$. sequence satisfies,
     % \item $\rprog$ has the form $\rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$.
   \item 
   % \todo{every
@@ -1193,9 +1202,10 @@ If $\rprog = \rprog_0; \cdots; \rprog_n$ is the refined program of $c$, then
   % \todo{if $\rprog' = \rprog_1; \rprog_2$, then
   % % and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
   % $\rprog_1$'s ending label is the same label as $\rprog_2$'s starting label. ==>}
-  every two repeat patterns that come from two different sub-programs, i.e.,
-  $\rpattern \in \rprog_i$ and $\rpattern' \in \rprog_{i + 1}$,
+  every two repeat patterns that come from two different sub-programs,
   and the two sub-programs follow each other in $\rprog$, 
+  i.e.,
+  $\rpattern \in \rprog_i$ and $\rpattern' \in \rprog_{i + 1}$,
   % i.e.,
   % $\rprog = \cdots, \rpchoose{\rpattern_1, \cdots}; \rpchoose{\rpattern_1', \cdots}, \cdots$,
   then $\rpattern$ ends at the program point from which $\rpattern'$ starts.
@@ -1212,23 +1222,26 @@ For concise, the annotation $\rpchoose{}$ is omitted if there is only one repeat
 \begin{itemize}
 \item Requiring the repeat pattern sets $LRP(l)$ for each loop
 that its header is at point $l$,
-and the set of remaining repeat patterns $W(c)$ from Algorithm~\ref{alg:repeat-pattern}.
+and the set of remaining simple transition paths set $W(c)$ from Algorithm~\ref{alg:repeat-pattern}.
 % 
-\item For all remaining repeat patterns in $W(c)$, 
-generating $\rprog_{s}$ if there
-are two repeat patterns starts and ending from the same program point.
+\item For all simple transition paths in $W(c)$
+% not in any SCC of $\absG(c)$,
+% remaining repeat patterns in $W(c)$, 
+this step generates $\rprog_{s}$ for all pair of
+%  there
+% are two 
+paths that start from and end at the same program point.
 % patterns which is a simple transition path and not in any SCC,
 % generating a repeat pattern set for all
 % repeat patterns starting and ending with the same label.
 \[
   \rprog_{s} \triangleq 
   \rpchoose{
-  \rpattern ~|~ l_1, l_2 \in \lvar(c) \land 
-  \rpattern = l_1 \to \cdots \to l_2 \in RP(c) 
-  \land  \rpattern \notin SCC
-    }
+  \tpath_1, \tpath_2 ~|~ l_1, l_2 \in \lvar(c) \land 
+  \tpath_1 = l_1 \to \cdots \to l_2 \land \tpath_2 = l_1 \to \cdots \to l_2
+  }
 \]
-Otherwise, generating $\rprog_{a} = \rpattern$.
+Otherwise, generating $\rprog_{a} = \tpath$.
 %
 \item 
 For every \emph{outermost loop} with the header at location $l$, 
@@ -1262,8 +1275,12 @@ Generating the \emph{refined program} $\rprog$ as a sequence of repeat pattern s
 % $\tpath_0$ is the simple path with the program entrance as the starting point
 % and $\tpath_{\lex}$ is the simple path going to the program exit point.
 % \\
-Each repeat pattern set in $\rprog$ is either a set of simple transition paths $\rprog_{s}$ not in any while loop computed from step 1,
-or a set of repeat patterns for a while loop $\rprog_l$.
+Each sub-refined program $\rprog_i$ in this sequqence,
+is a set. This set contains either
+%  repeat pattern set in $\rprog$ is either a set of 
+simple transition paths $\rprog_{s}$ not in any while loop
+% computed from step 1,
+or a set of repeat patterns for a while loop $\rprog_l$ in $c$.
 \\
 $\rprog_0$ contains the repeat patterns with the program entrance as the starting point
 and $\rprog_{\lex}$ contains the repeat patterns going to the program exit point.
@@ -1285,16 +1302,16 @@ and $\rprog_{\lex}$ contains the repeat patterns going to the program exit point
 \\ \quad 
 $\rprog_{s} \triangleq 
   \rpchoose{
-  \rpattern_1, \rpattern_2 ~|~ l_1, l_2 \in \lvar(c) \land 
-  \rpattern_1 = l_1 \to \cdots \to l_2 \land \rpattern_2 = l_1 \to \cdots \to l_2
+  \tpath_1, \tpath_2 ~|~ l_1, l_2 \in \lvar(c) \land 
+  \tpath_1 = l_1 \to \cdots \to l_2 \land \tpath_2 = l_1 \to \cdots \to l_2
   }
 $
 \\ \quad 
 $ W(c) \setminus \{\rpattern_1, \rpattern_2\} $
 \STATE  \textbf{For} $\rpattern\in W(c)$:
 \\ \quad 
-$\rprog_{a} \triangleq  \rpattern$
-\STATE \textbf{For} $\rpattern \in RP(l)$:
+$\rprog_{a} \triangleq  \tpath$
+\STATE \textbf{For} $\tpath \in RP(l)$:
 \\ \quad
 $\rprog_l \triangleq 
 \rpchoose{
