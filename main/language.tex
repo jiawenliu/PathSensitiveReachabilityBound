@@ -6,15 +6,16 @@
 \mbox{Arithmetic Operators} 
 & \oplus_a & ::= & + ~|~ - ~|~ \times 
 %
-~|~ \div ~|~ \emax ~|~ \emin\\  
-% ~|~ \div \\  
-\mbox{Boolean Operators} 
-& \oplus_b & ::= & \lor ~|~ \land
-\\
-%
-\mbox{Relational Operators} 
-& \sim & ::= & < ~|~ \leq ~|~ == 
+~|~ \div ~|~ \emax ~|~ \emin
 \\  
+% ~|~ \div \\  
+% \mbox{Boolean Operators} 
+% & \oplus_b & ::= & \lor ~|~ \land
+% \\
+%
+% \mbox{Relational Operators} 
+% & \sim & ::= & < ~|~ \leq ~|~ == 
+% \\  
 %
 \mbox{Arithmetic Expression} 
 & \aexpr & ::= & 
@@ -25,9 +26,12 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \mbox{Boolean Expression} & \bexpr & ::= & 
 %
 \etrue ~|~ \efalse  ~|~ \neg \bexpr
- ~|~ \bexpr \oplus_b \bexpr
+ ~|~ \bexpr \land \bexpr
 %
-~|~ \aexpr \sim \aexpr 
+~|~ \bexpr \lor \bexpr
+~|~ \aexpr \leq \aexpr 
+~|~ \aexpr < \aexpr 
+~|~ \aexpr = \aexpr 
 \\
 %
 \mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr ~|~ [\expr, \dots, \expr]
@@ -70,7 +74,7 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 % \todo{change trace notation into list, and update corresponding operator nations}
 % \\
 % \wqside{"$\cdot$" has two meanings? empty, delimit. Trace is list of event?}
-We use following notations to represent the set of corresponding terms:
+We use following notations to represent the sets of corresponding terms:
 \[
 \begin{array}{lll}
 \mathcal{VAR} & : & \mbox{Set of Variables}  
@@ -108,7 +112,7 @@ We use following notations to represent the set of corresponding terms:
 $FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. To be precise,
 $FV(\aexpr)$ and $FV(\bexpr)$
 %  and $FV(\qexpr)$ 
-represent the set of free variables in arithmetic
+represent the sets of free variables in arithmetic
 expression $\aexpr$ and boolean expression $\bexpr$
 %  and query expression $\qexpr$ 
 respectively.
@@ -117,10 +121,21 @@ respectively.
 \label{sec:operational_semantics}
 % \subsubsection{Event and Trace}
 \paragraph*{Event}
-An event tracks useful information about each step of the evaluation, as a quadruple. Its first element is either 
-an assigned variable (from an assignment command) or a boolean expression (from the guard of if or while command), follows by 
- the label associated to this event, the value evaluated either from the expression assigned to the variable,
-or the boolean expression in the guard.
+An event is a triple.
+% tracks useful information about each step of the evaluation, as a quadruple. 
+An \emph{assignment event} corresponds to the evaluation of an assignment command $\clabel{\assign{x}{\expr}}^l$.
+% the first element is either
+% an assigned 
+Its first element is the variable name $x$,
+% (on the left hand of the command),
+or a boolean expression (from the guard of if or while command), 
+following by 
+ the label, $l$ associated to this command and the value assigned to the variable.
+ \\
+ A \emph{testing event} corresponds to the evaluation of the boolean expression $b$ in the guard of a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo c$.
+ Its first element is the boolean expression $b$, following by 
+ the label $l$ associated to the guard and the evaluated boolean result.
+% or the boolean expression in the guard.
 %
 \[
 \begin{array}{llll}
@@ -231,9 +246,20 @@ $\pi_i :
   \and 
   \config{\trace, \bexpr_2} \barrow v_2
   \and 
-   v_1 \oplus_b v_2 = v
+   v_1 \land v_2 = v
 }{
- \config{\trace,  \bexpr_1 \oplus_b \bexpr_2} 
+ \config{\trace,  \bexpr_1 \land \bexpr_2} 
+ \barrow v
+}
+\and 
+\inferrule{ 
+  \config{\trace, \bexpr_1} \barrow v_1
+  \and 
+  \config{\trace, \bexpr_2} \barrow v_2
+  \and 
+   v_1 \lor v_2 = v
+}{
+ \config{\trace,  \bexpr_1 \lor \bexpr_2} 
  \barrow v
 }
 \and 
@@ -242,9 +268,31 @@ $\pi_i :
   \and 
   \config{\trace, \aexpr_2} \aarrow v_2
   \and 
-   v_1 \sim v_2 = v
+   v_1 \leq v_2 = v
 }{
- \config{\trace,  \aexpr_1 \sim \aexpr_2} 
+ \config{\trace,  \aexpr_1 \leq \aexpr_2} 
+ \barrow v
+}
+\and 
+\inferrule{ 
+  \config{\trace, \aexpr_1} \aarrow v_1
+  \and 
+  \config{\trace, \aexpr_2} \aarrow v_2
+  \and 
+   v_1 < v_2 = v
+}{
+ \config{\trace,  \aexpr_1 < \aexpr_2} 
+ \barrow v
+}
+\and 
+\inferrule{ 
+  \config{\trace, \aexpr_1} \aarrow v_1
+  \and 
+  \config{\trace, \aexpr_2} \aarrow v_2
+  \and 
+   v_1 = v_2 = v
+}{
+ \config{\trace,  \aexpr_1 = \aexpr_2} 
  \barrow v
 }
 \\
@@ -309,10 +357,12 @@ The trace based operational semantics rules are defined as follows,
 %
 \inferrule
 {
+  \config{\expr, \trace} \earrow v
+  \and
 \event = ({x}, l, v)
 }
 {
-\config{[\assign{{x}}{\aexpr}]^{l},  \trace } 
+\config{[\assign{{x}}{\expr}]^{l},  \trace } 
 \xrightarrow{} 
 \config{\clabel{\eskip}^l, \trace \traceadd \event}
 }
@@ -321,7 +371,7 @@ The trace based operational semantics rules are defined as follows,
 %
 \inferrule
 {
-  \config{\trace, b} \barrow \etrue
+  \config{\trace, b} \earrow \etrue
  \and 
  \event = (b, l, \etrue)
 }
@@ -339,7 +389,7 @@ c; \ewhile [b]^{l} \edo c,
 %
 \inferrule
 {
-  \config{\trace, b} \barrow \efalse
+  \config{\trace, b} \earrow \efalse
  \and 
  \event = (b, l, \efalse)
 }
@@ -387,7 +437,7 @@ c; \ewhile [b]^{l} \edo c,
 %
 \inferrule
 {
-  \config{\trace, b} \barrow \etrue
+  \config{\trace, b} \earrow \etrue
  \and 
  \event = (b, l, \etrue)
 }
@@ -404,7 +454,7 @@ c; \ewhile [b]^{l} \edo c,
 %
 \inferrule
 {
- \config{\trace, b} \barrow \efalse
+ \config{\trace, b} \earrow \efalse
  \and 
  \event = (b, l, \efalse)
 }
