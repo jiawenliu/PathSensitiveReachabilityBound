@@ -73,7 +73,7 @@ Three sub-steps:
   \end{itemize}
   \end{defn}
 %
-\item \textbf{Repeat Pattern} This step computes the set of all the \emph{repeat patterns} for every while loop in a program $c$.
+\item \textbf{Repeat Pattern} This step computes a set of all the \emph{repeat patterns} for every while loop in a program $c$.
 % \\
 % A \emph{Repeat Pattern} ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns of this program $c$. 
 % \[
@@ -282,7 +282,7 @@ Three sub-steps:
 % \\
 % This step computes the refined program for a program $c$ by composing the
 % repeat pattern set of every while loop and the simple transition paths not in any loop.
-This step computes the refined program for a program $c$ by composing the
+This step computes a refined program for a program $c$ by composing the
 repeat pattern set of every while loop and the simple transition paths not in any loop.
 \\
 % A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
@@ -291,7 +291,21 @@ repeat pattern set of every while loop and the simple transition paths not in an
 % \[
 %   \rprog :=  \rpattern ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
 % \]
-A \emph{Refined Program} for a program $c$, $\rprog$ is a sequence of
+% A \emph{Refined Program} for a program $c$, $\rprog$ is a sequence of
+% sub-refined program which
+% %  ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
+% % \todo{is either a repeat pattern $\rpattern$,
+% % or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
+% % ==>}
+% has the form $\rprog = \rprog_0; \cdots; \rprog_n$.
+% Each sub-refined program
+% $\rprog_i \in \rprog$ is
+% % is either a simple transition path, or 
+% a set of repeat patterns or simple transition paths with annotation $\kw{choose}$.
+% It is guaranteed to have certain properties by the computation algorithm in the full version.
+A \emph{Refined Program}
+% for a program $c$, 
+$\rprog$ is a sequence of
 sub-refined program which
 %  ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
 % \todo{is either a repeat pattern $\rpattern$,
@@ -302,7 +316,61 @@ Each sub-refined program
 $\rprog_i \in \rprog$ is
 % is either a simple transition path, or 
 a set of repeat patterns or simple transition paths with annotation $\kw{choose}$.
-It is guaranteed to have certain properties by the computation algorithm in the full version.
+For example, $\rprog_i = \rpchoose{\tpath_1, \cdots}$ or
+$\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
+% \\
+\begin{defn}[Refined Program of A Program]
+  \label{def:refined-prog}
+  % Given a abstract transition graph $\absG(c)$,
+  % its \emph{Refined Program} is either a repeat pattern, or a set of refined program, or sequence of refined program has
+  % the following syntax,
+  % \[
+  %   \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
+  % \]
+  $\rprog$  is a refined program of $c$ and if and only if it has the form $ \rprog = \rprog_0; \cdots; \rprog_n$
+  and  satisfies
+  % A \emph{Refined Program} for a program $c$, $\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$
+  % is 
+  % % \todo{either a repeat pattern $\rpattern$,
+  % % or a set of sub-refined programs $\{\rprog_1, \cdots, \rprog_m\}$ with annotation $\kw{choose}$,
+  % % or a sequence of sub-refined program $\rprog; \rprog$.
+  % % It satisfies that for every sub-refined program $\rprog' \in \rprog$ ==>}
+  % \highlight{a sequence of sets of repeat patterns with annotation $\kw{choose}$, 
+  % $\rprog = \rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$
+  % satisfying that}
+  % $\rprog = \rprog_1, \cdots; \rprog_n$ and
+  % $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
+  \begin{itemize}
+    % \item every sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$. sequence satisfies,
+    % \item $\rprog$ has the form $\rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$.
+  \item 
+  % \todo{every
+  %  $\rpattern, \rpattern' \in \rpchoose{\rprog_1, \cdots, \rprog_m}$,
+  %  then all the $\rprog_1, \cdots, \rprog_m$ have the same starting and ending label,==>}
+   \highlight{every repeat pattern that comes from 
+   the same set
+   starts from the same program point $l$ and ends at the same program point $l'$ too,
+   i.e., for every $\rpchoose{ \cdots } \in \rprog$,
+  every $\rpattern_i, \rpattern_j \in \rpchoose{ \cdots }$
+  starts from the same program point $l$ and ends at the same program point $l'$ for $l, l' \in \lvar(c)$;}
+  \item 
+  % \todo{if $\rprog' = \rprog_1; \rprog_2$, then
+  % % and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
+  % $\rprog_1$'s ending label is the same label as $\rprog_2$'s starting label. ==>}
+  every two repeat patterns that come from two different sub-programs,
+  and the two sub-programs follow each other in $\rprog$, 
+  i.e.,
+  $\rpattern \in \rprog_i$ and $\rpattern' \in \rprog_{i + 1}$,
+  % i.e.,
+  % $\rprog = \cdots, \rpchoose{\rpattern_1, \cdots}; \rpchoose{\rpattern_1', \cdots}, \cdots$,
+  then $\rpattern$ ends at the program point from which $\rpattern'$ starts.
+  % every two repeat patterns that come from two different sub-programs, i.e.,
+  %   $\rpattern \in \rpchoose{\rpattern_1, \cdots}$ and $\rpattern' \in \rpchoose{\rpattern_1', \cdots}$,
+  %   if the two sets follow each other in $\rprog$, i.e.,
+  %   $\rprog = \cdots, \rpchoose{\rpattern_1, \cdots}; \rpchoose{\rpattern_1', \cdots}, \cdots$,
+  %   then $\rpattern$ ends at the program point from which $\rpattern'$ starts.
+  \end{itemize}
+\end{defn}
 % % A \emph{Refined Program} for a program $c$, ($\rprog \in \mathcal{P}(\mathcal{P}(\absG(c)))$),
 % % is either a repeat pattern, or a set of refined programs, or sequence of refined program
 % % % ($\rprog \in \mathcal{P}({\absG(c)})$) is either a simple path or sequence of repeat patterns. 
@@ -416,7 +484,7 @@ This step computes a
 and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
 We refer to the two names as the same meaning in this paper.}}
 for each edge in the abstract transition graph $\absG(c)$ of a program $c$.
-Then it estimates the bound on the maximum value of each ranking function / local bound as well as
+Then it estimates a bound on the maximum value of each ranking function / local bound as well as
 % , and
 the bound on the execution times of the corresponding edge in a path-insensitive manner.
 \\
@@ -482,7 +550,7 @@ on the execution times of this edge in $c$.
 % this value only bounds the iteration number of $\rpattern$ inside $\rpattern'$ by assuming $\rpattern'$ executes once.
 For every repeat pattern $\rpattern$ in a refined program $\rprog$, 
 this algorithm
-computes the \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ on its iteration numbers locally.
+computes a bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ on its iteration numbers locally named \textbf{Outside-In} bound.
 %  of every repeat pattern 
 \\
 $\outinB(\rprog, \rpattern)$
@@ -490,11 +558,13 @@ computes the bound locally
 % is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ 
 in the sense that
 % for a repeat pattern 
-if $\rpattern$ is nested
-in another repeat pattern, i.e., $\rpattern' = \rprepeat(\rpattern)$,
-it only bounds $\rpattern$'s iteration number within $\rpattern'$ by assuming that $\rpattern'$ executes once.
+if $\rpattern'$ that is nested
+in another repeat pattern $\rpattern$, i.e., $\rpattern = \rprepeat(\rpattern')$,
+it only estimates
+$\rpattern'$'s iteration number within $\rpattern$ by assuming that $\rprepeat(\rpattern')$ executes once.
 % \\% \highlight{\textbf{Notations / Operators:}}
-\\ \highlight{Computation:}
+\\ 
+\highlight{Computation:}
 \\
 The \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$
 for a repeat pattern $\rpattern$ in a refined program $\rprog$
