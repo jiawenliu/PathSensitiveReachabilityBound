@@ -2036,7 +2036,7 @@ the \emph{Repeat Chain Bound} $\rpchB(l, \tpath, \rprog) \in \mathcal{A}_{in}$ i
 % $chsRB(\rprog_n, \tpath) = \prod\limits_{\rprog_i \in lpchain(\rprog_n, \tpath)}
 % \frac{chsInit(\rprog_i, \tpath) - chsFinal(\rprog_i, \tpath)}{\varGD(\rprog_i, \tpath)}$
   \\
-  $\rpchB(l, \tpath, \rprog) = \max \left\{ \prod\limits_{\rprog_i \in ch}  \outinB(\rprog_i) 
+  $\rpchB(l, \tpath, \rprog) = \max \left\{ \prod\limits_{\rprog_i \in ch}  \outinB(\rprog, \rprog_i) 
   ~\middle\vert~ ch \in \rpchset(l, \tpath, \rprog) \right\}
   $,
   \\
@@ -2257,9 +2257,22 @@ computed as follows.
 \begin{itemize}
 \item 
 \emph{Soundness} of the \emph{Repeat-Chain Bound}  $\rpchB(l, \tpath, \rprog)$.
+For a simple transition path $\tpath$ with its closest enclosing while loop at $l$ in a program $\rprog$, $\rpchB(l, \tpath, \rprog)$
+is a sound bound on its execution times in side $l$.
+\\
+For a simple transition path $\tpath$ only enclosed by one repeat pattern $\rprepeat(\tpath)$, 
+we know $\rpchB(l, \tpath, \rprog) = \outinB(\rprepeat(\tpath), \rprog)$.
+Since $\outinB(\rprepeat(\tpath), \rprog)$ is a sound local bound on the iteration times
+of $\rprepeat(\tpath)$ by assuming all the outside loops executes only once.
+In this sense, $\outinB(\rprepeat(\tpath), \rprog)$ is also a sound bound on the iteration times globally.
+\\
+For a simple transition path $\tpath$ nested in multiple repeat patterns $\rpattern_1, \cdots, \rpattern_m$,
+we know $\rpchB(l, \tpath, \rprog) = \prod\limits_{i = 1, \cdots, m}\outinB(\rpattern_i, \rprog)$.
+By the same guarantee from $\outinB(\rpattern_i, \rprog)$, it is sound to multiply each of them.
+% The soundness is guaranteed by the operation $ $.
 \item 
-\emph{Soundness} of the \emph{Relative-Loop Bound}  $\lpchB(l, \tpath, \rprog)$.
-For a loop label $l$ and a transition path $\tpath$ in a refined program $\rprog$,
+\emph{Soundness} of the \emph{Relative-Loop Bound}  $\lpchB(l, \tpath, \rprog)$. In a refined program $\rprog$,
+for its every loop at the program point $l$ and a transition path $\tpath$ inside this loop,
 the \emph{Relative Loop Bound} $\lpchB(l, \tpath, \rprog)$ is a symbolic bound
 on the number of $l$'s iteration numbers,
 %  will 
@@ -2332,53 +2345,48 @@ the $\psRB(c, l)$ for every label $l \in \lvar(c)$ is computed as follows,
 l \in \tpath} \inoutB(\tpath, \rprog)
 \]
  \end{defn}
+%  \textbf{Semantics of }
  \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
   \label{thm:pathsensitive_rb_soundness}
-Given a program ${c}$, for every label $l$ of this program $c$
+For every program ${c}$ and every label $l$ in this program,
+%  $c$,
 % such that $(l, w) \in \exeRB(c)$, 
 % and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
 % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
 % and $\config{\psRB(c, l), \trace_0} \earrow v$,
 % % for some generated evaluation trace $\vtrace \in \mathcal{T}$,
 % we have $ w(\trace_0) \leq v $.
-$\psRB(c, l)$ is a \emph{Reachability-Bound} for $l$ in $c$.
+$\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 %
 \[
-  \begin{array}{l}
-  \forall (l, w_{t}) \in \exeRB(c),
-  % (x^l, w_{p}) \in \progV, 
-  \trace_0 \in \mathcal{T}_0(c), 
-  v \in \mathbb{N} \st
-  \config{\psRB(c, l), \trace_0} \earrow v
-  \implies
-  % \right\} 
-  w_{t}(\trace_0) \leq v
-  \end{array}
-\]
+  \forall c \in \cdom, \trace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} \st 
+  \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
+  \implies \config{\psRB(c, l)}(\trace_0) \geq \vcounter(\vtrace, l) 
+  \]
 \end{thm}
-
-\begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
-  \label{thm:pathsensitive_rb_soundness}
-Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
-and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
-% $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
-and $\config{\psRB(c, l), \trace_0} \earrow v$,
-% for some generated evaluation trace $\vtrace \in \mathcal{T}$,
-we have $ w(\trace_0) \leq v $.
 %
-\[
-  \begin{array}{l}
-  \forall (l, w_{t}) \in \exeRB(c),
-  % (x^l, w_{p}) \in \progV, 
-  \trace_0 \in \mathcal{T}_0(c), 
-  v \in \mathbb{N} \st
-  \config{\psRB(c, l), \trace_0} \earrow v
-  \implies
-  % \right\} 
-  w_{t}(\trace_0) \leq v
-  \end{array}
-\]
-\end{thm}
+% \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
+%   \label{thm:pathsensitive_rb_soundness}
+% Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
+% and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
+% % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
+% and $\config{\psRB(c, l), \trace_0} \earrow v$,
+% % for some generated evaluation trace $\vtrace \in \mathcal{T}$,
+% we have $ w(\trace_0) \leq v $.
+% %
+% \[
+%   \begin{array}{l}
+%   \forall (l, w_{t}) \in \exeRB(c),
+%   % (x^l, w_{p}) \in \progV, 
+%   \trace_0 \in \mathcal{T}_0(c), 
+%   v \in \mathbb{N} \st
+%   \config{\psRB(c, l), \trace_0} \earrow v
+%   \implies
+%   % \right\} 
+%   w_{t}(\trace_0) \leq v
+%   \end{array}
+% \]
+% \end{thm}
 %
 Proof of this theorem is in Appendix~\ref{apdx:pathsensitive_rb_soundness}.
 \paragraph*{Path Sensitive Reachability Bound through An Example}

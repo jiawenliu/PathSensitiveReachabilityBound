@@ -168,6 +168,53 @@ $\pi_i :
 \env({[]} ) x \triangleq \bot
 \end{array}
 \]
+\paragraph{Expression Semantics}
+\begin{mathpar}
+  \boxed{ \config{\aexpr}(\trace) = v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
+  \\
+  \inferrule{ 
+    \empty
+  }{
+   \config{n} (\trace)
+   = n
+  }
+  \and
+  \inferrule{ 
+    \env(\trace) x = v
+  }{
+   \config{x} 
+   = v
+  }
+  \and
+  \inferrule{ 
+    \config{\aexpr_1}(\trace) = v_1
+    \and 
+    \config{\aexpr_2}(\trace) = v_2
+    \and 
+     v_1 \oplus_a v_2 = v
+  }{
+   \config{\aexpr_1 \oplus_a \aexpr_2} 
+   = v
+  }
+  \and
+  \inferrule{ 
+    \config{\aexpr}(\trace) = v'
+    \and 
+    \elog v' = v
+  }{
+   \config{\elog \aexpr}(\trace) 
+   = v
+  }
+  \and
+  \inferrule{ 
+    \config{\aexpr}(\trace) = v'
+    \and 
+    \esign v' = v
+  }{
+   \config{\esign \aexpr} 
+   = v
+  }
+   \end{mathpar}
 \paragraph{Operational Semantics Rules}
 {
 \begin{mathpar}
