@@ -168,101 +168,101 @@ $\pi_i :
 \env({[]} ) x \triangleq \bot
 \end{array}
 \]
-\paragraph{Expression Semantics}
+\paragraph{Arithmetic Expression Semantics}
 \begin{mathpar}
-  \boxed{ \config{\aexpr}(\trace) = v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
+  \boxed{ \econfig{\aexpr}(\trace) = v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
   \\
   \inferrule{ 
     \empty
   }{
-   \config{n} (\trace)
+   \econfig{n} (\trace)
    = n
   }
   \and
   \inferrule{ 
     \env(\trace) x = v
   }{
-   \config{x} 
+   \econfig{x} 
    = v
   }
   \and
   \inferrule{ 
-    \config{\aexpr_1}(\trace) = v_1
+    \econfig{\aexpr_1}(\trace) = v_1
     \and 
-    \config{\aexpr_2}(\trace) = v_2
+    \econfig{\aexpr_2}(\trace) = v_2
     \and 
      v_1 \oplus_a v_2 = v
   }{
-   \config{\aexpr_1 \oplus_a \aexpr_2} 
+   \econfig{\aexpr_1 \oplus_a \aexpr_2} 
    = v
   }
   \and
   \inferrule{ 
-    \config{\aexpr}(\trace) = v'
+    \econfig{\aexpr}(\trace) = v'
     \and 
     \elog v' = v
   }{
-   \config{\elog \aexpr}(\trace) 
+   \econfig{\elog \aexpr}(\trace) 
    = v
   }
   \and
   \inferrule{ 
-    \config{\aexpr}(\trace) = v'
+    \econfig{\aexpr}(\trace) = v'
     \and 
     \esign v' = v
   }{
-   \config{\esign \aexpr} 
+   \econfig{\esign \aexpr} 
    = v
   }
    \end{mathpar}
 \paragraph{Operational Semantics Rules}
 {
 \begin{mathpar}
-\boxed{ \config{\trace,\aexpr} \aarrow v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
-\\
-\inferrule{ 
-  \empty
-}{
- \config{\trace,  n} 
- \aarrow n
-}
-\and
-\inferrule{ 
-  \env(\trace) x = v
-}{
- \config{\trace,  x} 
- \aarrow v
-}
-\and
-\inferrule{ 
-  \config{\trace, \aexpr_1} \aarrow v_1
-  \and 
-  \config{\trace, \aexpr_2} \aarrow v_2
-  \and 
-   v_1 \oplus_a v_2 = v
-}{
- \config{\trace,  \aexpr_1 \oplus_a \aexpr_2} 
- \aarrow v
-}
-\and
-\inferrule{ 
-  \config{\trace, \aexpr} \aarrow v'
-  \and 
-  \elog v' = v
-}{
- \config{\trace,  \elog \aexpr} 
- \aarrow v
-}
-\and
-\inferrule{ 
-  \config{\trace, \aexpr} \aarrow v'
-  \and 
-  \esign v' = v
-}{
- \config{\trace,  \esign \aexpr} 
- \aarrow v
-}
-\\
+% \boxed{ \config{\trace,\aexpr} \aarrow v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
+% \\
+% \inferrule{ 
+%   \empty
+% }{
+%  \config{\trace,  n} 
+%  \aarrow n
+% }
+% \and
+% \inferrule{ 
+%   \env(\trace) x = v
+% }{
+%  \config{\trace,  x} 
+%  \aarrow v
+% }
+% \and
+% \inferrule{ 
+%   \config{\trace, \aexpr_1} \aarrow v_1
+%   \and 
+%   \config{\trace, \aexpr_2} \aarrow v_2
+%   \and 
+%    v_1 \oplus_a v_2 = v
+% }{
+%  \config{\trace,  \aexpr_1 \oplus_a \aexpr_2} 
+%  \aarrow v
+% }
+% \and
+% \inferrule{ 
+%   \config{\trace, \aexpr} \aarrow v'
+%   \and 
+%   \elog v' = v
+% }{
+%  \config{\trace,  \elog \aexpr} 
+%  \aarrow v
+% }
+% \and
+% \inferrule{ 
+%   \config{\trace, \aexpr} \aarrow v'
+%   \and 
+%   \esign v' = v
+% }{
+%  \config{\trace,  \esign \aexpr} 
+%  \aarrow v
+% }
+% \\
 \boxed{ \config{\trace, \bexpr} \barrow v \, : \, \mbox{Trace $\times$ Boolean Expr $\Rightarrow$ Boolean Value} }
 \\% \\
 \inferrule{ 
@@ -346,7 +346,7 @@ $\pi_i :
 \boxed{ \config{\trace, \expr} \earrow v \, : \, \mbox{Trace $\times$ Expression $\Rightarrow$ Value} }
 \\
 \inferrule{ 
-  \config{\trace, \aexpr} \aarrow v
+  \econfig{\aexpr}(\trace) = v
 }{
  \config{\trace,  \aexpr} 
  \earrow v

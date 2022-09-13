@@ -927,6 +927,7 @@ We aim to compute the repeat patterns for every while loop in a program soundly.
 Algorithm~\ref{alg:repeat-pattern}:
 \\
 \emph{Soundness}
+% \todo{Formalize Proof and Theorem}
 % on the step $5$ in Algorithm~\ref{alg:repeat-pattern}.
 % \\
 % This step doesn't unfold the nested loop when it generates multiple paths for the outer loop.
@@ -1028,32 +1029,34 @@ the output contains all the repeat patterns of this loop in $c$.
 %
 \end{enumerate}
 %
-\begin{thm}[Soundness of Loop Repeat Pattern Closure \todo{}]
+% \begin{thm}[Soundness of Repeat Patterns Computation]
+%   \label{thm:sound_rpattern}
+%   For every while loop with header at program point $l$ in a program $c$,
+%   Algorithm~\ref{alg:repeat-pattern} computes a set of repeat patterns for this loop.
+% \end{thm}
+%
+\begin{thm}[Soundness of Loop Repeat Pattern Closure Computation]
   \label{thm:sound_loop-rpattern}
   For every program $c$, a loop in this program with header at program point $l$,
-  the loop pattern set contains all repeat patterns of this loop in $c$.
-  \[
-    \begin{array}{l}
-    \forall c \in \cdom, l \in \lvar(c), \vtrace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} , 
-    % \event = (\_, l, \_) \in \eventset 
-    \st
-    \exists \ewhile \clabel{\bexpr}^l \edo c_w \in c 
-    \land 
-    \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}
-    \\ \qquad
-    \implies 
-    (\exists \rpattern \in Alg.3(c, l) \st )
-    \end{array}
-    \]
+  Algorithm~\ref{alg:loop-repeat-pattern} computes a set of repeat patterns for this loop.
+  % \[
+  %   \begin{array}{l}
+  %   \forall c \in \cdom, l \in \lvar(c), \vtrace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} , 
+  %   % \event = (\_, l, \_) \in \eventset 
+  %   \st
+  %   \exists \ewhile \clabel{\bexpr}^l \edo c_w \in c 
+  %   \land 
+  %   \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}
+  %   \\ \qquad
+  %   \implies 
+  %   (\exists \rpattern \in Alg.3(c, l) \st  \todo{})
+  %   \end{array}
+  %   \]
 \end{thm}
-\todo{Formalize Proof and Theorem}
+% \todo{Formalize Proof and Theorem}
 The soundness of the Algorithm~\ref{alg:loop-repeat-pattern} guarantees for every program $c$ and a loop in this program with header at program point $l$,
 the output contains all repeat patterns of this loop in $c$.
 %
-\begin{thm}[Soundness of Repeat Pattern]
-  \label{thm:sound_rpattern}
-\end{thm}
-\todo{Formalize Proof and Theorem}
 
 %
 \highlight{\textbf{Pseudocode:}}
@@ -1091,7 +1094,7 @@ is true after $\rpattern_{j}$'s executing condition is \highlight{false},
 \end{algorithm}
 %
 % \\
-% % Through Path-Sensitive Refinement / Contextualization algorithm \cite{GulwaniJK09, ZulegerGSV11},
+% % Through Path-sensitive Refinement / Contextualization algorithm \cite{GulwaniJK09, ZulegerGSV11},
 % % this step computes the repeat patterns over all \emph{simple transition path}s.
 % \\
 %   $\rprog \in \mathcal{RP}$.
@@ -1398,8 +1401,12 @@ It is formally proved in Theorem~\ref{thm:sound_refined-prog} with details in Ap
   the two execution traces $\trace, \trace' \in \mathcal{T}$
   from executing $c$ and $\rprog$ w.r.t. an initial trace $\trace_0 \in \mathcal{T}_0(c)$ are identical.
 \end{thm}
-\todo{Formalize Proof and Theorem}
+\todo{Formalize Proof}
+In \cite{GulwaniJK09}, they claim a semantics equivalence relation (property)
+between the program and the refined program, which guarantees the soundness (\todo{no proof?}).
 %
+In Theorem~4.1, they formalized the semantic and bound-perserving of the program refinement algorithm
+(\todo{with no proof and appendix}).
 \subsection{\highlight{Ranking Function / Local Bound Computation}}
 \label{sec:pathsensitive_rb-lbcompute}
 % The \emph{Path-Insensitive Reachability Bound} analysis is performed 
@@ -1509,17 +1516,17 @@ formally as follows.
 % Given a program $c$ with its abstract transition graph 
 % $\absG(c) = (\absV, \absE)$,
 For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
-its \emph{ranking function/local bound}, $\locbound(\absevent)$
+its \emph{ranking function/local bound}, $\locbound(\absevent, c)$
 is the variable that decreases on this edge, computed as follows,
 %
 \[ 
 \begin{array}{ll}
-  \locbound(\absevent) \triangleq 1 
+  \locbound(\absevent, c) \triangleq 1 
   & \absevent \notin SCC(\absG(c))
   \\
-  \locbound(\absevent) \triangleq x
+  \locbound(\absevent, c) \triangleq x
   & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x) \land  \absevent = (\_, \_ , x' \leq x - v) \\
-  \locbound(\absevent) \triangleq x
+  \locbound(\absevent, c) \triangleq x
   & \absevent \in SCC(\absG(c)) \land 
   \absevent  \notin \bigcup_{x \in \mathcal{VAR}} \dec(x)
   \land \absevent \notin SCC(\absG(c) \setminus \dec(x)).
@@ -1576,33 +1583,33 @@ $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
 % $\incrs(v) \triangleq \sum\limits_{(\absevent, c) \in \inc(v)}\{\absclr(\absevent) \times v\}$
 %
 \paragraph{Ranking Function / Local Bounds Estimation}
-This step estimates the upper bound, $\varinvar(x) \in \mathcal{A}_{\lin}$
+This step estimates the upper bound, $\varinvar(x, c) \in \mathcal{A}_{\lin}$
 on the maximum value for each ranking function / local bound $x \in  \mathcal{VAR} \cup \constdom$.
 \\
 For a program $c$, the \emph{ranking function bound} of an ,
-$\varinvar(\locbound(\absevent)) \in \mathcal{A}_{\lin}$ is 
+$\varinvar(\locbound(\absevent, c)) \in \mathcal{A}_{\lin}$ is 
 the bound on the maximum value of the ranking function / local bound
 % $\locbound(\absevent)  \in \mathcal{VAR} \cup \constdom $,
 assigned to the edge $\absevent \in \absG(c)$, formally in Definition~\ref{def:ranking_bound} and~\ref{def:edge_pathinsensitivebound}.
 \\
 % $\varinvar(\locbound(\absevent)) \in \mathcal{A}_{\lin}$.
 % Then, computing the bound for vriables and the transition closures for abstract events:
-In order to estimate the maximum value of $\locbound(\absevent)$ assigned to edge $\absevent \in \absG(c)$,
+In order to estimate the maximum value of $\locbound(\absevent, c)$ assigned to edge $\absevent \in \absG(c)$,
 % for each (ranking function's/ local bound's) maximum value,
-the bound on the iteration times of each corresponding edge, $\absclr(\absevent)$ 
+the bound on the iteration times of each corresponding edge, $\absclr(\absevent, c)$ 
 is computed interactively in a path-insensitive manner.
 % , the 
 \\ 
-$ \varinvar: \mathcal{VAR} \cup \constdom \to \mathcal{A}_{\lin}$
+$ \varinvar: (\mathcal{VAR} \cup \constdom  \times \cdom) \to \mathcal{A}_{\lin}$
 \\
-$\absclr: \absevent \to \mathcal{A}_{\lin}$
+$\absclr: (\absevent \times \cdom) \to \mathcal{A}_{\lin}$
 % \\
 % Then, the bound on the maximum value of each variable,
 % as well as the symbolic bound on the iteration times of each edge is calculated recursively as follows, path-insensitively.
 \begin{defn}[Ranking Function Bound Computation]
   \label{def:ranking_bound}
 For a program $c$ and an edge $\absevent \in \absG(c)$,
-the \emph{ranking function bound}, $\varinvar(\locbound(\absevent))$ for the ranking function $\locbound(\absevent)$
+the \emph{ranking function bound}, $\varinvar(\locbound(\absevent, c))$ for the ranking function $\locbound(\absevent, c)$
 of this edge
 % %  \in \mathcal{A}_{\lin}$ 
 % for $\locbound(\absevent) \in \mathcal{VAR} \cup \constdom$,
@@ -1612,12 +1619,12 @@ of this edge
 is computed as follows,
   \[ 
 \begin{array}{lll}
-  \varinvar(x) & \triangleq x & x \in \constdom \\
-  \varinvar(x) & \triangleq \incrs(x) + \max(\{\varinvar(y) + c ~\mid~ (l, x' \leq y + c, l') \in \reset(x)\}) & c \notin \constdom
+  \varinvar(x, c) & \triangleq x & x \in \constdom \\
+  \varinvar(x, c) & \triangleq \incrs(x, c) + \max(\{\varinvar(y, c) + c ~\mid~ (l, x' \leq y + c, l') \in \reset(x)\}) & c \notin \constdom
 \end{array}
 \]
 %
-$\incrs(x) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\varinvar(\absevent) \times c ~\mid~ \absevent = (l, x' \leq x + c, l')\}$
+$\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent, c) \times c ~\mid~ \absevent = (l, x' \leq x + c, l')\}$
 \end{defn}
 %
 % \paragraph*{Path-Insensitive Loop Bound Computation}
@@ -1643,7 +1650,7 @@ $\incrs(x) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\varinvar(\absevent) 
 \begin{defn}[Path-insensitive Transition Bound]
   \label{def:edge_pathinsensitivebound}
   For a program $c$ and an edge $\absevent \in \absG(c)$, the \emph{path-insensitive transition bound},
-  $\absclr(\absevent) \in \mathcal{A}_{\lin}$ 
+  $\absclr(\absevent, c) \in \mathcal{A}_{\lin}$ 
 for this edge is
 % $\absevent \in \absG(c)$,
 % is the bound on the iteration times of this edge,
@@ -1652,27 +1659,43 @@ for this edge is
 computed as follows,
 \[ 
 \begin{array}{lll}
-  \absclr(\absevent) 
-  & \triangleq \varinvar(\locbound(\absevent))  & \\
-  & \quad \locbound(\absevent) \in \constdom & \\
-  \absclr(\absevent) 
+  \absclr(\absevent, c) 
+  & \triangleq \varinvar(\locbound(\absevent, c))  & \\
+  & \quad \locbound(\absevent, c) \in \constdom & \\
+  \absclr(\absevent, c) 
   & \triangleq \Big(
     \sum\limits_{y \in \{ y ~|~ 
-    ch \in \resetchain(x), (l_1, x, y, v, l_2) \in ch \} } \incrs(y) & \\
+    ch \in \resetchain(x), (l_1, x, y, v, l_2) \in ch \} } \incrs(y, c) & \\
     & \quad + 
-  \sum\limits_{ch \in \resetchain(x)}
-  \big( \min\left\{\absclr(\absevent') ~\mid~ \absevent' \in ch\right\} \times 
-  \max\left\{\varinvar(in(ch)) + \sum\limits_{(l_1, x, y, v, l_2) \in ch } v, 0 \right\}\big) \Big)  & \\
-  &  \quad \locbound(\absevent) = x \land x \notin \constdom & ,
+  \sum\limits_{ch \in \resetchain(x, c)}
+  \big( \min\left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
+  \max\left\{\varinvar(in(ch), c) + \sum\limits_{(l_1, x, y, v, l_2) \in ch } v, 0 \right\}\big) \Big)  & \\
+  &  \quad \locbound(\absevent, c) = x \land x \notin \constdom & ,
 \end{array}
   \]
- where $in(ch)$ is the last edge on the reset chain $ch$.
+ where $in(ch)$ is the variable on the last edge on the reset chain $ch$.
 \end{defn}
   %
 % \paragraph*{Adding the Reachability Bounds for Every Vertex in the Data-Control Flow Graph}
 % Updating the weight of every vertex in the $\progG(c) = (\progV, \progE)$ for program $c$ generated from phase 1. 
 % For every $x^l \in \progV$, find the abstract event $\absevent \in \absflow(c)$ of the form $(l, \_, \_)$, updating the $\progW(x^l) $ by the transition closure of this event.
 % \\
+\begin{defn}[Path-insensitive Reachability-Bound]
+  \label{def:pathinsensitive_rb}
+  For each program ${c}$ and a program point $l$ in this program,
+  % for each edge $\absevent = (l_1, \_, \_) \in \absG(c)$,
+  % ${\sum\limits_{\absevent = (l, \_, \_) \in \absflow(c)} \absclr(\absevent, c)}$
+  %  label $l \in \lvar(c)$,
+   the \emph{path-insensitive reachability-bound},
+  $RB(l, c) \in \mathcal{A}_{\lin}$ is computed as
+% $\absevent \in \absG(c)$,
+% is the bound on the iteration times of this edge,
+% $\locbound(\absevent)  \in \mathcal{VAR} \cup \constdom $,
+% assigned to the edge $\absevent \in \absG(c)$, 
+\[ 
+  RB(l, c) = \sum\limits_{\absevent = (l, \_, \_) \in \absflow(c)} \absclr(\absevent, c).
+  \]
+\end{defn}
 % The \emph{Path-Insensitive Reachability Bound} 
 \paragraph{Theorem Guarantee}
 For a program $c$ and an edge $\absevent \in \absG(c)$,
@@ -1682,36 +1705,52 @@ on the execution times of this transition,
 formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. 
 Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
 %
-\begin{thm}[Soundness of the Path-insensitive Transition Bound]
-  \label{thm:pathinsensitive_rb_soundness}
-Given a program ${c}$, for each edge $\absevent = (l_1, \_, \_) \in \absG(c)$,
+\begin{lem}[Soundness of the Path-insensitive Transition Bound]
+  \label{lem:edge_pathinsensitive_bound_soundness}
+For each program ${c}$ and an edge $\absevent = (l, \_, \_) \in \absG(c)$, if $l$ is the label of an assignment command,
 %  label $l \in \lvar(c)$,
-its \emph{path-insensitive transition bound} $\absclr(\absevent)$ 
+then its \emph{path-insensitive transition bound} $\absclr(\absevent, c)$ 
  is a sound upper bound on 
 %  execution-based reachability bound $w^t$ 
-the execution times, $w_t$ of the command with label $l_1$,
-%  where $(l, w^p) \in \absW(c)$ and  
-where $(l_1, w_t) \in \exeRB(c)$.
+the execution times of this assignment command in $c$.
+% $w_t$ of the command with label $l_1$,
+% %  where $(l, w^p) \in \absW(c)$ and  
+% where $(l_1, w_t) \in \exeRB(c)$.
 % $\traceG = (\traceV, \traceE, \traceW, \traceF)$, 
 % we have:
   %
   \[
     \begin{array}{l}
       \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
-      \trace' \in \mathcal{T}, v \in \mathbb{N}
+      \trace \in \mathcal{T}, v \in \mathbb{N}
+       \st 
+       \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\vtrace} 
+      \implies
+      \vcounter(\trace, l) \leq \config{\absclr(\absevent, c)}(\trace_0)
+    \end{array}
+    \]
+\end{lem}
+%
+\begin{thm}[Soundness of the Path-insensitive Reachability-Bound]
+  \label{thm:pathinsensitive_rb_soundness}
+For each program ${c}$ and a program point $l$ in this program,
+% for each edge $\absevent = (l_1, \_, \_) \in \absG(c)$,
+$\config{RB(\absevent, c)}$
+%  label $l \in \lvar(c)$,
+ is a \emph{reachability-bound} of $l$ in $c$,
+  %
+  \[
+    \begin{array}{l}
+      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
+      \trace \in \mathcal{T}, v \in \mathbb{N}
       % , (v, n) \in \mathcal{VAR} \times \mathbb{N} \times \mathbb{N}
        \st 
       %  \\ \quad
-      w_p = \absclr(\absevent)
-      \land 
-      (l, w_t) \in \exeRB(c)
-      \\ \quad
-      \land \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\vtrace'} 
-      \land 
-      \config{w_{p}, \trace_0} \earrow v
+      \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\vtrace} 
       \implies
       % \right\} 
-      w_{t}(\trace) \leq v
+      \vcounter(\trace)l
+      \leq \config{RB(\absevent, c)}(\trace_0)
     \end{array}
     \]
 \end{thm}
@@ -1818,7 +1857,7 @@ ranks computed in Definition~\ref{def:edge_pathinsensitivebound} over the abstra
 }
 \\
 % Formally defined as follows,
-% \begin{defn}[Path-Sensitive Local Reachability Bound]
+% \begin{defn}[Path-sensitive Local Reachability Bound]
 %   \label{def:pathsensitive_lrb}
 % \end{defn}
 The computations of $\outinB(\rprepeat({\rpattern}))$ and $\rfinit(\rprog, \rpattern)$,
@@ -1909,18 +1948,46 @@ $\varGD(\rprog, \tpath) =  \rfinit(\tpath) - \rfnext(\rprog, \tpath)$
 counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
 In the other two cases,  $\varGD(\rprog, \rprepeat(\rpattern))$ and $\varGD(\rprog, \rpseq(\rpattern_1, \rpattern_2))$
 has the same assumption when compute the variables' changes.
-\\
-The soundness is guaranteed by the operation $\frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$
-it is solved by a sound external solver. \todo{reference}
+% \\
+The soundness also relies on the operation $\frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$,
+which is solved by a sound external solver. \todo{reference}
 %
 \begin{thm}[Soundness of Outside-In Bound]
   \label{thm:sound_outsidein}
+  For every program $c$ with it refined program $\rprog$,
+  if $\rpattern$ is a repeat pattern of this program, then the $\outinB(\rpattern, \rprog)$
+is a sound local bound on the execution times of $\rpattern$ in program $c$.
+  \[
+    \begin{array}{l}
+    \forall c \in \cdom, \rpattern, \rprog, \trace_0 \in \mathcal{T}_0(\rpattern), \trace_1, \trace \in \mathcal{T} \st 
+    \rpattern \in \rprog \land
+    \rprog = Alg.4(c)
+    \\ \qquad
+    \land
+    \config{c, \trace_0} \to^* \config{\highlight{\ewhile (\rpattern, \cdots)}, \trace_0 \tracecat \trace_1} 
+    \land 
+    \config{\rpattern, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
+    \\ \qquad
+    \implies
+    \todo{\vcounter(\trace, L(\rpattern))} \leq \outinB(\rpattern, \rprog)(\trace_0 \tracecat \trace_1).
+    \end{array}
+    \]
 \end{thm}
-\todo{Formalize the Theorem and Proof}
+\highlight{Informal Discussion}
+\\
 Theorem~\ref{thm:sound_outsidein} guarantees that
 the bound for every repeat pattern $\rpattern$, the $\outinB(\rpattern, \rprog)$
 is a sound upper bound on its execution times, by assuming
 that all the loops and repeat patterns where $\rpattern$ is nested execute only once.
+\\
+In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
+$v$ is a local bound if it has the same decreasing time as the transition's execution time.
+By assuming that certain program parts (those were e increases) are not executed,
+then value of $v$ can limit the execution time of that transition.
+\\
+In our soundness, we assume all the code pieces not inside this repeat pattern are executed at most once (once if they show up in front of the program
+zero time if not).
+In this case, this bound limits the execution time of this repeat pattern.
 %
 \subsection{Inside-Out Algorithm}
 \label{sec:pathsensitive_rb-inoutalg}
@@ -2313,17 +2380,40 @@ In the same time, the soundness also relies on the soundness of $\rpchB(l, \tpat
 % \todo{reference}
 \end{itemize}
 %
-\begin{thm}[Soundness of Outside-In Bound]
+\begin{thm}[Soundness of Inside-Out Bound]
   \label{thm:sound_insideout}
+  For every program $c$ with it refined program $\rprog$ and 
+  every simple transition path $\tpath$ in this program,
+   the $\inoutB(\tpath, \rprog)$
+is a sound bound on the execution times of $\tpath$ in $c$.
+  \[
+    \begin{array}{l}
+    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T}, \rprog \st 
+    % \rpattern \in \rprog \land
+    \rprog = Alg.4(c)
+    % \\ \qquad
+    \land
+    \config{c, \trace_0} \to^* 
+    % \config{\highlight{\tpath; \rprog', \trace_0 \tracecat \trace_1} 
+    % \land 
+    % \config{\rpattern, \trace_0 \tracecat \trace_1} \to^* 
+    \config{{\eskip, \trace_0 \tracecat \trace}}
+    \\ \qquad
+    \implies
+    \vcounter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
+    \end{array}
+    \]
 \end{thm}
-\todo{Formalize the Theorem and Proof}
+\todo{Formalize the Proof}
+\\
 Theorem~\ref{thm:sound_insideout} guarantees that
-the bound for every repeat pattern $\rpattern$, the $\inoutB(\rpattern, \rprog)$
-is a sound upper bound on its execution times, 
+for every simple transition path $\tpath$ in a program $c$ with its refined program $\rprog$,
+the $\inoutB(\tpath, \rprog)$
+is a sound upper bound on its execution times in $c$.
 % by assuming
 % that all the loops and repeat patterns where $\rpattern$ is nested execute only once.
 %
-\subsection{Path Sensitive Reachability Bound Computation for Every Location}
+\subsection{Path-sensitive Reachability-Bound Computation for Every Location}
 \label{sec:pathsensitive_rb-psrbcompute}
 For every program $c$ and a program point $l \in \lvar(c)$, with $\rprog$ as its refined program,
 %  in a program $c$,
@@ -2331,14 +2421,14 @@ its path-sensitive reachability-bound ($\psRB(l, \rprog)$) is a symbolic sound b
 %
  \begin{defn}
   \label{def:label_psrb}
-Given a program $c$ with the refined program $\rprog \in \mathcal{RP}$
+Given a program $c$ with $\rprog$ as its refined program,
 %  with 
 % \emph{Global Loop Bound} $\inoutB(\tpath)$
 % computed for its every transition path $\tpath \in \rprog$  notated by $\inoutB(\tpath)$,
 %  for each of its transition path $\tpath \in \rprog$ 
 % with the \emph{Global Loop Bound}
 % computed as above, notated by $\inoutB(\tpath)$.
-the $\psRB(c, l)$ for every label $l \in \lvar(c)$ is computed as follows,
+for every label $l \in \lvar(c)$, $\psRB(c, l)$ is computed as follows,
 % \\
 \[ 
   \psRB(c, l) = \sum\limits_{\tpath \in \rprog \land 
@@ -2346,7 +2436,7 @@ l \in \tpath} \inoutB(\tpath, \rprog)
 \]
  \end{defn}
 %  \textbf{Semantics of }
- \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
+ \begin{thm}[Soundness of the Path-sensitive Reachability Bound Estimation]
   \label{thm:pathsensitive_rb_soundness}
 For every program ${c}$ and every label $l$ in this program,
 %  $c$,
@@ -2365,7 +2455,7 @@ $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
   \]
 \end{thm}
 %
-% \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
+% \begin{thm}[Soundness of the Path-sensitive Reachability Bound Estimation]
 %   \label{thm:pathsensitive_rb_soundness}
 % Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
 % and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
@@ -2389,5 +2479,5 @@ $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 % \end{thm}
 %
 Proof of this theorem is in Appendix~\ref{apdx:pathsensitive_rb_soundness}.
-\paragraph*{Path Sensitive Reachability Bound through An Example}
+\paragraph{Path-sensitive Reachability Bound through An Example}
 \input{examples_psrb/whileSim}

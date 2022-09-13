@@ -215,6 +215,14 @@ counts the appearance of a label in a trace.
 \vcounter(\trace  :: (b, l', v), l) \triangleq \vcounter(\trace, l), l' \neq l
 \end{array}
 \]
+The counter operator is abused as follows when the input is a sequence of labels $L = (l_1, \cdots, l_n)$:
+\[
+  \vcounter(\trace :: (\_, l_1, \_) :: \cdots :: (\_, l_n, \_), L ) 
+  \triangleq \vcounter(\trace, L) + 1
+  \qquad 
+  \vcounter(\trace :: (\_, l, \_), L ) 
+  \triangleq \vcounter(\trace, L) ~ l \neq l_n
+  \]
 %
 % The Latest Label $\llabel : \mathcal{T} \to \mathcal{VAR} \to \mathbb{N}$ 
 % The label of the latest assignment event which assigns value to variable $x$.

@@ -8,8 +8,8 @@ a vertex set $\absV(c)$ and an edge set $\absE(c)$.
 %
 \\
 Every 
-vertex $l \in \absV(c)$ corresponds to a program point, which is a unique
-label $l$ of a command in this program.
+vertex $l \in \absV(c)$ corresponds to a program point $l$, which is a unique
+label of a command in this program.
 % $\absV(c)$ is the set of $c$'s all program points,
 \\
 Each edge $(l, dc, l') \in \absE(c)$ is an abstract transition
@@ -489,12 +489,12 @@ Then it estimates a bound on the maximum value of each ranking function / local 
 the bound on the execution times of the corresponding edge in a path-insensitive manner.
 \\
 For each edge $\absevent \in \absG(c)$,
-$\locbound(\absevent)$ is the \textbf{Ranking Function} assigned to $\absevent$.
+$\locbound(\absevent, c)$ is the \textbf{Ranking Function} assigned to $\absevent$.
 \\
-For each ranking function $\locbound(\absevent)$, $\varinvar(\locbound(\absevent))$ is
+For each ranking function $\locbound(\absevent, c)$, $\varinvar(\locbound(\absevent, c))$ is
 the \textbf{Ranking Function Bound} on its maximum value.
 \\
-For each edge $\absevent \in \absG(c)$, the $\absclr(\absevent)$ is the \textbf{Path-insensitive Transition Bound}
+For each edge $\absevent \in \absG(c)$, the $\absclr(\absevent, c)$ is the \textbf{Path-insensitive Transition Bound}
 % $\absclr(\absevent) \in \mathcal{A}_{\lin}$ 
 % for the edge $\absevent \in \absG(c)$,
 % is the bound 
@@ -657,15 +657,14 @@ For every program control location $l \in \lvar(c)$, with $\rprog$ as its refine
 its path-sensitive reachability-bound ($\psRB(l, \rprog)$) is a symbolic sound bound on the executing times of $l$.
  \begin{defn}
   \label{def:label_psrb}
-Given a program $c$ with its refined program $\rprog \in \mathcal{RP}$
-%  with 
-% \emph{Global Loop Bound} $\inoutB(\tpath)$
-% computed for its every transition path $\tpath \in \rprog$  notated by $\inoutB(\tpath)$,
-%  for each of its transition path $\tpath \in \rprog$ 
-% with the \emph{Global Loop Bound}
-% computed as above, notated by $\inoutB(\tpath)$.
-the $\psRB(c, l)$ for every label $l \in \lvar(c)$ is computed as follows,
-\\
-\[ \psRB(c, l) = \sum\limits_{\tpath \in \rprog \land 
-l \in \tpath} \inoutB(\tpath)\]
+  Given a program $c$ with $\rprog$ as its refined program,
+  %  with 
+  % \emph{Global Loop Bound} $\inoutB(\tpath)$
+  % computed for its every transition path $\tpath \in \rprog$  notated by $\inoutB(\tpath)$,
+  %  for each of its transition path $\tpath \in \rprog$ 
+  % with the \emph{Global Loop Bound}
+  % computed as above, notated by $\inoutB(\tpath)$.
+  for every label $l \in \lvar(c)$, $\psRB(c, l)$ is $\sum\limits_{\tpath \in \rprog \land 
+  l \in \tpath} \inoutB(\tpath, \rprog)$.
+  % \\
  \end{defn}
