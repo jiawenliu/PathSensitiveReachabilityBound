@@ -14,7 +14,7 @@ label of a command in this program.
 \\
 Each edge $(l, dc, l') \in \absE(c)$ is an abstract transition
 between two program points $l, l'$. There is an edge from $l$ to $l'$ if and only if
-the command with label $l'$ can execute after the execution of the command with label $l$.
+the command with label $l'$ can execute right after the execution of the command with label $l$.
 % if and only if there is a control flow between two program points.
 Each edge is annotated by a constraint $dc$ generated from the command with label $l$.
 % from the set $\dcdom^{\top}$.
@@ -58,16 +58,16 @@ Three sub-steps:
 % \end{itemize}
 \begin{defn}[Simple Tansition Path]
   A simple transition path
-  $\tpath \in \paths(\absG(c))$, is a path on this program's abstract transition graph $\absG(c)$ with 
+  $\tpath \in \paths(\absG(c))$ for the program $c$, is a path on the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
   \begin{itemize}
-  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \lvar(c)$ for every $i = 0, \cdots, n$ and
+  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
   %
   \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
   \end{itemize}
   %
   satisfying:
   \begin{itemize}
-    \item $l_i \neq l_j$ for every $l_i = l_0, \cdots, l_n$ and $l_j = l_0, \cdots, l_{n - 1}$,
+    \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
     \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
     \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
   \end{itemize}
@@ -471,7 +471,7 @@ $\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
 % \textbf{Theorem Guarantee.}
 % Soundness of the refinement.
 \end{enumerate}
-\subsection{Ranking Function/ Local Bound Computation}
+\subsection{Ranking Function Computation}
 \label{sec:ranking}
 % It estimates the bounds on the maximum value of counter variables, and
 % the iteration times
@@ -482,19 +482,21 @@ This step computes a
 \textbf{ranking function / local bound
 \footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
 and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
-We refer to the two names as the same meaning in this paper.}}
-for each edge in the abstract transition graph $\absG(c)$ of a program $c$.
-Then it estimates a bound on the maximum value of each ranking function / local bound as well as
+We choose the name \emph{ranking function} in formal definition and use both names to refer to the same meaning.
+We choose the name \emph{ranking function} in formal definition and use both names to refer to the same meaning.
+% refer to the two names as the same meaning in this paper.
+}}
+Then it estimates a bound on the maximum value of each ranking function as well as
 % , and
 the bound on the execution times of the corresponding edge in a path-insensitive manner.
 \\
-For each edge $\absevent \in \absG(c)$,
+For each edge $\absevent \in \absE(c)$,
 $\locbound(\absevent, c)$ is the \textbf{Ranking Function} assigned to $\absevent$.
 \\
 For each ranking function $\locbound(\absevent, c)$, $\varinvar(\locbound(\absevent, c))$ is
 the \textbf{Ranking Function Bound} on its maximum value.
 \\
-For each edge $\absevent \in \absG(c)$, the $\absclr(\absevent, c)$ is the \textbf{Path-insensitive Transition Bound}
+For each edge $\absevent \in \absE(c)$, the $\absclr(\absevent, c)$ is the \textbf{Path-insensitive Transition Bound}
 % $\absclr(\absevent) \in \mathcal{A}_{\lin}$ 
 % for the edge $\absevent \in \absG(c)$,
 % is the bound 

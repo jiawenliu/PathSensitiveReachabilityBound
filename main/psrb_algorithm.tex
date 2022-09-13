@@ -38,7 +38,7 @@ for computing the path-sensitive reachability-bound of a program location.
 refines the multiple-paths loops in the program
 % this program path sensitively, 
 based on the abstract transition graph. This step produces a refined program in the form of \todo{paths sequence} which come from its abstract transition graph.
-\item Section~\ref{sec:pathsensitive_rb-lbcompute} computes the ranking function / local bound
+\item Section~\ref{sec:pathsensitive_rb-lbcompute} computes the ranking function  
 \footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
 and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
 We refer to the two names as the same meaning in this paper.} for each edge in a program's abstract transition graph,
@@ -608,7 +608,7 @@ $\absV(c) = \lvar(c)\cup\{\lex\}$
 %
 \input{examples_psrb/whileSim_abscfg}
 %
-\subsection{\highlight{Program Refinement}}
+\subsection{\highlight{Program Refinement}\todo{Formalization}}
 \label{sec:pathsensitive_rb-refine}
 In order to analyze the reachability bound path-sensitively, this step refines the program based on its abstract transition graph in three steps.
 %
@@ -641,16 +641,16 @@ and ends the program exit $\lex$;
 \end{itemize}
   \begin{defn}[Simple Tansition Path]
   A simple transition path
-  $\tpath \in \paths(\absG(c))$, is a path on this program's abstract transition graph $\absG(c)$ with 
+  $\tpath \in \paths(\absG(c))$ for the program $c$, is a path on the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
   \begin{itemize}
-  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \lvar(c)$ for every $i = 0, \cdots, n$ and
+  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
   %
   \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
   \end{itemize}
   %
   satisfying:
   \begin{itemize}
-    \item $l_i \neq l_j$ for every $l_i = l_0, \cdots, l_n$ and $l_j = l_0, \cdots, l_{n - 1}$,
+    \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
     \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
     \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
   \end{itemize}
@@ -1407,30 +1407,31 @@ between the program and the refined program, which guarantees the soundness (\to
 %
 In Theorem~4.1, they formalized the semantic and bound-perserving of the program refinement algorithm
 (\todo{with no proof and appendix}).
-\subsection{\highlight{Ranking Function / Local Bound Computation}}
+\subsection{\highlight{Ranking Function Computation}}
 \label{sec:pathsensitive_rb-lbcompute}
 % The \emph{Path-Insensitive Reachability Bound} analysis is performed 
 This step computes a 
-\textbf{ranking function / local bound
+\textbf{ranking function / local bound 
 \footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
 and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
-We refer to the two names as the same meaning in this paper.}}
+We choose the name \emph{ranking function} in formal definition and use both names to refer to the same meaning.
+% refer to the two names as the same meaning in this paper.
+}}
 for each edge in the abstract transition graph $\absG(c)$ of a program $c$.
-Then it estimates the bound on the maximum value of each ranking function / local bound as well as
+Then it estimates the bound on the maximum value of each ranking function   as well as
 % , and
 the bound on the iteration times of the corresponding edge in a path-insensitive manner.
-% of the ranks / local bounds 
+% of the ranks  s 
 % for each edge in the constraint program $\absG(c)$, using the method in \cite{sinn2017complexity}.
 % \\
-% Ranking Function / Local Bound is computed based on the abstract transition graph, 
+% Ranking Function   is computed based on the abstract transition graph, 
 % through the edges in $\absG(c)$.
 This algorithm has three sub-steps:
 \begin{enumerate}
   \item It first collects three edge sets for each variable,
 in which the variable increases, decreases and reset respectively.
 \item
-Then, it assigns a variable to the edge on which this variable decreases as this edge's ranking function 
-(/ local bound).
+Then, it assigns a variable to the edge on which this variable decreases as this edge's ranking function.
 \item
 In the last step, it computes the bound on the maximum value of the variable and the bound on the execution
 times of the corresponding edge recursively but path-insensitively.
@@ -1506,12 +1507,12 @@ is reset on edge $e_{i + 1}$ recursively. The first edge $e_0$ of each sequence 
 \\
 In the following steps, $c$ is omitted in $\inc(x)$,
 $\dec(x)$ and $\reset(x)$ for concise when the reference of a program $c$ is clear in the context.
-\paragraph*{Assigning The Ranking Function(/ Local Bound) to An Edge}
+\paragraph*{Assigning The Ranking Function to An Edge}
 For each edge in the transition graph $\absG(c)$ of a program $c$,
-this step assigns the variable that decreases on this edge as the ranking function / local bound of this edge.
+this step assigns the variable that decreases on this edge as the ranking function   of this edge.
 This step adopts the local bound computation method in Section 4 of \cite{sinn2017complexity} to assign the local bound to each edge,
 formally as follows.
-\begin{defn}[Ranking Function / Local Bound Generatation]
+\begin{defn}[Ranking Function   Generatation]
   \label{def:ranking_gen}
 % Given a program $c$ with its abstract transition graph 
 % $\absG(c) = (\absV, \absE)$,
@@ -1582,20 +1583,20 @@ $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
 % \\
 % $\incrs(v) \triangleq \sum\limits_{(\absevent, c) \in \inc(v)}\{\absclr(\absevent) \times v\}$
 %
-\paragraph{Ranking Function / Local Bounds Estimation}
+\paragraph{Ranking Function  s Estimation}
 This step estimates the upper bound, $\varinvar(x, c) \in \mathcal{A}_{\lin}$
-on the maximum value for each ranking function / local bound $x \in  \mathcal{VAR} \cup \constdom$.
+on the maximum value for each ranking function   $x \in  \mathcal{VAR} \cup \constdom$.
 \\
 For a program $c$, the \emph{ranking function bound} of an ,
 $\varinvar(\locbound(\absevent, c)) \in \mathcal{A}_{\lin}$ is 
-the bound on the maximum value of the ranking function / local bound
+the bound on the maximum value of the ranking function  
 % $\locbound(\absevent)  \in \mathcal{VAR} \cup \constdom $,
-assigned to the edge $\absevent \in \absG(c)$, formally in Definition~\ref{def:ranking_bound} and~\ref{def:edge_pathinsensitivebound}.
+assigned to the edge $\absevent \in \absE(c)$, formally in Definition~\ref{def:ranking_bound} and~\ref{def:edge_pathinsensitivebound}.
 \\
 % $\varinvar(\locbound(\absevent)) \in \mathcal{A}_{\lin}$.
 % Then, computing the bound for vriables and the transition closures for abstract events:
-In order to estimate the maximum value of $\locbound(\absevent, c)$ assigned to edge $\absevent \in \absG(c)$,
-% for each (ranking function's/ local bound's) maximum value,
+In order to estimate the maximum value of $\locbound(\absevent, c)$ assigned to edge $\absevent \in \absE(c)$,
+% for each (ranking function's) maximum value,
 the bound on the iteration times of each corresponding edge, $\absclr(\absevent, c)$ 
 is computed interactively in a path-insensitive manner.
 % , the 
@@ -1608,12 +1609,12 @@ $\absclr: (\absevent \times \cdom) \to \mathcal{A}_{\lin}$
 % as well as the symbolic bound on the iteration times of each edge is calculated recursively as follows, path-insensitively.
 \begin{defn}[Ranking Function Bound Computation]
   \label{def:ranking_bound}
-For a program $c$ and an edge $\absevent \in \absG(c)$,
+For a program $c$ and an edge $\absevent \in \absE(c)$,
 the \emph{ranking function bound}, $\varinvar(\locbound(\absevent, c))$ for the ranking function $\locbound(\absevent, c)$
 of this edge
 % %  \in \mathcal{A}_{\lin}$ 
 % for $\locbound(\absevent) \in \mathcal{VAR} \cup \constdom$,
-% is the bound on the maximum value of the ranking function / local bound
+% is the bound on the maximum value of the ranking function  
 % % $\locbound(\absevent)  \in \mathcal{VAR} \cup \constdom $,
 % assigned to the edge $\absevent \in \absG(c)$, 
 is computed as follows,
@@ -1628,9 +1629,9 @@ $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent,
 \end{defn}
 %
 % \paragraph*{Path-Insensitive Loop Bound Computation}
-% Based on the bounds on ranks / local bounds' maximum value,
+% Based on the bounds on ranks  s' maximum value,
 % we estimate the bounds on the iteration times
-% % of the ranks / local bounds 
+% % of the ranks  s 
 % for each edge in a path-insensitive fashion.
 % \\
 % computing the loop bound in a path-insensitive way as the base step.
@@ -1649,7 +1650,7 @@ $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent,
 %
 \begin{defn}[Path-insensitive Transition Bound]
   \label{def:edge_pathinsensitivebound}
-  For a program $c$ and an edge $\absevent \in \absG(c)$, the \emph{path-insensitive transition bound},
+  For a program $c$ and an edge $\absevent \in \absE(c)$, the \emph{path-insensitive transition bound},
   $\absclr(\absevent, c) \in \mathcal{A}_{\lin}$ 
 for this edge is
 % $\absevent \in \absG(c)$,
@@ -1698,7 +1699,7 @@ computed as follows,
 \end{defn}
 % The \emph{Path-Insensitive Reachability Bound} 
 \paragraph{Theorem Guarantee}
-For a program $c$ and an edge $\absevent \in \absG(c)$,
+For a program $c$ and an edge $\absevent \in \absE(c)$,
 $\absclr(\absevent)$ is a sound upper bound
 %  for every label $l$ in this program 
 on the execution times of this transition,
@@ -1755,7 +1756,7 @@ $\config{RB(\absevent, c)}$
     \]
 \end{thm}
 
-\subsection{Outside-In Algorithm}
+\subsection{Outside-In Algorithm\todo{Making the Path-sensitivity Explicitly}}
 \label{sec:pathsensitive_rb-outinalg}
 %
 % \\
@@ -1950,7 +1951,8 @@ In the other two cases,  $\varGD(\rprog, \rprepeat(\rpattern))$ and $\varGD(\rpr
 has the same assumption when compute the variables' changes.
 % \\
 The soundness also relies on the operation $\frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$,
-which is solved by a sound external solver. \todo{reference}
+which is solved by Definition~\ref{def:edge_pathinsensitivebound} and~\ref{def:ranking_bound}.
+% a sound external solver. \todo{reference}
 %
 \begin{thm}[Soundness of Outside-In Bound]
   \label{thm:sound_outsidein}
@@ -1989,7 +1991,7 @@ In our soundness, we assume all the code pieces not inside this repeat pattern a
 zero time if not).
 In this case, this bound limits the execution time of this repeat pattern.
 %
-\subsection{Inside-Out Algorithm}
+\subsection{Inside-Out Algorithm\todo{Making the Path-sensitivity Explicitly}}
 \label{sec:pathsensitive_rb-inoutalg}
 % For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Inside-Out Algorithm}
 For every simple transition path $\tpath$ in a refined program $\rprog$, 

@@ -68,21 +68,31 @@
 
   \item \textbf{Program Refinement}. 
   \\
-  The \textbf{simple transition paths\footnote{For concise, the vertices sequence and the constraint for each edge in each transition path are omitted.
-  The examples with sequences and annotations that are fully spelled out is in the full paper.}} are
+  The \textbf{simple transition paths\footnote{For concise, the edges sequence and the constraint on each edge in
+  each transition path are omitted.
+  An example with edge sequences and annotations that is fully spelled out is in the full paper.}} are
   %  are computed as follows,
   \\
 $
-    \begin{array}{ll}
-\tpath_0 = (0 \to 1), (1 \to 2)
-&
-\tpath_2 = (2 \to 3), (3 \to 6), (6 \to 2)
-\\
-\tpath_1 = (2 \to 3), (3 \to 4), (4 \to 5), (5 \to 2)
-&
-\tpath_3 = (2 \to \lex)
-\end{array}
-$
+%     \begin{array}{ll}
+% \tpath_0 = (0 \to 1), (1 \to 2)
+% &
+% \tpath_2 = (2 \to 3), (3 \to 6), (6 \to 2)
+% \\
+% \tpath_1 = (2 \to 3), (3 \to 4), (4 \to 5), (5 \to 2)
+% &
+% \tpath_3 = (2 \to \lex)
+% \end{array}
+\begin{array}{llll}
+  \tpath_0 = (0 \to 1 \to 2)
+  &
+  \tpath_2 = (2 \to 3 \to 6 \to 2)
+  &
+  \tpath_1 = (2 \to 3 \to 4 \to 5 \to 2)
+  &
+  \tpath_3 = (2 \to \lex)
+  \end{array}
+$\footnote{We use the notation $(l_0 \to \cdots \to l_n)$ to denote a vertices sequence $(l_0, \cdots, l_n)$.}
 \\
 The \textbf{repeat patterns}
 for the loop that its header is
@@ -94,8 +104,8 @@ $2$ are:
 $\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) $
 and $\rprepeat_1(\tpath_1)$; 
 \\
-The \textbf{refined program\footnote{$\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
-For concise, it is omitted since all the arguments in the following computations are referring to the same $\rprog$.}} is
+The \textbf{refined program\footnote{The program $c$ and its refined program $\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
+For concise, it is omitted since all the arguments in the following computations are referring to the same program.}} is
 \\
 $
   \tpath_0 ; \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
@@ -137,11 +147,11 @@ $
   \item \textbf{Outside-In Algorithm}:\\
   The \textbf{Outside-In} bound for every $\rpattern$ w.r.t. the refined program $\rprog$ is as follows,
   \[
-    \begin{array}{l}
+    \begin{array}{lll}
         \outinB(\tpath_0) = 1
-        \\
+        &
         \outinB(2: \rprepeat_1(\tpath_1)) = m 
-        \\
+        &
         \outinB(2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor
         % \\
         % \outinB(\rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2), \rprepeat_1(\tpath_1) })
@@ -159,7 +169,7 @@ $
   \item \textbf{Repeat Chain Bound}
   %  for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
   \\
-  $\rpchB(2, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \\
+  $\rpchB(2, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \qquad
   $\rpchB(2, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
   %
   \item \textbf{Loop Chain}

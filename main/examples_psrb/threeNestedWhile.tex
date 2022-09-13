@@ -81,25 +81,24 @@
 
   \item \textbf{Program Refinement}
   \\
-  The \textbf{simple transition paths\footnote{For concise, the vertices sequence and the constraint for each edge in each transition path is omitted.
-  The examples with sequences and annotations that are fully spelled out is in the full paper.}} are
+  The \textbf{simple transition paths} are
   %  are computed as follows,
   \\
 $
       \begin{array}{llll}
           \tpath_0 = (0 \to 1)
           &
-          \tpath_1 = (1 \to 2), (2 \to 3)
+          \tpath_1 = (1 \to 2 \to 3)
           &           
-          \tpath_2 = (3 \to 4), (4 \to 5), (5 \to 6)
+          \tpath_2 = (3 \to 4 \to 5 \to 6)
           &
-          \tpath_3 = (6 \to 7), (7 \to 6)
+          \tpath_3 = (6 \to 7 \to 6)
           \\
           \tpath_6 = (1 \to \lex)
           &
-          \tpath_4 = (6 \to 8), (8 \to 3)
+          \tpath_4 = (6 \to 8 \to 3)
           &
-          \tpath_5 = (3 \to 9), (9 \to 1)
+          \tpath_5 = (3 \to 9 \to 1)
       \end{array}
 $
   \\
@@ -115,8 +114,10 @@ $
   \\
   at the program point $6$ is $\rprepeat(\tpath_3)$.
   \\
-  The \textbf{refined program\footnote{$\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
-  For concise, it is omitted since all the arguments in the following computations are referring to the same $\rprog$.}} is
+  The \textbf{refined program
+  % \footnote{$\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
+  % For concise, it is omitted since all the arguments in the following computations are referring to the same $\rprog$.}
+  } is
 \\
   $
   \rprog = \tpath_0 ; 
@@ -265,7 +266,7 @@ $\psRB(4) = \psRB(5) = \psRB(8) = n \times m$ \quad
 $\psRB(6) = N + n \times m$ 
 \\
 For simplicity, the notation $\psRB(L)$ denotes every program point in this set $L$ has the same reachability-bound $\psRB(L)$.
-Below is this compact notation w.r.t a set of program points.
+Below is this compact notation w.r.t a set of program points, and we use the compact notation in the following examples.
 \\
 $\psRB(\{0, \lex\}) = 1$ \quad
 $\psRB(\{1\}) = n - N + 1$ \quad
