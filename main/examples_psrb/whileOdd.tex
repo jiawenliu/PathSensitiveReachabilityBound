@@ -88,13 +88,13 @@
       &
       \outinB(\tpath_3) = 1
       &
-      \outinB(\rprepeat(\tpath_1; \tpath_2)) = \frac{n}{4} 
+      \outinB(\rprepeat(\tpath_1; \tpath_2)) = \lfloor \frac{n}{4} \rfloor
       \\
       \outinB(\tpath_1) = 1 
       &
       \outinB(\tpath_2) = 1 
       &
-      \outinB(\rprepeat(\tpath_2; \tpath_1)) = \frac{n}{4}
+      \outinB(\rprepeat(\tpath_2; \tpath_1)) = \lfloor \frac{n}{4} \rfloor
     \end{array}
     \]
   %       $\outinB(\tpath_0) = 1$
@@ -121,8 +121,8 @@
     $\rpchset(\_, \_) = \emptyset$ 
     % \\
     \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
-    $\rpchB(1, \tpath_1) = \frac{n}{4}$ \\
-    $\rpchB(1, \tpath_2) = \frac{n}{4}$ 
+    $\rpchB(1, \tpath_1) = \lfloor \frac{n}{4} \rfloor$ \quad
+    $\rpchB(1, \tpath_2) = \lfloor \frac{n}{4} \rfloor$ 
     %
     \item \textbf{Loop Chain}
     \[
@@ -143,9 +143,9 @@
     \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
     \[
     %   \begin{array}{ll}
-        \rpchB(1, \tpath_1) = \frac{n}{4}
+        \rpchB(1, \tpath_1) = \lfloor \frac{n}{4} \rfloor
         \qquad
-        \rpchB(1, \tpath_2) = \frac{n}{4}
+        \rpchB(1, \tpath_2) = \lfloor \frac{n}{4} \rfloor
         \qquad
         \rpchB(\bot, \tpath_0) = 1
         \qquad
@@ -158,14 +158,14 @@
     % $\rpchB(\bot, \tpath_3) = 1$ 
     \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
     \\
-    $\inoutB(\tpath_1) = \frac{n}{4}$ \quad
-    $\inoutB(\tpath_2) = \frac{n}{4}$ \quad
+    $\inoutB(\tpath_1) = \lfloor \frac{n}{4} \rfloor $ \quad
+    $\inoutB(\tpath_2) = \lfloor \frac{n}{4} \rfloor $ \quad
     $\inoutB(\tpath_0) = 1$ \quad
     $\inoutB(\tpath_3) = 1$ 
   \end{itemize}
   \item \textbf{Path Sensitive Reachability-Bound} on every program control location
   \\
-  $\psRB(\{0, \lex\}) = 1$ \quad
-  $\psRB(\{3, 4 \}) = \lfloor \frac{n}{4} \rfloor$ \quad
-  $\psRB(\{2, 1\}) = \lfloor \frac{n}{2} \rfloor + 1$ \quad
+  $\psRB(0) = \psRB(\lex) = 1$ \quad
+  $\psRB(3) = \psRB(4) = \lfloor \frac{n}{4} \rfloor$ \quad
+  $\psRB(1) = \psRB(2) = \lfloor \frac{n}{2} \rfloor + 1$ \quad
   \end{enumerate}
