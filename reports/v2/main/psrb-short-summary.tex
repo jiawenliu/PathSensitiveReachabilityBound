@@ -156,34 +156,40 @@ Three sub-steps:
 %   after the previous $\rpattern_{i - 1}$'s execution is finished.}
 %   \end{itemize}
 % \end{defn}
-\begin{defn}[Repeat Pattern]
+\begin{defn}[Repeat Pattern of A Loop]
   \label{def:repeat-pattern}
   % Given a abstract transition graph $\absG(c)$,
   % $\rpattern$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, 
-  A \emph{Repeat Pattern},
-  $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$ for a while loop in a program $c$
+  For a while loop with header at the program point $l$ in a program $c$
+  we define
+  % $\rpattern \in \mathcal{P}(\paths({\absG(c)}))$
+  $\rpattern = \rpattern_0; \cdots; \rpattern_n \in \mathcal{P}(\paths({\absG(c)}))$
+  a repeat pattern for the 
+  loop $l$ in $c$
 % is either a simple path or sequence of repeat patterns of this program $c$. 
-  is
+if and only if
   % \todo{
   % % it is a simple path or
   % is either a simple transition paths $\tpath$,
   % or a sub \emph{repeat pattern} $\rpattern'$ with annotation $\rprepeat$,
   % or a sequence of sub \emph{repeat pattern}s $\rpattern_0; \cdots; \rpattern_n$ ==> }
-  \highlight{a sequence of simple transition paths $\tpath$ with annotations $\rprepeat$ on certain sub-sequences,
-  $\rpattern = \rpattern_0; \cdots; \rpattern_n$
-  }
+  % \highlight{a sequence of simple transition paths $\tpath$ with annotations $\rprepeat$ on certain sub-sequences,
+  % $\rpattern = \rpattern_0; \cdots; \rpattern_n$
+  % }
   % a sequence of \emph{repeat pattern}
   % has the following forms,
   % \[
   %   \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
   % \] 
   % and 
-  satisfying that,
+  % satisfying that,
   \begin{itemize}
-  \item every sub-sequence is distinct, 
+  \item $\rpattern_i = \tpath$ for some $\tpath \in \paths({\absG(c)})$, or $\rpattern_i = \rprepeat(\rpattern')$ for some
+  $\rpattern'$ that has the same form, or
+  $\rpattern_i = \rpattern';\rpattern''$ for some $\rpattern'$ and $\rpattern''$ that have the same form,
   % i.e., if $\rpattern = \rpattern_0; \cdots; \rpattern_n$, then
   % $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, 
-  $\rpattern_i \neq \rpattern_j$ for every $i, j = 0, \cdots, n$;
+  \item $\rpattern_i \neq \rpattern_j$ for every $i, j = 0, \cdots, n$;
   \item 
   % \todo{every sub pattern with the annotation $\rprepeat$
   % can consecutively execute at least twice in $c$
@@ -193,7 +199,7 @@ Three sub-steps:
   % then $\rpattern'$ can consecutively execute at least twice in $c$
   % under some initial traces,}
   % \\
-  \highlight{every sub-sequence $\rpattern'$ that has the annotation $\rprepeat$,
+  \highlight{every $\rpattern'$ that has the annotation $\rprepeat$,
   i.e., $\rprepeat(\rpattern')$
   % if and only if
   always executes consecutively without being interleaved until its invariant is false under all possible initial traces;}
@@ -204,7 +210,7 @@ Three sub-steps:
   % \\
   \highlight{
     % In a repeat pattern $\rpattern = \rpattern_0; \cdots; \rpattern_n$,
-  every sub-sequence $\rpattern_i \in \rpattern$ can execute
+  every sub-sequence $\rpattern_i \in \rpattern$ can execute right
   after the previous $\rpattern_{i - 1}$'s execution (or iteration) is finished.}
   \end{itemize}
 \end{defn}
@@ -305,19 +311,19 @@ repeat pattern set of every while loop and the simple transition paths not in an
 % It is guaranteed to have certain properties by the computation algorithm in the full version.
 A \emph{Refined Program}
 % for a program $c$, 
-$\rprog$ is a sequence of
-sub-refined program which
-%  ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
-% \todo{is either a repeat pattern $\rpattern$,
-% or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
-% ==>}
-has the form $\rprog = \rprog_0; \cdots; \rprog_n$.
-Each sub-refined program
-$\rprog_i \in \rprog$ is
-% is either a simple transition path, or 
-a set of repeat patterns or simple transition paths with annotation $\kw{choose}$.
-For example, $\rprog_i = \rpchoose{\tpath_1, \cdots}$ or
-$\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
+% $\rprog$ is a sequence of
+% sub-refined program which
+% %  ($\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$),
+% % \todo{is either a repeat pattern $\rpattern$,
+% % or a set of refined programs with annotation $\rpchoose{ \cdots }$, or sequence of refined program $\rprog; \rprog$
+% % ==>}
+% has the form $\rprog = \rprog_0; \cdots; \rprog_n$.
+% Each sub-refined program
+% $\rprog_i \in \rprog$ is
+% % is either a simple transition path, or 
+% a set of repeat patterns or simple transition paths with annotation $\kw{choose}$.
+% For example, $\rprog_i = \rpchoose{\tpath_1, \cdots}$ or
+% $\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
 % \\
 \begin{defn}[Refined Program of A Program]
   \label{def:refined-prog}
@@ -327,8 +333,10 @@ $\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
   % \[
   %   \rprog :=  \rprepeat ~|~ \rpchoose{\rprog} ~|~ \rprog; \rprog.
   % \]
-  $\rprog$  is a refined program of $c$ and if and only if it has the form $ \rprog = \rprog_0; \cdots; \rprog_n$
-  and  satisfies
+  For a program $c$, let $\absG(c)$ be its abstract transition graph, $RP(c, l)$ be the set of repeat patterns 
+  for every loop with header at $l$,
+  we define $\rprog$ a refined program of $c$ and if and only if it has the form $\rprog = \rprog_0; \cdots; \rprog_n$
+  and satisfies
   % A \emph{Refined Program} for a program $c$, $\rprog \in \mathcal{P}(\mathcal{P}(\paths(\absG(c))))$
   % is 
   % % \todo{either a repeat pattern $\rpattern$,
@@ -341,6 +349,8 @@ $\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
   % $\rprog = \rprog_1, \cdots; \rprog_n$ and
   % $\rprog_i = \{\rpattern_{0}; \cdots; \rpattern_{i_n}\}$, $n, i_n \in \mathbb{N}$ and
   \begin{itemize}
+    \item $\rprog_i = \rpchoose{\tpath_1, \cdots}$ or
+    $\rprog_i = \rpchoose{\rpattern_1, \cdots}$ for every $i = 0, \cdots, n$,
     % \item every sub-refined program $\rprog_i \in \rprog$ is either a simple transition path, or a set of repeat patterns with annotation $\kw{choose}$. sequence satisfies,
     % \item $\rprog$ has the form $\rpchoose{\rpattern_1, \cdots }; \rpchoose{\rpattern'_1, \cdots }; \cdots$.
   \item 
@@ -350,9 +360,10 @@ $\rprog_i = \rpchoose{\rpattern_1, \cdots}$.
    \highlight{every repeat pattern that comes from 
    the same set
    starts from the same program point $l$ and ends at the same program point $l'$ too,
-   i.e., for every $\rpchoose{ \cdots } \in \rprog$,
+   i.e., for every
+   $\rpchoose{ \cdots } \in \rprog$,
   every $\rpattern_i, \rpattern_j \in \rpchoose{ \cdots }$
-  starts from the same program point $l$ and ends at the same program point $l'$ for $l, l' \in \lvar(c)$;}
+  starts from the same program point $l$ and ends at the same program point $l'$ for $l, l' \in \absV(c)$;}
   \item 
   % \todo{if $\rprog' = \rprog_1; \rprog_2$, then
   % % and for every $\rpattern_1 \in \rprog_i$ and $\rpattern_2 \in \rprog_{i + 1}$,
