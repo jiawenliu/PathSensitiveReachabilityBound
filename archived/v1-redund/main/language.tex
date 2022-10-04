@@ -1,0 +1,423 @@
+%
+%
+\subsection{Labeled Language}
+\[
+\begin{array}{llll}
+\mbox{Arithmetic Operators} 
+& \oplus_a & ::= & + ~|~ - ~|~ \times 
+%
+~|~ \div ~|~ \emax ~|~ \emin\\  
+% ~|~ \div \\  
+\mbox{Boolean Operators} 
+& \oplus_b & ::= & \lor ~|~ \land
+\\
+%
+\mbox{Relational Operators} 
+& \sim & ::= & < ~|~ \leq ~|~ == 
+\\  
+%
+\mbox{Arithmetic Expression} 
+& \aexpr & ::= & 
+n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  
+ ~|~ \elog \aexpr  ~|~ \esign \aexpr
+\\
+%
+\mbox{Boolean Expression} & \bexpr & ::= & 
+%
+\etrue ~|~ \efalse  ~|~ \neg \bexpr
+ ~|~ \bexpr \oplus_b \bexpr
+%
+~|~ \aexpr \sim \aexpr 
+\\
+%
+\mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr ~|~ [\expr, \dots, \expr]
+\\  
+%
+\mbox{Value} 
+& v & ::= & { n ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
+%
+% \\%
+\mbox{Label} 
+& l & \in & (\mathbb{N} \cup \{\lin, \lex\}) 
+% ~|~ (l, n)
+\\ 
+%
+\mbox{Labeled Command} 
+& {c} & ::= &  
+\clabel{\assign{x}{\expr}}^l 
+% ~|~ \clabel{\assign{x}{\query(\qexpr)}}^l
+~|~  \clabel{\eskip}^l
+~|~ \ewhile \clabel{\bexpr}^{l} \edo {c}
+~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
+~|~ {c};{c}  
+\\ 
+% \\
+\mbox{Event} 
+& \event & ::= & 
+% ~|~ ({x}, l, v, \qval)
+({x}, l, v) ~ \mbox{Assignment Event} 
+% \\
+% &&& 
+~|~(\bexpr, l, v) ~ \mbox{Testing Event}
+\\
+% \mbox{Trace} & \trace
+% & ::= & [] ~|~ \event:: \trace ~|~ \trace \tracecat \trace  \\
+\mbox{Trace} & \trace
+& ::= & [] ~|~ \trace :: \event
+\\
+\end{array}
+\]
+% \todo{change trace notation into list, and update corresponding operator nations}
+% \\
+% \wqside{"$\cdot$" has two meanings? empty, delimit. Trace is list of event?}
+We use following notations to represent the set of corresponding terms:
+\[
+\begin{array}{lll}
+\mathcal{VAR} & : & \mbox{Set of Variables}  
+% \\ 
+% %
+% \mathcal{VAL} & : & \mbox{Set of Values} 
+% \\ 
+% %
+% \mathcal{QVAL} & : & \mbox{Set of Query Values} 
+\\ 
+%
+\cdom & : & \mbox{Set of Commands} 
+\\ 
+%
+\eventset  & : & \mbox{Set of Events}  
+\\
+%
+\eventset^{\asn}  & : & \mbox{Set of Assignment Events}  
+\\
+%
+\eventset^{\test}  & : & \mbox{Set of Testing Events}  
+\\
+%
+\ldom  & : & \mbox{Set of Labels}  
+\\
+% \\
+%
+{\mathcal{T}} & : & \mbox{Set of Traces}
+\\
+%
+\mathcal{T}_0(c) & : & \mbox{Set of Initial Traces, where all the input variables of the program $c$ are initialized.
+}
+\end{array}
+\]
+$FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. To be precise,
+$FV(\aexpr)$ and $FV(\bexpr)$
+%  and $FV(\qexpr)$ 
+represent the set of free variables in arithmetic
+expression $\aexpr$ and boolean expression $\bexpr$
+%  and query expression $\qexpr$ 
+respectively.
+%
+\subsection{{Trace-based Operational Semantics}}
+\label{sec:operational_semantics}
+% \subsubsection{Event and Trace}
+\paragraph*{Event}
+An event tracks useful information about each step of the evaluation, as a quadruple. Its first element is either 
+an assigned variable (from an assignment command) or a boolean expression (from the guard of if or while command), follows by 
+ the label associated to this event, the value evaluated either from the expression assigned to the variable,
+or the boolean expression in the guard.
+%
+\[
+\begin{array}{llll}
+  \mbox{Event} 
+  & \event & ::= & 
+  % ~|~ ({x}, l, v, \qval)
+  ({x}, l, v) ~ \mbox{Assignment Event} 
+  % \\
+  % &&& 
+  ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
+\end{array}
+\]
+Event projection operators $\pi_i$ projects the $i$th element from an event: 
+\\
+$\pi_i : 
+\eventset \to \mathcal{VAR}\cup \mbox{Boolean Expression}  \cup \mathbb{N} $
+% \subsubsection{Trace}
+\paragraph*{Trace}
+\input{trace}
+%
+\paragraph{Environment} $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to( \mathbb{N} \cup \{\bot\})$
+\[
+\begin{array}{llll}
+\env(\trace  \traceadd (x, l, v)) x \triangleq v
+&
+\env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x, y \neq x
+&
+\env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
+&
+\env({[]} ) x \triangleq \bot
+\end{array}
+\]
+\paragraph{Operational Semantics Rules}
+{
+\begin{mathpar}
+\boxed{ \config{\trace,\aexpr} \aarrow v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
+\\
+\inferrule{ 
+  \empty
+}{
+ \config{\trace,  n} 
+ \aarrow n
+}
+\and
+\inferrule{ 
+  \env(\trace) x = v
+}{
+ \config{\trace,  x} 
+ \aarrow v
+}
+\and
+\inferrule{ 
+  \config{\trace, \aexpr_1} \aarrow v_1
+  \and 
+  \config{\trace, \aexpr_2} \aarrow v_2
+  \and 
+   v_1 \oplus_a v_2 = v
+}{
+ \config{\trace,  \aexpr_1 \oplus_a \aexpr_2} 
+ \aarrow v
+}
+\and
+\inferrule{ 
+  \config{\trace, \aexpr} \aarrow v'
+  \and 
+  \elog v' = v
+}{
+ \config{\trace,  \elog \aexpr} 
+ \aarrow v
+}
+\and
+\inferrule{ 
+  \config{\trace, \aexpr} \aarrow v'
+  \and 
+  \esign v' = v
+}{
+ \config{\trace,  \esign \aexpr} 
+ \aarrow v
+}
+\\
+\boxed{ \config{\trace, \bexpr} \barrow v \, : \, \mbox{Trace $\times$ Boolean Expr $\Rightarrow$ Boolean Value} }
+\\% \\
+\inferrule{ 
+  \empty
+}{
+ \config{\trace,  \efalse} 
+ \barrow \efalse
+}
+\and 
+\inferrule{ 
+  \empty
+}{
+ \config{\trace,  \etrue} 
+ \barrow \etrue
+}
+\and 
+\inferrule{ 
+  \config{\trace, \bexpr} \barrow v'
+  \and 
+  \neg v' = v
+}{
+ \config{\trace,  \neg \bexpr} 
+ \barrow v
+}
+\and 
+\inferrule{ 
+  \config{\trace, \bexpr_1} \barrow v_1
+  \and 
+  \config{\trace, \bexpr_2} \barrow v_2
+  \and 
+   v_1 \oplus_b v_2 = v
+}{
+ \config{\trace,  \bexpr_1 \oplus_b \bexpr_2} 
+ \barrow v
+}
+\and 
+\inferrule{ 
+  \config{\trace, \aexpr_1} \aarrow v_1
+  \and 
+  \config{\trace, \aexpr_2} \aarrow v_2
+  \and 
+   v_1 \sim v_2 = v
+}{
+ \config{\trace,  \aexpr_1 \sim \aexpr_2} 
+ \barrow v
+}
+\\
+\boxed{ \config{\trace, \expr} \earrow v \, : \, \mbox{Trace $\times$ Expression $\Rightarrow$ Value} }
+\\
+\inferrule{ 
+  \config{\trace, \aexpr} \aarrow v
+}{
+ \config{\trace,  \aexpr} 
+ \earrow v
+}
+\and
+\inferrule{ 
+  \config{\trace, \bexpr} \barrow v
+}{
+ \config{\trace,  \bexpr} 
+ \earrow v
+}
+\and
+\inferrule{ 
+  \config{\trace, \expr_1} \earrow v_1
+  \cdots
+  \config{\trace, \expr_n} \earrow v_n
+}{
+ \config{\trace,  [\expr_1, \cdots, \expr_n]} 
+ \earrow [v_1, \cdots, v_n]
+}
+\and
+\inferrule{ 
+  \empty
+}{
+ \config{\trace,  v} 
+ \earrow v
+}
+ \end{mathpar}
+%
+The trace based operational semantics rules are defined as follows,
+\begin{mathpar}
+\boxed{
+\mbox{Command $\times$ Trace}
+\xrightarrow{}
+\mbox{Command $\times$ Trace}
+}
+\and
+\boxed{\config{{c, \trace}}
+\xrightarrow{} 
+\config{{c',  \trace'}}
+}
+\\
+\inferrule
+{
+\empty
+}
+{
+\config{\clabel{\eskip}^l,  \trace } 
+\xrightarrow{} 
+\config{\clabel{\eskip}^l, \trace}
+}
+~\textbf{skip}
+%
+\and
+%
+\inferrule
+{
+\event = ({x}, l, v)
+}
+{
+\config{[\assign{{x}}{\aexpr}]^{l},  \trace } 
+\xrightarrow{} 
+\config{\clabel{\eskip}^l, \trace \traceadd \event}
+}
+~\textbf{assn}
+\and
+%
+\inferrule
+{
+  \config{\trace, b} \barrow \etrue
+ \and 
+ \event = (b, l, \etrue)
+}
+{
+\config{{\ewhile [b]^{l} \edo c, \trace}}
+\xrightarrow{} 
+\config{{
+c; \ewhile [b]^{l} \edo c,
+\trace \traceadd \event}}
+}
+~\textbf{while-t}
+%
+%
+\and
+%
+\inferrule
+{
+  \config{\trace, b} \barrow \efalse
+ \and 
+ \event = (b, l, \efalse)
+}
+{
+\config{{\ewhile [b]^{l}, \edo c, \trace}}
+\xrightarrow{} 
+\config{{
+  \clabel{\eskip}^l,
+\trace \traceadd \event}}
+}
+~\textbf{while-f}
+%
+%
+\and
+%
+%
+\inferrule
+{
+\config{{c_1, \trace}}
+\xrightarrow{}
+\config{{c_1',  \trace'}}
+}
+{
+\config{{c_1; c_2, \trace}} 
+\xrightarrow{} 
+\config{{c_1'; c_2, \trace'}}
+}
+~\textbf{seq1}
+%
+\and
+%
+\inferrule
+{
+  \config{{c_2, \trace}}
+  \xrightarrow{}
+  \config{{c_2',  \trace'}}
+}
+{
+\config{{\clabel{\eskip}^l; c_2, \trace}} \xrightarrow{} \config{{ c_2', \trace'}}
+}
+~\textbf{seq2}
+%
+\and
+%
+%
+\inferrule
+{
+  \config{\trace, b} \barrow \etrue
+ \and 
+ \event = (b, l, \etrue)
+}
+{
+ \config{{
+\eif([b]^{l}, c_1, c_2), 
+\trace}}
+\xrightarrow{} 
+\config{{c_1, \trace \traceadd \event}}
+}
+~\textbf{if-t}
+%
+\and
+%
+\inferrule
+{
+ \config{\trace, b} \barrow \efalse
+ \and 
+ \event = (b, l, \efalse)
+}
+{
+\config{{\eif([b]^{l}, c_1, c_2), \trace}}
+\xrightarrow{} 
+\config{{c_2, \trace \traceadd \event}}
+}
+~\textbf{if-f}
+%
+\end{mathpar}
+}
+%     \caption{Trace-based Operational Semantics}
+%     \label{fig:os}
+% \end{figure}
+%
