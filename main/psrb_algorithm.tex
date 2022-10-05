@@ -256,7 +256,7 @@ is transformed into a constraint.
 \begin{itemize}
 \item Operator: $\absexpr : \mathcal{A} \cup \mathcal{B} \to DC(\mathcal{VAR}  \cup \constdom)\cup \booldom \cup \{\top\}$
 %
-\item Constraints $\dcdom^{\top}: DC(\mathcal{VAR}  \cup \constdom) \cup \booldom$  contains:
+\item Constraints $\dcdom^{\top}: DC(\mathcal{VAR}  \cup \constdom) \cup \booldom\cup \{\top\}$  contains:
 %
 \begin{itemize}
 \item Difference Constraints $DC(\mathcal{VAR}  \cup \constdom)$ is the set of all the inequality of
@@ -269,7 +269,7 @@ at most the value of $y$ in the previous state plus some constant $v$.
 %
 \item The Boolean Expressions from the set $\booldom$
 %
-% \item The infinity $\top$.
+\item The constraint, $\top$ denotes always true. It is preserved for $\eskip$ command.
 \end{itemize}
 \end{itemize}
 
@@ -718,7 +718,7 @@ We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~
   \STATE \quad \quad \textbf{If} \highlight{$\kw{I' \in Q}$}
   \STATE \quad \quad \textbf{then}
   % let $i$ be the index such that 
-  Let $w = [\tpath_1, \cdots; \tpath_n]$, $Q = [I_1, \cdots, I_n]$, and $i$ be the index such that $I_i = I$
+  Let $w = [\tpath_1, \cdots; \tpath_n]$, $Q = [I_1, \cdots, I_n]$, and $i$ be the index such that $I_i = I'$
   \\ \quad \quad \quad \quad \quad
   $\kw{R_l.append(\tpath_1; \cdots; \tpath_{i - 1}; (\tpath_i; \cdots; \tpath')^*)}$
   % \STATE \quad \quad \todo{\textbf{else} $\kw{dfs(w', I_l, FS')}$}
@@ -1158,7 +1158,7 @@ In this sense, their method is imprecise in the same case as the contextualizati
 \begin{thm}[Soundness of Loop Repeat Pattern Closure Computation]
   \label{thm:sound_loop-rpattern}
   For every program $c$, a loop in this program with header at program point $l$,
-  Algorithm~\ref{alg:loop-repeat-pattern} computes a set of repeat patterns for this loop.
+  Algorithm~\ref{alg:path-refine} computes a set of repeat patterns for this loop.
   % \[
   %   \begin{array}{l}
   %   \forall c \in \cdom, l \in \lvar(c), \vtrace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} , 
@@ -2038,7 +2038,7 @@ $\kw{INIT(c, l_0, \absinit(\rpattern))}$ computes the equivalent results.
     \begin{array}{l}
   x =   \sum\limits_{(x, \absevent) \in \inc(x) }
   \left\{ 
-    \todo{\varinvar(y) ==> \reset(y)}+ v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath)\right\}
+    {\varinvar(y) \todo{==>} \reset(y)}+ v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath)\right\}
     \\ \qquad 
     - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
       \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath) \right\}
@@ -2095,7 +2095,8 @@ is a sound local bound on the execution times of $\rpattern$ in program $c$.
     \config{\rpattern, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
     \\ \qquad
     \implies
-    \todo{\vcounter(\trace, L(\rpattern))} \leq \outinB(\rpattern, \rprog)(\trace_0 \tracecat \trace_1).
+    \todo{Change Counter}
+    {\vcounter(\trace, L(\rpattern))} \leq \outinB(\rpattern, \rprog)(\trace_0 \tracecat \trace_1).
     \end{array}
     \]
 \end{thm}

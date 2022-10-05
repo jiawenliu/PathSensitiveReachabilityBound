@@ -102,10 +102,12 @@ We use following notations to represent the sets of corresponding terms:
 \\
 % \\
 %
-{\mathcal{T}} & : & \mbox{Set of Traces}
+\highlight{\tdom} & : & \mbox{\highlight{Set of All Finite Execution Traces}}
+\\
+\highlight{\tdom^{\infty}} & : & \mbox{\highlight{Set of All Finite Or Infinite  Execution Traces}}
 \\
 %
-\mathcal{T}_0(c) & : & \mbox{Set of Initial Traces, where all the input variables of the program $c$ are initialized.
+\tdom_0(c) & : & \mbox{Set of Initial Traces, which is finite and all the input variables of the program $c$ are initialized.
 }
 \end{array}
 \]
@@ -156,7 +158,7 @@ $\pi_i :
 \paragraph*{Trace}
 \input{trace}
 %
-\paragraph{Environment} $ \env : {\mathcal{T}}  \to \mathcal{VAR} \to( \mathbb{N} \cup \{\bot\})$
+\paragraph{Environment} $ \env : {\tdom}  \to \mathcal{VAR} \to( \mathbb{N} \cup \{\bot\})$
 \[
 \begin{array}{llll}
 \env(\trace  \traceadd (x, l, v)) x \triangleq v
@@ -216,53 +218,41 @@ $\pi_i :
   }
    \end{mathpar}
 \paragraph{Operational Semantics Rules}
+The operational semantics rules for expression evaluation and command execution is presented below.
+
+\highlight{
+  Given an initial trace $\trace_0 \in \tdom_0(c)$ w.r.t. a program $c$,
+we use $\to^*$ to represent the multiple-step execution. $\config{c, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \trace}$
+represents that the program's execution terminates and produces a finite execution trace $\trace \in \tdom$.
+When the program execution doesn't terminate under $\trace_0$, 
+we use $\config{c, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \trace}$ to
+represent the non-terminated execution w.r.t. an infinite trace $\trace \in \tdominf$.
+\\
+If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
+So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lemma_sec123}, 
+specifically the trace has the property that its length never decreases during the program execution.
+\begin{lem}
+[Trace Non-Decreasing]
+\label{lem:tracenondec}
+For any program $c \in \cdom$ and traces $\trace_0 \in \tdom_0(c), \trace \in \tdominf$, if 
+$\config{c, \trace_0} \rightarrow^{*} \config{\eskip, \trace} $ or 
+$\config{c, \trace_0} \rightarrow^{\infty} \config{\cdot, \trace}$,
+then there exists a trace $\trace' \in \tdominf$ with $\trace_0 \tracecat \trace' = \trace$
+%
+$$
+\forall \trace_0 \in \tdom_0(c), \trace \in \tdominf, c \st
+\Big(
+  \config{c, \trace_0} \rightarrow^{*} \config{\eskip, \trace} 
+  \lor 
+  \config{c, \trace_0} \rightarrow^{\infty} \config{\cdot, \trace}
+\Big)
+\implies \exists \trace' \in \tdominf \st \trace_0 \tracecat \trace' = \trace
+$$
+\end{lem}
+}
+
 {
 \begin{mathpar}
-% \boxed{ \config{\trace,\aexpr} \aarrow v \, : \, \mbox{Trace  $\times$ Arithmetic Expr $\Rightarrow$ Arithmetic Value} }
-% \\
-% \inferrule{ 
-%   \empty
-% }{
-%  \config{\trace,  n} 
-%  \aarrow n
-% }
-% \and
-% \inferrule{ 
-%   \env(\trace) x = v
-% }{
-%  \config{\trace,  x} 
-%  \aarrow v
-% }
-% \and
-% \inferrule{ 
-%   \config{\trace, \aexpr_1} \aarrow v_1
-%   \and 
-%   \config{\trace, \aexpr_2} \aarrow v_2
-%   \and 
-%    v_1 \oplus_a v_2 = v
-% }{
-%  \config{\trace,  \aexpr_1 \oplus_a \aexpr_2} 
-%  \aarrow v
-% }
-% \and
-% \inferrule{ 
-%   \config{\trace, \aexpr} \aarrow v'
-%   \and 
-%   \elog v' = v
-% }{
-%  \config{\trace,  \elog \aexpr} 
-%  \aarrow v
-% }
-% \and
-% \inferrule{ 
-%   \config{\trace, \aexpr} \aarrow v'
-%   \and 
-%   \esign v' = v
-% }{
-%  \config{\trace,  \esign \aexpr} 
-%  \aarrow v
-% }
-% \\
 \boxed{ \config{\trace, \bexpr} \barrow v \, : \, \mbox{Trace $\times$ Boolean Expr $\Rightarrow$ Boolean Value} }
 \\% \\
 \inferrule{ 
@@ -514,7 +504,3 @@ c; \ewhile [b]^{l} \edo c,
 %
 \end{mathpar}
 }
-%     \caption{Trace-based Operational Semantics}
-%     \label{fig:os}
-% \end{figure}
-%

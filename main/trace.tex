@@ -1,5 +1,5 @@
 %
-A trace $\trace \in \mathcal{T} $ is a list of events, 
+A trace $\trace \in \tdom $ is a list of events, 
 collecting the events generated along the program execution. 
 \[
 \begin{array}{llll}
@@ -7,99 +7,28 @@ collecting the events generated along the program execution.
 & ::= & [] ~|~ \trace :: \event
 \end{array}
 \]
-$\mathcal{T} $ represents the set of traces. 
 A trace can be regarded as the program history, 
 which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
 \\
+\highlight{If a program doesn't terminate when executing under some initial trace, it produces an infinite trace $\trace \in \tdom^{\infty}$.
+$\tdom^{\infty}$ is the set of all finite or infinite traces.}
+\\
 Below are some useful operators on trace.
-  \begin{defn}[Trace Concatenation, $\tracecat: \mathcal{T} \to \mathcal{T} \to \mathcal{T}$]
-Given two traces $\trace_1, \trace_2 \in \mathcal{T}$, the trace concatenation operator 
+\highlight{
+\begin{defn}[Trace Concatenation, $\tracecat: \tdominf \to \tdom \to \tdominf $]
+Given two traces $\trace_1 \in \tdominf, \trace_2 \in \tdom$, the trace concatenation operator 
 $\tracecat$ is defined as:
-% \[
-  % \trace_1 \tracecat \trace_2 \triangleq
-  % \left\{
-  % \begin{array}{ll} 
-  %   \trace_1 \tracecat [] \triangleq \trace_1 & 
-  %   \trace_1 \tracecat (\trace_2' :: \event) \triangleq  (\trace_1  \tracecat \trace_2')  :: \event 
-  % \end{array}
-  % \right.
-% \]
-% \[
-  % \trace_1 \tracecat \trace_2 \triangleq
-  % \left\{
-  % \begin{array}{ll} 
-  %   \trace_1 \tracecat [] \triangleq \trace_1 & 
-  %   \trace_1 \tracecat (\trace_2' :: \event) \triangleq  (\trace_1  \tracecat \trace_2')  :: \event 
-  % \end{array}
-  % \right.
-% \]
 \[
-  \trace_1 \tracecat \trace_2 \triangleq
-  \left\{
-  \begin{array}{ll} 
-     \trace_1 & \trace_2 = [] \\
-     (\trace_1  \tracecat \trace_2')  :: \event & \trace_2 = \trace_2' :: \event
-  \end{array}
-  \right.
+\trace_1 \tracecat \trace_2 \triangleq
+\left\{
+\begin{array}{ll} 
+  \trace_1 & \trace_2 = [] \\
+  (\trace_1  \tracecat \trace_2'):: \event & \trace_2 = \trace_2' :: \event
+\end{array}
+\right.
 \]
 \end{defn}
-%
-% \todo{ need to consider the occurrence times }
-% \\
-% \mg{This definition is not well given. You use a different operator to define it t[:e] which you say it is a shorthand. It cannot be a shorthand because it is used in the definition. I think you need to define two operations, either in sequence or mutually recursive.}
-% \jl{I moved this definition from the main paper into the appendix \ref{apdx:flowsto_event_soundness}. Because this operator is only being used in the soundness proof. And I also feel it doesn't worth to spend many lines in the main paper for defining this complex notation.}
-% Subtrace: $[ : ] : \mathcal{{T} \to \eventset \to \eventset \to \mathcal{T}}$ 
-% \wqside{Confusing, I can not understand the subtraction, it takes a trace, and two events, and this operator is used to subtract these two events?}
-% \[
-%   \trace[\event_1 : \event_2] \triangleq
-%   \left\{
-%   \begin{array}{ll} 
-%   \trace'[\event_1: \event_2]             & \trace = \event :: \trace' \land \event \eventneq \event_1 \\
-%   \event_1 :: \trace'[:\event_2]  & \trace = \event :: \trace' \land \event \eventeq \event_1 \\
-%   {[]} & \trace = [] \\
-%   \end{array}
-%   \right.
-% \]
-% For any trace $\trace$ and two events $\event_1, \event_2 \in \eventset$,
-% $\trace[\event_1 : \event_2]$ takes the subtrace of $\trace$ starting with $\event_1$ and ending with $\event_2$ including $\event_1$ and $\event_2$.
-% \\
-% We use $\trace[:\event_2] $ as the shorthand of subtrace starting from head and ending with $\event_2$, and similary for $\trace[\event_1:]$.
-% \[
-%   \trace[:\event] \triangleq
-%   \left\{
-%   \begin{array}{ll} 
-%  \event' :: \trace'[: \event]             & \trace = \event' :: \trace' \land \event' \eventneq \event \\
-%   \event'  & \trace = \event' :: \trace' \land \event' \eventeq \event \\
-%   {[]}  & \trace = [] 
-%   \end{array}
-%   \right.
-% % \]
-% % \[
-%   \quad
-%   \trace[\event: ] \triangleq
-%   \left\{
-%   \begin{array}{ll} 
-%   \trace'[\event: ]     & \trace =  \event' :: \trace' \land \event \eventneq \event' \\
-%   \event' :: \trace'  & \trace = \event' :: \trace' \land \event \eventeq \event' \\
-%   {[ ] } & \trace = []
-%   \end{array}
-%   \right.
-% \]
-% %
-% \mg{why in the next definition you use ( ) while in the previous ones you didn't? They seem like the same cases. And why you use o.w. instead of []?}
-% An event $\event \in \eventset$ belongs to a trace $\trace$, i.e., $\event \eventin \trace$ are defined as follows:
-% %
-% \begin{equation}
-%   \event \eventin \trace  
-%   \triangleq \left\{
-%   \begin{array}{ll} 
-%     \etrue                  & \trace =  (\event' :: \trace') \land (\event \eventeq \event')
-%                               \\
-%     \event \eventin \trace' & \trace =  (\event' :: \trace') \land (\event \eventneq \event') \\ 
-%     \efalse                 & o.w.
-%   \end{array}
-%   \right.
-% \end{equation}
+}
 \begin{defn}(An Event Belongs to A Trace)
   An event $\event \in \eventset$ belongs to a trace $\trace$, i.e., $\event \in \trace$ are defined as follows:
 %
@@ -119,89 +48,8 @@ $\tracecat$ is defined as:
 As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
 \end{defn}
 %
-% An event $\event \in \eventset$ belongs to a trace $\trace$ up to value, 
-% i.e., $\event \sigin \trace$ are defined as follows:
-%   %
-% \begin{equation}
-%   \event \sigin \trace  
-%   \triangleq \left\{
-%   \begin{array}{ll} 
-%     \etrue                  & \trace =  (\trace' \tracecate \event')                          \land \pi_1(\event_1) = \pi_1(\event_2) 
-%                               \land  \pi_2(\event_1) = \pi_2(\event_2)  
-%                               % \land \vcounter(\trace \event) = \vcounter()
-%                               \\
-%     \event \sigin \trace'   & \trace =  (\trace' \tracecate \event') 
-%                               \land 
-%                               (\pi_1(\event_1) \neq \pi_1(\event_2) 
-%                               \lor  \pi_2(\event_1) \neq \pi_2(\event_2)) 
-%                               \\ 
-%     \efalse                 & o.w.
-%   \end{array}
-%   \right.
-% \end{equation}
-%
-% % \mg{Why the previous definition used :: and now you switch to ++? Cannot this just be defined using ::? I am trying to anticipate places where a reader might be confused. Also, this definition would be much simpler if we defined event in a more uniform way. Ideally, we want to distinguish three cases, we don't need to distinguish 7 cases.}\\
-% % \jl{My bad, I was really too sticky to the convention.
-% I though the list appending  $::$ can only append element on the left side.}
-% \mg{We introduce a counting operator $\vcounter : \mathcal{T} \to \mathbb{N} \to \mathbb{N}$ whose behavior is defined as follows, \sout{Counter $\vcounter : \mathcal{T} \to \mathbb{N} \to \mathbb{N}$ }}.
-% \wq{The operator counter actually provides the number of times a specific label appears in a trace. Only a number, the position of label is ignored.}
-% \[
-% \begin{array}{lll}
-% \vcounter((x, l, v) :: \trace ) l \triangleq \vcounter(\trace) l + 1
-% &
-% \vcounter((b, l, v):: \trace ) l \triangleq \vcounter(\trace) l + 1
-% &
-% \vcounter((x, l, \qval, v):: \trace ) l \triangleq \vcounter(\trace) l + 1
-% \\
-% \vcounter((x, l', v):: \trace ) l \triangleq \vcounter(\trace ) l
-% &
-% \vcounter((b, l', v):: \trace ) l \triangleq \vcounter(\trace ) l
-% &
-% \vcounter((x, l', \qval, v):: \trace ) l \triangleq \vcounter(\trace ) l
-% \\
-% \vcounter({[]}) l \triangleq 0
-% &&
-% \end{array}
-% \]
-% \[
-% \begin{array}{lll}
-% \vcounter(\trace  \tracecat [(x, l, v)] ) l \triangleq \vcounter(\trace) l + 1
-% &
-% \vcounter(\trace  \tracecat [(b, l, v)] ) l \triangleq \vcounter(\trace) l + 1
-% &
-% \vcounter(\trace  \tracecat [(x, l, \qval, v)] ) l \triangleq \vcounter(\trace) l + 1
-% \\
-% \vcounter(\trace  \tracecat [(x, l', v)] ) l \triangleq \vcounter(\trace ) l
-% &
-% \vcounter(\trace  \tracecat [(b, l', v)] ) l \triangleq \vcounter(\trace ) l
-% &
-% \vcounter(\trace  \tracecat [(x, l', \qval, v)]) l \triangleq \vcounter(\trace ) l
-% \\
-% \vcounter({[]}) l \triangleq 0
-% &&
-% \end{array}
-% \]
-The counting operator $\vcounter : \mathcal{T} \to \ldom \to \mathbb{N}$
+The counting operator $\vcounter : \tdominf \to \ldom \to (\mathbb{N} \cup \{\infty\})$
 counts the appearance of a label in a trace.
-% whose behavior is defined as follows,
-% \[
-% \begin{array}{lll}
-% \vcounter(\trace :: (x, l, v, \bullet) ) l \triangleq \vcounter(\trace) l + 1
-% &
-% \vcounter(\trace  ::(b, l, v, \bullet) ) l \triangleq \vcounter(\trace) l + 1
-% &
-% \vcounter(\trace  :: (x, l, v, \qval) ) l \triangleq \vcounter(\trace) l + 1
-% \\
-% \vcounter(\trace  :: (x, l', v, \bullet) ) l \triangleq \vcounter(\trace ) l, l' \neq l
-% &
-% \vcounter(\trace  :: (b, l', v, \bullet) ) l \triangleq \vcounter(\trace ) l, l' \neq l
-% &
-% \vcounter(\trace  :: (x, l', v, \qval)) l \triangleq \vcounter(\trace ) l, l' \neq l
-% \\
-% \vcounter({[]}) l \triangleq 0
-% &&
-% \end{array}
-% \]
 \[
 \begin{array}{lll}
 \vcounter(\trace :: (x, l, v), l ) \triangleq \vcounter(\trace, l) + 1
@@ -215,6 +63,7 @@ counts the appearance of a label in a trace.
 \vcounter(\trace  :: (b, l', v), l) \triangleq \vcounter(\trace, l), l' \neq l
 \end{array}
 \]
+\highlight{When the input trace is infinite, it returns $\infty$.}
 The counter operator is abused as follows when the input is a sequence of labels $L = (l_1, \cdots, l_n)$:
 \[
   \vcounter(\trace :: (\_, l_1, \_) :: \cdots :: (\_, l_n, \_), L ) 
@@ -224,7 +73,7 @@ The counter operator is abused as follows when the input is a sequence of labels
   \triangleq \vcounter(\trace, L) ~ l \neq l_n
   \]
 %
-% The Latest Label $\llabel : \mathcal{T} \to \mathcal{VAR} \to \mathbb{N}$ 
+% The Latest Label $\llabel : \tdom \to \mathcal{VAR} \to \mathbb{N}$ 
 % The label of the latest assignment event which assigns value to variable $x$.
 % \[
 %   \begin{array}{lll}
@@ -245,7 +94,7 @@ The counter operator is abused as follows when the input is a sequence of labels
 %
 % \todo{wording}
 % \mg{This wording needs to be fixed. Also notice that the type is wrong, a label is not always returned.}
-%  The Latest Label $\llabel : \mathcal{T} \to \mathcal{VAR} \to \mathbb{N}$ 
+%  The Latest Label $\llabel : \tdom \to \mathcal{VAR} \to \mathbb{N}$ 
 % The label of the latest assignment event which assigns value to variable $x$.
 % \[
 %   \begin{array}{lll}
@@ -263,7 +112,7 @@ The counter operator is abused as follows when the input is a sequence of labels
 % &&
 % \end{array}
 % \]
-% We introduce an operator $\llabel : \mathcal{T} \to \mathcal{VAR} \to \ldom \cup \{\bot\}$, which 
+% We introduce an operator $\llabel : \tdom \to \mathcal{VAR} \to \ldom \cup \{\bot\}$, which 
 % takes a trace and a variable and returns the label of the latest assignment event which assigns value to that variable.
 % Its behavior is defined as follows,
 % % \begin{defn}[Latest Label]
@@ -288,7 +137,7 @@ The counter operator is abused as follows when the input is a sequence of labels
 % \end{defn}
 %
 % \mg{This wording needs to be fixed but also the description does not make sense. This operator seems to just collect all the labels in a trace. Again, this definition would be shorter with a more uniform definition of events.}
-% The Trace Label Set $\tlabel : \mathcal{T} \to \mathcal{P}{(\mathbb{N})}$ 
+% The Trace Label Set $\tlabel : \tdom \to \mathcal{P}{(\mathbb{N})}$ 
 % The label of the latest assignment event which assigns value to variable $x$.
 % \[
 %   \begin{array}{llll}
@@ -302,7 +151,7 @@ The counter operator is abused as follows when the input is a sequence of labels
 % \end{array}
 % \]
 % \begin{defn}
-  The operator $\tlabel : \mathcal{T} \to \mathcal{P}{(\ldom)}$ gives the set of labels in every event belonging to 
+  The operator $\tlabel : \tdom \to \mathcal{P}{(\ldom)}$ gives the set of labels in every event belonging to 
   a trace,
   % , whoes behavior is 
 defined as follows,
@@ -328,32 +177,16 @@ defined as follows,
 % \]
 %
 %
-% $\mathcal{T}$ : Set of Well-formed Traces (in Definition~\ref{def:wf_trace})
+% $\tdom$ : Set of Well-formed Traces (in Definition~\ref{def:wf_trace})
 %
 %
 % \\
 %
 
 %
-% \mg{The next lemma is trivial but it still needs a proof sketch.}
-If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
-So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lemma_sec123}, 
-specifically the trace has the property that its length never decreases during the program execution.
-\begin{lem}
-[Trace Non-Decreasing]
-\label{lem:tracenondec}
-For every program $c \in \cdom$ and traces $\trace, \trace' \in \mathcal{T}$, if 
-$\config{c, \trace} \rightarrow^{*} \config{\eskip, \trace'}$,
-then there exists a trace $\trace'' \in \mathcal{T}$ with $\trace \tracecat \trace'' = \trace'$
-%
-$$
-\forall \trace, \trace' \in \mathcal{T}, c \st
-\config{c, \trace} \rightarrow^{*} \config{\eskip, \trace'} 
-\implies \exists \trace'' \in \mathcal{T} \st \trace \tracecat \trace'' = \trace'
-$$
-\end{lem}
+
 % \begin{proof}
-%   Taking arbitrary trace $\trace \in \mathcal{T}$, by induction on program $c$, we have the following cases:
+%   Taking arbitrary trace $\trace \in \tdom$, by induction on program $c$, we have the following cases:
 %   \caseL{$c = [\assign{x}{\expr}]^{l}$}
 %   By the evaluation rule $\rname{assn}$, we have
 %   $
@@ -390,7 +223,7 @@ $$
 %     \trace :: (b, l_w, \etrue, \bullet)}}~ (1)
 %   $.
 %   \\
-%   Let $\trace_w' \in \mathcal{T}$ be the trace satisfying following execution:
+%   Let $\trace_w' \in \tdom$ be the trace satisfying following execution:
 %   \\
 %   $
 %   \config{{
@@ -404,7 +237,7 @@ $$
 % By induction hypothesis on sub program $c_w$ with starting trace 
 % $\trace :: (b, l_w, \etrue, \bullet)$ and ending trace $\trace_w'$, 
 % we know there exist
-% $\trace_w \in \mathcal{T}$ such that $\trace_w' = \trace :: (b, l_w, \etrue, \bullet) \tracecat \trace_w$.
+% $\trace_w \in \tdom$ such that $\trace_w' = \trace :: (b, l_w, \etrue, \bullet) \tracecat \trace_w$.
 % \\
 % Then we have the following execution continued from $(1)$:
 % \\
@@ -421,7 +254,7 @@ $$
 % By repeating the execution (1) and (2) until the program is evaluated into $\eskip$,
 % with trace $\trace_w^{i'} $ for $i = 1, \cdots, n n \geq 1$ in each iteration, we know 
 % in the $i-th$ iteration,
-%  there exists  $\trace_w^i \in \mathcal{T}$ such that  
+%  there exists  $\trace_w^i \in \tdom$ such that  
 % $\trace_w^{i'} = \trace_w^{(i-1)'} :: (b, l_w, \etrue, \bullet) ++ \trace_w^{i'}$
 % \\
 % Then we have the following execution:
@@ -476,15 +309,15 @@ $$
 % So we have the following Corollary~\ref{coro:aqintrace} with proof in Appendix~\ref{apdx:lemma_sec123}.
 % \begin{coro}
 % \label{coro:aqintrace}
-% For every event and a trace $\trace \in \mathcal{T}$,
+% For every event and a trace $\trace \in \tdom$,
 % if $\event \in \trace$, 
-% then there exist another event $\event' \in \eventset$ and traces $\trace_1, \trace_2 \in \mathcal{T}$
+% then there exist another event $\event' \in \eventset$ and traces $\trace_1, \trace_2 \in \tdom$
 % such that $\trace_1 \tracecat [\event'] \tracecat \trace_2 = \trace $
 % with 
 % $\event$ and $\event'$ equivalent but may differ in their query value.
 % \[
-%   \forall \event \in \eventset, \trace \in \mathcal{T} \st
-% \event \in \trace \implies \exists \trace_1, \trace_2 \in \mathcal{T}, 
+%   \forall \event \in \eventset, \trace \in \tdom \st
+% \event \in \trace \implies \exists \trace_1, \trace_2 \in \tdom, 
 % \event' \in \eventset \st (\event \in \event') \land \trace_1 \tracecat [\event'] \tracecat \trace_2 = \trace  
 % \]
 % \end{coro}
@@ -533,10 +366,10 @@ $$
 % \label{thm:os_wf_trace}
 % \\
 % \[
-% \forall \trace \in \mathcal{T}, c \st
+% \forall \trace \in \tdom, c \st
 % \config{c, \vtrace} \to^{*} \config{\eskip, \trace \tracecat \trace'} \land \trace_p = p(\trace')
 % \implies
-% \trace_p\in \mathcal{T}
+% \trace_p\in \tdom
 % \] 
 % % \wqside{ is $p(\tau)$ defined some where? I guess it means post-processing.}
 % %
@@ -614,11 +447,3 @@ $$
 
 %
 %
-%
-%
-%
-%
-%
-% \subsection{SSA Transformation and Soundness of Transformation}
-% in File {\tt ``ssa\_transform\_sound.tex''}
-% \input{ssa_transform_sound}
