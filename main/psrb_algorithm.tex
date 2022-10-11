@@ -28,30 +28,33 @@ The algorithm is summarized into the following steps,
 %
 %
 \begin{enumerate}
-\item  In Section~\ref{sec:abscfg}, we first construct an abstract transition graph based on $c$, by computing an abstract transition 
+\item  In Section~\ref{sec:abs_prog}, we first construct an abstract transition graph based on $c$, by computing an abstract transition 
 for every labeled command. 
 This graph is used in the following sections
-%  from Section~\ref{sec:pathsensitive_rb-refine} to Section~\ref{sec:pathsensitive_rb-psrbcompute} 
+%  from Section~\ref{sec:refine} to Section~\ref{sec:psrbcompute} 
 for computing the path-sensitive reachability-bound of a program location.
 % see Section~\ref{sec:alg_vertexgen}
-\item Section~\ref{sec:pathsensitive_rb-refine}
+\item Section~\ref{sec:refine}
 refines the multiple-paths loops in the program
 % this program path sensitively, 
-based on the abstract transition graph. This step produces a refined program in the form of \todo{paths sequence} which come from its abstract transition graph.
-\item Section~\ref{sec:pathsensitive_rb-lbcompute} computes the ranking function  
+based on the abstract transition graph.
+This step transforms the multiple-paths loops into multiple loops where
+the interleaving of paths is explicit.
+%  which come from its abstract transition graph.
+\item Section~\ref{sec:lbcompute} computes the ranking function  
 \footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
 and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
 We refer to the two names as the same meaning in this paper.} for each edge in a program's abstract transition graph,
 and estimates the upper bounds on every ranking function's maximum value and every edge's execution times path-insensitively.
 % path-insensitive reachability upper bound for every while loop command in $c$.
-\item Section~\ref{sec:pathsensitive_rb-outinalg} performs the \textbf{Outside-In} algorithm and computes
+\item Section~\ref{sec:outinalg} performs the \textbf{Outside-In} algorithm and computes
 the upper bound for the execution times of \todo{certain sub-sequence} of paths in a refined program locally, named \textbf{Outside-In} bound.
 % path-sensitive local bounds.
-\item Section~\ref{sec:pathsensitive_rb-inoutalg} performs the \textbf{Inside-Out} algorithm and 
+\item Section~\ref{sec:inoutalg} performs the \textbf{Inside-Out} algorithm and 
 computes the upper bound for the execution times of
 every distinct path in a refined program globally, named \textbf{Inside-Out} bound.
 % abstract transition graph.
-\item Section~\ref{sec:pathsensitive_rb-psrbcompute} computes the path-sensitive reachability-bound for every program point
+\item Section~\ref{sec:psrbcompute} computes the path-sensitive reachability-bound for every program point
 %  in this program 
 based on the above results.
 %  by
@@ -168,7 +171,7 @@ based on the above results.
 %     an abstract transition graph
 %     %  over all labels,
 %     (remove?? with program's labels as vertices and abstract transitions as edges)
-%     in Section~\ref{sec:abscfg},
+%     in Section~\ref{sec:abs_prog},
 %     % used to analyze 
 %     for analyzing the weight of every vertex in $\progV(c)$ and edges between every vertex in $\progV(c)$ in the next two steps;
 %     %  \ref{sec:alg_weightgen} and 
@@ -184,7 +187,7 @@ based on the above results.
 % \end{enumerate}
 
 \subsection{Abstract Transition Graph}
-\label{sec:abscfg}
+\label{sec:abs_prog}
 
 This path-sensitive reachability-bound algorithm
 is performed on basis of an \emph{Abstract Transition Graph} for the program $c$.
@@ -196,7 +199,7 @@ program $c$ through constructing its vertices and edges.
 % abstract transition graph for a program $c$, $\absG(c)$.
 
 \subsubsection{Vertices Construction}
-\label{sec:abscfg-vertex}
+\label{sec:abs_prog-vertex}
 Every 
 vertex corresponds to a program execution point, which is a unique
 label of a command in this program.
@@ -208,7 +211,7 @@ the vertices of this graph is the set of $c$'s labels with the exit label ${\lex
 %  corresponding to a label command in the program.
 
 \subsubsection{Edge Construction}
-\label{sec:abscfg-edge}
+\label{sec:abs_prog-edge}
   The vertices can be easily collected and the key point of the abstract
   transition graph for a program is constructing the edge set, $\absE(c)$ for a program $c$.
   It relies on the control flow analysis and the program abstraction of each command.
@@ -249,8 +252,12 @@ by a program abstraction method adopted from the
 algorithm in Section 6 in~\cite{sinn2017complexity}.
 \\
 Given a program $c$,
-every expression in an assignment command or in the guard of a $\eif$ or $\ewhile$ command
+every arithmetic expression in an assignment command with label $l$,
+or boolean expression in the guard of a $\eif$ or $\ewhile$ command with label $l$
 is transformed into a constraint.
+\\
+This constraint describes the abstract execution of the assignment command with label $l$,
+or abstract evaluation of the boolean expression in the guard with label $l$.
 
 \highlight{Notations / Formal Definitions:}
 \begin{itemize}
@@ -266,10 +273,16 @@ The \emph{Symbolic Constant} set $\constdom = \mathbb{N} \cup \inpvar \cup{\inft
 is the set of natural numbers with $\infty$ and input variables.
 An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus some constant $v$.
+$x' \leq y + v$ on an edge describes $l \xrightarrow{x' \leq y + v} l'$ describes
+that after evaluating the assignment command with label $l$, the value of $x$ is
+at most the value of $y$ before executing this command plus some constant $v$.
 %
-\item The Boolean Expressions from the set $\booldom$
+\item The Boolean Expressions $b$ from the set $\booldom$.
+$b$ on an edge $l \xrightarrow{b} l'$ describes
+that after evaluating the guard with label $l$,
+$b$ holds and the command with label $l$ will execute right after.
 %
-\item The constraint, $\top$ denotes always true. It is preserved for $\eskip$ command.
+\item The top constraint, $\top$ denotes always true. It is preserved for $\eskip$ command.
 \end{itemize}
 \end{itemize}
 
@@ -372,7 +385,6 @@ Given a program $c$, its abstract initial state, $\absinit(c)$ is computed as fo
 \[
   \begin{array}{ll}
     \absinit(\clabel{\assign{x}{\expr}}{}^l)  & = \{l\}  \\
-    \absinit(\clabel{\assign{x}{\expr}}{}^l)  & = \{l\} \\
     \absinit(\clabel{\eskip}^{l})  & = l \\
     \absinit(\eif [b]^l \ethen c_1 \eelse c_2)  & = \{l\} \\
     \absinit(\ewhile [b]^l \edo c)  & = \{l\} \\
@@ -462,15 +474,14 @@ is computed as follows in Definition~\ref{def:absevent_compute}.
   % We now show how to compute the abstract execution trace. 
  We first append a $\eskip$ command with 
 %  a symbolic label $l_e$, i.e., $\clabel{\eskip}^{l_e}$ at the end of the program $c$, and compute the $\absflow(c) = \absflow'(c')$ for $c'$, where $c' = c;\clabel{\eskip}^{l_e}$ as follows,
-the label $\lex$, i.e., $\clabel{\eskip}^{l_{ex}}$ at the end of the program $c$, and construct 
-the program $c' = c;\clabel{\eskip}^{l_{ex}}$.
+the label $\lex$, i.e., $\clabel{\eskip}^{{\lex}}$ at the end of the program $c$, and construct 
+the program $c' = c;\clabel{\eskip}^{{\lex}}$.
 Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
  %
  {\footnotesize
  \[
    \begin{array}{ll}
       \absflow'(\clabel{\assign{x}{\expr}}{}^l)  & = \emptyset  \\
-      \absflow'(\clabel{\assign{x}{\query(\qexpr)}}{}^l)  & = \emptyset  \\
       \absflow'([\eskip]^{l})  & = \emptyset \\
       \absflow'(\eif [b]^l \ethen c_t \eelse c_f)  & =  \absflow'(c_t) \cup \absflow'(c_f)
         \\ & \quad 
@@ -484,24 +495,24 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
    \end{array}
    \]
    }
-   Notice $\absflow'([x := \expr]^{l})$, $\absflow'([x := \query(\qexpr)]^{l})$ and $\absflow'([\eskip]^{l})$ are all empty set. 
+   Notice $\absflow'([x := \expr]^{l})$ and $\absflow'([\eskip]^{l})$ are both empty set. 
    For every event $\event$ with label $l$ in an execution trace $\trace$ of program $c$, 
    there is an abstract event in program's abstract execution trace of form $(l, \_, \_)$.  
-   We also show the soundness of the abstract events computation in Appendix.
+   We also show the soundness of the \emph{abstract events computation} in Appendix.
 
  \highlight{Theorem Guarantee:}
    \begin{lem}[Soundness of the Abstract Events Computation]
      \label{lem:abscfg_sound}
      For every program $c$ and
-     an execution trace $\trace \in \mathcal{T}$ that is generated w.r.t.
-     an initial trace  $\vtrace_0 \in \mathcal{T}_0(c)$,
+     an execution trace $\trace \in \tdom$ that is generated w.r.t.
+     an initial trace  $\vtrace_0 \in \tdom_0(c)$,
      there is an abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
      % with initial label $l$
      for every event $\event \in \trace$ having the label $l$, i.e., $\event = (\_, l, \_)$.
       %
    \[
      \begin{array}{l}
-       \forall c \in \cdom, \vtrace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} ,  \event = (\_, l, \_) \in \eventset \st
+       \forall c \in \cdom, \vtrace_0 \in \tdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset \st
    \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
    \land \event \in \trace 
    \\
@@ -521,8 +532,8 @@ there is a unique abstract event in the program's abstract events set $\absevent
 \begin{lem}[Uniqueness of the Abstract Events Computation]
   \label{lem:abscfg_unique}
   For every program $c$ and
-  an execution trace $\trace \in \mathcal{T}$ that is generated w.r.t.
-  an initial trace  $\vtrace_0 \in \mathcal{T}_0(c)$,
+  an execution trace $\trace \in \tdom$ that is generated w.r.t.
+  an initial trace  $\vtrace_0 \in \tdom_0(c)$,
   there is a unique abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
   % with initial label $l$
   for every assignment event $\event \in \eventset^{\asn}$ in the
@@ -530,7 +541,7 @@ there is a unique abstract event in the program's abstract events set $\absevent
 %
 \[
   \begin{array}{l}
-    \forall c \in \cdom, \vtrace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
+    \forall c \in \cdom, \vtrace_0 \in \tdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
 \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
 \land \event \in \trace 
 \\
@@ -547,6 +558,8 @@ The edge for $c$'s abstract transition graph is constructed simply by computing 
   \[
     \absE(c) = \{(l_1, dc, l_2) | (l_1, dc, l_2) \in \absflow(c)\}
   \]
+  For each edge $(l, dc, l') \in \absE(c)$, $dc$ describes an abstract execution of the assignment command with label $l$,
+  of evaluation of the guard with label $l$.
 % The edge set is constructed simply by computing the program's abstract events set, $\absflow(c)$.
 %   Each abstract event $(l_1, dc, l_2)$ in this set represents an edge in $\absE(c)$.
 %   % Then, every abstract transition in the abstraction execution trace corresponds to an edge in the abstract transition graph. In another word, the edge $(l_1, dc, l_2)$ in the abstract transition graph, represents an abstract transition 
@@ -585,7 +598,7 @@ $\absV(c) = \lvar(c)\cup\{\lex\}$
 % For concise, $\mathcal{A}_{\lin}$ is used as the same meaning of $EXPR(\constdom)$ in the follows, to denote the arithmetic expression 
 % over the symbolic variables, (i.e., $\mathbb{N}$ with input variables).
 \subsubsection{Abstract Transition Graph through An Example \todo{Change the Walk-through Example}}
-\label{sec:abscfg_example}
+\label{sec:abs_prog_example}
 % 
 % Look at the two-round example again, its generated abstract control is shown as in Figure~\ref{fig:adapfun_tworound}(a).
 % In this abstract transition graph, every vertex is a label,
@@ -609,8 +622,11 @@ $\absV(c) = \lvar(c)\cup\{\lex\}$
 \input{examples_psrb/whileSim_abscfg}
 %
 \subsection{\highlight{Program Refinement}\todo{Formalization}}
-\label{sec:pathsensitive_rb-refine}
-In order to analyze the reachability bound path-sensitively, this step refines the program based on its abstract transition graph in three steps.
+\label{sec:refine}
+In order to analyze the reachability bound path-sensitively, 
+this step transforms a loop with multiple paths 
+into multiple loops where the interleaving of paths is explicit.
+This refinement algorithm performs over program's abstract transition graph in three steps as follows.
 %
 \paragraph{Simple Transition Path} This step computes the set of all \emph{simple transition paths} for a program $c$.
 \\
@@ -680,7 +696,7 @@ We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~
 \begin{algorithm}
   \caption{
   {Interleaving Refinement}
-  \label{alg:path-refine}
+  \label{alg:prog-refine}
   }
   \begin{algorithmic}[1]
   \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
@@ -759,28 +775,29 @@ the program state will go back to $I_2$ and start the local loop $\tpath_2; \tpa
 \\
 In this way, program execution will terminate until local loop $\tpath_2;\tpath_3$.
 \end{proof}
-\highlight{\textbf{Improvement Discussion:}
-\\
-The improvement comes from the annotation $\rprepeat$ on the sub-sequence
-that always consecutively execute without being interleaved until its invariant is false.
-% In additional to guarantee the execution orders of the sub-sequences following each other,
-This is an additional guarantee on the execution orders of multiple paths in a while loop.
-The $\rprepeat(\rpattern')$ further refines the execution order
-if there are more than one path can execute after $\rpattern'$.
+\highlight{
+  \textbf{Improvement Discussion:}
+  There are two improvements in terms of Performance and Accuracy respectively.
+  \begin{itemize}
 % ? can execute after each other,
+\item \textbf{Accuracy Improvement.}
 \\
-In comparison to the traditional multiple-paths refinement methods,
+The accuracy improvement comes from the line:4 and Line:8.
+    In comparison to the traditional multiple-paths refinement methods,
+    \\
+    the contextualization method in~\cite{ZulegerGSV11} only build the relations between pairs of
+    simple transition paths if they can execute after each other, which is imprecise if there are multiple paths
+    can execute after a same path.
+    \\
+    The program refinement algorithm in~\cite{GulwaniJK09} has the same annotations on some transition paths,
+    but they only has the guarantee that
+    the annotated path can execute multiple times.
+    In this sense, their method is imprecise in the same case as the contextualization method.
+\item \textbf{Performance Improvement.}
 \\
-the contextualization method in~\cite{ZulegerGSV11} only build the relations between pairs of
-simple transition paths if they can execute after each other, which is imprecise if there are multiple paths
-can execute after a same path.
-\\
-The program refinement algorithm in ~\cite{GulwaniJK09} has the same annotations on some transition paths,
-but they only has the guarantee that
-the annotated path can execute multiple times.
-In this sense, their method is imprecise in the same case as the contextualization method.
+The performance improvement comes from the same two lines.
+  \end{itemize}
 }
-
 % \paragraph{Repeat Pattern.}
 % This step computes the set of all the \emph{repeat patterns} for every while loop in a program $c$.
 % \\
@@ -1155,29 +1172,28 @@ In this sense, their method is imprecise in the same case as the contextualizati
 %   Algorithm~\ref{alg:repeat-pattern} computes a set of repeat patterns for this loop.
 % \end{thm}
 %
-\begin{thm}[Soundness of Loop Repeat Pattern Closure Computation]
-  \label{thm:sound_loop-rpattern}
-  For every program $c$, a loop in this program with header at program point $l$,
-  Algorithm~\ref{alg:path-refine} computes a set of repeat patterns for this loop.
-  % \[
-  %   \begin{array}{l}
-  %   \forall c \in \cdom, l \in \lvar(c), \vtrace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} , 
-  %   % \event = (\_, l, \_) \in \eventset 
-  %   \st
-  %   \exists \ewhile \clabel{\bexpr}^l \edo c_w \in c 
-  %   \land 
-  %   \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}
-  %   \\ \qquad
-  %   \implies 
-  %   (\exists \rpattern \in Alg.3(c, l) \st  \todo{})
-  %   \end{array}
-  %   \]
-\end{thm}
+% \begin{thm}[Soundness of Loop Repeat Pattern Closure Computation]
+%   \label{thm:sound_loop-rpattern}
+%   For every program $c$, a loop in this program with header at program point $l$,
+%   Algorithm~\ref{alg:prog-refine} computes a set of repeat patterns for this loop.
+%   % \[
+%   %   \begin{array}{l}
+%   %   \forall c \in \cdom, l \in \lvar(c), \vtrace_0 \in \tdom_0(c), \trace \in \tdom , 
+%   %   % \event = (\_, l, \_) \in \eventset 
+%   %   \st
+%   %   \exists \ewhile \clabel{\bexpr}^l \edo c_w \in c 
+%   %   \land 
+%   %   \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}
+%   %   \\ \qquad
+%   %   \implies 
+%   %   (\exists \rpattern \in Alg.3(c, l) \st  \todo{})
+%   %   \end{array}
+%   %   \]
+% \end{thm}
 % \todo{Formalize Proof and Theorem}
-The soundness of the Algorithm~\ref{alg:loop-repeat-pattern} guarantees for every program $c$ and a loop in this program with header at program point $l$,
-the output contains all repeat patterns of this loop in $c$.
+% The soundness of the Algorithm~\ref{alg:loop-repeat-pattern} guarantees for every program $c$ and a loop in this program with header at program point $l$,
+% the output contains all repeat patterns of this loop in $c$.
 %
-
 % %
 % \highlight{\textbf{Pseudocode:}}
 % \begin{algorithm}
@@ -1474,7 +1490,7 @@ refined program for $c$.}
 % \begin{algorithm}
 % \caption{
 % {Program Refinement}
-% \label{alg:prog_refine}
+% \label{alg:prog-refine}
 % }
 % \begin{algorithmic}[1]
 % \REQUIRE The repeat pattern sets $RP(l)$ for every loop header $l$ and $W(c)$ for patterns not in any loop
@@ -1508,7 +1524,6 @@ refined program for $c$.}
 % \end{algorithmic}
 % \end{algorithm}
 %
-
 \highlight{\textbf{Algorithms' Theorem Guarantee Discussion:}}
 \\
 \emph{Soundness}
@@ -1517,9 +1532,9 @@ refined program for $c$.
 It is formally proved in Theorem~\ref{thm:sound_refined-prog} with details in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.}
 \begin{thm}[Soundness of Refined Program]
   \label{thm:sound_refined-prog}
-  For every program $c$ and the refined program computed from Alg.\ref{alg:prog_refine}, $\rprog = Alg.4(c)$,
-  the two execution traces $\trace, \trace' \in \mathcal{T}$
-  from executing $c$ and $\rprog$ w.r.t. an initial trace $\trace_0 \in \mathcal{T}_0(c)$ are identical.
+  For every program $c$ and the refined program computed from Alg.\ref{alg:prog-refine}, $\rprog = Alg.4(c)$,
+  the two execution traces $\trace, \trace' \in \tdom$
+  from executing $c$ and $\rprog$ w.r.t. an initial trace $\trace_0 \in \tdom_0(c)$ are identical.
 \end{thm}
 \todo{Formalize Proof}
 In \cite{GulwaniJK09}, they claim a semantics equivalence relation (property)
@@ -1529,7 +1544,7 @@ In Theorem~4.1, they formalized the semantic and bound-preserving of the program
 (\todo{with no proof and appendix}).
 %
 \subsection{\highlight{Ranking Function Computation}}
-\label{sec:pathsensitive_rb-lbcompute}
+\label{sec:lbcompute}
 % The \emph{Path-Insensitive Reachability Bound} analysis is performed 
 This step computes a 
 \textbf{ranking function / local bound 
@@ -1843,8 +1858,8 @@ the execution times of this assignment command in $c$.
   %
   \[
     \begin{array}{l}
-      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
-      \trace \in \mathcal{T}, v \in \mathbb{N}
+      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \tdom_0(c), 
+      \trace \in \tdom, v \in \mathbb{N}
        \st 
        \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\vtrace} 
       \implies
@@ -1863,8 +1878,8 @@ $\config{RB(\absevent, c)}$
   %
   \[
     \begin{array}{l}
-      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
-      \trace \in \mathcal{T}, v \in \mathbb{N}
+      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \tdom_0(c), 
+      \trace \in \tdom, v \in \mathbb{N}
       % , (v, n) \in \mathcal{VAR} \times \mathbb{N} \times \mathbb{N}
        \st 
       %  \\ \quad
@@ -1880,7 +1895,7 @@ $\config{RB(\absevent, c)}$
 \subsection{Outside-In Algorithm
 % \todo{Making the Path-sensitivity Explicitly}
 }
-\label{sec:pathsensitive_rb-outinalg}
+\label{sec:outinalg}
 %
 % \\
 % For every repeat pattern $\rpattern$ in a refined program $\rprog$, 
@@ -2085,7 +2100,7 @@ which is solved by Definition~\ref{def:edge_pathinsensitivebound} and~\ref{def:r
 is a sound local bound on the execution times of $\rpattern$ in program $c$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \rpattern, \rprog, \trace_0 \in \mathcal{T}_0(\rpattern), \trace_1, \trace \in \mathcal{T} \st 
+    \forall c \in \cdom, \rpattern, \rprog, \trace_0 \in \tdom_0(\rpattern), \trace_1, \trace \in \tdom \st 
     \rpattern \in \rprog \land
     \rprog = Alg.4(c)
     \\ \qquad
@@ -2118,7 +2133,7 @@ In this case, this bound limits the execution time of this repeat pattern.
 %
 \subsection{Inside-Out Algorithm}
 % \todo{Making the Path-sensitivity Explicitly}}
-\label{sec:pathsensitive_rb-inoutalg}
+\label{sec:inoutalg}
 % For the refined program $\rprog \in \mathcal{RP}$, the \textbf{Inside-Out Algorithm}
 For every simple transition path $\tpath$ in a refined program $\rprog$, 
 this algorithm
@@ -2740,7 +2755,7 @@ In the same time, the soundness also relies on the soundness of $\rpchB(l, \tpat
 is a sound bound on the execution times of $\tpath$ in $c$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T}, \rprog \st 
+    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
     % \rpattern \in \rprog \land
     \rprog = Alg.4(c)
     % \\ \qquad
@@ -2766,7 +2781,7 @@ is a sound upper bound on its execution times in $c$.
 % that all the loops and repeat patterns where $\rpattern$ is nested execute only once.
 %
 \subsection{Path-sensitive Reachability-Bound Computation for Every Location}
-\label{sec:pathsensitive_rb-psrbcompute}
+\label{sec:psrbcompute}
 For every program $c$ and a program point $l \in \lvar(c)$, with $\rprog$ as its refined program,
 %  in a program $c$,
 its path-sensitive reachability-bound ($\psRB(l, \rprog)$) is a symbolic sound bound on the executing times of $l$.
@@ -2793,15 +2808,15 @@ l \in \tpath} \inoutB(\tpath, \rprog)
 For every program ${c}$ and every label $l$ in this program,
 %  $c$,
 % such that $(l, w) \in \exeRB(c)$, 
-% and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
+% and any initial trace $\trace_0 \in \tdom_0(c)$ with 
 % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
 % and $\config{\psRB(c, l), \trace_0} \earrow v$,
-% % for some generated evaluation trace $\vtrace \in \mathcal{T}$,
+% % for some generated evaluation trace $\vtrace \in \tdom$,
 % we have $ w(\trace_0) \leq v $.
 $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 %
 \[
-  \forall c \in \cdom, \trace_0 \in \mathcal{T}_0(c), \trace \in \mathcal{T} \st 
+  \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
   \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
   \implies \config{\psRB(c, l)}(\trace_0) \geq \vcounter(\vtrace, l) 
   \]
@@ -2810,17 +2825,17 @@ $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 % \begin{thm}[Soundness of the Path-sensitive Reachability Bound Estimation]
 %   \label{thm:pathsensitive_rb_soundness}
 % Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
-% and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
+% and any initial trace $\trace_0 \in \tdom_0(c)$ with 
 % % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
 % and $\config{\psRB(c, l), \trace_0} \earrow v$,
-% % for some generated evaluation trace $\vtrace \in \mathcal{T}$,
+% % for some generated evaluation trace $\vtrace \in \tdom$,
 % we have $ w(\trace_0) \leq v $.
 % %
 % \[
 %   \begin{array}{l}
 %   \forall (l, w_{t}) \in \exeRB(c),
 %   % (x^l, w_{p}) \in \progV, 
-%   \trace_0 \in \mathcal{T}_0(c), 
+%   \trace_0 \in \tdom_0(c), 
 %   v \in \mathbb{N} \st
 %   \config{\psRB(c, l), \trace_0} \earrow v
 %   \implies

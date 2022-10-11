@@ -13,15 +13,11 @@ the expression $0$ in the assignment command $\assign{a}{0}$.
 %  from the function $\absexpr(0)$.
 It represents that the value of $a$ is less than or equal to $0$ after the
 execution of $\clabel{\assign{a}{0}}^0$ and before executing $\clabel{\assign{j}{k}}^1$.
-\todo{The difference constraint is an inequality relation, 
-the left-hand side of the inequality $x'$ denotes the variable $x$
-after executing the command at $l$
-and the right-hand side describes the variable $x$ in the state before the execution. 
-For example, the constraint $a' \leq a+x $ on edge $5 \xrightarrow{a' \leq a + x } 2$ describes the execution of
+Another example constraint $a' \leq a+x $ on the edge $5 \xrightarrow{a' \leq a + x } 2$ describes the execution of
  the command at line $5$, 
 $\clabel{\assign{a}{x + a}}^{5}$. 
 The $a'$ on the left side of $a' \leq a+x$ represents the value of $a$ after the assignment,
-while the right-hand side $a$ stores the value before the assignment. }
+while the right-hand side $a$ stores the value before the assignment.
 % $top$ means there is no assignment executed, for example, 
 % I have 
 The boolean constraint $j \leq 0 $ on the edge $2 \xrightarrow{j \leq 0} 6$, 

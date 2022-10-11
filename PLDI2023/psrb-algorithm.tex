@@ -1,46 +1,116 @@
-\subsection{Constraint Program}
+The algorithm is summarized into the following steps,
+% \begin{figure}
+%   \centering    
+% \includegraphics[width=1.0\columnwidth]{adapfun.png}
+%   \vspace{-0.3cm}
+%   \caption{The overview of {\THESYSTEM}}
+%   \label{fig:adaptfun}
+%   \vspace{-0.5cm}
+% \end{figure}
+%
+%
+\begin{enumerate}
+\item  In Section~\ref{sec:abs_prog}, we first construct an abstract transition graph based on $c$, by computing an abstract transition 
+for every labeled command. 
+This graph is used in the following sections
+for computing the path-sensitive reachability-bound of a program location.
+% see Section~\ref{sec:alg_vertexgen}
+\item Section~\ref{sec:refine}
+refines the multiple-paths loops in the program
+% this program path sensitively, 
+based on the abstract transition graph.
+This step transforms the multiple-paths loops into multiple loops where
+the interleaving of paths is explicit.
+%  which come from its abstract transition graph.
+\item Section~\ref{sec:lbcompute} computes the local bound 
+\footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
+and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
+We refer to the two names as the same meaning in this paper.} for each edge in a program's abstract transition graph,
+and estimates the upper bounds on each local bound's maximum value and every edge's execution times path-insensitively.
+% path-insensitive reachability upper bound for every while loop command in $c$.
+\item Section~\ref{sec:outinalg} computes
+the upper bound for the execution times of each path in a refined program locally, named \textbf{Outside-In} bound.
+% path-sensitive local bounds.
+\item Section~\ref{sec:inoutalg}
+% performs the \textbf{Inside-Out} algorithm and 
+computes the upper bound on the execution times for
+every distinct path in a refined program globally, named \textbf{Inside-Out} bound.
+% abstract transition graph.
+\item Section~\ref{sec:psrbcompute} computes the path-sensitive reachability-bound for every program point
+%  in this program 
+based on the above results.
+%  by
+%  ?summarizing 
+% the path-sensitive reachabilitybound of each edge on the abstract transition graph.
+% \item The Section~\ref{sec:reachabilitybound_algorithm} computes program's reachability bound in two steps as follows.
+\end{enumerate}
+
+\subsection{Abstract Transition Graph}
 \label{sec:abs_prog}
 % \textbf{Step 1: Program Abstract Execution Control Flow Graph}
-The Constraint program is an Abstract Transition Graph,
-% For a program $c$, this analysis first generates its abstract execution control flow graph notated as follows,
-\[\absG(c) =(\absV(c), \absE(c)).\]
+
+An \emph{Abstract Transition Graph}, $\absG(c)$ for a program $c$ is composed of
+a vertex set $\absV(c)$ and an edge set $\absE(c)$, $\absG(c) \triangleq (\absV(c), \absE(c))$.
+\\
+Every 
+vertex $l \in \absV(c)$ is a program point $l$ corresponding to the command with label $l$ in $c$, which is unique.
+% We also call the unique label as program point.
+% corresponds to a program point $l$, which is a unique
+% label of a command in this program.
+% $\absV(c)$ is the set of $c$'s all program points,
+\\
+Each edge $(l \xrightarrow{dc} l') \in \absE(c)$ is an abstract transition
+between two program points $l, l'$. 
+There is an edge from $l$ to $l'$ if and only if
+the command with label $l'$ can execute right after the execution of the command with label $l$.
+% if and only if there is a control flow between two program points.
+Each edge is annotated by a constraint $dc \in \dcdom^{\top}$, which is generated from the command with label $l$.
+This constraint describes the abstract execution of the command with $l$. 
+The edge set is constructed in three steps summarized as follows (with detail in Appendix).
+\begin{enumerate}
+    \item Computing \textbf{constrains} over the expression for every program's labeled command,
+  which is used as the annotation of an edge.
+  Its domain $\dcdom^{\top}$ is composed of the \emph{Difference Constraints} $DC(\mathcal{VAR}  \cup \constdom)$,
+  the \emph{Boolean Expressions} $\booldom$ and $\top$.
 %
-$\absV(c)$ is the set of program $c$'s control location, each edge in $\absE(c)$ is a transition
-between two control locations if and only if there is a feasible control flow between the two locations.
-Each edge is annotated by a constraint
-from the set $\dcdom^{\top}$.
-% (denoted by $\dcdom^{\top}$).
-\\
-\textbf{Components:} 
-\\
-The Vertices Set $\absV(c) = \lvar(c)\cup\{{\lex}\}$, is the set of program $c$'s control locations.
-%  $\absV(c) = \lvar(c)\cup\{{\lex}\}$
-\\
-An edge $(l_1, dc, l_2) \in \ldom \times \dcdom^{\top} \times \ldom$, represents control flow from $l_1$ to $L_2$.
-% such that control flow from $l_1$ to $l_2$.
-\\
-An annotation is a constraint from $\dcdom^{\top}$: Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
-\\
-A difference constraint $dc: \dcdom^{\top}$,
-% Difference Constraints $\cup$ Boolean Expressions $\booldom$ $\cup \top$ represents the infinity.
-describes the size changes of all the program variables by executing commands from location $l_1$ to $l_2$.
-\\
-\textbf{Computation Steps:} 
-\\
-Step1: generating control flow edges $(l_1, \_, l_2)$ for all the locations $l_1, l_2 \in \lvar(c)$.
-\\
-Step2: computing annotation $dc$ for each edge $(l_1, \_, l_2)$.
-\\
-Input the commands from location $l_1$ to $l_2$.
-\\
-Output: a set of $\dcdom^{\top}$.
-\\
-% Constraint Event: 1 edge of the Constraint Program, and 
-% \\
-% Constraint Execution Trace : the edge set of the Constraint Program.
-\textbf{Theorem Guarantee:}
-Soundness and Uniqueness.
-\subsection{Constraint Program Refinement}
+\begin{itemize}
+\item The difference constraints $DC(\mathcal{VAR}  \cup \constdom)$ is the set of all the inequality of
+form $x' \leq y + v$ where $x \in \mathcal{VAR} $, 
+$y \in \mathcal{VAR}$ and $v \in \constdom$.
+The \emph{Symbolic Constant} set $\constdom = \mathbb{N} \cup \inpvar \cup {\infty}$
+is the set of natural numbers with $\infty$ and the input variables.
+% , and a symbol $Q_m$ representing the abstract value of a query request.
+An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
+at most the value of $y$ in the previous state plus some constant $v$.
+When a difference constrain shows up as an edge annotation, $l \xrightarrow{x' \leq y + v} l'$,
+% Then $x'$ 
+it denotes that
+the value of variable $x$
+after executing the command at $l$ is at most
+% and the right-hand side describes 
+the value of variable $y$ plus $v$ before the execution.
+For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in \cite{sinn2017complexity}. 
+%
+\item The Boolean Expressions $b$ from the set $\booldom$.
+$b$ on an edge $l \xrightarrow{b} l'$ describes
+that after evaluating the guard with label $l$,
+$b$ holds and the command with label $l$ will execute right after.
+%
+\item The top constraint, $\top$ denotes true. It is preserved for $\eskip$ command.
+%
+\end{itemize}
+    \item \textbf{Initial and final state} computation step generates two sets for each labeled command in $c$. 
+  The initial state contains the
+  label where this command {starts} executing, 
+  and the final state is a set
+  that contains the constraint of this command
+  and the continuation labels after the execution of this command.
+%   \\ 
+ \item \textbf{abstract event} computation step generates a set of edges for the $c$, by computing the initial state and finial state interactively and recursively.
+%   Each edge is a pair of initial and finial state.
+\end{enumerate}
+
+\subsection{Multiple-Path Loop Refinement}
 \label{sec:refine}
 Algorithm Steps:
 \\
@@ -74,29 +144,29 @@ and ending with different loop header $l'$ (or the program exist $\lex$).
 % Through Path-Sensitive Refinement / Contextualization algorithm in \cite{GulwaniJK09, ZulegerGSV11},
 % this step computes the repeat patterns over all \emph{simple transition path}s.
 % \\
-\begin{defn}[Repeat Pattern of A Program]
-  \label{def:repeat-pattern}
-  Given a constraint program $\absG(c)$,
-  $\rpattern(c)$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, it is a simple path or
-  a sequence of \emph{repeat pattern}
-  has the following syntax
-  \[
-    \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
-  \] 
-  and satisfying,
-  \begin{itemize}
-  \item every sub-repeat pattern $\rpattern' \in \rpattern(c)$ with the annotation $\rpattern$
-  can consecutively execute twice
-  %  when executing this program $c$ 
-  w.r.t. some initial trace,
-  \item every sub-repeat patter in a sequence is distinct, i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and 
-  % $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, 
-  $\rpattern_i \neq \rpattern_j$ for every $i, j = 1, \cdots, n$,
-  \item and every two continuous sub-repeat patters in a sequence can execute after each other w.r.t some initial trace,
-  i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and for every $i = 1, \cdots, n$,
-  $\rpattern_i$ can execute after $\rpattern_{i - 1}$ under some initial trace.
-  \end{itemize}
-\end{defn}
+% \begin{defn}[Repeat Pattern of A Program]
+%   \label{def:repeat-pattern}
+%   Given a constraint program $\absG(c)$,
+%   $\rpattern(c)$ is a \emph{Repeat Pattern} of $\absG(c)$ if and only if, it is a simple path or
+%   a sequence of \emph{repeat pattern}
+%   has the following syntax
+%   \[
+%     \rpattern := \tpath ~|~ \rprepeat(\rpattern) ~|~ \rpattern; \rpattern
+%   \] 
+%   and satisfying,
+%   \begin{itemize}
+%   \item every sub-repeat pattern $\rpattern' \in \rpattern(c)$ with the annotation $\rpattern$
+%   can consecutively execute twice
+%   %  when executing this program $c$ 
+%   w.r.t. some initial trace,
+%   \item every sub-repeat patter in a sequence is distinct, i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and 
+%   % $\rpattern_i, \rpattern_j \in \rpattern_1; \cdots; \rpattern_n$, 
+%   $\rpattern_i \neq \rpattern_j$ for every $i, j = 1, \cdots, n$,
+%   \item and every two continuous sub-repeat patters in a sequence can execute after each other w.r.t some initial trace,
+%   i.e., $\rpattern(c) = \rpattern_1; \cdots; \rpattern_n$ and for every $i = 1, \cdots, n$,
+%   $\rpattern_i$ can execute after $\rpattern_{i - 1}$ under some initial trace.
+%   \end{itemize}
+% \end{defn}
 %
 \textbf{Step3: Refined Program}.
 % \\
@@ -126,8 +196,8 @@ and ending with different loop header $l'$ (or the program exist $\lex$).
 %s
 \textbf{Theorem Guarantee.}
 Soundness of the refinement.
-\subsection{Ranking / Local Bound Computation}
-\label{sec:ranking}
+\subsection{Local Bound Computation}
+\label{sec:lbcompute}
 Steps:
 \\
 \textbf{Step1: Variable Constraint Collection:}
@@ -350,7 +420,7 @@ the path sensitive reachability-bound on $\tpath$'s execution numbers.
 % where $lpchains(\tpath)$ is set of $lpchains(\tpath)$ containing all the loop chains of $\tpath$.
 \end{enumerate}
 \subsection{Path Sensitive Reachability Bound Computation}
-
+\label{sec:psrbcompute}
 For every program control location $l \in \lvar(c)$, with $\rprog$ as its refined program,
 %  in a program $c$,
 its path-sensitive reachability-bound ($\psRB(l, \rprog)$) is a symbolic sound bound on the executing times of $l$.
