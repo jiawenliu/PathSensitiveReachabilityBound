@@ -1,0 +1,42 @@
+Two steps:
+\\
+1. Rewriting program preserving the same semantics. The rewritten program is compatible with syntax in \cite{GulwaniJK09}.
+\\
+2. Computing the 
+refined program $\rprog$ by Algorithm~1 from paper~\cite{GulwaniJK09}.
+
+\begin{enumerate}
+\item \textbf{Rewrite the Program}
+This step transforms the program into the program model in paper~\cite{GulwaniJK09}. 
+\\
+It first collects all \emph{transition paths} $\tpath$ for the program $c$ from its abstract transition graph $\absG(c)$.
+%
+Each transition path $\tpath$ corresponds to a path in \cite{GulwaniJK09}.
+%
+\\
+Then it rewrites these paths by the syntax in \cite{GulwaniJK09} and preserving the same semantics as follows,
+\\
+1. For each while loop with header at program point $l$, we
+collect all the paths $\tpath_1, \cdots , \tpath_n$ with $n \geq 1$ that start and end both at $l$, 
+and then rewrite the while into  $\rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$ or $\rprepeat(\tpath_1)$ if $n = 1$.
+\\
+2. Each if statement that is not in any loop with two branches $\tpath_1, \tpath_2$
+is rewritten into $\rpchoose{\tpath_1, \tpath_2 }$.
+\\
+3. Then, every $\rpchoose{\tpath_1, \tpath_2 }$,  $\rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$ 
+and $\tpath$ which isn't in if and while statement 
+are rewritten into program sequence  by the order of their starting and ending points,
+$\cdots; \tpath;\cdots;  \rpchoose{\tpath_1, \tpath_2 }; \cdots; \rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$.
+\\
+Then, $\cdots; \tpath;\cdots;  \rpchoose{\tpath_1, \tpath_2 }; \cdots; \rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$
+is the transformed program $\rprog^{T}$ for $c$.
+%  for its two branches.
+% %
+% \\
+% For each $\tpath$ or $\rpchoose{\tpath_1, \cdots}$, if their starting point and ending point are the same, 
+% then creating $\rprepeat(\tpath)$ or $\rprepeat(\rpchoose{\tpath_1, \cdots})$ for them.
+%
+\item \textbf{Refined Program}
+This step invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+refined program $\rprog$ for a program $c$ given the input $\rprog^{T}$.
+\end{enumerate}
