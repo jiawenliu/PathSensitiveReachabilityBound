@@ -94,57 +94,87 @@ $
   \end{array}
 $\footnote{We use the notation $(l_0 \to \cdots \to l_n)$ to denote a vertices sequence $(l_0, \cdots, l_n)$.}
 \\
-The \textbf{repeat patterns}
-for the loop that its header is
-% the repeat pattern for the loop that its header is at the program point 
-% loop with header 
-at the program point 
-$2$ are:
-\\
-$\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) $
-and $\rprepeat_1(\tpath_1)$; 
-\\
 The \textbf{refined program\footnote{The program $c$ and its refined program $\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
 For concise, it is omitted since all the arguments in the following computations are referring to the same program.}} is
 \\
 $
-  \tpath_0 ; \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
-  2: \rprepeat_1(\tpath_1) }; \tpath_3
+  \tpath_0 ; 
+  2: \rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
+  \rprepeat_1(\tpath_1) }; \tpath_3
 $
-\item \textbf{Ranking Function Computation}:
+%
+\item {Path Local Reachability Bound}:
 \\
-  The \textbf{ranking function / (local bound)}  assigned to each edge is as follows,
-    \\  
-      $\locbound(0 \to 1) = 1$ 
+$\inoutB(2 :\rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
+\rprepeat_1(\tpath_1) } , \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ 
+\\
+$\inoutB(2: \rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
+\rprepeat_1(\tpath_1) }, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
+%
+\\
+Loop Bounds:
+\\
+     $ BD(\tpath_0) = 1$
       \quad
-      $\locbound(1 \to 2) = 1$ 
+      $BD(\rprepeat_1(\tpath_1)) = m $
       \quad
-      $\locbound(2 \to \lex) = 1$ 
-      \quad $\locbound(2 \to 3) = i$ 
-      \quad $\locbound(3 \to 6) = i$ 
-      \quad $\locbound(3 \to 4) = i$ 
-      \quad $\locbound(4 \to 5) = i$ 
-      \quad $\locbound(5 \to 2) = i$ 
-      \quad $\locbound(6 \to 2) = i$ 
-      \\
-  The bound on the maximum value of the ranking function $i$, i.e., the \textbf{ranking function bound} is
-    $\varinvar(i) = n$.
-    \\
-    The \textbf{path-insensitive transition bound} for each edge:
-    \\  
-      $\absclr(0 \to 1) = 1$
-      \quad $\absclr(1 \to 2) = 1$
-      \quad $\absclr(2 \to \lex) = 1$ 
-      \quad $\absclr(2 \to 3) = n$ 
-      \quad $\absclr(3 \to 6) = n$ 
-      \\
-      \quad $\absclr(3 \to 4) = n$ 
-      \quad $\absclr(4 \to 5) = n$ 
-      \quad $\absclr(5 \to 2) = n$ 
-      \quad $\absclr(6 \to 2) = n$ 
+      $BD(\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor$
+\item Loop Reachability Bound:
+\\
+$\rpchB(2 : \cdots, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
+$\rpchB(2 : \cdots, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
+%
+\item Path Global Reachability Bound:
+\\
+$\inoutB(\rprog, \tpath_1) = n$ \quad
+$\inoutB(\rprog, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ \quad
+$\inoutB(\rprog, \tpath_0) = 1$ \quad
+$\inoutB(\rprog, \tpath_3) = 1$ 
+%
+\item The Reachability Bound:
+\\
+$\psRB(0) = \psRB(1) = \psRB(\lex) = 1$ \qquad
+$\psRB(4) = \psRB(5) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ 
+\\
+$\psRB(3) = \psRB(2) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $
+\quad $\psRB(6) = \lfloor\frac{n}{m}\rfloor$ 
+%
+
+% \item \textbf{Ranking Function Computation}:
+% \\
+%   The \textbf{ranking function / (local bound)}  assigned to each edge is as follows,
+%     \\  
+%       $\locbound(0 \to 1) = 1$ 
+%       \quad
+%       $\locbound(1 \to 2) = 1$ 
+%       \quad
+%       $\locbound(2 \to \lex) = 1$ 
+%       \quad $\locbound(2 \to 3) = i$ 
+%       \quad $\locbound(3 \to 6) = i$ 
+%       \quad $\locbound(3 \to 4) = i$ 
+%       \quad $\locbound(4 \to 5) = i$ 
+%       \quad $\locbound(5 \to 2) = i$ 
+%       \quad $\locbound(6 \to 2) = i$ 
+%       \\
+%   The bound on the maximum value of the ranking function $i$, i.e., the \textbf{ranking function bound} is
+%     $\varinvar(i) = n$.
+%     \\
+%     The \textbf{path-insensitive transition bound} for each edge:
+%     \\  
+%       $\absclr(0 \to 1) = 1$
+%       \quad $\absclr(1 \to 2) = 1$
+%       \quad $\absclr(2 \to \lex) = 1$ 
+%       \quad $\absclr(2 \to 3) = n$ 
+%       \quad $\absclr(3 \to 6) = n$ 
+%       \\
+%       \quad $\absclr(3 \to 4) = n$ 
+%       \quad $\absclr(4 \to 5) = n$ 
+%       \quad $\absclr(5 \to 2) = n$ 
+%       \quad $\absclr(6 \to 2) = n$ 
   % \\
   % $\bot$ means the algorithm fails in inferring the ranking bound.
-  \item \textbf{Outside-In Algorithm}:\\
+  \item \textbf{Outside-In Algorithm}:
+  \\
   The \textbf{Outside-In} bound for every $\rpattern$ w.r.t. the refined program $\rprog$ is as follows,
   \[
     \begin{array}{lll}

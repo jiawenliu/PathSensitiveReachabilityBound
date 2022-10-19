@@ -1,5 +1,18 @@
-\textbf{}
-
+\textbf{Computation Overview}
+\[
+  \begin{array}{rcl}
+    \outinB(\tpath, \tpath) & \triangleq & 1 \\
+    \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \\
+    \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
+    \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
+    & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
+    \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
+    & \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}
+     \times \outinB(\rprog', \tpath)
+     \\
+    \outinB(l: \rprog', \tpath) & \triangleq & \outinB(\rprog', \tpath) \\
+    &  & \text{this case always equals to } 0 \\
+  \end{array}\]
 Three steps:
 \begin{enumerate}
     \item It first collects three edge sets for each variable,
