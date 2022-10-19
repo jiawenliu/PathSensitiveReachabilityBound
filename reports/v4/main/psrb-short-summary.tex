@@ -1,0 +1,181 @@
+\subsection{Abstract Transition Graph}
+\label{sec:abs_prog}
+% \textbf{Step 1: Program Abstract Execution Control Flow Graph}
+An \emph{Abstract Transition Graph}, $\absG(c) =(\absV(c), \absE(c))$ for a program $c$ is composed of
+a vertex set $\absV(c)$ and an edge set $\absE(c)$.
+% For a program $c$, this analysis first generates its abstract execution control flow graph notated as follows,
+% \[\absG(c) =(\absV(c), \absE(c))\]
+%
+\\
+Every 
+vertex $l \in \absV(c)$ corresponds to a program point $l$, which is a unique
+label of a command in this program.
+% $\absV(c)$ is the set of $c$'s all program points,
+\\
+Each edge $(l, dc, l') \in \absE(c)$ is an abstract transition
+between two program points $l, l'$. There is an edge from $l$ to $l'$ if and only if
+the command with label $l'$ can execute right after the execution of the command with label $l$.
+% if and only if there is a control flow between two program points.
+Each edge is annotated by a constraint $dc$ generated from the command with label $l$.
+% from the set $\dcdom^{\top}$.
+% The constraint set contains the different constraints and the boolean expressions. 
+% A different constraint is an inequality of form $x \leq y + v$ where 
+% $x, y$ are program variables and $v$ is either a 
+% % $y \in \mathcal{VAR}$ and $v \in \constdom$.
+% % The \emph{Symbolic Variables} $\constdom = \mathbb{N} \cup \inpvar$ is the 
+% % set of 
+% natural number, the infinity or an input variable. 
+\subsection{Program Refinement}
+\label{sec:refine}
+Two steps:
+\begin{enumerate}
+\item \textbf{Rewrite the Program}
+This step transforms the program into the program model in paper~\cite{GulwaniJK09}. 
+\\
+It first collects all \emph{transition paths} $\tpath$ for the program $c$ from its abstract transition graph $\absG(c)$.
+%
+Each transition path $\tpath$ corresponds to a path in \cite{GulwaniJK09}.
+% %
+% \begin{defn}[Simple Tansition Path]
+% A path in the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ is a transition path
+% $\tpath \in \paths(\absG(c))$ if and only if,
+%   \begin{itemize}
+%   \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
+%   %
+%   \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
+%   \end{itemize}
+%   %
+%   satisfying:
+%   \begin{itemize}
+%     \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
+%     \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+%     \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
+%   \end{itemize}
+%   \end{defn}
+%
+\\
+Then it rewrites these paths by the syntax in \cite{GulwaniJK09} and preserving the same semantics as follows,
+\\
+1. For each while loop with header at program point $l$, we
+collect all the paths $\tpath_1, \cdots , \tpath_n$ with $n \geq 1$ that start and end both at $l$, 
+and then rewrite the while into  $\rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$ or $\rprepeat(\tpath_1)$ if $n = 1$.
+\\
+2. Each if statement that is not in any loop with two branches $\tpath_1, \tpath_2$
+is rewritten into $\rpchoose{\tpath_1, \tpath_2 }$.
+\\
+3. Then, every $\rpchoose{\tpath_1, \tpath_2 }$,  $\rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$ 
+and $\tpath$ which isn't in if and while statement 
+are rewritten into program sequence  by the order of their starting and ending points,
+$\cdots; \tpath;\cdots;  \rpchoose{\tpath_1, \tpath_2 }; \cdots; \rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$.
+\\
+Then, $\cdots; \tpath;\cdots;  \rpchoose{\tpath_1, \tpath_2 }; \cdots; \rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$
+is the transformed program $\rprog^{T}$ for $c$.
+%  for its two branches.
+% %
+% \\
+% For each $\tpath$ or $\rpchoose{\tpath_1, \cdots}$, if their starting point and ending point are the same, 
+% then creating $\rprepeat(\tpath)$ or $\rprepeat(\rpchoose{\tpath_1, \cdots})$ for them.
+%
+\item \textbf{Refined Program}
+This step invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+refined program $\rprog$ for a program $c$ given the input $\rprog^{T}$.
+\end{enumerate}
+%
+%
+\subsection{Path-sensitive Reachability-Bound Analysis}
+Given a program $c$ with $\rprog$ as its refined program,
+\begin{enumerate}
+    \item Reachability Bound
+    
+    For every program point $l \in \lvar(c)$, $\psRB(c, l)$
+   \[ 
+     \psRB(c, l) = \sum\limits_{\tpath \in \rprog \land 
+   l \in \tpath} \inoutB(\tpath, \rprog)
+   \]
+
+
+    
+    \item $\inoutB(\rprog, \tpath) $, Path Global Reachability Bound:
+    
+
+    \[
+      \begin{array}{rcl}
+        \inoutB(\tpath, \tpath) & \triangleq & 1 \\
+        \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \\
+        \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
+        % \inoutB(l: \rprog', \tpath) & \triangleq & \lpchB(l, \tpath, \rprog) \times \inoutB(\rprog, \tpath) \\
+        \inoutB(l: \rprog', \tpath) & \triangleq & 
+       0, \qquad \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
+        \\
+        & \triangleq & 
+        \highlight{\outinB(\rprog', \tpath), \qquad l = \kw{enclosed}(\tpath)}
+        \\
+        & \triangleq & 
+        \highlight{
+          \lpchB(l:\rprog', \tpath ) } \\
+          & & 
+        \highlight{\times \max\limits_{l':\rprog'' \in \rprog' \land l = \kw{enclosed}(l':\rprog'')}
+       \{\inoutB(l':\rprog'', \tpath)\} }, \\
+       & & o.w.
+        \\
+        \inoutB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
+        & \max\left\{ \inoutB(\rprog_1, \tpath), \cdots, \inoutB(\rprog_m, \tpath) \right\} \\
+        \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
+        &  & \text{this case will never be matched}
+        \end{array}
+      \]
+
+      \[\kw{enclosed}(\rprog): \text{the closest loop where } \rprog \text{ is nested}\]
+      \[\kw{enclosing}(\rprog): \text{all the loops which are nested inside } \rprog\]
+
+      \item $\outinB(\rprog, \tpath)$, Path Local Reachability Bound 
+\[
+  \begin{array}{rcl}
+    \outinB(\tpath, \tpath) & \triangleq & 1 \\
+    \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \\
+    \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
+    \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
+    & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
+    \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
+    & BD(\rprepeat(\rprog'))
+    % \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}
+     \times \outinB(\rprog', \tpath)
+     \\
+    \outinB(l: \rprog', \tpath) & \triangleq & \outinB(\rprog', \tpath) \\
+    &  & \text{this case always equals to } 0 \\
+  \end{array}
+  \]
+
+  $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ by paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops. 
+  We provide an alternative computation method based on \cite{sinn2017complexity} as follows. All computation details are in full version.
+  \[
+    BD(\rprepeat(\rprog')) = \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}
+\]
+      \item $\lpchB(l: \rprog, \tpath)$,
+      {Loop Reachability Bound}:
+      \[
+        \lpchB(l: \rprog, \tpath) \triangleq
+        % \left\{
+        \begin{array}{ll}
+        %   \outinB(\rprog, \tpath)
+        %   & \qquad{ l:\rprog = \kw{enclosed}(\tpath)}
+        %   \\
+          \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(l: \rprog, \tpath) - \lpnext(l: \rprog, \tpath)}
+          & 
+        \end{array}
+        % \right\}
+        \]
+        $\lpchB(l: \rprog, \tpath)$
+        is the bound on iteration numbers of the outside loop $l$,
+        % the inner loop $l'$ that is $\tpath$'s closest enclosing loop,
+        such that,
+        % the simple transition path $\tpath$.
+        % This $\tpath$'s closest enclosing loop has the loop header at $l'$ and $l'$ is nested inside the loop $l$.
+        % \\
+        % It estimates the iteration numbers of loop $l$ such that 
+        during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
+        
+        $\lpchB(l:\rprog, \tpath)$ is over-approximated by
+        $I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in paper\cite{GulwaniJK09}.
+        $I(l, l')$ computes the iteration numbers of $l'$ in one iteration of $l$.
+\end{enumerate}
