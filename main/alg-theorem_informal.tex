@@ -169,7 +169,7 @@ In this case, this bound limits the execution time of this repeat pattern.
   $\outinB(\tpath) = 1$ is sound and tight because it bounds one execution of the while body accurate.
   \\
   If a simple transition path is nested in some $\rprepeat$ annotations,
-  $\rpch(l, \tpath, \rprog) \triangleq \rpattern_m \to \rpattern_{n-1} \to \cdots \to \rpattern_{0} \to \tpath$, we have the following guarantees.
+  $\rpch(l: \rprog, \tpath) \triangleq \rpattern_m \to \rpattern_{n-1} \to \cdots \to \rpattern_{0} \to \tpath$, we have the following guarantees.
   \\
   1. $\rprog_n$ is a unique repeat pattern of this loop,
   and isn't a sub-pattern of any other repeat patterns in this loop.
@@ -209,11 +209,11 @@ In this case, this bound limits the execution time of this repeat pattern.
 
 \subsection{Loop Reachability Bound}
 \subsubsection{Path-sensitivity}
-$\lpchB(l, \tpath, \rprog) \in \mathcal{A}_{\lin}$.
+$\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$.
 \\
 For every simple transition path $\tpath$
 and a loop whose header is at program point $l$ in a refined program $\rprog$,
- $\lpchB(l, \tpath, \rprog) \in \mathcal{A}_{\lin}$ computes a symbolic expression in $\mathcal{A}_{\lin}$
+ $\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ computes a symbolic expression in $\mathcal{A}_{\lin}$
 as the \emph{Relative Loop Bound} for the $\tpath$ and loop $l$.
 \\
 It bounds the iteration numbers of the loop $l$ w.r.t.
@@ -269,9 +269,9 @@ ranking functions and abstract states over the abstract transition graph $\absG(
 
 \emph{Soundness}
 \\
-\emph{Relative-Loop Bound} $\lpchB(l, \tpath, \rprog)$. In a refined program $\rprog$,
+\emph{Relative-Loop Bound} $\lpchB(l: \rprog, \tpath)$. In a refined program $\rprog$,
 for its every loop at the program point $l$ and a transition path $\tpath$ inside this loop,
-the \emph{Relative Loop Bound} $\lpchB(l, \tpath, \rprog)$ is a symbolic bound
+the \emph{Relative Loop Bound} $\lpchB(l: \rprog, \tpath)$ is a symbolic bound
 on the number of $l$'s iteration numbers,
 %  will 
 % bound the execution times of $L_{t_0}$
