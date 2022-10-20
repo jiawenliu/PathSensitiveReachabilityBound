@@ -13,10 +13,11 @@ label of a command in this program.
 % $\absV(c)$ is the set of $c$'s all program points,
 \\
 Each edge $(l, dc, l') \in \absE(c)$ is an abstract transition
-between two program points $l, l'$. There is an edge from $l$ to $l'$ if and only if
+between two program points $l, l'$. 
+There is an edge from $l$ to $l'$ if and only if
 the command with label $l'$ can execute right after the execution of the command with label $l$.
 % if and only if there is a control flow between two program points.
-Each edge is annotated by a constraint $dc$ generated from the command with label $l$.
+The constraint $dc$ in each edge is generated from the command with label $l$, which describes the abstract execution of this command.
 % from the set $\dcdom^{\top}$.
 % The constraint set contains the different constraints and the boolean expressions. 
 % A different constraint is an inequality of form $x \leq y + v$ where 
@@ -27,112 +28,74 @@ Each edge is annotated by a constraint $dc$ generated from the command with labe
 % natural number, the infinity or an input variable. 
 \subsection{Program Refinement}
 \label{sec:refine}
-Two steps:
-\begin{enumerate}
-\item \textbf{Rewrite the Program}
-This step transforms the program into the program model in paper~\cite{GulwaniJK09}. 
+1. It first rewrites the program $c$ by syntax in \cite{GulwaniJK09} and preserves the same semantics, based on $\absG(c)$.
 \\
-It first collects all \emph{transition paths} $\tpath$ for the program $c$ from its abstract transition graph $\absG(c)$.
+Each \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ in the rewritten program
+corresponds to a path $\rho$ in the flatten program by Definition~4.1 in \cite{GulwaniJK09}.
 %
-Each transition path $\tpath$ corresponds to a path in \cite{GulwaniJK09}.
-% %
-% \begin{defn}[Simple Tansition Path]
-% A path in the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ is a transition path
-% $\tpath \in \paths(\absG(c))$ if and only if,
-%   \begin{itemize}
-%   \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
-%   %
-%   \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
-%   \end{itemize}
-%   %
-%   satisfying:
-%   \begin{itemize}
-%     \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
-%     \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
-%     \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
-%   \end{itemize}
-%   \end{defn}
-%
+It contains only the edges of atomic assignment or guard transition.
 \\
-Then it rewrites these paths by the syntax in \cite{GulwaniJK09} and preserving the same semantics as follows,
-\\
-1. For each while loop with header at program point $l$, we
-collect all the paths $\tpath_1, \cdots , \tpath_n$ with $n \geq 1$ that start and end both at $l$, 
-and then rewrite the while into  $\rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$ or $\rprepeat(\tpath_1)$ if $n = 1$.
-\\
-2. Each if statement that is not in any loop with two branches $\tpath_1, \tpath_2$
-is rewritten into $\rpchoose{\tpath_1, \tpath_2 }$.
-\\
-3. Then, every $\rpchoose{\tpath_1, \tpath_2 }$,  $\rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$ 
-and $\tpath$ which isn't in if and while statement 
-are rewritten into program sequence  by the order of their starting and ending points,
-$\cdots; \tpath;\cdots;  \rpchoose{\tpath_1, \tpath_2 }; \cdots; \rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$.
-\\
-Then, $\cdots; \tpath;\cdots;  \rpchoose{\tpath_1, \tpath_2 }; \cdots; \rprepeat(\rpchoose{\tpath_1, \cdots, \tpath_n})$
-is the transformed program $\rprog^{T}$ for $c$.
-%  for its two branches.
-% %
-% \\
-% For each $\tpath$ or $\rpchoose{\tpath_1, \cdots}$, if their starting point and ending point are the same, 
-% then creating $\rprepeat(\tpath)$ or $\rprepeat(\rpchoose{\tpath_1, \cdots})$ for them.
-%
-\item \textbf{Refined Program}
-This step invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
-refined program $\rprog$ for a program $c$ given the input $\rprog^{T}$.
-\end{enumerate}
-%
+2. Then it computes the 
+refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
 %
 \subsection{Path-sensitive Reachability-Bound Analysis}
-Given a program $c$ with $\rprog$ as its refined program,
+Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and refined program $\rprog$,
 \begin{enumerate}
     \item Reachability Bound
     
-    For every program point $l \in \lvar(c)$, $\psRB(c, l)$
+    The reachability bound of each program point $l \in \lvar(c)$, $\psRB(c, l)$
    \[ 
      \psRB(c, l) = \sum\limits_{\tpath \in \rprog \land 
    l \in \tpath} \inoutB(\tpath, \rprog)
    \]
-
-
-    
-    \item $\inoutB(\rprog, \tpath) $, Path Global Reachability Bound:
-    
-
+   %    
+    \item $\inoutB(\rprog, \tpath) $, Path Global Reachability Bound:  
+    \\
+    The reachability bound of a \emph{simple transition path}.
+    \\
+    $\inoutB(\rprog, \tpath) $ bounds the execution times of $\tpath$ during the execution of $\rprog$.
+%
+% \begin{figure}
     \[
       \begin{array}{rcl}
-        \inoutB(\tpath, \tpath) & \triangleq & 1 \\
-        \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \\
+        \inoutB(\tpath, \tpath) & \triangleq & 1  \\
+        \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
         \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
-        % \inoutB(l: \rprog', \tpath) & \triangleq & \lpchB(l, \tpath, \rprog) \times \inoutB(\rprog, \tpath) \\
         \inoutB(l: \rprog', \tpath) & \triangleq & 
-       0, \qquad \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
+        \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
         \\
-        & \triangleq & 
-        \highlight{\outinB(\rprog', \tpath), \qquad l = \kw{enclosed}(\tpath)}
+        &  \triangleq & 
+       0, \qquad \qquad \qquad \quad ~~ \text{if }  \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
         \\
-        & \triangleq & 
+        &  \triangleq & 
         \highlight{
-          \lpchB(l:\rprog', \tpath ) } \\
-          & & 
+          \lpchB(l:\rprog', \tpath ) }
         \highlight{\times \max\limits_{l':\rprog'' \in \rprog' \land l = \kw{enclosed}(l':\rprog'')}
-       \{\inoutB(l':\rprog'', \tpath)\} }, \\
-       & & o.w.
-        \\
+       \{\inoutB(l':\rprog'', \tpath)\} }, o.w. \\
         \inoutB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
         & \max\left\{ \inoutB(\rprog_1, \tpath), \cdots, \inoutB(\rprog_m, \tpath) \right\} \\
         \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
         &  & \text{this case will never be matched}
         \end{array}
       \]
-
-      \[\kw{enclosed}(\rprog): \text{the closest loop where } \rprog \text{ is nested}\]
-      \[\kw{enclosing}(\rprog): \text{all the loops which are nested inside } \rprog\]
-
-      \item $\outinB(\rprog, \tpath)$, Path Local Reachability Bound 
+% \end{figure}
+%
+      $\kw{enclosed}(\rprog)$: \text{the closest loop where } $\rprog$ is nested
+      \\
+      $\kw{enclosing}(\rprog)$: \text{all the loops which are nested inside } $\rprog$
+%
+\item $\outinB(\rprog, \tpath)$, Path Local Reachability Bound:
+\\
+The local reachability bound of a \emph{simple transition path}. 
+\\
+$\outinB(\rprog, \tpath)$ bounds the execution times of $\tpath$ when executing program $\rprog$,
+and $\rprog$ is the closest loop where $\tpath$ is nested.
+The local reachability bound  considers only the influence of $\tpath$'s closest enclosing loop, i.e., $\kw{enclosed}(\tpath)$.
+%
 \[
   \begin{array}{rcl}
     \outinB(\tpath, \tpath) & \triangleq & 1 \\
-    \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \\
+    \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
     \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
     \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
     & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
@@ -146,7 +109,7 @@ Given a program $c$ with $\rprog$ as its refined program,
   \end{array}
   \]
 
-  $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ by paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops. 
+  The loop bound $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ by paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops. 
   We provide an alternative computation method based on \cite{sinn2017complexity} as follows. All computation details are in full version.
   \[
     BD(\rprepeat(\rprog')) = \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}

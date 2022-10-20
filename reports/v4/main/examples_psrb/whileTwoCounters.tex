@@ -64,13 +64,13 @@
 \end{example}
 
 \begin{enumerate}
-  \item  \textbf{The Abstract Control Flow Graph} is generated in Figure~\ref{fig:twoPathsWhile}(b).
+  \item  \textbf{The Abstract Control Flow Graph}: Figure~\ref{fig:twoPathsWhile}(b).
 
-  \item \textbf{Program Refinement}. 
+  \item \textbf{Program Refinement}:
   \\
-  The \textbf{simple transition paths\footnote{For concise, the edges sequence and the constraint on each edge in
+  {Simple Transition Paths:\footnote{For concise, the edges sequence and the constraint on each edge in
   each transition path are omitted.
-  An example with edge sequences and annotations that is fully spelled out is in the full paper.}} are
+  An example with edge sequences and annotations that is fully spelled out is in the full paper.}}
   %  are computed as follows,
   \\
 $
@@ -94,8 +94,8 @@ $
   \end{array}
 $\footnote{We use the notation $(l_0 \to \cdots \to l_n)$ to denote a vertices sequence $(l_0, \cdots, l_n)$.}
 \\
-The \textbf{refined program\footnote{The program $c$ and its refined program $\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
-For concise, it is omitted since all the arguments in the following computations are referring to the same program.}} is
+{Refined Program:\footnote{The program $c$ and its refined program $\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
+For concise, it is omitted since all the arguments in the following computations are referring to the same program.}}
 \\
 $
   \tpath_0 ; 
@@ -119,17 +119,19 @@ Loop Bounds:
       $BD(\rprepeat_1(\tpath_1)) = m $
       \quad
       $BD(\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor$
-\item Loop Reachability Bound:
-\\
-$\rpchB(2 : \cdots, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
-$\rpchB(2 : \cdots, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
 %
 \item Path Global Reachability Bound:
 \\
-$\inoutB(\rprog, \tpath_1) = n$ \quad
+$\inoutB(\rprog, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
 $\inoutB(\rprog, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ \quad
-$\inoutB(\rprog, \tpath_0) = 1$ \quad
-$\inoutB(\rprog, \tpath_3) = 1$ 
+$\inoutB(\rprog, \tpath_0) = \inoutB(\rprog, \tpath_3) = 1$ 
+%
+\item Loop Reachability Bound:
+% \\%
+No nested loop.
+% $\rpchB(2 : \cdots, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
+% $\rpchB(2 : \cdots, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
+%
 %
 \item The Reachability Bound:
 \\
