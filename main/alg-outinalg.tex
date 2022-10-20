@@ -1,18 +1,3 @@
-\textbf{Computation Overview}
-\[
-  \begin{array}{rcl}
-    \outinB(\tpath, \tpath) & \triangleq & 1 \\
-    \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \\
-    \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
-    \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
-    & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
-    \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
-    & \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}
-     \times \outinB(\rprog', \tpath)
-     \\
-    \outinB(l: \rprog', \tpath) & \triangleq & \outinB(\rprog', \tpath) \\
-    &  & \text{this case always equals to } 0 \\
-  \end{array}\]
 Three steps:
 \begin{enumerate}
     \item It first collects three edge sets for each variable,
@@ -20,14 +5,8 @@ Three steps:
   \item
   Then, it assigns a variable to the edge on which this variable decreases as this edge's ranking function.
   \item
-  In the last step, it computes the bound on the maximum value of the ranking function,
-  the $\rfinit(\rprog, \rpattern)$,
-  $\rffinal(\rprog, \rpattern)$, $\rfnext(\rprog, \rpattern)$ and $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
-%   are formally presented as follows.
-   and the bound on the execution
-  times of the given execution path recursively.
-%   \item In the last step, it combines the local bound of each transition path
-%    but path-insensitively.
+  In the last step, it estimates the bound on the maximum value of each ranking function recursively.
+  In the meantime, it also solves the loop bound and loop reachability bound.
   \end{enumerate}
 
   The algorithm in this step is inspired from the Algorithm.2 in paper~\cite{SinnZV14},
@@ -40,127 +19,6 @@ Three steps:
   and then estimates the maximum value for the ranking function.
   The Definition.25 in paper~\cite{sinn2017complexity}
   assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
-
-\subsection{Local Bound Computation}
-  For every repeat pattern $\rpattern$ in a refined program $\rprog$, 
-this algorithm
-computes a bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ on its iteration numbers locally and path-sensitively
-named \textbf{Outside-In} bound.
-%  of every repeat pattern 
-\\
-% $\outinB(\rprog, \rpattern)$
-% computes the bound locally
-% % is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ 
-% in the sense that
-% % for a repeat pattern 
-% if 
-For every $\rpattern'$ that is nested
-in another repeat pattern $\rpattern$, i.e., $\rpattern = \rprepeat(\rpattern')$,
-$\outinB(\rprog, \rpattern)$ only estimates
-$\rpattern'$'s iteration number within $\rpattern$ by assuming that $\rprepeat(\rpattern')$ executes once.
-% \\
-
-\highlight{\textbf{Notations / Operators:}}
-\\
-The \emph{State}: 
-$\absstate \in \mathcal{P}(\dcdom^{\top})$ is a conjunction of constraints.
-%  constraints.
-\\
-% For a refined program ($\rprog$), there are the 
-% \\
-\emph{Initial State} ($\rfinit(\rprog, \rpattern) \in \absstate$), 
-\\
-\emph{Final State} ($\rffinal(\rprog, \rpattern) \in \absstate$),
-\\
-\emph{Next State} $\rfnext(\rprog, \rpattern) \in \absstate$,
-% The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
-\\
-\emph{Variable Grade Decedent}: $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
-
-
-\highlight{\textbf{Computation Steps:}}
-  \textbf{Outside-In} Bound ($\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$)
-  \\
-For a repeat pattern $\rpattern$ in a refined program $\rprog$,
-the \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ is computed recursively as follows,
-% for every nested repeat patterns in $\rprog$,
-% \\
-% $\outinB(\rpchoose{\rprog_1, \cdots, \rprog_m}) =  \max\{\outinB(\rprog_1), \cdots, \outinB(\rprog_m)\}$
-\\
-$\outinB(\rprog, \rprepeat({\rpattern})) = 
-\frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$
-\\
-$\outinB(\rprog, \rpattern_1; \rpattern_2) =  \outinB(\rprog, \rpattern_1)+ \outinB(\rprog,  \rpattern_2)$
-\\
-$\outinB(\rprog, \tpath) =  1$.
-\\
-\highlight{
-  \textbf{Improvement Discussion:}
-\\
-The computation of $\outinB(\rprepeat({\rpattern}))$ 
-as below is more efficient and accurate than existing techniques.
-% in the first case
-% can be computed  as follows
-\\
-The method $T(c, l)$ in \cite{GulwaniJK09} can also compute a
-bound on the iteration numbers of $\rprepeat({\rpattern})$ locally based on
-% $\rprepeat(\rpattern)$ with loop header $l$
-% has the 
-the same semantics and syntax.
-Specifically, $T(c, l)$ call the $\kw{BOUNDFINDERD}$ function as follows:
-\\
-$\kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprepeat({\rpattern}))),
-NEXTD(c, l_0, \absinit(\rprepeat({\rpattern})), V_{\lin} )}$
-% based on
-% % $\rprepeat(\rpattern)$ with loop header $l$
-% % has the 
-% the same semantics and syntax.
-%  as the refined program in paper~\cite{GulwaniJK09},
-% in paper~\cite{GulwaniJK09} 
-% with equivalent results.
-However, the $\kw{BOUNDFINDERD}$ function in \cite{GulwaniJK09} relies an arbitrary interface to
-compute the bound on the iteration numbers.
-The efficiency and accuracy of this computation fully depend on this arbitrary interface.
-\\
-In comparison to them, below I provide an efficient and accurate bound computation method using the
-ranks computed in Definition~\ref{def:edge_pathinsensitivebound} over the abstract transition graph $\absG(c)$.
-}
-\\
-% Formally defined as follows,
-% \begin{defn}[Path-sensitive Local Reachability Bound]
-%   \label{def:pathsensitive_lrb}
-% \end{defn}
-
-
-
-
-% \begin{enumerate}
-%     \item It first collects three edge sets for each variable,
-%   in which the variable increases, decreases and reset respectively.
-%   \item
-%   Then, it assigns a variable to the edge on which this variable decreases as this edge's ranking function.
-%   \item
-%   In the last step, it computes the bound on the maximum value of the variable,
-%   the $\rfinit(\rprog, \rpattern)$,
-%   $\rffinal(\rprog, \rpattern)$, $\rfnext(\rprog, \rpattern)$ and $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
-% %   are formally presented as follows.
-%    and the bound on the execution
-%   times of the corresponding simple transition path recursively.
-% %   \item In the last step, it combines the local bound of each transition path
-% %    but path-insensitively.
-%   \end{enumerate}
-
-%   The algorithm in this step is inspired from the Algorithm.2 in paper~\cite{SinnZV14},
-%   % which assigns a variable to each edge on which this variable decrease as its ranking function.
-%   the Algorithm.3 in paper~\cite{ZulegerGSV11},
-%   and the Definition.25 in Section 4 of paper~\cite{sinn2017complexity}.
-%   Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
-%   and estimates the maximum value each variable in this set.
-%   Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decrease as its ranking function
-%   and then estimates the maximum value for the ranking function.
-%   The Definition.25 in paper~\cite{sinn2017complexity}
-%   assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
-  %
   %
   \subsection{Collecting Variable Modifications}
   For each variable $x$ in a program $c$, this step computes three edge sets, $\inc(c, x)$, $\dec(c, x)$,
@@ -243,62 +101,18 @@ ranks computed in Definition~\ref{def:edge_pathinsensitivebound} over the abstra
     For the label $l$ which is not in any while loop, 
     the labeled command with the label $l$ will be 
     evaluated at most once. 
-    % we do not need to analyze the visiting times of every node in the graph from phase 1.
     The second and third cases are guaranteed by the \emph{Discussion on Soundness} in Section 4 in~\cite{sinn2017complexity}.
     The formal soundness proof is in Lemma~\ref{lem:local_bound_sound} in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
   %
-  % \paragraph*{Invariant Inference and Closure Generation }
-  % Then, computing the bound invariants for variables and the transition closures for abstract events:
-  % \\ 
-  % $ \varinvar: \mathcal{VAR} \cup \constdom \to EXPR(\constdom)$
-  % \\
-  % $\absclr: \absevent \to EXPR(\constdom)$
-  % \\
-  % $EXPR(\constdom)$ is symbolic expression 
-  % over $\constdom$, which is a subset of arithmetic expressions over $\mathbb{N}$ with input variables and $ $.
-  % We use $\mathcal{A}_{\lin}$ denotes the arithmetic expression 
-  % over the symbolic variables, (i.e., $\mathbb{N}$ with input variables and $ $).
-  % Then, the symbolic invariant for each variable 
-  % as well as the symbolic transition closure for each transition is calculated as follows:
-  % \[ 
-  % \begin{array}{lll}
-  %   \varinvar(x) & \triangleq c & c \in \constdom \\
-  %   \varinvar(x) & \triangleq \incrs(v) + \max(\{\varinvar(a) + c | (t, a, c) \in \reset(x)\}) & c \notin \constdom
-  % \end{array}
-  % \]
-  % %
-  % \begin{defn}
-  %   \label{def:edge_pathinsensitivebound_base}
-  % \[ 
-  % \begin{array}{lll}
-  %   \absclr(\absevent) 
-  %   & \triangleq x / v & \\ 
-  %   & \locbound(\absevent) = (x, v) \in \constdom \times \mathbb{N} & \\
-  %   \absclr(\absevent) 
-  %   & \triangleq (\incrs(x) + 
-  %   \sum\limits_{(\absevent', y, v') \in \reset(x)}
-  %   \absclr(\absevent') \times \max(\varinvar(y) + v', 0) ) / v & \\
-  %   & \locbound(\absevent) = (x, v) \land x \notin \constdom & 
-  % \end{array}
-  %   \]
-  % \end{defn}
-  % %
-  % \paragraph*{Improved Variable Modification Tracking}
-  % \\
-  % $\incrs(v) \triangleq \sum\limits_{(\absevent, c) \in \inc(v)}\{\absclr(\absevent) \times v\}$
-  %
-  \subsection{Abstract States Computation}
+  \subsection{Ranking Function Estimation}
   This step estimates the upper bound, $\varinvar(x, c) \in \mathcal{A}_{\lin}$
   on the maximum value for each ranking function   $x \in  \mathcal{VAR} \cup \constdom$.
   \\
   For a program $c$, the \emph{ranking function bound} of an,
   $\varinvar(\locbound(\absevent, c)) \in \mathcal{A}_{\lin}$ is 
   the bound on the maximum value of the ranking function  
-  % $\locbound(\absevent)  \in \mathcal{VAR} \cup \constdom $,
-  assigned to the edge $\absevent \in \absE(c)$, formally in Definition~\ref{def:ranking_bound} and~\ref{def:edge_pathinsensitivebound}.
+  assigned to the edge $\absevent \in \absE(c)$, formally in Definition~\ref{def:ranking_bound}.
   \\
-  % $\varinvar(\locbound(\absevent)) \in \mathcal{A}_{\lin}$.
-  % Then, computing the bound for vriables and the transition closures for abstract events:
   In order to estimate the maximum value of $\locbound(\absevent, c)$ assigned to edge $\absevent \in \absE(c)$,
   % for each (ranking function's) maximum value,
   the bound on the iteration times of each corresponding edge, $\absclr(\absevent, c)$ 
@@ -316,11 +130,6 @@ ranks computed in Definition~\ref{def:edge_pathinsensitivebound} over the abstra
   For a program $c$ and an edge $\absevent \in \absE(c)$,
   the \emph{ranking function bound}, $\varinvar(\locbound(\absevent, c))$ for the ranking function $\locbound(\absevent, c)$
   of this edge
-  % %  \in \mathcal{A}_{\lin}$ 
-  % for $\locbound(\absevent) \in \mathcal{VAR} \cup \constdom$,
-  % is the bound on the maximum value of the ranking function  
-  % % $\locbound(\absevent)  \in \mathcal{VAR} \cup \constdom $,
-  % assigned to the edge $\absevent \in \absG(c)$, 
   is computed as follows,
     \[ 
   \begin{array}{lll}
@@ -350,152 +159,4 @@ ranks computed in Definition~\ref{def:edge_pathinsensitivebound} over the abstra
  where $in(ch)$ is the variable on the last edge on the reset chain $ch$.
 \end{defn}
   %
-The computations of $\outinB(\rprepeat({\rpattern}))$ and $\rfinit(\rprog, \rpattern)$,
-$\rffinal(\rprog, \rpattern)$, $\rfnext(\rprog, \rpattern)$ and $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
-are formally presented as follows.
-  \begin{defn}[Abstract States Computation]
-    \label{def:edge_pathinsensitivebound}
-   The computations of $\outinB(\rprepeat({\rpattern}))$ and $\rfinit(\rprog, \rpattern)$,
-   $\rffinal(\rprog, \rpattern)$, $\rfnext(\rprog, \rpattern)$ and $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
-   are formally presented as follows.
-   \begin{itemize}
-    \item The \emph{Initial State}, $\rfinit(\rprog, \rpattern)$ for the repeat pattern $\rpattern$ of a refined program $\rprog$ is computed as follows,
-   % \\
-   %  For a refined program $\rprepeat$, its initial refined abstract $\rfinit(\rprepeat) \in \mathcal{P}(\absstate)$ is computed as follows,
-   \[
-     \rfinit(\rprog, \rpattern) \triangleq 
-     \bigwedge_{x \in VAR(\rpattern)}
-     % \left\{ 
-     x
-     % = v ~\middle\vert~ 
-     % v 
-     = arg\max_{l_1}\left\{
-       \varinvar(y) + v ~\middle\vert~ 
-       \begin{array}{l} 
-         (l_1, x' \leq y + v, l_2) \in \reset(x) 
-         \\
-       % \land \absevent = (l_1, dc, l_2)
-       \land l_1 \leq \absinit(\rpattern)
-     \end{array}
-     \right\}
-     % \right\}
-     \]
-   % \\
-   % The 
-   $\rfinit(\rprog, \rpattern)$ can also be computed using the function $\kw{INIT(c, l_0, \absinit(\rpattern))}$ in \cite{GulwaniJK09}. 
-   $\kw{INIT(c, l_0, \absinit(\rpattern))}$ computes the equivalent results.
-   %
-   \item  The {\emph{Final State}, $\rffinal(\rprog, \rpattern) \in \absstate$ for the repeat pattern $\rpattern$ of a refined program $\rprog$ is computed as follows, }
-   % \\
-   % The program $\rprepeat$'s final refined abstract state $\rffinal(\rprepeat) \in \mathcal{P}(\absstate) $ is computed as follows, 
-   \[
-     \rffinal(\rprog, \rpattern) \triangleq 
-     \bigwedge_{x \in VAR(\rpattern)}
-     % \left\{ 
-     %   \varinvar(x)
-     % \right\} \land 
-     \neg \invariant(\rpattern)
-     \]
-     % \\
-   \item The \emph{Next State}, $\rfnext(\rprog, \rpattern) \in \absstate$ for the repeat pattern $\rpattern$ of a refined program $\rprog$ is computed as follows,
-   % \\
-   %  For a transition path $\tpath \in \paths(\absG(c))$, its $\rfnext(\tpath)$ is computed as follows,
-   %
-   \[
-     \begin{array}{l}
-     \rfnext(\rprog, \tpath) \triangleq 
-     \bigwedge\limits_{x \in VAR(\tpath)}
-     \left\{ 
-       \begin{array}{l}
-     x =   \sum\limits_{(x, \absevent) \in \inc(x) }
-     \left\{ 
-       {\varinvar(y) \todo{==>} \reset(y)}+ v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath)\right\}
-       \\ \qquad 
-       - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
-         \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath) \right\}
-       \end{array}
-     \right\}
-     \end{array}
-   \]
-   We only need to compute the $\rfnext(\rprog, \rpattern)$ for the repeat pattern which is a simple transition path,
-   i.e., $\rfnext(\rprog, \tpath)$.
-   \item  The \emph{Variable Gradient Decent}, $\varGD(\rprog, \rpattern)$ for the repeat pattern $\rpattern$ of a refined program $\rprog$ is computed as follows,
-   % \\
-   % $\varGD(\rpchoose{\rprog_1, \cdots, \rprog_m}) =  \max\left\{\varGD(\rprog_1), \cdots, \varGD(\rprog_m) \right\}$
-   \\
-   % \todo
-   {$\varGD(\rprog, \rprepeat(\rpattern)) =  \outinB(\rprog, \rpattern) \times {\varGD(\rprog, \rpattern)}$}
-   \\
-   $\varGD(\rprog, \rpseq(\rpattern_1, \rpattern_2)) =  \varGD(\rprog, \rpattern_1)+ \varGD(\rprog, rpattern_2)$
-   \\
-   $\varGD(\rprog, \tpath) =  \rfinit(\tpath) - \rfnext(\rprog, \tpath)$   
-    \end{itemize}
-\end{defn}
-    %
-    
-
-\subsection{Theorem Guarantee}
-  \label{sec:outinalg-theorem}
-  For a program $c$ and an edge $\absevent \in \absE(c)$,
-  $\absclr(\absevent)$ is a sound upper bound
-  %  for every label $l$ in this program 
-  on the execution times of this transition,
-  formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. 
-  Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
-
-  \highlight{\textbf{Theorem Guarantee Discussion:}}
-\\
-\emph{Soundness} For every repeat pattern $\rpattern$, the $\outinB(\rpattern, \rprog)$
-is a sound upper bound on its execution times locally.
-\\
-This bound is sound locally by assuming
-that all the loops and repeat patterns where $\rpattern$ is nested execute only once.
-This assumption comes from the computation of the $\varGD$ and the deep first search strategy.
-\\
-For every base case, i.e., a simple transition path, 
-$\varGD(\rprog, \tpath) =  \rfinit(\tpath) - \rfnext(\rprog, \tpath)$
-counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
-In the other two cases,  $\varGD(\rprog, \rprepeat(\rpattern))$ and $\varGD(\rprog, \rpseq(\rpattern_1, \rpattern_2))$
-has the same assumption when compute the variables' changes.
-% \\
-The soundness also relies on the operation $\frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$,
-which is solved by Definition~\ref{def:edge_pathinsensitivebound} and~\ref{def:ranking_bound}.
-% a sound external solver. \todo{reference}
-%
-\begin{thm}[Soundness of Outside-In Bound]
-  \label{thm:sound_outsidein}
-  For every program $c$ with it refined program $\rprog$,
-  if $\rpattern$ is a repeat pattern of this program, then the $\outinB(\rpattern, \rprog)$
-is a sound local bound on the execution times of $\rpattern$ in program $c$.
-  \[
-    \begin{array}{l}
-    \forall c \in \cdom, \rpattern, \rprog, \trace_0 \in \tdom_0(\rpattern), \trace_1, \trace \in \tdom \st 
-    \rpattern \in \rprog \land
-    \rprog = Alg.4(c)
-    \\ \qquad
-    \land
-    \config{c, \trace_0} \to^* \config{\highlight{\ewhile (\rpattern, \cdots)}, \trace_0 \tracecat \trace_1} 
-    \land 
-    \config{\rpattern, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
-    \\ \qquad
-    \implies
-    \todo{Change Counter}
-    {\vcounter(\trace, L(\rpattern))} \leq \outinB(\rpattern, \rprog)(\trace_0 \tracecat \trace_1).
-    \end{array}
-    \]
-\end{thm}
-\highlight{Informal Discussion}
-\\
-Theorem~\ref{thm:sound_outsidein} guarantees that
-the bound for every repeat pattern $\rpattern$, the $\outinB(\rpattern, \rprog)$
-is a sound upper bound on its execution times, by assuming
-that all the loops and repeat patterns where $\rpattern$ is nested execute only once.
-\\
-In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
-$v$ is a local bound if it has the same decreasing time as the transition's execution time.
-By assuming that certain program parts (those were e increases) are not executed,
-then value of $v$ can limit the execution time of that transition.
-\\
-In our soundness, we assume all the code pieces not inside this repeat pattern are executed at most once (once if they show up in front of the program
-zero time if not).
-In this case, this bound limits the execution time of this repeat pattern.
+  %

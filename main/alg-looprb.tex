@@ -1,0 +1,172 @@
+\textbf{Computation Overview}
+\\
+ Loop Reachability Bound
+\[
+  \lpchB(l: \rprog, \tpath) \triangleq
+    \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(l: \rprog, \tpath) - \lpnext(l: \rprog, \tpath)}
+\]
+ Loop Bound (the alternative computation method):
+  \[
+    BD(\rprepeat(\rprog')) = \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}
+\]
+  To solve the loop reachability bound and loop bound:
+  \\
+  1. Compute the ranking function for every transition and estimate its maximum value, as in Section~\ref{sec:outinalg}.
+  \\
+  2. Compute the abstract states ($\lpinit(l: \rprog, \tpath)$, $\rffinal(\rprog, \tpath)$ and $\lpnext(l: \rprog, \tpath)$ ) using ranking function,
+  as in Definition~\ref{def:alg-absstate}.
+  \\
+  3. Solve the equation using abstract states and SMT solver.
+  % \\
+\begin{defn}[Abstract States Computation]
+    \label{def:alg-absstate}
+   The computations of $\rfinit(\tpath)$,
+   $\rffinal(\tpath)$, $\rfnext(\tpath)$ and $\varGD(\tpath) \in \mathcal{A}_{in}$
+   are formally presented as follows.
+   \begin{itemize}
+    \item The \emph{Initial State}, 
+    $\rfinit(\rprog)$ of the refined program $\rprog$ is a set of difference constraints.
+    It contains the initial value of each rank function.
+   % \\
+   %  For a refined program $\rprepeat$, its initial refined abstract $\rfinit(\rprepeat) \in \mathcal{P}(\absstate)$ is computed as follows,
+   \[
+     \rfinit(\rprog) \triangleq 
+     \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
+     % \left\{ 
+     x
+     % = v ~\middle\vert~ 
+     % v 
+     = arg\max_{l_1}\left\{
+       \varinvar(y) + v ~\middle\vert~ 
+       \begin{array}{l} 
+         (l_1, x' \leq y + v, l_2) \in \reset(x) 
+         \\
+       % \land \absevent = (l_1, dc, l_2)
+       \land l_1 \leq \absinit(\rprog)
+     \end{array}
+     \right\}
+     % \right\}
+     \]
+   % \\
+   % The 
+   $\rfinit(\tpath)$ can also be computed using the function $\kw{INIT(c, l_0, \absinit(\rprog))}$ in \cite{GulwaniJK09}. 
+   $\kw{INIT(c, l_0, \absinit(\rprog))}$ computes the equivalent results.
+   %
+   \item  The {\emph{Final State}, $\rffinal(\rprog) \in \absstate$ of the refined program $\rprog$ is the post-condition
+   after execution of $\rprog$, computed as follows, }
+   % \\
+   \[
+     \rffinal(\rprog) \triangleq 
+     \bigwedge_{b \in \kw{Guard}(\rprog)}
+     \neg b
+     \]
+     % \\
+   \item The \emph{Next State}, $\rfnext(\rprog) \in \absstate$ of the refined program $\rprog$ is a set of difference constraints.
+   It contains the state of the ranking function when it is visited the second time in $\rprog$.
+   % \\
+   %  For a transition path $\tpath \in \paths(\absG(c))$, its $\rfnext(\tpath)$ is computed as follows,
+   %
+   \[
+     \begin{array}{l}
+     \rfnext(\rprog) \triangleq 
+     \bigwedge\limits_{x \in VAR(\tpath)}
+     \left\{ 
+       \begin{array}{l}
+     x =   \sum\limits_{(x, \absevent) \in \inc(x) }
+     \left\{ 
+       {\varinvar(y) \todo{or ?} \reset(y)}+ v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath)\right\}
+       \\ \qquad 
+       - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
+         \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath) \right\}
+       \end{array}
+     \right\}
+     \end{array}
+   \]
+   We only need to compute the $\rfnext(\tpath)$ because of the recursion will be exhausted when computing $\varGD(\rprog)$ as below.
+   \item  The \emph{Variable Gradient Decent}, 
+   $\varGD(\tpath)$ for the repeat pattern $\tpath$ of a refined program $\rprog$ is computed as follows,
+   % \\
+   % $\varGD(\rpchoose{\rprog_1, \cdots, \rprog_m}) =  \max\left\{\varGD(\rprog_1), \cdots, \varGD(\rprog_m) \right\}$
+   \\
+   % \todo
+   {$\varGD(\rprepeat(\tpath)) =  BD(\tpath) \times {\varGD(\tpath)}$}
+   \\
+   $\varGD(\rprog_1;\rprog_2, \tpath) =  \varGD(\tpath_1)+ \varGD(tpath_2)$
+   \\
+   $\varGD(\tpath) =  \rfinit(\tpath) - \rfnext(\tpath)$   
+
+
+   \item For a transition path $\tpath \in \paths(\absG(c))$ and a loop label $l$ in this transition path's loop chain.
+Let $\tpath_l$ be the repeat pattern with label $l$, i.e., $l: \tpath_l \in \rprog$, 
+the abstract loop chain initial state $\lpinit(l: \rprog, \tpath) \in \mathcal{P}(\absstate)$ is computed as follows,
+\[
+  \lpinit(l: \rprog, \tpath) \triangleq 
+  \bigwedge_{x \in VAR(\tpath)}
+  % \left\{ 
+  x = arg\max_{l_1}
+  \left\{
+      \begin{array}{l}
+    (v, (l_1, dc, l_2)) \in \reset(x) 
+        \\ 
+    % \qquad
+    \land \absinit(\tpath_l) \leq l_1 \leq \absinit(\tpath)
+    \land l: \tpath_l \in \rprog
+    \end{array}
+    \right\}
+  % \right\}
+  \]
+\item
+For the transition path $\tpath \in \paths(\absG(c))$ and in a refined program $\rprog$,
+%  with the loop label $l: \rprog_i$, its 
+$\rfnext(l: \rprog, \tpath)$ is computed as follows,
+%
+\[
+  \begin{array}{l}
+  \lpnext(l: \rprog, \tpath) \triangleq 
+  \bigwedge\limits_{x \in VAR(\tpath)}
+  % \left\{ 
+    x =   
+    \begin{array}{l}
+  \sum\limits_{(x, \absevent) \in \inc(x) }\left\{ 
+    \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath_l)\right\}
+    \\ \qquad 
+    - \sum\limits_{(x, \absevent) \in dec(x) }\left\{ 
+      \varinvar(y) + v 
+      ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath_l) \right\}
+      \\
+      \qquad 
+      \land l: \tpath_l \in \rprog
+    \end{array}
+  % \right\}
+  \end{array}
+\]
+    \end{itemize}
+\end{defn}
+
+Formally
+\begin{defn}[Loop Bound (Alternative Computation Method)]
+\label{def:loopbound}
+\[
+  \begin{array}{rcl}
+    BD(\tpath) & \triangleq & 1 \\
+    BD(\rprog_1;\rprog_2) & \triangleq & BD(\rprog_1) + BD(\rprog_2) \\
+    BD(\rpchoose{\rprog_1, \cdots, \rprog_m }) & \triangleq 
+    & \max\left\{ BD(\rprog_1), \cdots, BD(\rprog_m) \right\} \\
+    BD(\rprepeat(\rprog')) & \triangleq 
+    &
+    \highlight{\frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog')}}
+     \times BD(\rprog')
+     \\
+    BD(l: \rprog') & \triangleq & BD(\rprog')
+  \end{array}
+  \]
+\end{defn}
+
+\begin{defn}[Loop Reachability Bound]
+  \label{def:looprb}
+  Loop Reachability Bound
+  \[
+    \lpchB(l: \rprog, \tpath) \triangleq
+      \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(l: \rprog, \tpath) - \lpnext(l: \rprog, \tpath)}
+  \]
+\end{defn}
