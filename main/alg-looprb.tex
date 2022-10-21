@@ -69,10 +69,10 @@
        \begin{array}{l}
     \sum\limits_{(x, \absevent) \in \inc(x) }
      \left\{ 
-       { \todo{ \varinvar(y) or \reset(y)} }+ v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath)\right\}
+       { \todo{ \varinvar(y) or \reset(y)} }+ v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \tpath\right\}
        \\ \qquad 
        - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
-         \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \lvar(\tpath) 
+         \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \tpath 
          \right\}
        \end{array}
      \end{array}
@@ -117,6 +117,8 @@ $\lpnext(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$
 describes how much $\tpath$'s ranking function
 is modified before
 the second visit of $\tpath$ but during the second execution of $l: \rprog$.
+\footnote{$l' \in \rprog$: the $\in$ notation is abused to denote
+the program point $l'$ is a vertex on a path in the program $\rprog$.}
 %
 \[
   \begin{array}{l}

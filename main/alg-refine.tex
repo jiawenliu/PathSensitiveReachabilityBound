@@ -43,7 +43,8 @@ Line-5: for every candidate $c'$, if it starts and ends with the same vertex, re
 \\
 Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
 \\
-The \emph{simple transition path}s are generated as follows.
+We use simple depth first search strategy computes all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath} below.
+It guarantees that  every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
   \begin{defn}[Simple Tansition Path]
     \label{def:tpath}
   A simple transition path
