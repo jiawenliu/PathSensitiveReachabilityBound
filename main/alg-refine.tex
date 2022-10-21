@@ -19,7 +19,7 @@ refined program $\rprog$ for a program $c$ given the input $c^{T}$.
 \begin{algorithmic}[1]
     \REQUIRE none
     \STATE finds all $c$'s \emph{simple transition path}s, $\tpath_1, \cdots, \tpath_n \in \paths(\absG(c))$.
-    \STATE \textbf{init}: candidate set $W = \{c_1, \cdots, c_n\}$, $c_i = \tpath_i$ for all transition paths.
+    \STATE \textbf{init}: candidate set $W = \{c_1, \cdots, c_n\}$, where $c_i = \tpath_i$ and $i = 1, \cdots, n$
     \STATE \textbf{while} $W.size()> 1$:
     \STATE \quad create $c' = \rpchoose{c_1, \cdots, c_m}$ 
     s.t. $c_i \in W \land c_i[0] = c_j[0] \land c_i[-1] = c_j[-1], i, j = 1, \cdots, m$.
@@ -42,6 +42,25 @@ Line-4: for all the candidates $c_1, \cdots, c_m$ having the same starting and e
 Line-5: for every candidate $c'$, if it starts and ends with the same vertex, rewrite it into while loop statement as~\cite{GulwaniJK09}.
 \\
 Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
+\\
+The \emph{simple transition path}s are generated as follows.
+  \begin{defn}[Simple Tansition Path]
+    \label{def:tpath}
+  A simple transition path
+  $\tpath \in \paths(\absG(c))$ for the program $c$, is a path on the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
+  \begin{itemize}
+  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
+  %
+  \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
+  \end{itemize}
+  %
+  satisfying:
+  \begin{itemize}
+    \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
+    \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+    \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
+  \end{itemize}
+  \end{defn}
 
 \paragraph{Refined Program}
 This step simply invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
