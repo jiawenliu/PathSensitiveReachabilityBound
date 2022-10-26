@@ -1,5 +1,3 @@
-%
-%
 \subsection{Labeled Language}
 \[
 \begin{array}{llll}
@@ -8,21 +6,11 @@
 %
 ~|~ \div ~|~ \emax ~|~ \emin
 \\  
-% ~|~ \div \\  
-% \mbox{Boolean Operators} 
-% & \oplus_b & ::= & \lor ~|~ \land
-% \\
-%
-% \mbox{Relational Operators} 
-% & \sim & ::= & < ~|~ \leq ~|~ == 
-% \\  
-%
 \mbox{Arithmetic Expression} 
 & \aexpr & ::= & 
 n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  
  ~|~ \elog \aexpr  ~|~ \esign \aexpr
 \\
-%
 \mbox{Boolean Expression} & \bexpr & ::= & 
 %
 \etrue ~|~ \efalse  ~|~ \neg \bexpr
@@ -33,7 +21,6 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 ~|~ \aexpr < \aexpr 
 ~|~ \aexpr = \aexpr 
 \\
-%
 \mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr ~|~ [\expr, \dots, \expr]
 \\  
 %
@@ -49,41 +36,27 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \mbox{Labeled Command} 
 & {c} & ::= &  
 \clabel{\assign{x}{\expr}}^l 
-% ~|~ \clabel{\assign{x}{\query(\qexpr)}}^l
 ~|~  \clabel{\eskip}^l
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo {c}
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c}  
 \\ 
-% \\
 \mbox{Event} 
 & \event & ::= & 
-% ~|~ ({x}, l, v, \qval)
 ({x}, l, v) ~ \mbox{Assignment Event} 
 % \\
 % &&& 
 ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
 \\
-% \mbox{Trace} & \trace
-% & ::= & [] ~|~ \event:: \trace ~|~ \trace \tracecat \trace  \\
 \mbox{Trace} & \trace
 & ::= & [] ~|~ \trace :: \event
 \\
 \end{array}
 \]
-% \todo{change trace notation into list, and update corresponding operator nations}
-% \\
-% \wqside{"$\cdot$" has two meanings? empty, delimit. Trace is list of event?}
 We use following notations to represent the sets of corresponding terms:
 \[
 \begin{array}{lll}
 \mathcal{VAR} & : & \mbox{Set of Variables}  
-% \\ 
-% %
-% \mathcal{VAL} & : & \mbox{Set of Values} 
-% \\ 
-% %
-% \mathcal{QVAL} & : & \mbox{Set of Query Values} 
 \\ 
 %
 \cdom & : & \mbox{Set of Commands} 
@@ -100,7 +73,6 @@ We use following notations to represent the sets of corresponding terms:
 %
 \ldom  & : & \mbox{Set of Labels}  
 \\
-% \\
 %
 \highlight{\tdom} & : & \mbox{\highlight{Set of All Finite Execution Traces}}
 \\
@@ -113,23 +85,16 @@ We use following notations to represent the sets of corresponding terms:
 \]
 $FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. To be precise,
 $FV(\aexpr)$ and $FV(\bexpr)$
-%  and $FV(\qexpr)$ 
 represent the sets of free variables in arithmetic
 expression $\aexpr$ and boolean expression $\bexpr$
-%  and query expression $\qexpr$ 
 respectively.
 %
 \subsection{{Trace-based Operational Semantics}}
 \label{sec:operational_semantics}
-% \subsubsection{Event and Trace}
 \paragraph*{Event}
 An event is a triple.
-% tracks useful information about each step of the evaluation, as a quadruple. 
 An \emph{assignment event} corresponds to the evaluation of an assignment command $\clabel{\assign{x}{\expr}}^l$.
-% the first element is either
-% an assigned 
 Its first element is the variable name $x$,
-% (on the left hand of the command),
 or a boolean expression (from the guard of if or while command), 
 following by 
  the label, $l$ associated to this command and the value assigned to the variable.
@@ -137,16 +102,12 @@ following by
  A \emph{testing event} corresponds to the evaluation of the boolean expression $b$ in the guard of a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo c$.
  Its first element is the boolean expression $b$, following by 
  the label $l$ associated to the guard and the evaluated boolean result.
-% or the boolean expression in the guard.
 %
 \[
 \begin{array}{llll}
   \mbox{Event} 
   & \event & ::= & 
-  % ~|~ ({x}, l, v, \qval)
   ({x}, l, v) ~ \mbox{Assignment Event} 
-  % \\
-  % &&& 
   ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
 \end{array}
 \]
@@ -226,7 +187,7 @@ we use $\to^*$ to represent the multiple-step execution. $\config{c, \trace_0} \
 represents that the program's execution terminates and produces a finite execution trace $\trace \in \tdom$.
 When the program execution doesn't terminate under $\trace_0$, 
 we use $\config{c, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \trace}$ to
-represent the non-terminated execution w.r.t. an infinite trace $\trace \in \tdominf$.
+represent the non-terminated execution w.r.t. the infinite trace $\trace_0 \in \tdominf$.
 \\
 If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
 So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lemma_sec123}, 
@@ -479,7 +440,7 @@ c; \ewhile [b]^{l} \edo c,
  \event = (b, l, \etrue)
 }
 {
- \config{{
+\config{{
 \eif([b]^{l}, c_1, c_2), 
 \trace}}
 \xrightarrow{} 

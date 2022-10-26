@@ -1,13 +1,8 @@
 The operator $\lvar: \cdom \to \mathcal{P}(\ldom)$,
 computes the set of labels
-% assigned variables and labeles variables 
 for a labeled command $c$ defined as follows,
-% defined in Definition~\ref{def:lvar} and 
-% \ref{def:avar}.
-%
 \begin{defn}[Program Labels
 (
-% $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
 $\lvar : \cdom \to \mathcal{P}(\ldom)$]
 \label{def:lvar}
 {\small
@@ -32,7 +27,9 @@ $$
 }
 \end{defn}
 %
-Every label and every labeled command in a program is unique, formally as follows with proof in Appendix~\ref{apdx:lemma_sec123}.
+Every label corresponds to a labeled command in a program, and it is unique.
+The Lemma below formally describes the uniqueness property of the program labels
+with proof in Appendix~\ref{apdx:lemma_sec123}.
 \begin{lem}[Uniqueness of the Program Labels]
   \label{lem:label_unique}
   For every program $c \in \cdom$ and every two labels such that
@@ -73,12 +70,7 @@ Ideally, we aim to compute a precise reachability-bound as follows.
 \begin{defn}[Precise Reachability-Bound]
   \label{def:exe_rb}
   For a program ${c}$ and a location $l \in \lvar(c)$ in this program,
-% its 
 $\exeRB({c}, l): \tdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Precise Reachability-Bound}  if and only if,
-%  satisfying
-%  defined as follows,
-% over all possible traces,
-%
 \highlight{
 \[
   \forall \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
