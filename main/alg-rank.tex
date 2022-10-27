@@ -108,7 +108,7 @@ Three steps:
   This step estimates the upper bound, $\varinvar(x, c) \in \mathcal{A}_{\lin}$
   on the maximum value for each ranking function   $x \in  \mathcal{VAR} \cup \constdom$.
   \\
-  For a program $c$, the \emph{ranking function bound} of an,
+  For a program $c$, the \emph{ranking function bound},
   $\varinvar(\locbound(\absevent, c)) \in \mathcal{A}_{\lin}$ is 
   the bound on the maximum value of the ranking function  
   assigned to the edge $\absevent \in \absE(c)$, formally in Definition~\ref{def:ranking_bound}.
@@ -122,9 +122,6 @@ Three steps:
   $ \varinvar: (\mathcal{VAR} \cup \constdom  \times \cdom) \to \mathcal{A}_{\lin}$
   \\
   $\absclr: (\absevent \times \cdom) \to \mathcal{A}_{\lin}$
-  % \\
-  % Then, the bound on the maximum value of each variable,
-  % as well as the symbolic bound on the iteration times of each edge is calculated recursively as follows, path-insensitively.
   \begin{defn}[Ranking Function Estimation]
     \label{def:ranking_bound}
   For a program $c$ and an edge $\absevent \in \absE(c)$,
@@ -161,7 +158,8 @@ Three steps:
   %
 $\absclr$ can also be used to estimate the loop bound, $BD(\tpath)$ for the transition path $\tpath$ as follows
 where $\absevent \in \tpath$ denotes $\absevent$ is an edge on path $\tpath$.
-\[
+\begin{equation}
+  \label{eq:absBD}
   BD(\tpath) = \max\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \tpath \right\}.
-\]
+\end{equation}
   %

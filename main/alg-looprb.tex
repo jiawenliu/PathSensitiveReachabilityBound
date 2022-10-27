@@ -8,7 +8,7 @@
  Loop Bound (the alternative computation method):
   \[
     BD(\rprepeat(\rprog')) \triangleq
-    \frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog, \rprog')}
+    \frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog')}
 \]
   To solve the loop reachability bound and loop bound:
   \\
@@ -85,9 +85,9 @@
    It computes the set of next states for every ranking function of the simple transition path $\tpath$ in $\rprog$,
    and recursively computes the loop bound, $BD$ in the meantime.
    \\
-   {$\varGD(\rprepeat(\tpath)) =  BD(\tpath) \times {\varGD(\tpath)}$}
+   {$\varGD(\rprepeat(\rprog)) =  BD(\rprepeat(\rprog)) \times {\varGD(\rprog)}$}
    \\
-   $\varGD(\rprog_1;\rprog_2, \tpath) =  \varGD(\tpath_1)+ \varGD(\tpath_2)$
+   $\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1)+ \varGD(\rprog_2)$
    \\
    $\varGD(\tpath) =  \rfnext(\tpath)$   
 %

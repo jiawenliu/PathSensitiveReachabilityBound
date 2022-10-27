@@ -270,31 +270,54 @@ in two challenging classes of programs: Programs with Path-Sensitive Loops, and 
 \maketitle
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Introduction and Overview %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \label{sec:intro}
 \input{introduction}
 \section{Overview}
 \label{sec:overview}
 \input{overview}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Program Model and Definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{{Program Model}}
 \label{sec:language}
-% \subsection{Language}
-% \subsection{Trace-Based Operational Semantics}
 \input{language}
-% %
-% %
 \section{{Reachability Bound}}
 \label{sec:rb-def}
 \input{rb-definition}
-% % 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Path Sensitive Reachability Bound Analysis}
 \label{sec:psrb-alg}
-% \input{static_reachabilitybound}
-% % % % 
-\input{psrb-algorithm}
+\input{alg-preface}
+% \input{psrb-algorithm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Sub-Steps of Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Abstraction Transition Graph}
+    \label{sec:progabs}
+    \input{alg-progabs}
+    \subsection{Loop Refinement}
+    \label{sec:refine}
+    \input{alg-refine}
+    \subsection{Path-sensitive Reachability-Bound Analysis}
+    \label{sec:psrb}
+    \input{alg-psrb}
+    \subsection{Loop Reachability-Bound}
+    \label{sec:looprb}
+    \input{alg-looprb}
+    \subsection{Ranking Function Computation and Estimation}
+    \label{sec:rank}
+    \input{alg-rank}
+    \subsection{Reachability Bound Computation}
+    \label{sec:alg-rb}
+    \input{alg-rb}
+
+
 \section{Examples and Experimental Results}
 \label{sec:example}
-% \input{impl_results}
 
 \section{Related Work}
 % \input{relatedwork}

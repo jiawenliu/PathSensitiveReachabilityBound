@@ -1,37 +1,39 @@
 \subsection{Loop Bound}
 
 \subsubsection{Soundness}
-  For a program $c$ and an edge $\absevent \in \absE(c)$,
-  $\absclr(\absevent)$ is a sound upper bound
-  on the execution times of this transition,
-  formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. 
-  Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+We present two ways for computing a loop bound on a single while loop path, both of them are sound.
 
-  \highlight{\textbf{Theorem Guarantee Discussion:}}
-\\
-\emph{Soundness} For every transition path $\rprog$, the $BD(\rprog)$
+\highlight{\textbf{Loop Bound Soundness Discussion - 1}}
+The second on in Equation.~\ref{eq:absBD} relies on the soundness of the $\absclr(\absevent, c)$
+in Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
+For a program $c$ and an edge $\absevent \in \absE(c)$, $\absclr(\absevent, c)$ is a sound upper bound on the execution times of this transition,
+formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. 
+Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+
+\highlight{\textbf{Loop Bound Soundness Discussion - 2}}
+The first computation method in Section~\ref{sec:looprb} is based on the in Definition~\ref{def:loopbound} and also relies on external SMT solver.
+For every transition path $\rprog$, the $BD(\rprog)$
 is a sound upper bound on its execution times locally.
 \\
 This bound is sound locally by assuming
 that all the loops and transition paths where $\rprog$ is nested execute only once.
-This assumption comes from the computation of the $\varGD$ and the deep first search strategy.
+This assumption comes from the computation of the $\varGD$ and the depth first search strategy.
 \\
 For every base case, i.e., a simple transition path, 
-$\varGD(\rprog, \tpath) =  \rfinit(\tpath) - \rfnext(\rprog, \tpath)$
+$\varGD(\rprog) =  \rfinit(\tpath) - \rfnext(\rprog)$
 counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
-In the other two cases,  $\varGD(\rprog, \rprepeat(\rprog))$ and $\varGD(\rprog, \rpseq(\rprog_1, \rprog_2))$
+In the other two cases,  $\varGD(\rprepeat(\rprog))$ and $\varGD(\rpseq(\rprog_1, \rprog_2))$
 has the same assumption when compute the variables' changes.
-% \\
-The soundness also relies on the operation $\frac{\rfinit(\rprog, \rprog) - \rffinal(\rprog, \rprog)}{\varGD(\rprog, \rprog)}$,
+The soundness also relies on the operation $\frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$,
 which can be solved by external SMT solver,
 or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
 %
 \begin{thm}[Soundness of Loop Bound]
-  \label{thm:sound_outsidein}
-  For every program $c$ with it refined program $\rprog$,
-  if $\rprog$ is a transition path of this program, then the $BD(\rprog)$
+\label{thm:sound_outsidein}
+For every program $c$ with it refined program $\rprog$,
+if $\rprog$ is a transition path of this program, then the $BD(\rprog)$
 is a sound local bound on the execution times of $\rprog$ in program $c$.
-  \[
+\[
     \begin{array}{l}
     \forall c \in \cdom, \rprog, \rprog, \trace_0 \in \tdom_0(\rprog), \trace_1, \trace \in \tdom \st 
     \rprog \in \rprog \land
@@ -42,11 +44,9 @@ is a sound local bound on the execution times of $\rprog$ in program $c$.
     \land 
     \config{\rprog, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
     \\ \qquad
-    \implies
-    \todo{Change Counter}
-    {\vcounter(\trace, L(\rprog))} \leq BD(\rprog)(\trace_0 \tracecat \trace_1).
+    \implies {\vcounter(\trace, L(\rprog))} \leq BD(\rprog)(\trace_0 \tracecat \trace_1).
     \end{array}
-    \]
+\]
 \end{thm}
 \highlight{Informal Discussion}
 \\
@@ -81,7 +81,7 @@ the same semantics and syntax.
 Specifically, $T(c, l)$ call the $\kw{BOUNDFINDERD}$ function as follows:
 \\
 $\kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprepeat({\rprog}))),
-NEXTD(c, l_0, \absinit(\rprepeat({\rprog})), V_{\lin} )}$
+NEXTD(c, l_0, \absinit(\rprepeat({\rprog})), V_{\lin} )}$.
 However, the $\kw{BOUNDFINDERD}$ function in \cite{GulwaniJK09} relies an arbitrary interface to
 compute the bound on the iteration numbers.
 The efficiency and accuracy of this computation fully depend on this arbitrary interface.

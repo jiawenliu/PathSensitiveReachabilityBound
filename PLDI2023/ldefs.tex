@@ -294,18 +294,6 @@
 
 \newcommand{\postevent}{{\kw{\epsilon}}}
 
-% \newcommand{\event}{\kw{\epsilon}}
-% \newcommand{\eventset}{\mathcal{E}}
-% \newcommand{\eventin}{\in_{\kw{e}}}
-% \newcommand{\eventeq}{=_{\kw{e}}}
-% \newcommand{\eventneq}{\neq_{\kw{e}}}
-% \newcommand{\eventgeq}{\geq_{\kw{e}}}
-% \newcommand{\eventlt}{<_{\kw{e}}}
-% \newcommand{\eventleq}{\leq_{\kw{e}}}
-% \newcommand{\eventdep}{\mathsf{DEP_{\kw{e}}}}
-% \newcommand{\asn}{\kw{{asn}}}
-% \newcommand{\test}{\kw{{test}}}
-% \newcommand{\ctl}{\kw{{ctl}}}
 \newcommand{\event}{\kw{\epsilon}}
 \newcommand{\eventset}{\mathcal{E}}
 \newcommand{\eventin}{\in_{\kw{e}}}
@@ -468,7 +456,6 @@
 \newcommand{\absE}{\abst{\kw{E}}}
 \newcommand{\absF}{\abst{\kw{F}}}
 \newcommand{\absW}{\abst{\kw{W}}}
-\newcommand{\locbound}{\kw{locb}}
 \newcommand{\absdom}{\mathcal{ADOM}}
 \newcommand{\inpvar}{\mathcal{VAR}_{\kw{in}}}
 \newcommand{\grdvar}{\mathcal{VAR}_{\kw{guard}}}
@@ -488,31 +475,40 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Path Sensitive Reachability Bound Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand{\locbound}{\kw{rank}}
+
+
 \newcommand{\tpath}{\kw{tp}}
 \newcommand{\rprog}{\kw{rp}}
 \newcommand{\absstate}{\kw{rstate}}
-\newcommand{\rpchoose}{\kw{choose}}
-\newcommand{\rprepeat}{\kw{repreat}}
+\newcommand{\rpchoose}[1]{\kw{choose}\left\{  #1 \right\}}
+\newcommand{\rprepeat}{\kw{repeat}}
 \newcommand{\rpseq}{\kw{seq}}
 \newcommand{\booldom}{\mathcal{B}}
 \newcommand{\vnorm}{\mathcal{V}_{\kw{N}}}
 \newcommand{\rfinit}{\kw{rInit}}
 \newcommand{\rffinal}{\kw{rFinal}}
 \newcommand{\rfnext}{\kw{rNext}}
-\newcommand{\outinB}{\kw{outinB}}
+
+
+\newcommand{\outinB}{\kw{locRB}}
 \newcommand{\varGD}{\kw{varGD}}
 \newcommand{\rpch}{\kw{rpchain}}
 \newcommand{\rpchset}{\kw{rp}\mathcal{C}}
-\newcommand{\inoutB}{\kw{inoutB}}
+
+
+\newcommand{\inoutB}{\kw{gbRB}}
+
 \newcommand{\psRB}{\kw{psRB}}
 \newcommand{\rpchB}{\kw{rpchB}}
-
 \newcommand{\lpch}{\kw{lpchain}}
-\newcommand{\lpchB}{\kw{lpchB}}
+\newcommand{\lpchB}{\kw{lpRB}}
 \newcommand{\lpinit}{\kw{lpInit}}
 \newcommand{\lpfinal}{\kw{lpFinal}}
 \newcommand{\lpnext}{\kw{lpNext}}
 \newcommand{\rpattern}{\kw{ptn}}
+\newcommand{\invariant}{\kw{invariant}}
+\newcommand{\incrs}{\kw{increase}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% author comments in draft mode %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

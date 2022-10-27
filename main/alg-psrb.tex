@@ -66,7 +66,6 @@ The local reachability bound  considers only the influence of $\tpath$'s closest
     & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
     \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
     & BD(\rprepeat(\rprog'))
-    % \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}
      \times \outinB(\rprog', \tpath)
      \\
     \outinB(l: \rprog', \tpath) & \triangleq & \outinB(\rprog', \tpath) \\
@@ -77,7 +76,7 @@ The local reachability bound  considers only the influence of $\tpath$'s closest
   The loop bound $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ by paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops. 
   We provide an alternative computation method based on \cite{sinn2017complexity} in Definition~\ref{def:loopbound}.
   \[
-    BD(\rprepeat(\rprog')) = \highlight{\frac{\rfinit(\rprog, \rprog') - \rffinal(\rprog, \rprog')}{\varGD(\rprog, \rprog')}}
+    BD(\rprepeat(\rprog')) = \highlight{\frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog')}}
 \]
       \item $\lpchB(l: \rprog, \tpath)$,
       {Loop Reachability Bound}:

@@ -2,35 +2,30 @@ The operator $\lvar: \cdom \to \mathcal{P}(\ldom)$,
 computes the set of labels
 % assigned variables and labeles variables 
 for a labeled command $c$ defined as follows,
-% defined in Definition~\ref{def:lvar} and 
-% \ref{def:avar}.
-%
-\begin{defn}[Program Labels
-(
-% $\lvar_{c} \subseteq \mathcal{VAR} \times \mathbb{N}$ or 
-$\lvar : \cdom \to \mathcal{P}(\ldom)$]
-\label{def:lvar}
-{\small
-$$
-  \lvar(c) \triangleq
-  \left\{
-  \begin{array}{ll}
-      \{l\}                  
-      & {c} = [{\assign x e}]^{l} 
-      \\
-      \lvar({c_1}) \cup \lvar({{c_2}})  \cup \{l\} 
-      & {c} = {c_1};{c_2}
-      \\
-      \lvar(c_1) \cup \lvar({{c_2}}) \cup \{l\} 
-      & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
-      \\
-      \lvar({{c}'}) \cup \{l\} 
-      & {c}   = \ewhile ([\bexpr]^{l}, {c}')
-\end{array}
-\right.
-$$
-}
-\end{defn}
+% \begin{defn}[Program Labels
+% ($\lvar : \cdom \to \mathcal{P}(\ldom)$]
+% \label{def:lvar}
+% {\small
+% $$
+%   \lvar(c) \triangleq
+%   \left\{
+%   \begin{array}{ll}
+%       \{l\}                  
+%       & {c} = [{\assign x e}]^{l} 
+%       \\
+%       \lvar({c_1}) \cup \lvar({{c_2}})  \cup \{l\} 
+%       & {c} = {c_1};{c_2}
+%       \\
+%       \lvar(c_1) \cup \lvar({{c_2}}) \cup \{l\} 
+%       & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
+%       \\
+%       \lvar({{c}'}) \cup \{l\} 
+%       & {c}   = \ewhile ([\bexpr]^{l}, {c}')
+% \end{array}
+% \right.
+% $$
+% }
+% \end{defn}
 %
 Every label and every labeled command in a program is unique, formally as follows with proof in Appendix~\ref{apdx:lemma_sec123}.
 \begin{lem}[Uniqueness of the Program Labels]
