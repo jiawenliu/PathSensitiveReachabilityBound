@@ -3,7 +3,7 @@ is performed on basis of an \emph{Abstract Transition Graph} for the program $c$
 This step shows how to generate the abstract transition graph $\absG(c)$ of a
 program $c$ through constructing its vertices and edges.
 
-\subsection{Vertices Construction}
+\subsection{Vertices}
 \label{sec:abs_prog-vertex}
 Every 
 vertex corresponds to a program execution point, which is a unique
@@ -14,14 +14,16 @@ the vertices of this graph is the set of $c$'s labels with the exit label ${\lex
   \absV(c) = \lvar(c)\cup\{{\lex}\}
   \]
 
-\subsection{Edge Construction}
+\subsection{Edges}
 \label{sec:abs_prog-edge}
   The vertices can be easily collected and the key point of the abstract
   transition graph for a program is constructing the edge set, $\absE(c)$ for a program $c$.
-  It relies on the control flow analysis and the program abstraction of each command.
-  To make it easy to understand, it
-  is an enriched control flow graph with an annotation on each edge.
-  The edge set is constructed by a program abstraction method in three steps.
+
+  It combines the program abstraction of each command (in the first step)
+  and the control flow analysis (in the second and third steps) as follows.
+  % To make it easy to understand, it
+  % is an enriched control flow graph with an annotation on each edge.
+  % The edge set is constructed by a program abstraction method in three steps.
   \\
   In the first step, \textbf{Constraint Computation} generates the constraint
   for the expression in each program command,
@@ -29,7 +31,7 @@ the vertices of this graph is the set of $c$'s labels with the exit label ${\lex
   \\
   In the second step, \textbf{Initial and Final State Computation} generates two sets for each command. 
   The initial state is a set that contains the
-  program point where this command {starts} executing, 
+  program point where this command {starts} to execute, 
   and the final state is a set
   that contains the constraint of this command
   and the continuation program points after the execution of this command.

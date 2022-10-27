@@ -1,78 +1,87 @@
 \subsection{Loop Bound}
+
+\subsubsection{Soundness}
+  For a program $c$ and an edge $\absevent \in \absE(c)$,
+  $\absclr(\absevent)$ is a sound upper bound
+  on the execution times of this transition,
+  formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. 
+  Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+
+  \highlight{\textbf{Theorem Guarantee Discussion:}}
+\\
+\emph{Soundness} For every transition path $\rprog$, the $BD(\rprog)$
+is a sound upper bound on its execution times locally.
+\\
+This bound is sound locally by assuming
+that all the loops and transition paths where $\rprog$ is nested execute only once.
+This assumption comes from the computation of the $\varGD$ and the deep first search strategy.
+\\
+For every base case, i.e., a simple transition path, 
+$\varGD(\rprog, \tpath) =  \rfinit(\tpath) - \rfnext(\rprog, \tpath)$
+counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
+In the other two cases,  $\varGD(\rprog, \rprepeat(\rprog))$ and $\varGD(\rprog, \rpseq(\rprog_1, \rprog_2))$
+has the same assumption when compute the variables' changes.
+% \\
+The soundness also relies on the operation $\frac{\rfinit(\rprog, \rprog) - \rffinal(\rprog, \rprog)}{\varGD(\rprog, \rprog)}$,
+which can be solved by external SMT solver,
+or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
+%
+\begin{thm}[Soundness of Loop Bound]
+  \label{thm:sound_outsidein}
+  For every program $c$ with it refined program $\rprog$,
+  if $\rprog$ is a transition path of this program, then the $BD(\rprog)$
+is a sound local bound on the execution times of $\rprog$ in program $c$.
+  \[
+    \begin{array}{l}
+    \forall c \in \cdom, \rprog, \rprog, \trace_0 \in \tdom_0(\rprog), \trace_1, \trace \in \tdom \st 
+    \rprog \in \rprog \land
+    \rprog = Alg.4(c)
+    \\ \qquad
+    \land
+    \config{c, \trace_0} \to^* \config{\highlight{\ewhile (\rprog, \cdots)}, \trace_0 \tracecat \trace_1} 
+    \land 
+    \config{\rprog, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
+    \\ \qquad
+    \implies
+    \todo{Change Counter}
+    {\vcounter(\trace, L(\rprog))} \leq BD(\rprog)(\trace_0 \tracecat \trace_1).
+    \end{array}
+    \]
+\end{thm}
+\highlight{Informal Discussion}
+\\
+Theorem~\ref{thm:sound_outsidein} guarantees that
+the bound for every transition path $\rprog$, the $BD(\rprog)$
+is a sound upper bound on its execution times, by assuming
+that all the loops and transition paths where $\rprog$ is nested execute only once.
+\\
+In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
+$v$ is a local bound if it has the same decreasing time as the transition's execution time.
+By assuming that certain program parts (those were e increases) are not executed,
+then value of $v$ can limit the execution time of that transition.
+\\
+In our soundness, we assume all the code pieces not inside this transition path are executed at most once (once if they show up in front of the program
+zero time if not).
+In this case, this bound limits the execution time of this transition path.
+
 \subsubsection{Path-sensitivity}
-  For every repeat pattern $\rpattern$ in a refined program $\rprog$, 
-this algorithm
-computes a bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ on its iteration numbers locally and path-sensitively
-named \textbf{Outside-In} bound.
-%  of every repeat pattern 
-\\
-% $\outinB(\rprog, \rpattern)$
-% computes the bound locally
-% % is the \textbf{Outside-In} bound for a repeat pattern $\rpattern$ 
-% in the sense that
-% % for a repeat pattern 
-% if 
-For every $\rpattern'$ that is nested
-in another repeat pattern $\rpattern$, i.e., $\rpattern = \rprepeat(\rpattern')$,
-$\outinB(\rprog, \rpattern)$ only estimates
-$\rpattern'$'s iteration number within $\rpattern$ by assuming that $\rprepeat(\rpattern')$ executes once.
-% \\
+$BD(\rprepeat({\rprog}))$  is path-insensitive because we only compute the loop bound
+for the single loop path in a refined program $\rprog$.
+But our alternative computation method in Section~\ref{sec:looprb} has a better performance in the following sense.
 
-\highlight{\textbf{Notations / Operators:}}
-\\
-The \emph{State}: 
-$\absstate \in \mathcal{P}(\dcdom^{\top})$ is a conjunction of constraints.
-\\
-\emph{Initial State} ($\rfinit(\rprog, \rpattern) \in \absstate$), 
-\\
-\emph{Final State} ($\rffinal(\rprog, \rpattern) \in \absstate$),
-\\
-\emph{Next State} $\rfnext(\rprog, \rpattern) \in \absstate$,
-% The \emph{Initial State}: $\rfinit : \rprog \to \absstate $.
-\\
-\emph{Variable Grade Decedent}: $\varGD(\rprog, \rpattern) \in \mathcal{A}_{in}$
-
-
-\highlight{\textbf{Computation Steps:}}
-  \textbf{Outside-In} Bound ($\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$)
-  \\
-For a repeat pattern $\rpattern$ in a refined program $\rprog$,
-the \textbf{Outside-In} bound, $\outinB(\rprog, \rpattern) \in \mathcal{A}_{in}$ is computed recursively as follows,
-% for every nested repeat patterns in $\rprog$,
-% \\
-% $\outinB(\rpchoose{\rprog_1, \cdots, \rprog_m}) =  \max\{\outinB(\rprog_1), \cdots, \outinB(\rprog_m)\}$
-\\
-$\outinB(\rprog, \rprepeat({\rpattern})) = 
-\frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$
-\\
-$\outinB(\rprog, \rpattern_1; \rpattern_2) =  \outinB(\rprog, \rpattern_1)+ \outinB(\rprog,  \rpattern_2)$
-\\
-$\outinB(\rprog, \tpath) =  1$.
-\\
 \highlight{
   \textbf{Improvement Discussion:}
 \\
-The computation of $\outinB(\rprepeat({\rpattern}))$ 
+The computation of $BD(\rprepeat({\rprog}))$ 
 as below is more efficient and accurate than existing techniques.
-% in the first case
-% can be computed  as follows
 \\
 The method $T(c, l)$ in \cite{GulwaniJK09} can also compute a
-bound on the iteration numbers of $\rprepeat({\rpattern})$ locally based on
-% $\rprepeat(\rpattern)$ with loop header $l$
-% has the 
+bound on the iteration numbers of $\rprepeat({\rprog})$ locally based on
 the same semantics and syntax.
 Specifically, $T(c, l)$ call the $\kw{BOUNDFINDERD}$ function as follows:
 \\
-$\kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprepeat({\rpattern}))),
-NEXTD(c, l_0, \absinit(\rprepeat({\rpattern})), V_{\lin} )}$
-% based on
-% % $\rprepeat(\rpattern)$ with loop header $l$
-% % has the 
-% the same semantics and syntax.
-%  as the refined program in paper~\cite{GulwaniJK09},
-% in paper~\cite{GulwaniJK09} 
-% with equivalent results.
+$\kw{BOUNDFINDERD(INITD(c, l_0, \absinit(\rprepeat({\rprog}))),
+NEXTD(c, l_0, \absinit(\rprepeat({\rprog})), V_{\lin} )}$
 However, the $\kw{BOUNDFINDERD}$ function in \cite{GulwaniJK09} relies an arbitrary interface to
 compute the bound on the iteration numbers.
 The efficiency and accuracy of this computation fully depend on this arbitrary interface.
@@ -80,73 +89,6 @@ The efficiency and accuracy of this computation fully depend on this arbitrary i
 In comparison to them, the alternative loop bound computation method in 
 Definition~\ref{def:loopbound} based on the abstract transition graph $\absG(c)$ is more accurate.
 }
-
-\subsubsection{Soundness}
-\subsection{Theorem Guarantee}
-  \label{sec:outinalg-theorem}
-  For a program $c$ and an edge $\absevent \in \absE(c)$,
-  $\absclr(\absevent)$ is a sound upper bound
-  %  for every label $l$ in this program 
-  on the execution times of this transition,
-  formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. 
-  Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
-
-  \highlight{\textbf{Theorem Guarantee Discussion:}}
-\\
-\emph{Soundness} For every repeat pattern $\rpattern$, the $\outinB(\rpattern, \rprog)$
-is a sound upper bound on its execution times locally.
-\\
-This bound is sound locally by assuming
-that all the loops and repeat patterns where $\rpattern$ is nested execute only once.
-This assumption comes from the computation of the $\varGD$ and the deep first search strategy.
-\\
-For every base case, i.e., a simple transition path, 
-$\varGD(\rprog, \tpath) =  \rfinit(\tpath) - \rfnext(\rprog, \tpath)$
-counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
-In the other two cases,  $\varGD(\rprog, \rprepeat(\rpattern))$ and $\varGD(\rprog, \rpseq(\rpattern_1, \rpattern_2))$
-has the same assumption when compute the variables' changes.
-% \\
-The soundness also relies on the operation $\frac{\rfinit(\rprog, \rpattern) - \rffinal(\rprog, \rpattern)}{\varGD(\rprog, \rpattern)}$,
-which is solved by Definition~\ref{def:edge_pathinsensitivebound} and~\ref{def:ranking_bound}.
-% a sound external solver. \todo{reference}
-%
-\begin{thm}[Soundness of Outside-In Bound]
-  \label{thm:sound_outsidein}
-  For every program $c$ with it refined program $\rprog$,
-  if $\rpattern$ is a repeat pattern of this program, then the $\outinB(\rpattern, \rprog)$
-is a sound local bound on the execution times of $\rpattern$ in program $c$.
-  \[
-    \begin{array}{l}
-    \forall c \in \cdom, \rpattern, \rprog, \trace_0 \in \tdom_0(\rpattern), \trace_1, \trace \in \tdom \st 
-    \rpattern \in \rprog \land
-    \rprog = Alg.4(c)
-    \\ \qquad
-    \land
-    \config{c, \trace_0} \to^* \config{\highlight{\ewhile (\rpattern, \cdots)}, \trace_0 \tracecat \trace_1} 
-    \land 
-    \config{\rpattern, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
-    \\ \qquad
-    \implies
-    \todo{Change Counter}
-    {\vcounter(\trace, L(\rpattern))} \leq \outinB(\rpattern, \rprog)(\trace_0 \tracecat \trace_1).
-    \end{array}
-    \]
-\end{thm}
-\highlight{Informal Discussion}
-\\
-Theorem~\ref{thm:sound_outsidein} guarantees that
-the bound for every repeat pattern $\rpattern$, the $\outinB(\rpattern, \rprog)$
-is a sound upper bound on its execution times, by assuming
-that all the loops and repeat patterns where $\rpattern$ is nested execute only once.
-\\
-In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
-$v$ is a local bound if it has the same decreasing time as the transition's execution time.
-By assuming that certain program parts (those were e increases) are not executed,
-then value of $v$ can limit the execution time of that transition.
-\\
-In our soundness, we assume all the code pieces not inside this repeat pattern are executed at most once (once if they show up in front of the program
-zero time if not).
-In this case, this bound limits the execution time of this repeat pattern.
 
 \subsection{Path Local Reachability Bound}
 \subsubsection{Path-sensitivity}
@@ -169,19 +111,19 @@ In this case, this bound limits the execution time of this repeat pattern.
   $\outinB(\tpath) = 1$ is sound and tight because it bounds one execution of the while body accurate.
   \\
   If a simple transition path is nested in some $\rprepeat$ annotations,
-  $\rpch(l: \rprog, \tpath) \triangleq \rpattern_m \to \rpattern_{n-1} \to \cdots \to \rpattern_{0} \to \tpath$, we have the following guarantees.
+  $\rpch(l: \rprog, \tpath) \triangleq \rprog_m \to \rprog_{n-1} \to \cdots \to \rprog_{0} \to \tpath$, we have the following guarantees.
   \\
-  1. $\rprog_n$ is a unique repeat pattern of this loop,
-  and isn't a sub-pattern of any other repeat patterns in this loop.
+  1. $\rprog_n$ is a unique transition path of this loop,
+  and isn't a sub-pattern of any other transition paths in this loop.
   \\
-  2. for every $i = n, \cdots, 0$, $\outinB(\rpattern_{i - 1})$ bounds the execution time of $\rpattern_{i - 1}$ with the assumption that $\rprog_{i}$ executes only once.
+  2. for every $i = n, \cdots, 0$, $\outinB(\rprog_{i - 1})$ bounds the execution time of $\rprog_{i - 1}$ with the assumption that $\rprog_{i}$ executes only once.
   \\
   3. $\tpath$ only shows up once inside $\rprog_n$.
   \\
-  By 1. 2. 3. guarantees, multiplication of $\outinB(\rpattern_{i - 1})$ for every $i = n, \cdots, 0$ is the accurate execution time of this
-  simple transition path in the repeat pattern $\rprog_n$.
+  By 1. 2. 3. guarantees, multiplication of $\outinB(\rprog_{i - 1})$ for every $i = n, \cdots, 0$ is the accurate execution time of this
+  simple transition path in the transition path $\rprog_n$.
   \\
-  In the case that loop has multiple repeat patterns, $\rpchoose{l: \rpattern_1, \cdots, l: \rpattern_n}$,
+  In the case that loop has multiple transition paths, $\rpchoose{l: \rprog_1, \cdots, l: \rprog_n}$,
   \\
   We first find every repeat chain of this loop for this simple transition path.
   Then we compute the execution time of $\tpath$ on every repeat chain and take the maximum value.
@@ -194,15 +136,15 @@ In this case, this bound limits the execution time of this repeat pattern.
     $\outinB(\rprog, \tpath)$
     is a sound bound on its execution times in side $l$.
     \\
-    For a simple transition path $\tpath$ only enclosed by one repeat pattern $\rprepeat(\tpath)$, 
+    For a simple transition path $\tpath$ only enclosed by one transition path $\rprepeat(\tpath)$, 
     we know $\outinB(\rprog, \tpath) = \outinB(\rprepeat(\tpath), \rprog)$.
     Since $\outinB(\rprepeat(\tpath), \rprog)$ is a sound local bound on the iteration times
     of $\rprepeat(\tpath)$ by assuming all the outside loops executes only once.
     In this sense, $\outinB(\rprepeat(\tpath), \rprog)$ is also a sound bound on the iteration times globally.
     \\
-    For a simple transition path $\tpath$ nested in multiple repeat patterns $\rpattern_1, \cdots, \rpattern_m$,
-    we know $\outinB(\rprog, \tpath) = \prod\limits_{i = 1, \cdots, m}\outinB(\rpattern_i, \rprog)$.
-    By the same guarantee from $\outinB(\rpattern_i, \rprog)$, it is sound to multiply each of them.
+    For a simple transition path $\tpath$ nested in multiple transition paths $\rprog_1, \cdots, \rprog_m$,
+    we know $\outinB(\rprog, \tpath) = \prod\limits_{i = 1, \cdots, m}\outinB(\rprog_i, \rprog)$.
+    By the same guarantee from $\outinB(\rprog_i, \rprog)$, it is sound to multiply each of them.
     
   %  
 
@@ -313,7 +255,7 @@ it is sound to multiply these bounds by $\outinB(\rprog, \tpath)$.
 In the same time, the soundness also relies on the soundness of $\outinB(\rprog, \tpath)$ and $\rpchB(l', \tpath, \rprog)$. 
 % Since 
 % In this way, it assumes all the outside patterns and loop execution only once.
-% In the other two cases,  $\varGD(\rprog, \rprepeat(\rpattern))$ and $\varGD(\rprog, \rpseq(\rpattern_1, \rpattern_2))$
+% In the other two cases,  $\varGD(\rprog, \rprepeat(\rprog))$ and $\varGD(\rprog, \rpseq(\rprog_1, \rprog_2))$
 % has the same assumption.
 % \todo{reference}
 % \end{itemize}
@@ -327,14 +269,14 @@ is a sound bound on the execution times of $\tpath$ in $c$.
   \[
     \begin{array}{l}
     \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
-    % \rpattern \in \rprog \land
+    % \rprog \in \rprog \land
     \rprog = Alg.4(c)
     % \\ \qquad
     \land
     \config{c, \trace_0} \to^* 
     % \config{\highlight{\tpath; \rprog', \trace_0 \tracecat \trace_1} 
     % \land 
-    % \config{\rpattern, \trace_0 \tracecat \trace_1} \to^* 
+    % \config{\rprog, \trace_0 \tracecat \trace_1} \to^* 
     \config{{\eskip, \trace_0 \tracecat \trace}}
     \\ \qquad
     \implies

@@ -41,8 +41,8 @@ for every labeled command in $c$ and each abstract transition is an edge in $\ab
 % for computing the path-sensitive reachability-bound of a program location.
 % see Section~\ref{sec:alg_vertexgen}
 \item The second step in Section~\ref{sec:refine}
-computes the refined program by the refine algorithm in \cite{GulwaniJK09}, $\rprog$ for a program $c$ based on 
-its abstraction transition graph.
+computes the refined program, $\rprog$ for a program $c$ based on 
+its abstraction transition graph by the refine algorithm in \cite{GulwaniJK09}.
 This algorithm transforms the multiple-paths loops
 into multiple loops where
 the interleaving of paths is explicit.
@@ -57,7 +57,7 @@ w.r.t its nested loop. These two bounds also involve computing the ranking funct
 and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
 We refer to the two names as the same meaning in this paper.} 
 for every transition path,
-and estimates the upper bounds on every ranking function's maximum value. The details are in Section~\ref{sec:rank}.
+and estimating the upper bound on every ranking function's maximum value. The details are in Section~\ref{sec:rank}.
 \end{enumerate}
 % Section~\ref{sec:rank} computes the ranking function  
 % \footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}

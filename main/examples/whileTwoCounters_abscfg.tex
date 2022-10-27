@@ -76,8 +76,8 @@ $\clabel{\assign{i}{i - 1}}^{5}$.
 The $i'$ on the left side of $i' \leq i - 1$ represents the value of $i$ after the assignment operation,
 and the right-hand side $i$ stores the value before the assignment.
 The boolean constraint $i \leq 0 $ on the edge $2 \xrightarrow{i \leq 0} \lex$, 
-represents the negation of the testing guard $i > 0$
-in the $\ewhile$ command with loop header at line $2$.
+represents the negation of the testing guard $\clabel{i > 0}^2$
+in the $\ewhile$ command.
 $2 \xrightarrow{i \leq 0} \lex$ denotes that $i \leq 0$ must hold in order to perform this transition from program point $2$ to
 the program exit. 
 \end{example}

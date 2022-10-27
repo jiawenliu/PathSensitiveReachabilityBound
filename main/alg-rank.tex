@@ -159,4 +159,9 @@ Three steps:
  where $in(ch)$ is the variable on the last edge on the reset chain $ch$.
 \end{defn}
   %
+$\absclr$ can also be used to estimate the loop bound, $BD(\tpath)$ for the transition path $\tpath$ as follows
+where $\absevent \in \tpath$ denotes $\absevent$ is an edge on path $\tpath$.
+\[
+  BD(\tpath) = \max\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \tpath \right\}.
+\]
   %
