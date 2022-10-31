@@ -1,0 +1,112 @@
+Two steps:
+\begin{enumerate}
+    \item \textbf{Rewrite the Program}
+    It first rewrites the program $c$ by syntax in \cite{GulwaniJK09} and preserves the same semantics, based on $\absG(c)$.
+\\
+Each \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ in the rewritten program
+corresponds to a path $\rho$ in the flatten program by Definition~4.1 in \cite{GulwaniJK09}.
+%
+It contains only the edges of atomic assignment or guard transition.
+\item \textbf{Refined Program}
+Then it computes the 
+refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
+\\
+This step invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+refined program $\rprog$ for a program $c$ given the input $c^{T}$.
+\end{enumerate}
+
+\paragraph{Rewrite the Program}
+\begin{algorithmic}[1]
+    \REQUIRE $\absG(c)$
+    \STATE finds all $c$'s \emph{simple transition path}s, $\tpath_1, \cdots, \tpath_n \in \paths(\absG(c))$.
+    \STATE \textbf{init}: candidate set $W = \{c_1, \cdots, c_n\}$, where $c_i = \tpath_i$ and $i = 1, \cdots, n$
+    \STATE \textbf{while} $W.size()> 1$:
+    \STATE \quad create $c' = \rpchoose{c_1, \cdots, c_m}$ 
+    s.t. $c_i \in W \land c_i[0] = c_j[0] \land c_i[-1] = c_j[-1], i, j = 1, \cdots, m$.
+    \\ \quad $W.add(c')$ \qquad $W.remove(c_1, \cdots, c_m)$
+    \STATE
+    \quad create $c' = \rprepeat(c)$ s.t. $c_i \in W \land c[0] = c[-1]$
+    \\ \quad $W.add(c')$, \qquad $W.remove(c)$
+    \STATE \quad create $c' = c_1; c_2$ s.t. $c_1, c_2 \in W \land c_1[-1] = c_2[0]$
+    \\
+    \quad $W.add(c')$ \qquad $W.remove(c_1, c_2)$
+    \STATE \textbf{Endwhile}
+    \\ $c^T = W[0]$
+    \RETURN $c^T$.
+\end{algorithmic}
+%
+Line-2: initialize each candidate $c_i$ with a simple transition path $\tpath_i$.
+\\
+Line-4: for all the candidates $c_1, \cdots, c_m$ having the same starting and ending vertices, rewrite them into if statement as~\cite{GulwaniJK09}.
+\\
+Line-5: for every candidate $c'$, if it starts and ends with the same vertex, rewrite it into while loop statement as~\cite{GulwaniJK09}.
+\\
+Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
+\\
+We use simple depth first search strategy computes all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath} below.
+It guarantees that  every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
+  \begin{defn}[Simple Tansition Path]
+    \label{def:tpath}
+  A simple transition path
+  $\tpath \in \paths(\absG(c))$ for the program $c$, is a path on the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
+  \begin{itemize}
+  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
+  %
+  \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
+  \end{itemize}
+  %
+  satisfying:
+  \begin{itemize}
+    \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
+    \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+    \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
+  \end{itemize}
+  \end{defn}
+
+\paragraph{Refined Program}
+\paragraph{Contextualization}
+
+\[
+  cxlG(c) = (cxlV, cxlE)
+  \]
+  \[cxlV = \tpath \in \paths(\absG(c))
+  \]
+  \[
+    cxlE = (\tpath_1, \tpath_2)\]
+
+    $cxlV$ is the set contains all program $c$'s simple transition paths.
+$cxlE$ is a set of edges between two simple transition paths of program $c$. There is an edge from $\tpath_1$ to $\tpath_2$
+if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
+We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~10 and build the edge.
+\paragraph{Path Interleaving Refinement}
+\begin{algorithm}
+  \caption{
+  {Interleaving Refinement}
+  \label{alg:prog-refine}
+  }
+  \begin{algorithmic}[1]
+  \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
+  \STATE  \textbf{Init} 
+  $R_l = \{\}$ initial set for each loop with header at program point $l$, (i.e., set of the transition sequences from interleaving-refinement) .
+  \STATE Define algorithm \highlight{$\kw{dfs(p, Q)}$:}
+  \STATE \quad {$\kw{Q_0 = Q.top()}$, $\kw{\tpath_0 = p.last()}$, $\kw{wking = \{\}}$, $\kw{loops = \{\}}$}
+  \STATE \quad \textbf{For} $(\tpath_0, \tpath_i) \in cxlE(c)$:
+  \\
+  \STATE \quad \quad $\kw{p_i = p.append(\tpath_i)}$; $\kw{Q_i = postCondition(p_i)}$; 
+  \STATE \quad \quad \textbf{If} \highlight{$\kw{Q_i \in Q}$}
+  \STATE \quad \quad \textbf{then} $\kw{wking.add( (p_i, Q_i) )}$
+  \STATE \quad \quad  \highlight{\textbf{else} 
+  ${\kw{r_i = dfs(p_i, Q.push(Q_i))}}$}
+  \STATE \quad \textbf{For} $r_i$:
+  \STATE \quad \quad \textbf{For} $(p_j, Q_j) \in r_i$:
+  \STATE \quad \quad \quad \textbf{If} $\kw{Q_j = Q_0}$: 
+  \STATE \quad \quad \quad \textbf{Then} $\kw{loops.add(p_j-p)}$
+  \STATE \quad \quad \quad \textbf{Else} $\kw{wking.add( (p_j - p, Q_j) )}$
+  \STATE \quad \textbf{For} $\kw{(p_j, Q_j) \in wking}$:
+  \STATE \quad \quad \textbf{If} $\kw{len(p_j) \geq len(loop)}$:  update $\kw{p_j = p + loops^* + p_j - loops}$
+  \STATE \quad \textbf{Return} $\kw{wking}$
+  \STATE \textbf{For} each loop $c_{l}$ with header at program point $l$:
+    \STATE \quad \highlight{$\kw{Q = postCondition(c_{l}, c)}$}; $\kw{dfs([], [Q] )}$
+  \RETURN $R_l$ for every while loop with its header at $l$.
+  \end{algorithmic}
+  \end{algorithm}
