@@ -1,0 +1,16 @@
+The refinement relies on the external algorithm, summarized as follows.
+\begin{enumerate}
+    \item \textbf{Rewrite the Program}
+    It first rewrites the program $c$ by syntax in \cite{GulwaniJK09} and preserves the same semantics, based on $\absG(c)$.
+\\
+Each \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ in the rewritten program
+corresponds to a path $\rho$ in the flatten program by Definition~4.1 in \cite{GulwaniJK09}.
+%
+It contains only the edges of atomic assignment or guard transition.
+\item \textbf{Refined Program}
+Then it computes the 
+refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
+\\
+This step invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+refined program $\rprog$ for a program $c$ given the input $c^{T}$.
+\end{enumerate}
