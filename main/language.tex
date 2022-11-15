@@ -184,9 +184,10 @@ then the program's execution terminates and produces a finite execution trace $\
 \\
 For non-terminating program, we pass to the limit of
 $\config{c, \trace_0} \to^{*}$ 
-by defining $\config{c, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat []^{\infty} } 
-\triangleq \lim(\config{c, \trace_0} \to^{*})$ for arbitrary $c'$.
-This follows the maximal trace semantics in \cite{cousot2019abstract} Section 2.5.
+by defining $\config{c, \trace_0} \to^{\infty} 
+% \config{\cdot, \trace_0 \tracecat []^{\infty} } 
+\triangleq \lim(\config{c, \trace_0} \to^{*})$.
+This follows the maximal trace semantics in \cite{cousot2019abstract} Section 2.5 Equation (12).
 % When the program execution doesn't terminate under $\trace_0$, 
 % we use $\config{c, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \trace}$ to
 % represent the non-terminated execution w.r.t. the infinite trace $\trace_0 \in \inftdom$.

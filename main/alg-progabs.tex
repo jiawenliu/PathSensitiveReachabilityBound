@@ -18,11 +18,10 @@ and the vertices set is all the $c$'s program execution points with an extra exi
   for the expression in each program command,
   which is used as the annotation of an edge.
   \\
-  In the second step, \textbf{Initial and Final State Computation} generates two sets for each command. 
-  The initial state is a set that contains the
+The second step, generates two sets for each command, which are \textbf{Initial and Continuation Execution Program Points}. 
+  The initial set contains the
   program point where this command {starts} to execute, 
-  and the final state is a set
-  that contains the constraint of this command
+  and the continuation set contains both the constraint of this command
   and the continuation program points after the execution of this command.
   \\ 
   In the third step, \textbf{Abstract Event Computation} generates a set of edges for the program.
@@ -98,7 +97,7 @@ or commands that don't interfere any guard variable.
       \absexpr(\expr, x) = \top &  \todo{o.w.} \\
     \end{array}
     \]
-   $\absexpr(\expr, x)$ is iteratively updating until stabilized over every guard or assignment command in $c$, and $\absexpr(\expr, x)$
+   $\absexpr(\expr, x)$ is iteratively updating until stabilized over every guard and assignment command in $c$, and $\absexpr(\expr, x)$
    denotes the stabilized result in the following paper.
   \end{defn}
 %
@@ -145,8 +144,8 @@ from the standard control flow analysis.
 
 \highlight{Computation Steps:}
 \begin{itemize}
-  \item The \emph{abstract initial state}, $\absinit(c) \in \mathcal{P}(\ldom)$
-  for a command $c$ is the set of the initial program points.
+  \item The \emph{initial execution points}, $\absinit(c) \in \mathcal{P}(\ldom)$
+  for a command $c$.
 Each point in this set is a unique program label corresponds to the command before executing this command. 
 \\
 Given a program $c$, its abstract initial state, $\absinit(c)$ is computed as follows,
@@ -162,7 +161,7 @@ Given a program $c$, its abstract initial state, $\absinit(c)$ is computed as fo
  \]
 %
 %
-\item The \emph{abstract final state} of the program $c$, 
+\item The \emph{continuation execution points}, $\absfinal(c)$ of program $c$, 
 $\absfinal(c) \in \mathcal{P}(\ldom \times \dcdom^{\top})$
 is a set of pairs, $(l, dc)$ with a
 program point (i.e., a label), $l$ as the first component and a constraint, 
