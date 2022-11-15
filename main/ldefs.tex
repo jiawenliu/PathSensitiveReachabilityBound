@@ -215,7 +215,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Trace and Events %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Trace 
 \newcommand{\tdom}{\mathcal{T}}
-\newcommand{\tdominf}{\tdom^{\infty}}
+\newcommand{\inftdom}{\tdom^{+\infty}}
+\newcommand{\ftdom}{\tdom^{+}}
 
 %annotated variables
 \newcommand{\av}{\kw{av}}
@@ -309,7 +310,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Dynamic Program Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Program Semantics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Execution Based Dependency, Graph and Adaptivity 
@@ -318,7 +319,6 @@
 \newcommand{\progwalks}{\mathcal{WK}^{\kw{prog}}}
 
 \newcommand{\len}{\kw{len}}
-% \newcommand{\lvar}{\mathbb{LV}}
 \newcommand{\lvar}{\mathbb{L}}
 \newcommand{\avar}{\mathbb{AV}}
 \newcommand{\qvar}{\mathbb{QV}}
@@ -339,6 +339,11 @@
 \newcommand{\traceF}{\kw{{Q_{trace}}}}
 \newcommand{\traceW}{\kw{{W_{trace}}}}
 \newcommand{\exeRB}{\kw{RB_{exe}}}
+
+
+\newcommand{\loopl}{\lvar_{\kw{loop}}}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Static Program Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -396,7 +401,8 @@
 %program abstraction
 \newcommand{\abst}[1]{\kw{abs}{#1}}
 \newcommand{\absexpr}{\abst{\kw{expr}}}
-\newcommand{\absevent}{\stackrel{\scriptscriptstyle{\alpha}}{\event{}}}
+% \newcommand{\absevent}{\stackrel{\scriptscriptstyle{\alpha}}{\event{}}}
+\newcommand{\absevent}{\hat{\event{}}}
 \newcommand{\absfinal}{\abst{\kw{final}}}
 \newcommand{\absinit}{\abst{\kw{init}}}
 \newcommand{\absflow}{\abst{\kw{trace}}}
@@ -407,19 +413,25 @@
 \newcommand{\absW}{\abst{\kw{W}}}
 \newcommand{\locbound}{\kw{rank}}
 \newcommand{\absdom}{\mathcal{ADOM}}
-\newcommand{\inpvar}{\mathcal{VAR}_{\kw{in}}}
-\newcommand{\grdvar}{\mathcal{VAR}_{\kw{guard}}}
+\newcommand{\inpvar}{\mathcal{V}_{\kw{in}}}
+\newcommand{\grdvar}{\mathcal{V}_{\kw{guard}}}
 
 
 \newcommand{\absclr}{{\kw{TB}}}
 \newcommand{\varinvar}{{\kw{VB}}}
 \newcommand{\init}{\kw{init}}
-\newcommand{\constdom}{\mathcal{SMBCST}}
+\newcommand{\constdom}{\mathcal{SC}}
 \newcommand{\dcdom}{\mathcal{DC}}
 \newcommand{\reset}{\kw{re}}
 \newcommand{\resetchain}{\kw{rechain}}
 \newcommand{\inc}{\kw{inc}}
 \newcommand{\dec}{\kw{dec}}
+
+
+
+
+
+\newcommand{\scexpr}{\mathcal{A}_{\kw{sc}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Path Sensitive Reachability Bound Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

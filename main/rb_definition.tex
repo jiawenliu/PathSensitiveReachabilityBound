@@ -1,9 +1,9 @@
 The operator $\lvar: \cdom \to \mathcal{P}(\ldom)$,
-computes the set of labels
-for a labeled command $c$ defined as follows,
-\begin{defn}[Program Labels
-(
-$\lvar : \cdom \to \mathcal{P}(\ldom)$]
+computes the set of all labels
+in a labeled command $c$ defined as follows, we call it program points, 
+$\loopl(c) \subseteq \lvar(c)$ is the set of all program points of the loop headers in program $c$.
+Every the program point is unique.
+\begin{defn}[Program Points ($\lvar : \cdom \to \mathcal{P}(\ldom)$]
 \label{def:lvar}
 {\small
 $$
@@ -26,6 +26,21 @@ $$
 $$
 }
 \end{defn}
+
+\begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
+  \label{def:loopl}
+  $$
+  \loopl(c) \triangleq 
+  \left\{
+    \begin{array}{ll}
+      \{\}  & {c} = [{\assign x e}]^{l} \\
+      \loopl({c_1}) \cup \loopl({{c_2}})  & {c} = {c_1};{c_2} \\
+      \loopl(c_1) \cup \loopl({{c_2}})   & {c} =\eif([\bexpr]^{l}, c_1, c_2) \\
+  \loopl(c') \cup \{l\}, &  {c}   = \ewhile ([\bexpr]^{l}, {c}')
+  \end{array}
+\right.
+  $$
+  \end{defn}
 %
 Every label corresponds to a labeled command in a program, and it is unique.
 The Lemma below formally describes the uniqueness property of the program labels
@@ -50,11 +65,11 @@ showing up in $c$, which aren't defined before be used, are actually the input v
 a function $f(c, l) : \tdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Reachability-Bound} for $l$ if and only if
 \highlight{
 \[
-  \forall \trace_0 \in \tdom_0(c), \trace \in \tdominf \st 
+  \forall \trace_0 \in \tdom_0(c), c' \in \cdom, \trace \in \inftdom \st 
   \Big(
-    \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
-    \lor 
-    \config{{c}, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \vtrace} 
+    \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \vtrace} 
+    % \lor 
+    % \config{{c}, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \vtrace} 
   \Big)
   \implies f({c}, l)(\trace_0) \geq \vcounter(\vtrace, l) 
   \]
@@ -64,7 +79,7 @@ a function $f(c, l) : \tdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Re
 Given a program point $l$ in $c$, our algorithm (defined below) computes a Reachability-Bound for it.
 It is easy to compute a trivial \emph{Reachability-Bound} $f(c, l): \tdom_0(c) \to \infty$, but it is not interesting to us.
 \\
-In the following sections, we only focus on computing a finite \emph{reachability-bound} for program's given location and considering the executions that terminates.
+% In the following sections, we only focus on computing a finite \emph{reachability-bound} for program's given location and considering the executions that terminates.
 Ideally, we aim to compute a precise reachability-bound as follows.
 }
 \begin{defn}[Precise Reachability-Bound]
@@ -73,11 +88,11 @@ Ideally, we aim to compute a precise reachability-bound as follows.
 $\exeRB({c}, l): \tdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Precise Reachability-Bound}  if and only if,
 \highlight{
 \[
-  \forall \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
+  \forall \trace_0 \in \tdom_0(c) \st \exists \trace \in \inftdom, c' \in \cdom \st 
   \Big(
-    \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
-    \lor 
-    \config{{c}, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \vtrace} 
+    \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \vtrace} 
+    % \lor 
+    % \config{{c}, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \vtrace} 
   \Big)
   \implies \exeRB({c}, l)(\trace_0) = \vcounter(\vtrace, l) 
   \]

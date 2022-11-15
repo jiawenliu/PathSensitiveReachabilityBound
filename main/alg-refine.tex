@@ -25,7 +25,7 @@ refined program $\rprog$ for a program $c$ given the input $c^{T}$.
     s.t. $c_i \in W \land c_i[0] = c_j[0] \land c_i[-1] = c_j[-1], i, j = 1, \cdots, m$.
     \\ \quad $W.add(c')$ \qquad $W.remove(c_1, \cdots, c_m)$
     \STATE
-    \quad create $c' = \rprepeat(c)$ s.t. $c_i \in W \land c[0] = c[-1]$
+    \quad create $c' = \rprepeat(c)$ s.t. $c_i \in W \land c[0] = c[-1] \land c[0] \in \loopl(c)$
     \\ \quad $W.add(c')$, \qquad $W.remove(c)$
     \STATE \quad create $c' = c_1; c_2$ s.t. $c_1, c_2 \in W \land c_1[-1] = c_2[0]$
     \\
@@ -59,7 +59,9 @@ It guarantees that  every $\tpath$ is equivalent to a path $\rho$ in Definition~
   \begin{itemize}
     \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
     \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
-    \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$).
+    i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
+    \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
+    i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$.
   \end{itemize}
   \end{defn}
 
