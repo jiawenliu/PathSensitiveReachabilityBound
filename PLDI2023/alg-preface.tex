@@ -1,0 +1,30 @@
+In this section, we present our static program analysis algorithm for computing 
+% an upper bound on the 
+% execution-based reachability times 
+the \emph{reachability-bound} for every program point $l$ in a program $c$ in a path sensitive manner.
+The algorithm is summarized into the following steps,
+%
+\begin{enumerate}
+\item  The Section~\ref{sec:progabs} first 
+computes the Abstract Transition graph, $\absG(c)$ for a program $c$ through program abstraction.
+It computes the abstract transition 
+for every labeled command in $c$ and each abstract transition is an edge in $\absG(c)$.
+\item The second step in Section~\ref{sec:refine}
+computes the refined program, $\rprog$ for a program $c$ based on 
+its abstraction transition graph by the refine algorithm in \cite{GulwaniJK09}.
+This algorithm transforms the multiple-paths loops
+into multiple loops where
+the interleaving of paths is explicit.
+\item Section~\ref{sec:psrb} computes the path-sensitive reachability-bound for every program point.
+It is based on computing the path reachability bound and the loop reachability bound
+in Section~\ref{sec:looprb}.
+The path reachability bound is an upper bound on the execution times of a transition path,
+and
+the loop reachability bound is an upper bound on the execution times of a outside loop 
+w.r.t its nested loop. These two bounds also involve computing the ranking function  
+\footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
+and \textbf{local bound} is the name used in \cite{ZulegerGSV11}, \cite{sinn2017complexity}.
+We refer to the two names as the same meaning in this paper.} 
+for every transition path,
+and estimating the upper bound on every ranking function's maximum value. The details are in Section~\ref{sec:rank}.
+\end{enumerate}

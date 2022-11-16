@@ -1,0 +1,145 @@
+\begin{example}[A Simplified Nested Loop with Related Iterator Example]
+  \label{ex:relatedNestedWhileSim}
+  %
+  %
+  { \small
+\begin{figure}
+\centering
+\begin{subfigure}{.4\textwidth}
+  \begin{centering}
+  {\footnotesize
+  $
+  \begin{array}{l}
+      \kw{relatedNestedWhileSim}(n, m, N) \triangleq \\
+      \clabel{ \assign{i}{0} }^{0} ; \\
+          \ewhile ~ \clabel{i < n}^{1} ~ \edo ~ \\
+          \qquad \Big(
+            \clabel{\assign{w}{i}}^{2};\\
+            \qquad \ewhile ~ \clabel{w < N}^{3} ~ \edo ~
+            \Big(
+              \clabel{\assign{w}{w + 1}}^{4}
+                \Big); \\
+                \qquad \clabel{\assign{i}{w}}^{5};
+                \clabel{\assign{i}{i+1}}^{6}
+            \Big)
+      \end{array}
+  $
+  }
+  \caption{}
+  \end{centering}
+  \end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \begin{centering}
+%   \todo{abstract-cfg for two round}
+\begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
+\draw[] (-7, 10) circle (0pt) node{{ $0$}};
+\draw[] (0, 10) circle (0pt) node{{ $1$}};
+\draw[] (6, 10) circle (0pt) node {{$\lex$}};
+\draw[] (0, 7) circle (0pt) node{{$2$}};
+\draw[] (0, 4) circle (0pt) node{{ $3$}};
+\draw[] (-7, 4) circle (0pt) node{{ $6$}};
+\draw[] (-3, 4) circle (0pt) node{{ $5$}};
+\draw[] (4, 4) circle (0pt) node{{ $4$}};
+% Counter Variables
+%
+% Control Flow Edges:
+\draw[ thick, -latex] (-6, 10)  -- node [above] {$i' \leq 0$}(-0.5, 10);
+\draw[ thick, -latex] (0, 9.5)  -- node [left] {$i < n$} (0, 7.5) ;
+\draw[ thick, -latex] (0, 6.5)  -- node [left] {$w' \leq i$} (0, 4.5) ;
+\draw[ thick, -latex] (-0.5, 4)  -- node [below] {$w \geq N$} (-2.5, 4) ;
+\draw[ thick, -latex] (-3.5, 4)  -- node [below] {$i' \leq w$} (-6.5, 4) ;
+\draw[ thick, -latex] (-6.5, 4.5)  to  [out=90,in=180]  node [left] {$i' \leq i + 1$ }(-0.5, 9.5);
+\draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \geq n$}  (5, 10);
+\draw[ thick, -latex] (4, 4.5)  to  [out=120,in=30] node [above] {$w' \leq w + 1$}  (0.5, 4.5);
+\draw[ thick, -latex] (0.5, 4)  -- node [below] {$w < N$}  (3.5, 4);
+\end{tikzpicture}
+\caption{}
+  \end{centering}
+  \end{subfigure}
+\caption{
+(a) The Simplified Example of Nested Loop with Related Iterator
+  (b) The Abstract Execution Control Flow Graph}
+    \label{fig:relatedNestedWhileSim}
+\end{figure}
+}
+\end{example}
+
+\begin{enumerate}
+  \item  \textbf{The Constraint Program (Abstract Control Flow Graph)} is generated in Figure~\ref{fig:threeNestedWhile}(b).
+
+  \item \textbf{Program Refinement}
+  \\
+  The loop free simple transition paths are computed as follows,
+  \[
+      % \begin{array}{lllll}
+          \tpath_0 = (0 \to 1)
+          \quad
+          \tpath_1 = (1 \to 2 \to 3)
+          \quad           
+          \tpath_2 = (3 \to 4 \to 3)
+          \quad
+          \tpath_3 = (3 \to 5 \to 6 \to 1)
+          \quad
+          \tpath_4 = (1 \to \lex)
+      % \end{array}
+      \]
+  \textbf{Refined Program}:
+  \[
+  \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3); \tpath_4
+  \]
+  \item \textbf{Outside-In Algorithm}: The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
+  \\
+$\outinB(\tpath_0) = 1$
+\quad
+$\outinB(3: \rprepeat(\tpath_2)) = N $
+\\
+$\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)) = n - N $
+\item \textbf{Inside-Out Algorithm}
+\begin{itemize}
+  \item \textbf{Repeat Chain Set}
+  \\
+  $\rpchset(1, \tpath_1) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$
+  \\
+  $\rpchset(1, \tpath_3) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$
+  \\
+  $\rpchset(3, \tpath_2) = \{\rprepeat(\tpath_2)\}$ \quad
+  $\rpchset(_, \_) = \emptyset$ 
+  % \\
+  \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
+  \\
+  $\rpchB(1, \tpath_1) = n - N$ \quad
+  $\rpchB(1, \tpath_3) = n - N$ \quad
+  $\rpchB(3, \tpath_2) = N$ \quad
+  $\rpchB(_, \_) = \bot $ 
+  %
+  \item \textbf{Loop Chain}
+  \\
+  $\lpch(\tpath_1) = 1\to \tpath_1$ \quad
+  \highlight{$\lpch(\tpath_2) = 1 \to 3 \to \tpath_2$} \quad
+  $\lpch(\tpath_3) = 1 \to \tpath_3$ \\
+  $\lpch(\tpath_0) = \tpath_0$ \quad
+  $\lpch(\tpath_4) = \tpath_4$
+  \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
+  \\
+  $\rpchB(1, \tpath_1) = n - N$ \quad
+  $\rpchB(1, \tpath_3) = n - N$ \quad
+  \highlight{$\rpchB(1, \tpath_2) = 1$} \quad
+  $\rpchB(3, \tpath_2) = N$ \quad
+  $\rpchB(_, \_) = 1 $ 
+  \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
+  \\
+  $\inoutB(\tpath_1) = n - N$ \quad
+  $\inoutB(\tpath_2) = N$ \quad
+  $\inoutB(\tpath_0) = 1$ 
+  \\
+  \highlight{ $\inoutB(\tpath_3) = n - N$} \quad
+  $\inoutB(\tpath_4) = 1$ 
+  \end{itemize}
+\item \textbf{Path Sensitive Reachability-Bound} on every program control location
+\\
+$\psRB(\{0, \lex\}) = 1$ \quad
+$\psRB(\{1\}) = n - N + 1$ \quad
+$\psRB(\{2, 5, 6\}) = n - N$ \\
+\highlight{$\psRB(\{3\}) = N + 1 + n - N = n + 1$} \quad
+$\psRB(\{4\}) = N$
+\end{enumerate}
