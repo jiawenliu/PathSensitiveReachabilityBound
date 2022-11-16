@@ -13,26 +13,26 @@ class PathSensitiveReachabilityBound():
         self.prog_loc_bound =  defaultdict(str)
         self.transition_path_rpchain_bound =  defaultdict(str)
         self.prog_bound =  defaultdict(str)
+        ################################ The Loop Bound for Single Loop Path without Path Interleaving ################################
         self.transition_bound = TransitionBound(transition_graph)
         self.transition_path_ps_bound =  defaultdict(str)
         self.loop_chains = defaultdict(list)
  
-    # def transition_bound(self, transition_graph):
-    #     return TransitionBound(transition_graph).compute_bounds()
-
-    # def program_refine(self):
-    #     self.refined_prog = ProgramRefine(self.transition_graph).get_result() 
-
     def outside_in(self, refined_prog):
+        id = refined_prog.prog_id()
         if refined_prog.type == RefinedProg.RType.CHOICE:
-            return ("max(" + ",".join(self.outside_in(choice_prog) for choice_prog in refined_prog.get_choices()) + ")")
+            self.prog_loc_bound[id] = ("max(" + ",".join(self.outside_in(choice_prog) for choice_prog in refined_prog.get_choices()) + ")")
+            # return self.prog_loc_bound[id]
+            # ("max(" + ",".join(self.outside_in(choice_prog) for choice_prog in refined_prog.get_choices()) + ")")
         elif refined_prog.type == RefinedProg.RType.REPEAT:
             rp_prog = refined_prog.get_repeat()
-            return "(" + self.prog_initial(rp_prog) + " until "  + self.prog_final(rp_prog) + ") / (" + self.var_gd(rp_prog)
+            self.prog_loc_bound[id] = "(" + self.prog_initial(rp_prog) + " until "  + self.prog_final(rp_prog) + ") / (" + self.var_gd(rp_prog)
         elif refined_prog.type == RefinedProg.RType.SEQ:
-            return ("(" + "+".join(self.outside_in(seq_prog) for seq_prog in refined_prog.get_seqs()) + ")")
+            self.prog_loc_bound[id] = ("(" + "+".join(self.outside_in(seq_prog) for seq_prog in refined_prog.get_seqs()) + ")")
         elif refined_prog.type == RefinedProg.RType.TP:
-            return "1"
+            self.prog_loc_bound[id] = "1"
+            # return "1"
+        return self.prog_loc_bound[id]
 
     def var_gd(self, prog):
         id = prog.prog_id()
@@ -100,9 +100,6 @@ class PathSensitiveReachabilityBound():
         elif prog.type == RefinedProg.RType.SEQ:
             return ("(" + "+".join(self.prog_next(seq_prog) for seq_prog in prog.get_seqs()) + ")")
         elif prog.type == RefinedProg.RType.TP:
-        #### TODO: ADD the restriction on the label order.
-        ### THE label should be contained in the prog
-
             return ("(" + "+".join([
                 (str("+".join([inc[1] for inc in self.transition_bound.var_incs[v]])) if self.transition_bound.var_incs[v] else "0") for v in self.get_vars(prog)]) + ")")
 
@@ -201,10 +198,15 @@ class PathSensitiveReachabilityBound():
             return
 
     def compute_rb(self, prog):
+        print("REFINED PROGRAM : {}".format(prog.prog_signature()))
         self.transition_bound.compute_transition_bounds()
         self.outside_in(prog)
+        print("OUTSIDE IN BOUND IS : ", self.prog_loc_bound)
         self.inside_out(prog)
+        return self.transition_path_ps_bound
 
+    def get_transition_path_ps_bound(self):
+        return self.transition_path_ps_bound
 
     def print_path_bound(self):
         print("Number of Repeat Chain Bounds Computed for the Transition Path is : ", len(self.transition_path_rpchain_bound))

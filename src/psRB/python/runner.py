@@ -17,8 +17,6 @@ class Runner:
 start_time = time.time()
 runner = Runner()
 runner.main()
-print("--- ADAPTIVITY ANALYSIS TIME: %s seconds ---" % (time.time() - start_time))
-
 
 
 

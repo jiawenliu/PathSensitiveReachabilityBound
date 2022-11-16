@@ -1,9 +1,8 @@
 from collections import defaultdict
 import time
-from abstract_transition_graph import TransitionGraph, DifferenceConstraint
+from abstract_transition_graph import TransitionGraph
 from bound_infer import TransitionBound
 from adapt_lib import AdaptType, Graph
-from adapt_search import AdaptSearchAlgRefined
 from program_refine import ProgramRefine
 from rechability_bound_pathsensitive import PathSensitiveReachabilityBound
 
@@ -21,21 +20,23 @@ class BoundEstimate():
 
         def reachability_bound_estimation(self):
             # Path-Insensitive Version:
-            self.reachability_bound = TransitionBound(self.transition_graph).compute_transition_bounds()
+            # self.reachability_bound = TransitionBound(self.transition_graph).compute_transition_bounds()
 
             # # Path-Sensitive Version:
-            # reachability_bound_path = PathSensitiveReachabilityBound(self.transition_graph).compute_rb(ProgramRefine(self.transition_graph).get_result())
-            # for transition_path, bound in reachability_bound_path.items():
-            #     for transition_id in [int(id) for id in (transition_path[1:-1].split(", "))]:
-            #         self.reachability_bound[transition_id] = bound
+            reachability_bound_path = PathSensitiveReachabilityBound(self.transition_graph).compute_rb(ProgramRefine(self.transition_graph).program_refine())
+            print("TRANSITION BOUND FOR PATHS ARE {}".format(reachability_bound_path))
+            for transition_path, bound in reachability_bound_path.items():
+                for transition_id in [int(id) for id in (transition_path[1:-1].split(", "))]:
+                    self.reachability_bound[transition_id] = self.reachability_bound[transition_id] + AdaptType(bound)
             return
 
         def vertex_weights_estimate(self):
             self.graph.weights = [AdaptType(0)]*self.graph.get_vertice_num()
-            for (t_index, b) in enumerate(self.reachability_bound):
+            for (t_index, b) in (self.reachability_bound.items()):
                 transition = self.transition_graph.transitions[t_index]
                 for var_vertex in transition[3] :
-                    self.graph.weights[var_vertex] = self.graph.weights[var_vertex] + AdaptType(b)
+                    print("TRANSITION {} HAS BOUND {}".format(transition, b))
+                    self.graph.weights[var_vertex] = self.graph.weights[var_vertex] + b
         
 
         def get_vertex_weights(self):

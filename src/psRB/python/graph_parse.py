@@ -31,8 +31,8 @@ class GraphParser(argparse.ArgumentParser):
             self.example_name = self.args.example.split("/")[-1]
         else:
             self.example_name = example.split("/")[-1]
-        self.dcfg_file = "./dcfg/ps_reachability_bound/" + self.example_name
-        self.abs_cfg_file = "./abscfg/ps_reachability_bound/" + self.example_name
+        self.dcfg_file = "./dcfg/" + self.example_name
+        self.abs_cfg_file = "./abscfg/" + self.example_name
 
     def weight_parse(self):
         with open(self.dcfg_file, "r") as weightdata:
@@ -43,13 +43,15 @@ class GraphParser(argparse.ArgumentParser):
             n = int(graphdata.readline())
             query = [int(q) for q in graphdata.readline().strip("\n").split(",")[:-1]]
             edges = [([int(v) for v in e.split(",")]) for e in graphdata.readline().split(";")[:-1]]
+            print("The Input DCFG: ", n, query, edges)
+            return Graph(edges, None, query)
             weights_line = graphdata.readline()
             if weights_line:
                 weights = [AdaptType(int(l)) if isinstance(l, int) else AdaptType(l) for l in weights_line.strip("\n").split(",")]
-                # print("The Input DCFG: ", n, query, edges, weights)
+                print("The Input DCFG: ", n, query, edges, weights)
                 return Graph(edges, weights, query)               
             else:
-                # print("The Input DCFG: ", n, query, edges)
+                print("The Input DCFG: ", n, query, edges)
                 return Graph(edges, None, query)
 
     def abscfg_parse(self):
@@ -73,7 +75,7 @@ class GraphParser(argparse.ArgumentParser):
                 transitions.append((int(l1), dc_set, int(l2), v_set))
             transitions.sort(key=lambda y: y[0]) 
             edges.sort(key=lambda y: y[0])   
-            # print("The Input ABS Transition Graph: ", n, edges, transitions)
+            print("The Input ABS Transition Graph: ", n, edges, transitions)
             return TransitionGraph(edges, transitions, n)
 
         pass

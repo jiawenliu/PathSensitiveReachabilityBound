@@ -44,8 +44,8 @@ class ProgramRefine():
                     print("Mutliple Path From While Header to The While Body via The Nest Label %d Through Transition: %d" % (next_label_true, next_transition_id_true))
                     body = refine_dfs(next_label_true, [next_transition_id_true], [])
                     print("Mutliple Path From While Header to The While Exit via The Nest Label %d Through Transition: %d" % (next_label_false, next_transition_id_false))
-                    tprog2 = refine_dfs(next_label_false, curr_transition_path + [next_transition_id_false], nested_while_path + curr_transition_path + [next_transition_id_false])
-                    return RefinedProg(RefinedProg.RType.SEQ, [tprog1, RefinedProg(RefinedProg.RType.REPEAT, body), tprog2])
+                    tprog2 = refine_dfs(next_label_false, [next_transition_id_false], nested_while_path + curr_transition_path + [next_transition_id_false])
+                    return RefinedProg(RefinedProg.RType.SEQ, [tprog1, RefinedProg(RefinedProg.RType.REPEAT, body, loop_label = curr_label), tprog2])
                     ####################################### FOR RELEASE ###################################################
                     return RefinedProg(RefinedProg.RType.SEQ, [RefinedProg(RefinedProg.RType.TP, curr_transition_path), RefinedProg(RefinedProg.RType.REPEAT, body), refine_dfs(next_label_false, [next_transition_id_false])])
                 else:
@@ -60,6 +60,7 @@ class ProgramRefine():
         return refine_dfs(1, [0], [])
 
     def get_result(self):
+        print("REFINED PROGRAM : {}".format(self.refined_result.prog_signature()))
         return self.refined_result
 
 class RefinedProg():
@@ -92,9 +93,6 @@ class RefinedProg():
     def get_tp(self):
         return self.prog
     
-    # # dfs until the TP, return the list of assumptions on all the transition paths.
-    # def get_assumes(self):
-    #     return ["True"]
     
     def get_transitions(self):
         if self.type == RefinedProg.RType.CHOICE:

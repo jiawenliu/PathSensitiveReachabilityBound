@@ -86,7 +86,6 @@ class DirectedGraph:
 
     def is_in_scc(self, edge):
         if self.scc_cnt == -1:
-            self.build_edges()
             self.build_scc()
         (u, v) = edge
         return self.scc_ids[u] == self.scc_ids[v]
@@ -159,10 +158,6 @@ class DirectedGraph:
 #Inherit the Transition Graph and the Data-Flow Graph from the Command Graph Class
 class TransitionGraph(DirectedGraph):
     # locations = [0, 1]
-    ctl_edges = [(0, 1), (1, 1)]
-    transitions = [(0, [DifferenceConstraint("x", None, "k", DifferenceConstraint.DCType.RESET)], 1, [0]),
-    (1, [DifferenceConstraint("x", None, "1", DifferenceConstraint.DCType.DEC)], 1, [1, 2])]
-
     def __init__(self, 
     edges=[(0, 1), (1, 1)], 
     transitions=[(0, [DifferenceConstraint("x", None, "k", DifferenceConstraint.DCType.RESET)], 1, [0]),
