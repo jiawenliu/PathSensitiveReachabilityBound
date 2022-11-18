@@ -37,7 +37,7 @@
   and arbitrary $\vtrace, \trace' \in \mathbb{T}$ satisfying
   \\
   % \max \left\{ 
-    % \vcounter(\vtrace') l ~ \middle\vert~
+    % \counter(\vtrace') l ~ \middle\vert~
   % \forall \vtrace, \trace' \in \mathcal{T} \st 
   $\config{{c}, \trace} 
   \to^{*} \config{\eskip, \trace\tracecat\vtrace'} 
@@ -48,7 +48,7 @@
   \[
     \forall v \in \mathbb{N}
     \st \config{\trace, w_p} \earrow v \implies
-    \vcounter(\vtrace', l) \leq v
+    \counter(\vtrace', l) \leq v
     \]
   %  labelled variable $x^l \in \lvar_c$.
   % By Definition of $\progV$ in $\progG(c)$, 
@@ -67,7 +67,7 @@
   \[
   \forall v \in \mathbb{N} \st 
   \config{\absclr(\absevent), \trace} \earrow v \implies
-  \vcounter(\vtrace', l) \leq v
+  \counter(\vtrace', l) \leq v
   \]
   % By line:2 of Algorithm~\ref{alg:add_weights}, there are 2 cases:
   By definition of $\absclr(\absevent)$:
@@ -86,7 +86,7 @@
 To show:
 \[
   \begin{array}{l}
-    \max \left\{ \vcounter(\vtrace') l ~ \middle\vert~
+    \max \left\{ \counter(\vtrace') l ~ \middle\vert~
 \forall \vtrace \in \mathcal{T} \st \config{{c}, \trace} \to^{*} \config{\eskip, \trace\tracecat\vtrace'} \right\} 
 \\
 \leq 
@@ -101,7 +101,7 @@ Incr(\locbound(\absevent)) +
   executing $c$ with $\trace_0$, let $\trace$ be the trace after evaluation, i.e., $\config{{c}, \trace_0} \to^{*} \config{\eskip,\vtrace}$, it is sufficient to show:
   \[ 
     \begin{array}{l}
-      \vcounter(\vtrace') l \leq 
+      \counter(\vtrace') l \leq 
     Incr(\locbound(\absevent)) + 
     \sum\{\absclr(\absevent') \times \max(\varinvar(a) + c, 0) | (\absevent', a, c) \in \reset(\locbound(\absevent))\}
   \end{array}
@@ -303,7 +303,7 @@ Given a program ${c}$, we have:
 %
 \[
 \forall \absevent = (l, dc, l') \st 
-\max \left\{ \vcounter(\vtrace') l ~ \middle\vert~
+\max \left\{ \counter(\vtrace') l ~ \middle\vert~
 \forall \vtrace \in \mathcal{T} \st \config{{c}, \trace} \to^{*} \config{\eskip, \trace\tracecat\vtrace'} \right\} 
 \leq 
 \locbound(\absevent)
@@ -320,7 +320,7 @@ Given a program ${c}$, we have:
   we know the
   assignment command at line $l$ associated with the abstract event $\absevent$ will be executed at most once, i.e.,:
   %
-  $\vcounter(\vtrace) l \leq 1$
+  $\counter(\vtrace) l \leq 1$
   \\
   By $\locbound$ definition, we know $\locbound(\absevent) = 1$.
   \\
@@ -339,7 +339,7 @@ Given a program ${c}$, we have:
 % %
 % \[
 % \forall x^l \in \lvar_c \st 
-% \max \left\{ \vcounter(\vtrace') l ~ \middle\vert~
+% \max \left\{ \counter(\vtrace') l ~ \middle\vert~
 % \forall \vtrace \in \mathcal{T} \st \config{{c}, \trace} \to^{*} \config{\eskip, \trace\tracecat\vtrace'} \right\} 
 % \leq 
 % \rb(x^l, c)
@@ -352,7 +352,7 @@ Given a program ${c}$, we have:
 % %
 % \[
 % \forall x^l \in \lvar_c \st 
-% \max \left\{ \vcounter(\vtrace') l ~ \middle\vert~
+% \max \left\{ \counter(\vtrace') l ~ \middle\vert~
 % \forall \vtrace \in \mathcal{T} \st \config{{c}, \trace} \to^{*} \config{\eskip, \trace\tracecat\vtrace'} \right\} 
 % \leq 
 % \rb(x^l, c)
@@ -366,7 +366,7 @@ Given a program ${c}$, we have:
 %   %
 %   \[
 %   \forall x^l \in \lvar_c \st 
-%   \max \left\{ \vcounter(\vtrace') l ~ \middle\vert~
+%   \max \left\{ \counter(\vtrace') l ~ \middle\vert~
 %   \forall \vtrace \in \mathcal{T} \st \config{{c}, \trace} \to^{*} \config{\eskip, \trace\tracecat\vtrace'} \right\} 
 %   \leq 
 %   \rb(x^l, c)

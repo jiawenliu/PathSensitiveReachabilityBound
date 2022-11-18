@@ -5,21 +5,23 @@ collecting the events generated along the program execution.
 \begin{array}{llll}
 \mbox{Trace} & \trace
 & ::= & [] ~|~ \trace :: \event 
-~|~ []^{\infty}
+% ~|~ []^{\infty}
 \end{array}
 \]
 A trace can be regarded as the program history, 
 which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
 \\
 \highlight{If a program doesn't terminate when executing under some initial trace,
-it produces an infinite trace $[]^{\infty}$.
-$\inftdom = \ftdom \cup \{[]^{\infty}\}$ is the set of all finite or infinite traces.
+it produces the infinite trace 
+% $[]^{\infty}$.
+% $\inftdom = \ftdom \cup \{[]^{\infty}\}$ 
+from $\inftdom$, which is the set of all finite or infinite traces.
 The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in \cite{cousot2019abstract}.}
 \\
 Below are some useful operators on trace.
 \highlight{
 \begin{defn}[Trace Concatenation, $\tracecat: \inftdom \to \ftdom\to \inftdom $]
-Given two traces $\trace_1 \in \inftdom, \trace_2 \in \tdom$, the trace concatenation operator 
+Given two traces $\trace_1 \in \inftdom, \trace_2 \in \ftdom$, the trace concatenation operator 
 $\tracecat$ is defined as:
 \[
 \trace_1 \tracecat \trace_2 \triangleq
@@ -40,8 +42,7 @@ $\tracecat$ is defined as:
   \triangleq \left\{
   \begin{array}{ll} 
     \etrue                  & \trace =  \trace' :: \event'
-     \land \event = \event'
-                              \\
+     \land \event = \event' \\
     \event \in \trace' & \trace =  \trace' :: \event'
     \land \event \neq \event' \\ 
     \efalse                 & \trace = []
@@ -51,29 +52,29 @@ $\tracecat$ is defined as:
 As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
 \end{defn}
 %
-The counting operator $\vcounter : \inftdom \to \ldom \to (\mathbb{N} \cup \{\infty\})$
+The counting operator $\counter : \inftdom \to \ldom \to (\mathbb{N} \cup \{\infty\})$
 counts the appearance of a label in a trace.
 \[
 \begin{array}{lll}
-\vcounter(\trace :: (x, l, v), l ) \triangleq \vcounter(\trace, l) + 1
+\counter(\trace :: (x, l, v), l ) \triangleq \counter(\trace, l) + 1
 &
-\vcounter(\trace  ::(b, l, v), l) \triangleq \vcounter(\trace, l) + 1
+\counter(\trace  ::(b, l, v), l) \triangleq \counter(\trace, l) + 1
 &
-\vcounter({[]}, l) \triangleq 0
+\counter({[]}, l) \triangleq 0
 \\
-\vcounter(\trace  :: (x, l', v), l) \triangleq \vcounter(\trace, l), l' \neq l
+\counter(\trace  :: (x, l', v), l) \triangleq \counter(\trace, l), l' \neq l
 &
-\vcounter(\trace  :: (b, l', v), l) \triangleq \vcounter(\trace, l), l' \neq l
+\counter(\trace  :: (b, l', v), l) \triangleq \counter(\trace, l), l' \neq l
 \end{array}
 \]
-\highlight{When the input trace is infinite, it returns $\infty$.}
+\highlight{When the input trace is infinite, $\counter$ returns $\infty$.}
 The counter operator is abused as follows when the input is a sequence of labels $L = (l_1, \cdots, l_n)$:
 \[
-  \vcounter(\trace :: (\_, l_1, \_) :: \cdots :: (\_, l_n, \_), L ) 
-  \triangleq \vcounter(\trace, L) + 1
+  \counter(\trace :: (\_, l_1, \_) :: \cdots :: (\_, l_n, \_), L ) 
+  \triangleq \counter(\trace, L) + 1
   \qquad 
-  \vcounter(\trace :: (\_, l, \_), L ) 
-  \triangleq \vcounter(\trace, L) ~ l \neq l_n
+  \counter(\trace :: (\_, l, \_), L ) 
+  \triangleq \counter(\trace, L) ~ l \neq l_n
   \]
 %
 % The Latest Label $\llabel : \ftdom\to \mathcal{VAR} \to \mathbb{N}$ 
@@ -171,9 +172,9 @@ defined as follows,
 %   \trace \triangleq
 %   \left\{
 %   \begin{array}{ll} 
-%   p(\trace' \tracecate (x, l, v)) & = p(\trace') \tracecate (x, l, \vcounter(\trace') l + 1, v) \\
-%   p(\trace' \tracecate (b, l, v)) & = p(\trace') \tracecate (b, l, \vcounter(\trace') l + 1, v) \\
-%   p(\trace' \tracecate (x, l, \qval, v)) & = p(\trace') \tracecate (x, l, \vcounter(\trace') l + 1, \qval, v) \\
+%   p(\trace' \tracecate (x, l, v)) & = p(\trace') \tracecate (x, l, \counter(\trace') l + 1, v) \\
+%   p(\trace' \tracecate (b, l, v)) & = p(\trace') \tracecate (b, l, \counter(\trace') l + 1, v) \\
+%   p(\trace' \tracecate (x, l, \qval, v)) & = p(\trace') \tracecate (x, l, \counter(\trace') l + 1, \qval, v) \\
 %   p([]) & = []
 %   \end{array}
 %   \right.
@@ -340,9 +341,9 @@ defined as follows,
 %   p(\trace) \triangleq
 %   \left\{
 %   \begin{array}{ll} 
-%   p(\trace' \tracecat [(x, l, v)]) & = p(\trace') \tracecat [(x, l, \vcounter(\trace') l + 1, v)] \\
-%   p(\trace' \tracecat [(b, l, v)]) & = p(\trace') \tracecat [(b, l, \vcounter(\trace') l + 1, v)] \\
-%   p(\trace' \tracecat [(x, l, \qval, v)]) & = p(\trace') \tracecat [(x, l, \vcounter(\trace') l + 1, \qval, v)] \\
+%   p(\trace' \tracecat [(x, l, v)]) & = p(\trace') \tracecat [(x, l, \counter(\trace') l + 1, v)] \\
+%   p(\trace' \tracecat [(b, l, v)]) & = p(\trace') \tracecat [(b, l, \counter(\trace') l + 1, v)] \\
+%   p(\trace' \tracecat [(x, l, \qval, v)]) & = p(\trace') \tracecat [(x, l, \counter(\trace') l + 1, \qval, v)] \\
 %   p({[]}) & = []
 %   \end{array}
 %   \right.

@@ -34,16 +34,17 @@ Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and re
         &  \triangleq & 
         \highlight{
           \lpchB(l:\rprog', \tpath ) }
-        \highlight{\times \max\limits_{l':\rprog'' \in \rprog' \land l = \kw{enclosed}(l':\rprog'')}
-       \{\inoutB(l':\rprog'', \tpath)\} }, o.w. \\
+        \highlight{\times \max\limits_{l = \kw{enclosed}(l':\rprog'')}
+       \{\inoutB(l':\rprog'', \tpath)\} } \footnotemark, o.w. \\
         \inoutB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
-        & \max\left\{ \inoutB(\rprog_1, \tpath), \cdots, \inoutB(\rprog_m, \tpath) \right\} \\
+        & \max\left\{ \inoutB(\rprog_1, \tpath), \cdots, \inoutB(\rprog_m, \tpath) \right\} 
+        \\
         \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
         &  & \text{this case will never be matched}
         \end{array}
       \]
-% \end{figure}
-%
+      \footnotetext{There is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$, 
+      all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$}%
       $\kw{enclosed}(\rprog)$: \text{the closest loop where } $\rprog$ is nested
       \\
       $\kw{enclosing}(\rprog)$: \text{all the loops which are nested inside } $\rprog$

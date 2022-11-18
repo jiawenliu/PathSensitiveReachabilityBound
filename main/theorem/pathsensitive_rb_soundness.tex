@@ -80,7 +80,7 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
         $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} $,
         it is sufficient to show 
         \[
-            \vcounter(\vtrace, l) \leq v.
+            \counter(\vtrace, l) \leq v.
         \]
         Let $\rprog$ be the rephrased program for $c$,
         by computation of $psRB(l)$ in Definition~\ref{def:label_psrb}, it is sufficient to show 
@@ -88,7 +88,7 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
           \forall v \in \mathbb{N} \st 
           \config{\sum\limits_{\tpath \in \rprog \land 
           l \in \tpath} tRB(\tpath), \trace_0
-          } \earrow v \implies  \vcounter(\vtrace, l) \leq v\]
+          } \earrow v \implies  \counter(\vtrace, l) \leq v\]
           %
           By the soundness of the abstract execution trace in Lemma~\ref{lem:abscfg_sound}, 
           the uniqueness of the abstract execution trace in Lemma~\ref{lem:absevent_unique},
@@ -104,7 +104,7 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
           In case of  $\tpath \not\in SCC(\absG(c))$, there is only one $\tpath$ contains $l$ and $tRB(\tpath) = 1$.
           \\
           Then we have $\config{\sum\limits_{\tpath} 1, \trace_0
-          } \earrow 1$ and $ \vcounter(\vtrace, l) \leq 1$.
+          } \earrow 1$ and $ \counter(\vtrace, l) \leq 1$.
           \\
           This case is proved.
           \caseL{$\tpath \in SCC(\absG(c))$}
@@ -113,25 +113,25 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
           \[
           \forall v \in \mathbb{N} \st 
           \config{\sum\limits_{\tpath \in TP} tRB(\tpath), \trace_0
-          } \earrow v \implies  \vcounter(\vtrace, l) \leq v
+          } \earrow v \implies  \counter(\vtrace, l) \leq v
           \]
           For each transition path $\tpath \in TP$, let $\trace_t$ be the execution trace 
           containing all the executions of $\tpath$
           under initial trace $\trace_0$, then we know 
           \[
-            \vcounter(\vtrace, l) \leq \sum_{\tpath \in TP} \vcounter(\vtrace_t, l) 
+            \counter(\vtrace, l) \leq \sum_{\tpath \in TP} \counter(\vtrace_t, l) 
           \]
           Then it is sufficient to show 
           \[
           \forall v \in \mathbb{N} \st 
           \config{\sum\limits_{\tpath \in TP} tRB(\tpath), \trace_0
-          } \earrow v \implies \sum_{\tpath \in TP} \vcounter(\vtrace_t, l) \leq v
+          } \earrow v \implies \sum_{\tpath \in TP} \counter(\vtrace_t, l) \leq v
           \]
           Taking arbitrary transition path $\tpath \in TP$, it is sufficient to show 
           \[
             \forall v \in \mathbb{N} \st 
             \config{tRB(\tpath), \trace_0
-            } \earrow v \implies \vcounter(\vtrace_t, l) \leq v
+            } \earrow v \implies \counter(\vtrace_t, l) \leq v
             \]
                     %
           By the \emph{Global Loop Bound} computation and the uniqueness of the 
@@ -142,7 +142,7 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
           \[
             \forall v \in \mathbb{N} \st 
           \config{\prod_{LOOP_{t_i} \in lpch(\tpath)} lpRB(LOOP_{t_i}, \tpath), \trace_0
-          } \earrow v \implies  \vcounter(\vtrace_t, l) \leq v
+          } \earrow v \implies  \counter(\vtrace_t, l) \leq v
         \]
         For each transition path $\tpath \in TP$, 
         let $\{LOOP_{t_n} \to \cdots \to LOOP_{t_0} \to \tpath\}$
@@ -171,12 +171,12 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
         %     \config{
         % %   \prod_{LOOP_i \in lpch(\tpath)}
         % lpRB(LOOP_i, \tpath), \trace_0
-        %   } \earrow v \implies  \vcounter(\vtrace, l) \leq v
+        %   } \earrow v \implies  \counter(\vtrace, l) \leq v
         % \]        
         By the label consistency and computation of the 
         \emph{Nest Loop Chain}, we know
         \[
-          \vcounter(\vtrace_t, l) \leq \vcounter(\trace_{t_n}' \tracecat \cdots 
+          \counter(\vtrace_t, l) \leq \counter(\trace_{t_n}' \tracecat \cdots 
           \tracecat \trace_{t_0}', l)
           \] 
           % $\trace_t = \trace_i' \tracecat \trace_i$, then
@@ -185,7 +185,7 @@ $RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for loca
           \forall v \in \mathbb{N} \st 
         \config{\prod_{LOOP_{t_i} \in lpch(\tpath)} lpRB(LOOP_{t_i}, \tpath), \trace_0
         } \earrow v 
-        \implies  \vcounter(\trace_{t_n}' \tracecat \cdots 
+        \implies  \counter(\trace_{t_n}' \tracecat \cdots 
         \tracecat \trace_{t_0}', l) \leq v
       \]
 %
@@ -194,14 +194,14 @@ Let $\trace_{t_i} \in \mathcal{T}$ for $i = n, \cdots, t$
 be the execution traces corresponds to the single execution of $\rprog_i$ under initial trace $\trace_0$.
 \\
 Since the evaluation results in different iterations doesn't change the program label,
-we know $\vcounter(\trace_{t_i}, l) = \vcounter(\trace_{t_i}', l)$ for two different iterations of $\rprog_i$.
+we know $\counter(\trace_{t_i}, l) = \counter(\trace_{t_i}', l)$ for two different iterations of $\rprog_i$.
 \\
 Then we know:
 \[
-  \vcounter(\vtrace_t, l) \leq 
-  \vcounter(\trace_{t_n}, l_{t_{n-1}}) \times \cdots 
-  \vcounter(\trace_{t_1}, l_{t_{0}}) \times \vcounter(\trace_{t_0}, l)
-  = \prod\limits_{LOOP_{t_i} \in lpch(\tpath)} \vcounter(\trace_{t_i}, l_{t_{i-1}})
+  \counter(\vtrace_t, l) \leq 
+  \counter(\trace_{t_n}, l_{t_{n-1}}) \times \cdots 
+  \counter(\trace_{t_1}, l_{t_{0}}) \times \counter(\trace_{t_0}, l)
+  = \prod\limits_{LOOP_{t_i} \in lpch(\tpath)} \counter(\trace_{t_i}, l_{t_{i-1}})
   \]
 %
 Then, it is sufficient to show 
@@ -210,7 +210,7 @@ Then, it is sufficient to show
 \config{\prod_{LOOP_{t_i} \in lpch(\tpath)} lpRB(LOOP_{t_i}, \tpath), \trace_0
 } \earrow v 
 \implies  
-\prod\limits_{LOOP_{t_i} \in lpch(\tpath)} \vcounter(\trace_{t_i}, l_{t_{i-1}})
+\prod\limits_{LOOP_{t_i} \in lpch(\tpath)} \counter(\trace_{t_i}, l_{t_{i-1}})
 \]
 %
 Let $r_n, \cdots, r_1$ be the number of iterations for each $LOOP_{t_n}, \cdots, LOOP_{t_0} \in lpch(\tpath)$, 
@@ -220,11 +220,11 @@ the $\tpath$ is executed in the $r_i$ iterations of loop $LOOP_{t_i}$.
 \\
 Then we know
 \[
-  \vcounter(\vtrace_t, l) \leq 
+  \counter(\vtrace_t, l) \leq 
   r_n \times \cdots 
-  r_1 \times \vcounter(\trace_{t_0}, l)
+  r_1 \times \counter(\trace_{t_0}, l)
   = 
-  % \vcounter(\trace_{t_0}, l) \times 
+  % \counter(\trace_{t_0}, l) \times 
   \prod\limits_{LOOP_{t_i} \in lpch(\tpath)} r_i
   \]
 %  for each $LOOP_{t_n}, \cdots, LOOP_{t_0} \in lpch(\tpath)$ where 
@@ -268,7 +268,7 @@ $LOOP_{t_i} \in lpch(\tpath)$.
         \\
         Then we know $LOOP_i = LOOP_{t_0}$, and 
         \[
-          r_0 = \vcounter(\trace_{t_0}, l)
+          r_0 = \counter(\trace_{t_0}, l)
         \]
     Since $\trace_{t_0}$ is the trace of a single execution of the while loop body $\rprog_{t_0}$ for $LOOP_{t_0}$,
     it is equivalent to show that $rpLB(LOOP_{t_0}, \tpath)$ is the local bound for $\tpath$, i.e.,
@@ -280,7 +280,7 @@ $LOOP_{t_i} \in lpch(\tpath)$.
         %   \prod_{LOOP_i \in lpch(\tpath)}
         \max \left\{ \prod\limits_{\rprog_j \in ch}  rLB(\rprog_j) 
         ~\middle\vert~ ch \in rp\mathcal{C}(LOOP_{t_0}, \tpath) \right\}, \trace_0
-          } \earrow v \implies  \vcounter(\vtrace_{t_0}, l) \leq v
+          } \earrow v \implies  \counter(\vtrace_{t_0}, l) \leq v
         \]
     % i.e., since $\trace_{t_0}$ is the trace of single execution of $\rprog_{t_0}$ for $LOOP_{t_0}$,
     % it is equivalent to show that $rpLB(LOOP_{t_0}, \tpath)$ is the local bound for $\tpath$.
@@ -300,14 +300,14 @@ $LOOP_{t_i} \in lpch(\tpath)$.
        i.e., the soundness of \textbf{Outside-In Algorithm} for the local reachability
                   bound of the $\rprog_j$, we know 
                   \[
-                    \vcounter(\vtrace_j, l) \leq v_j
+                    \counter(\vtrace_j, l) \leq v_j
                     \]
 Then we have 
 \[
-    \vcounter(\vtrace_{t_0}, l) 
+    \counter(\vtrace_{t_0}, l) 
     \leq \max_{ch \in rp\mathcal{C}(LOOP_i, \tpath)} 
     \prod\limits_{\rprog_j \in ch}
-    \vcounter(\vtrace_j, l) \leq 
+    \counter(\vtrace_j, l) \leq 
     \max \left\{ \prod\limits_{\rprog_j \in ch}  v_j 
         ~\middle\vert~ ch \in rp\mathcal{C}(LOOP_i, \tpath) \right\}
     \]

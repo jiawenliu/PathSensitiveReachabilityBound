@@ -25,7 +25,7 @@ its \emph{path-sensitive reachability-bound} ($\psRB(c, l)$ is a symbolic sound 
   \[
     \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
     \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
-    \implies \config{\psRB(c, l)}(\trace_0) \geq \vcounter(\vtrace, l) 
+    \implies \config{\psRB(c, l)}(\trace_0) \geq \counter(\vtrace, l) 
     \]
   \end{thm}
 Proof of this theorem is in Appendix~\ref{apdx:pathsensitive_rb_soundness}.

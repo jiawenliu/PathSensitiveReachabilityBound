@@ -23,7 +23,7 @@ class BoundEstimate():
             # self.reachability_bound = TransitionBound(self.transition_graph).compute_transition_bounds()
 
             # # Path-Sensitive Version:
-            reachability_bound_path = PathSensitiveReachabilityBound(self.transition_graph).compute_rb(ProgramRefine(self.transition_graph).program_refine())
+            reachability_bound_path = PathSensitiveReachabilityBound(self.transition_graph).compute_psRB(ProgramRefine(self.transition_graph).program_refine())
             print("TRANSITION BOUND FOR PATHS ARE {}".format(reachability_bound_path))
             for transition_path, bound in reachability_bound_path.items():
                 for transition_id in [int(id) for id in (transition_path[1:-1].split(", "))]:
@@ -65,8 +65,8 @@ class BoundEstimate():
     @staticmethod
     def bound_estimate(dcf_graph, abs_transition_graph):
         start_time = time.time()
+
         weight_infer = BoundEstimate.ProgramBasedDependencyGraphWeightsEstimation(dcf_graph, abs_transition_graph)
-        # dcf_graph.weights = [AdaptType(1)]* dcf_graph.get_vertice_num()
         if dcf_graph.weights is None:
             weight_infer.weight_estimate()
             weight_infer.print_weights()

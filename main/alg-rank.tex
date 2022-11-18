@@ -156,10 +156,12 @@ Three steps:
  where $in(ch)$ is the variable on the last edge on the reset chain $ch$.
 \end{defn}
   %
-$\absclr$ can also be used to estimate the loop bound, $BD(\tpath)$ for the transition path $\tpath$ as follows
-where $\absevent \in \tpath$ denotes $\absevent$ is an edge on path $\tpath$.
+$\absclr$ can also be used to estimate the loop bound, $BD(\rprog)$ for the refined program $\rprog$ as follows
+where $\absevent \in \rprog$ denotes $\absevent$ is an edge on path $\rprog$.
 \begin{equation}
   \label{eq:absBD}
-  BD(\tpath) = \max\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \tpath \right\}.
+  BD(\rprog) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog \right\}.
 \end{equation}
-  %
+%
+This bound is accurate on the iteration numbers of a loop, but not tight on the iterations of different paths inside the loop.
+%

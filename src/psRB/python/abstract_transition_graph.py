@@ -12,12 +12,11 @@ class DifferenceConstraint:
 
     dc_type = 1
     def __init__(self, var = None, dc_var = None, dc_const = None, dc_type = 1) -> None:
-        self.var = None if dc_type == self.DCType.ASUM else var 
+        self.var = None if dc_type == self.DCType.WHILE or dc_type == self.DCType.IF else var 
         self.dc_var = dc_var
         self.dc_const = dc_const
         self.dc_type = dc_type
-        self.dc_bexpr = var if dc_type == self.DCType.ASUM else None
-        self.transition_type = "WHILE" if self.dc_bexpr and self.dc_bexpr.startswith("WHILE:") else "IF" if self.dc_bexpr else "ASN"
+        self.dc_bexpr = var if dc_type == self.DCType.WHILE or dc_type == self.DCType.IF else None
         pass
 
     def get_var(self):

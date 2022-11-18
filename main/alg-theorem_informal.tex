@@ -44,7 +44,7 @@ is a sound local bound on the execution times of $\rprog$ in program $c$.
     \land 
     \config{\rprog, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
     \\ \qquad
-    \implies {\vcounter(\trace, L(\rprog))} \leq BD(\rprog)(\trace_0 \tracecat \trace_1).
+    \implies {\counter(\trace, L(\rprog))} \leq BD(\rprog)(\trace_0 \tracecat \trace_1).
     \end{array}
 \]
 \end{thm}
@@ -280,7 +280,7 @@ is a sound bound on the execution times of $\tpath$ in $c$.
     \config{{\eskip, \trace_0 \tracecat \trace}}
     \\ \qquad
     \implies
-    \vcounter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
+    \counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
     \end{array}
     \]
 \end{thm}
