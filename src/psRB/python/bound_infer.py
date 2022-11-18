@@ -80,18 +80,13 @@ class TransitionBound:
             if dc_var and (dc_var not in self.reset_vars[v]) and (not (dc_var == v)):
                 self.reset_vars[v].add(dc_var)
                 if (not self.var_reset_chains[dc_var]):
-                    # self.var_reset_chains[dc_var] = []
                     self.dfs_var_inc_and_reset_chains(dc_var)
-                # print("the nested reset chain of " , v, "are: ", self.var_reset_chains[dc_var])
                 for dc_var_rchain in self.var_reset_chains[dc_var]:
-                    # tmp = [(transition_index, dc_var, dc_const)] + [(t, v, c) if (not t == transition_index) for (t, v, c) in dc_var_rchain]
                     self.var_reset_chains[v].append(list(filter(lambda x: (x[0] != transition_index and x[1] != v), dc_var_rchain))+[(transition_index, dc_var, dc_const)])
                 for rv in self.reset_vars[dc_var]:
                     self.reset_vars[v].add(rv)
             else:
                 self.var_reset_chains[v].append([(transition_index, dc_var, dc_const)])
-        # print("computed the reset chain of: ", v, self.var_reset_chains[v])
-        # print("computed the reset vars of: ", v, self.reset_vars[v])
         # self.var_reset_chains[v]=(reset_chains)
         
         return
