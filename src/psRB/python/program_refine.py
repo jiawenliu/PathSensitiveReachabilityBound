@@ -18,6 +18,8 @@ class RefinedProg():
         self.loop_label = loop_label
         self.start_point = start_point
         self.end_point = end_point
+        self.prog_edges = self.build_edges()
+        self.prog_id = self.build_id()
 
 
     def get_loop_label(self):
@@ -35,6 +37,9 @@ class RefinedProg():
     def get_tp(self):
         return self.prog
 
+    def get_edges(self):
+        return self.prog_edges
+
 
     def get_transitions(self):
         if self.type == RefinedProg.RType.CHOICE:
@@ -46,19 +51,32 @@ class RefinedProg():
         elif self.type == RefinedProg.RType.TP:
             return set(self.prog)
 
-    
+    def build_edges(self):
+        if self.type == RefinedProg.RType.CHOICE:
+            return reduce(lambda a, b: a + b, (choice_p.get_edges() for choice_p in self.get_choices()), [])
+        elif self.type == RefinedProg.RType.REPEAT:
+            return self.get_repeat().get_edges()
+        elif self.type == RefinedProg.RType.SEQ:
+            seq1, seq2 = self.get_seqs()
+            return seq1.get_edges() + [(seq1.end_point, seq2.start_point)] + seq2.get_edges()
+        elif self.type == RefinedProg.RType.TP:
+            return list(map(lambda edge: "{}->{}".format(edge[0], edge[1]),  zip(self.get_tp()[:-1], self.get_tp()[1:])))
+        
+        
+    def build_id(self):
+        if self.type == RefinedProg.RType.CHOICE:
+            return reduce(lambda a, b: a + b, (choice_p.build_id() for choice_p in self.get_choices()), [])
+        elif self.type == RefinedProg.RType.REPEAT:
+            return self.get_repeat().build_id()
+        elif self.type == RefinedProg.RType.SEQ:
+            return reduce(lambda a, b: a + b, (seq_prog.build_id() for seq_prog in self.get_seqs()), [])
+        elif self.type == RefinedProg.RType.TP:
+            return (self.get_tp())
+
+
 
     def get_id(self):
-        def compute_id(prog):
-            if prog.type == RefinedProg.RType.CHOICE:
-                return reduce(lambda a, b: a + b, (compute_id(choice_p) for choice_p in prog.get_choices()), [])
-            elif prog.type == RefinedProg.RType.REPEAT:
-                return compute_id(prog.get_repeat())
-            elif prog.type == RefinedProg.RType.SEQ:
-                return reduce(lambda a, b: a + b, (compute_id(seq_prog) for seq_prog in prog.get_seqs()), [])
-            elif prog.type == RefinedProg.RType.TP:
-                return (prog.get_tp())
-        return str(compute_id(self))
+        return str(self.prog_id)
 
     def prog_signature(self):
         if self.type == RefinedProg.RType.CHOICE:
@@ -85,6 +103,7 @@ class ProgramRefine():
         self.refined_result = RefinedProg()
         self.loop_points = set()
         self.transition_paths = []
+        self.transition_edges = []
         pass
 
     def collect_loop_point(self):

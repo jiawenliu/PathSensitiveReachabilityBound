@@ -168,12 +168,14 @@ class TransitionGraph(DirectedGraph):
         self.ctl_edges = edges
         self.transitions = transitions
         self.transition_id = defaultdict(int)
-    
-    def transition_id_lookup(self):
-        for id, transition in enumerate(self.transitions):
-            # print(id, transition)
-            l1,_,l2,_ = transition
-            self.transition_id[str(l1) + "->" + str(l2)] = id
+        self.edge_to_transition_id = defaultdict(int)
+
+        for id, (l1,_,l2,_) in enumerate(self.transitions):
+            self.edge_to_transition_id["{}->{}".format(l1,l2)] = id
+
+    def transition_id_lookup(self, edge):
+        return self.edge_to_transition_id[edge]
+
 
 
 
