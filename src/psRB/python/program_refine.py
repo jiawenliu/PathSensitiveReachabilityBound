@@ -3,6 +3,11 @@ from functools import reduce
 from typing import DefaultDict
 from abstract_transition_graph import TransitionGraph, DifferenceConstraint
 
+
+# ############################################################################################################################################################################
+# ######################################################################## THE REFINED PROGRAM TYPE ########################################################################
+# ############################################################################################################################################################################
+
 class RefinedProg():
     class RType(enum.Enum):
         CHOICE = 1
@@ -10,8 +15,10 @@ class RefinedProg():
         SEQ = 3
         TP = 4
     
-    # type: The type of the refined program
-    # prog: List of Refined Program
+    '''
+    type: The type of the refined program
+    prog: List of Refined Program
+    '''
     def __init__(self, type = None, prog = None, loop_label = None, start_point = None, end_point = None):
         self.type = type
         self.prog = prog
@@ -20,6 +27,10 @@ class RefinedProg():
         self.end_point = end_point
         self.prog_edges = self.build_edges()
         self.prog_id = self.build_id()
+        self.prog_signature = self.build_signature()
+
+
+######################################################################## Program Property/Data Intereface ########################################################################
 
 
     def get_loop_label(self):
@@ -40,16 +51,15 @@ class RefinedProg():
     def get_edges(self):
         return self.prog_edges
 
+    def get_id(self):
+        return str(self.prog_id)
 
-    def get_transitions(self):
-        if self.type == RefinedProg.RType.CHOICE:
-            return reduce(lambda a, b: a.union(b), (choice_p.get_transitions() for choice_p in self.get_choices()), set())
-        elif self.type == RefinedProg.RType.REPEAT:
-            return self.get_repeat().get_transitions()
-        elif self.type == RefinedProg.RType.SEQ:
-            return reduce(lambda a, b: a.union(b), (seq_prog.get_transitions() for seq_prog in self.get_seqs()), set())
-        elif self.type == RefinedProg.RType.TP:
-            return set(self.prog)
+    def get_signature(self):
+        return self.prog_signature
+
+
+######################################################################## Program Property Computation ########################################################################
+
 
     def build_edges(self):
         if self.type == RefinedProg.RType.CHOICE:
@@ -75,21 +85,20 @@ class RefinedProg():
 
 
 
-    def get_id(self):
-        return str(self.prog_id)
-
-    def prog_signature(self):
+    
+    def build_signature(self):
         if self.type == RefinedProg.RType.CHOICE:
-            return "CH : {" + ",".join(choice_p.prog_signature() for choice_p in self.get_choices()) + "}"
+            return "CH : {" + ",".join(choice_p.build_signature() for choice_p in self.get_choices()) + "}"
         elif self.type == RefinedProg.RType.REPEAT:
-            return "RP : (" + self.get_repeat().prog_signature() + ")"
+            return "RP : (" + self.get_repeat().build_signature() + ")"
         elif self.type == RefinedProg.RType.SEQ:
-            return "SEQ : (" + ",".join(seq_prog.prog_signature() for seq_prog in self.get_seqs()) + ")"
+            return "SEQ : (" + ",".join(seq_prog.build_signature() for seq_prog in self.get_seqs()) + ")"
         elif self.type == RefinedProg.RType.TP:
             return str(self.prog)
+
     
     def pretty_print(self):
-        print(self.prog_signature())
+        print(self.get_signature())
     
 
 
@@ -107,7 +116,7 @@ class ProgramRefine():
         pass
 
     def collect_loop_point(self):
-         self.loop_points = set([t[0] if t[1][0].dc_type == DifferenceConstraint.DCType.WHILE else None for t in self.transition_graph.transitions])
+         self.loop_points = set(filter(lambda p : p, [t[0] if t[1][0].dc_type == DifferenceConstraint.DCType.WHILE else None for t in self.transition_graph.transitions]))
     
     def build_transition_path(self):
         def dfs(curr_path):
@@ -159,7 +168,7 @@ class ProgramRefine():
                             if postfix_prog.start_point == loop_point:
                                 new_seq = RefinedProg(RefinedProg.RType.SEQ, [new_prefix_prog, postfix_prog], None, prefix_prog.start_point, postfix_prog.end_point)
                                 if new_seq.get_id() not in list(map(lambda prog: prog.get_id(), updated_working)):
-                                    # print("THE NEW CREATED SEQ: ", new_seq.prog_signature())
+                                    # print("THE NEW CREATED SEQ: ", new_seq.get_signature())
                                     updated_working.append(new_seq)
                                     pop_set.add(postfix_prog)
             ############## Add The Unchanged Programs From Old Working List Into The New Working List #################### 
@@ -167,13 +176,13 @@ class ProgramRefine():
                 if prog not in pop_set:
                     updated_working.append(prog)
             
-            # print("THE UPDATED WORKING LIST: {}".format(list(map(lambda prog: prog.prog_signature(), updated_working))))
+            # print("THE UPDATED WORKING LIST: {}".format(list(map(lambda prog: prog.get_signature(), updated_working))))
             if working == updated_working:
                 working = updated_working
                 break
             working = updated_working
             working.sort(key=lambda prog: (prog.start_point, prog.end_point))
-        print("THE TRANSLATED PROGRAM: ", working[-1].prog_signature())
+        print("THE TRANSLATED PROGRAM: ", working[-1].get_signature())
         return working[-1]
 
 
@@ -231,6 +240,6 @@ class ProgramRefine():
         return self.build_program()
 
     def get_result(self):
-        print("REFINED PROGRAM : {}".format(self.refined_result.prog_signature()))
+        print("REFINED PROGRAM : {}".format(self.refined_result.get_signature()))
         return self.refined_result
 

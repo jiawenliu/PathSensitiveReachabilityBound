@@ -64,7 +64,6 @@ class TransitionBound:
     def collect_var_modifications(self):
         for transition_index in range(len(self.transition_graph.transitions)):
             (_, dc_set, _, _) = self.transition_graph.transitions[transition_index]
-            # (_, dc_set, _, _) = t
             for dc in dc_set:
                 if dc.dc_type == DifferenceConstraint.DCType.WHILE or dc.dc_type == DifferenceConstraint.DCType.IF: continue
                 var = dc.get_var()

@@ -112,7 +112,7 @@ let rec print_bexpr b =
   match b with
   | BTrue  -> "true"
   | BFalse  -> "false"
-  | BNeg  b ->  sprintf "not(%s)" (print_bexpr b)
+  | BNeg b ->  sprintf "(¬%s)" (print_bexpr b)
   | Bbop (bop, b_1 , b_2) ->  (print_bexpr b_1 ) ^ (print_bop bop) ^ (print_bexpr b_2) 
   | Bcop  (cop , a_1 , a_2) -> (print_aexpr a_1 ) ^ (print_cop cop) ^ (print_aexpr a_2) 
 
