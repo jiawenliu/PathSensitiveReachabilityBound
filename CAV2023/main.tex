@@ -1,0 +1,156 @@
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.21 of 2022/01/12
+%
+\documentclass[runningheads]{llncs}
+%
+\usepackage[T1]{fontenc}
+% T1 fonts will be used to generate the final print and online PDFs,
+% so please use T1 fonts in your manuscript whenever possible.
+% Other font encondings may result in incorrect characters.
+%
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following two lines
+% to display URLs in blue roman font according to Springer's eBook style:
+%\usepackage{color}
+%\renewcommand\UrlFont{\color{blue}\rmfamily}
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%SELF DEFINED AND INPUTS%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{prelude}
+\input{ldefs}
+\newcommand{\highlight}[1]{\textcolor[rgb]{.0,0.0,1.0}{ #1}}
+\newcommand{\THESYSTEM}{\textsf{PsRB}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%SELF DEFINED AND INPUTS%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%
+\title{Path Sensitive Reachability Bound Analysis}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%Authors%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \author{First Author\inst{1}\orcidID{0000-1111-2222-3333} \and
+% Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
+% Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
+% %
+% \authorrunning{F. Author et al.}
+% % First names are abbreviated in the running head.
+% % If there are more than two authors, 'et al.' is used.
+% %
+% \institute{Princeton University, Princeton NJ 08544, USA \and
+% Springer Heidelberg, Tiergartenstr. 17, 69121 Heidelberg, Germany
+% \email{lncs@springer.com}\\
+% \url{http://www.springer.com/gp/computer-science/lncs} \and
+% ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
+% \email{\{abc,lncs\}@uni-heidelberg.de}}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%Authors Above%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\maketitle              
+
+% typeset the header of the contribution
+%
+\begin{abstract}
+\todo{150--250 words.}
+Goal: bound the number of visiting times for every program control location, i.e., Solve the 
+\emph{Reachability-Bound Program}.
+\\
+Motivation: State-of-Art Techniques 
+\\
+in paper~\cite{Sumit2010rechability,sinn2017complexity} : path-insensitive 
+\\
+in paper~\cite{GulwaniJK09} : path-sensitive and precise for estimating loop bounds,
+but over-approximate reachability times of control location as the loop bound.
+\\
+in paper~\cite{ZulegerGSV11} : able to identify different paths from multiple-path loop, but aims to solve bounds for loop and path. They over-approximate reachability times of control location with loop bound.
+\\
+Contributions: 
+\\
+1. Solve the 
+\emph{Reachability-Bound Program} precisely /(improve accuracy),
+in two challenging classes of programs: Programs with Path-Sensitive Loops, and Programs with Nested Loops 
+\\
+2. Improved efficiency by abstracting program using the Difference Constraint-base method in \cite{sinn2017complexity}.
+\\
+3. Efficient implementation and evaluation results.
+\keywords{Loop Bound Inference, program refinement, path-sensitive}
+\end{abstract}
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Introduction and Overview %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:intro}
+\input{introduction}
+\section{Overview}
+\label{sec:overview}
+\input{overview}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Program Model and Definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{{Program Model}}
+\label{sec:language}
+\input{language}
+\section{{Reachability Bound}}
+\label{sec:rb-def}
+\input{rb-definition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Path Sensitive Reachability Bound Analysis}
+\label{sec:psrb-alg}
+\input{alg-preface}
+% \input{psrb-algorithm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Sub-Steps of Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Abstraction Transition Graph}
+    \label{sec:progabs}
+    \input{alg-progabs}
+    \subsection{Loop Refinement}
+    \label{sec:refine}
+    \input{alg-refine}
+    \subsection{Path-sensitive Reachability-Bound Analysis}
+    \label{sec:psrb}
+    \input{alg-psrb}
+    \subsection{Loop Reachability-Bound}
+    \label{sec:looprb}
+    \input{alg-looprb}
+    \subsection{Ranking Function Computation and Estimation}
+    \label{sec:rank}
+    \input{alg-rank}
+    \subsection{Reachability Bound Computation}
+    \label{sec:alg-rb}
+    \input{alg-rb}
+
+
+\section{Examples and Experimental Results}
+\label{sec:example}
+
+\section{Related Work}
+% \input{relatedwork}
+
+\section{Conclusion and future works}
+
+
+\subsubsection*{Acknowledgements}
+Acknowledgments is at the end of the paper, preceded by an unnumbered run-in heading (i.e.
+3rd-level heading).
+
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+\bibliographystyle{splncs04}
+\bibliography{main}
+%
+
+\end{document}

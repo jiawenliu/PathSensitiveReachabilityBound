@@ -1,0 +1,28 @@
+%
+A trace $\trace \in \tdom $ is a list of events, 
+collecting the events generated along the program execution. 
+\[
+\begin{array}{llll}
+\mbox{Trace} & \trace
+& ::= & [] ~|~ \trace :: \event
+\end{array}
+\]
+A trace can be regarded as the program history, 
+which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
+\\
+\highlight{If a program doesn't terminate when executing under some initial trace, it produces an infinite trace $\trace \in \tdom^{\infty}$.
+$\tdom^{\infty}$ is the set of all finite or infinite traces.}
+\\
+$\tracecat: \mathcal{T} \to \mathcal{T} \to \mathcal{T}$ is the trace concatenation operator, which combines two traces,
+and $\vcounter : \mathcal{T} \to \mathbb{N} \to \mathbb{N}$ is the counting operator, 
+which counts the occurrence of a labeled variable in the trace. When the input trace is infinite, it returns $\infty$.
+$\event \in \trace $ or $\event \notin \trace $ denotes that $\event$ belongs to $trace$ or not.
+All the definition details are in the appendix.
+%
+The counter operator is abused when the input is a sequence of labels $L = (l_1, \cdots, l_n)$ by counting the occurrence
+of this sequence in trace. Specifically,
+$\vcounter(\trace :: (\_, l_1, \_) :: \cdots :: (\_, l_n, \_), L ) \triangleq \vcounter(\trace, L) + 1$
+and $\vcounter(\trace :: (\_, l, \_), L ) 
+\triangleq \vcounter(\trace, L) ~ l \neq l_n$, etc.
+The operator $\tlabel : \tdom \to \mathcal{P}{(\ldom)}$ gives the set of labels in every event belonging to a trace.
+$\tlabel{(\trace  :: (\_, l, \_)])} \triangleq \{l\} \cup \tlabel{(\trace )}$ and $\tlabel({[ ]}) \triangleq \{\}$.

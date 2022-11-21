@@ -1,0 +1,49 @@
+An \emph{Abstract Transition Graph}, $\absG(c)$ for a program $c$ is composed of
+a vertex set $\absV(c)$ and an edge set $\absE(c)$, $\absG(c) \triangleq (\absV(c), \absE(c))$.
+\\
+Every 
+vertex $l \in \absV(c)$ is a program point $l$ corresponding to the command with label $l$ in $c$, which is unique.
+\\
+Each edge $(l \xrightarrow{dc} l') \in \absE(c)$ is an abstract transition
+between two program points $l, l'$. 
+There is an edge from $l$ to $l'$ if and only if
+the command with label $l'$ can execute right after the execution of the command with label $l$.
+Each edge is annotated by a constraint $dc \in \dcdom^{\top}$, which is generated from the command with label $l$.
+This constraint describes the abstract execution of the command with $l$. 
+The edge set is constructed in three steps summarized as follows (with detail in Appendix).
+
+\textbf{$1$st Step. Constraint Computation} generates the constraint
+for the expression in each program command,
+which is used as the annotation of an edge.
+Its domain $\dcdom^{\top}$ is composed of the \emph{Difference Constraints} $DC(\mathcal{VAR}  \cup \constdom)$,
+the \emph{Boolean Expressions} $\booldom$ and $\top$.
+%
+\begin{itemize}
+\item The difference constraints $DC(\mathcal{VAR}  \cup \constdom)$ is the set of all the inequality of
+form $x' \leq y + v$ where $x \in \mathcal{VAR} $, 
+$y \in \mathcal{VAR}$ and $v \in \constdom$.
+The \emph{Symbolic Constant} set $\constdom = \mathbb{N} \cup \inpvar \cup {\infty}$
+is the set of natural numbers with $\infty$ and the input variables.
+An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
+at most the value of $y$ in the previous state plus some constant $v$.
+When a difference constrain shows up as an edge annotation, $l \xrightarrow{x' \leq y + v} l'$,
+it denotes that
+the value of variable $x$
+after executing the command at $l$ is at most
+the value of variable $y$ plus $v$ before the execution.
+For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in \cite{sinn2017complexity}. 
+%
+\item The Boolean Expressions $b$ from the set $\booldom$.
+$b$ on an edge $l \xrightarrow{b} l'$ describes
+that after evaluating the guard with label $l$,
+$b$ holds and the command with label $l$ will execute right after.
+%
+\item The top constraint, $\top$ denotes true. It is preserved for $\eskip$ command.
+%
+\end{itemize}
+
+\textbf{$2$nd Step. Initial and Final State Computation} generates two sets for each command.
+The initial state is a set that contains the program point where this command {starts} to execute, and the final state is a set
+that contains the constraint of this command and the continuation program points after the execution of this command.
+
+\textbf{$3$rd Step. Abstract Event Computation} generates a set of edges for the program. Each edge is a pair of initial and finial state.
