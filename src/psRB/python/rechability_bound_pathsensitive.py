@@ -1,5 +1,6 @@
 from collections import defaultdict
 from abstract_transition_graph import TransitionGraph, DifferenceConstraint
+from symbolic_expression import SymbolicExpression, SymbolicConst
 from bound_infer import TransitionBound
 from program_refine import RefinedProg
 
@@ -216,7 +217,7 @@ class PathSensitiveReachabilityBound():
     def program_point_psRB_computation(self):
             for transition_path, bound in self.transition_path_psRB.items():
                 for transition_id in [int(id) for id in (transition_path[1:-1].split(", "))]:
-                    self.program_point_psRB[transition_id] = bound if not self.program_point_psRB[transition_id] else "{}+{}".format(self.program_point_psRB[transition_id], (bound))
+                    self.program_point_psRB[transition_id] = SymbolicExpression(SymbolicConst(bound)) if not self.program_point_psRB[transition_id] else SymbolicExpression(SymbolicConst("{}+{}".format(self.program_point_psRB[transition_id], (bound))))
             return
 
     def compute_psRB(self, prog):
@@ -261,8 +262,8 @@ class PathSensitiveReachabilityBound():
 
     def print_program_point_psRB(self):
         print("Number of Bounds Computed for the Transition Path is : ", len(self.transition_path_psRB))
-        for  transition_id, bound in self.program_point_psRB.items():
-            print("psRB of The Program Point : {} is {}".format(transition_id, bound))
+        for  program_point, bound in self.program_point_psRB.items():
+            print("psRB of The Program Point : {} is {}".format(program_point, bound.pretty_symbolic_expression()))
         # print(["psRB of The Program Point : {} is {} \n".format(transition_id, bound) for transition_id, bound in self.program_point_psRB.items()])
 
     def print_path_bound(self):

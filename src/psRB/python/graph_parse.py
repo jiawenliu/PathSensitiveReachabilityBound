@@ -1,5 +1,6 @@
 from abstract_transition_graph import TransitionGraph, DifferenceConstraint
-from data_controlflow_graph import Graph
+from data_controlflow_graph import DCFGraph
+from symbolic_expression import SymbolicExpression, SymbolicConst
 import argparse
 
 class GraphParser(argparse.ArgumentParser):
@@ -44,15 +45,15 @@ class GraphParser(argparse.ArgumentParser):
             query = [int(q) for q in graphdata.readline().strip("\n").split(",")[:-1]]
             edges = [([int(v) for v in e.split(",")]) for e in graphdata.readline().split(";")[:-1]]
             print("The Input DCFG: ", n, query, edges)
-            return Graph(edges, None, query)
+            return  DCFGraph(edges, None, query)
             weights_line = graphdata.readline()
             if weights_line:
-                weights = [AdaptType(int(l)) if isinstance(l, int) else AdaptType(l) for l in weights_line.strip("\n").split(",")]
+                weights = [SymbolicExpression(SymbolicConst(l)) for l in weights_line.strip("\n").split(",")]
                 print("The Input DCFG: ", n, query, edges, weights)
-                return Graph(edges, weights, query)               
+                return  DCFGraph(edges, weights, query)               
             else:
                 print("The Input DCFG: ", n, query, edges)
-                return Graph(edges, None, query)
+                return  DCFGraph(edges, None, query)
 
     def abscfg_parse(self):
         with open(self.abs_cfg_file, "r") as graphdata:

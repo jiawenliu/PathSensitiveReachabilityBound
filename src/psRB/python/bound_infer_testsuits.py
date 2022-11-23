@@ -1,5 +1,4 @@
 from bound_infer import TransitionGraph, TransitionBound, DifferenceConstraint
-from symbolic_expression import SymbolicExpression
 
 class TestUnits:
 
@@ -38,7 +37,6 @@ class TestUnits:
         
     # the two-round example, 
     # Expected Weights: [1,k,k,1]
-    # i.e., [SymbolicExpression(1), SymbolicExpression("k"), SymbolicExpression("k"), SymbolicExpression(1)]
     def test_multiple_constriants(self):
         ctl_edges = [(0, 1), (1, 1), (1, 2)]
         transitions = [(0, 
@@ -62,10 +60,7 @@ class TestUnits:
     # the nested while example, 
     # Expected Weights: [1, 1, k, k, k!]
     def test_simple_nested_approximated(self):
-        # weights = [SymbolicExpression(1), SymbolicExpression("k"), SymbolicExpression("k"), SymbolicExpression(1)]
         query = [0, 0, 0, 1, 0, 1]
-        edges = [(0, 4), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3)]
-        weights = [SymbolicExpression("INF")]*len(query)
 
         ctl_edges = [(0, 1), (1, 2), (2, 1), (2, 2)]
         transitions = [
@@ -135,11 +130,7 @@ class TestUnits:
 
     # the two-round example, 
     # Expected Weights: [1,k,k,1]
-    # i.e., [SymbolicExpression(1), SymbolicExpression("k"), SymbolicExpression("k"), SymbolicExpression(1)]
     def test_two_round(self):
-        query = [0, 0, 0, 1, 0, 1]
-        edges = [(0, 2), (1, 2), (1,4), (2,2), (2, 3), (3, 4), (4, 4), (4, 5)]
-        weights = [SymbolicExpression("INF")]*len(query)
 
         ctl_edges = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 2), (2, 6)]
         transitions = [
@@ -159,7 +150,6 @@ class TestUnits:
 
     # the multiple-round example, 
     # Expected Weights: [1, 1, k, k, k]
-    # i.e., weights = [SymbolicExpression(1),  SymbolicExpression(1), SymbolicExpression("k"), SymbolicExpression("k"), SymbolicExpression("k")]
     def test_multiple_round(self):
         ctl_edges = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 2)]
 

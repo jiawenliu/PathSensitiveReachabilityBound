@@ -1,19 +1,39 @@
+
+import enum
+
+class SCType(enum.Enum):
+        INF = 1
+        NAT = 2
+        INPUT = 3
+        TOP = 4
+
+class SymbolicConst(object):
+    def __init__(self, value = None) -> None:
+        self.value = value if value else 0
+        self.type = SCType.INF if value == "inf" else SCType.TOP if value == "top" else SCType.INPUT if isinstance(value, str) else SCType.NAT if isinstance(value, int) else SCType.NAT
+
+
 class SymbolicExpression:
-    value = 0
-    def __init__(self, value = 0) -> None:
-        self.value = value
+    def __init__(self, value = None, operator = None) -> None:
+        self.value = value if value else SymbolicConst()
+        self.operator = operator
+    
+    # TODO: Some simplification
     def __add__(self, other):
+        return SymbolicExpression([self.value, other.value], "+")
         if (isinstance(self.value, str)) or isinstance(other.value, str):
             if (isinstance(self.value, int) and int(self.value) == 0):
                 return other
             if (isinstance(other.value, int) and int(other.value) == 0):
                 return self
-            return SymbolicExpression(str(self.value) + " + " + str(other.value))
+            return SymbolicExpression([self.value, other.value], "+")
         else:
             # print(self.value, other.value, " both are int")
             return SymbolicExpression(self.value + other.value)
 
+    # TODO: Some simplification
     def __radd__(self, other):
+        return SymbolicExpression([self.value, other.value], "+")
         if (isinstance(self.value, str)) or isinstance(other.value, str):
             if (isinstance(self.value, int) and int(self.value) == 0):
                 return other
@@ -24,7 +44,9 @@ class SymbolicExpression:
             # print(self.value, other.value, " both are int")
             return SymbolicExpression(self.value + other.value)
     
+    # TODO: Some simplification
     def __mul__(self, other):
+        return SymbolicExpression([self.value, other.value], "*")
         if (isinstance(self.value, str)) or isinstance(other.value, str):
             if (isinstance(self.value, int) and int(self.value) == 0) or (isinstance(other.value, int) and int(other.value) == 0):
                 return SymbolicExpression(0)
@@ -37,7 +59,9 @@ class SymbolicExpression:
             # print(self.value, other.value, " both are int")
             return SymbolicExpression(self.value * (other.value))
 
+    # TODO: Some simplification
     def adapt_max(self, other):
+        return SymbolicExpression([self.value, other.value], "max")
         if (isinstance(self.value, str)) and isinstance(other.value, str):
             if (isinstance(self.value, int) and int(self.value) == 0):
                 return other
@@ -49,7 +73,9 @@ class SymbolicExpression:
         else:
             return SymbolicExpression(max(self.value, other.value))
 
+    # TODO: Some simplification
     def adapt_min(self, other):
+        return SymbolicExpression([self.value, other.value], "min")
         if (isinstance(self.value, str)) and isinstance(other.value, str):
             if (isinstance(self.value, int) and int(self.value) == 0):
                 return self
@@ -63,6 +89,16 @@ class SymbolicExpression:
         #     return other
         else:
             return SymbolicExpression(min(self.value, other.value))
+
+    def pretty_symbolic_expression(self):
+        # If the expression is an symbolic const
+        if self.operator is None:
+            return self.value.value
+        elif self.operator == "max" or self.operator == "min":
+            return "{}{{{}}}".format(self.operator, ",".join([v.pretty_symbolic_expression() for v in self.value]))
+        else:
+            return "{}{}{}".format(self.value[0].pretty_symbolic_expression(), self.operator, self.value[1].pretty_symbolic_expression())
+    
 
     # def __lt__(self, other):
     #     if (self.value is int) and (other.value is int):

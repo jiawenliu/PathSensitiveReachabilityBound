@@ -1,7 +1,7 @@
 import enum
 from functools import reduce
 from typing import DefaultDict
-from abstract_transition_graph import TransitionGraph, DifferenceConstraint
+from abstract_transition_graph import DifferenceConstraint
 
 
 # ############################################################################################################################################################################
@@ -16,8 +16,8 @@ class RefinedProg():
         TP = 4
     
     '''
-    type: The type of the refined program
-    prog: List of Refined Program
+    type: in RType, The type of the refined program
+    prog: in RType List, List of Refined Program
     '''
     def __init__(self, type = None, prog = None, loop_label = None, start_point = None, end_point = None):
         self.type = type
