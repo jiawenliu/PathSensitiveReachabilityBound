@@ -1,5 +1,5 @@
 from abstract_transition_graph import TransitionGraph, DifferenceConstraint
-from adapt_lib import AdaptType, Graph
+from data_controlflow_graph import Graph
 import argparse
 
 class GraphParser(argparse.ArgumentParser):
