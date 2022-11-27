@@ -1,11 +1,11 @@
 from collections import defaultdict
 import time
 from abstract_transition_graph import TransitionGraph
-from bound_infer import TransitionBound
+from pathinsensitive_transition_bound import TransitionBound
+from pathsensitive_rechability_bound import PathSensitiveReachabilityBound
 from symbolic_expression import SymbolicExpression, SymbolicConst
 from data_controlflow_graph import DCFGraph
 from program_refine import ProgramRefine
-from rechability_bound_pathsensitive import PathSensitiveReachabilityBound
 
 class BoundEstimate():
     def __init__(self) -> None:
@@ -24,8 +24,9 @@ class BoundEstimate():
             # self.reachability_bound = TransitionBound(self.transition_graph).compute_transition_bounds()
 
             # # Path-Sensitive Version:
-            Bounder = PathSensitiveReachabilityBound(self.transition_graph)
-            Bounder.compute_psRB(ProgramRefine(self.transition_graph).program_refine())
+            Bounder, refiner = PathSensitiveReachabilityBound(self.transition_graph), ProgramRefine(self.transition_graph)
+            refiner.program_refine()
+            Bounder.compute_psRB(refiner.get_refined_prog())
             Bounder.print_transition_path_psRB()
             Bounder.print_program_point_psRB()
             # for program_point, bound in enumerate(Bounder.get_program_point_psRB()):

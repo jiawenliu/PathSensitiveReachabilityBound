@@ -20,62 +20,25 @@ class SymbolicExpression:
     
     # TODO: Some simplification
     def __add__(self, other):
-        return SymbolicExpression([self.value, other.value], "+")
-        if (isinstance(self.value, str)) or isinstance(other.value, str):
-            if (isinstance(self.value, int) and int(self.value) == 0):
-                return other
-            if (isinstance(other.value, int) and int(other.value) == 0):
-                return self
-            return SymbolicExpression([self.value, other.value], "+")
-        else:
-            # print(self.value, other.value, " both are int")
-            return SymbolicExpression(self.value + other.value)
+        return SymbolicExpression((self, other), "+")
+
 
     # TODO: Some simplification
     def __radd__(self, other):
-        return SymbolicExpression([self.value, other.value], "+")
-        if (isinstance(self.value, str)) or isinstance(other.value, str):
-            if (isinstance(self.value, int) and int(self.value) == 0):
-                return other
-            if (isinstance(other.value, int) and int(other.value) == 0):
-                return self
-            return SymbolicExpression(str(other.value) + " + " + str(self.value))
-        else:
-            # print(self.value, other.value, " both are int")
-            return SymbolicExpression(self.value + other.value)
+        return SymbolicExpression((self, other), "+")
     
     # TODO: Some simplification
     def __mul__(self, other):
-        return SymbolicExpression([self.value, other.value], "*")
-        if (isinstance(self.value, str)) or isinstance(other.value, str):
-            if (isinstance(self.value, int) and int(self.value) == 0) or (isinstance(other.value, int) and int(other.value) == 0):
-                return SymbolicExpression(0)
-            if (isinstance(self.value, int) and int(self.value) == 1):
-                return other
-            if (isinstance(other.value, int) and int(other.value) == 1):
-                return self
-            return SymbolicExpression("(" + str(other.value) + ") * (" + str(self.value) + ")")
-        else:
-            # print(self.value, other.value, " both are int")
-            return SymbolicExpression(self.value * (other.value))
+        return SymbolicExpression((self, other), "*")
+
 
     # TODO: Some simplification
     def adapt_max(self, other):
-        return SymbolicExpression([self.value, other.value], "max")
-        if (isinstance(self.value, str)) and isinstance(other.value, str):
-            if (isinstance(self.value, int) and int(self.value) == 0):
-                return other
-            if (isinstance(other.value, int) and int(other.value) == 0):
-                return self
-            return SymbolicExpression("max(" + str(self.value) + ", " + str(other.value) + ")")
-        elif (isinstance(self.value, str)) or (isinstance(other.value, str)):
-            return self  if other.value == 0 else other if self.value == 0 else SymbolicExpression("max(" + str(self.value) + ", " + str(other.value) + ")")
-        else:
-            return SymbolicExpression(max(self.value, other.value))
+        return SymbolicExpression([self, other], "max")
 
     # TODO: Some simplification
     def adapt_min(self, other):
-        return SymbolicExpression([self.value, other.value], "min")
+        return SymbolicExpression([self, other], "min")
         if (isinstance(self.value, str)) and isinstance(other.value, str):
             if (isinstance(self.value, int) and int(self.value) == 0):
                 return self

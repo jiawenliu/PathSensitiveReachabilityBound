@@ -109,7 +109,8 @@ class ProgramRefine():
 
     def __init__(self, transition_graph) -> None:
         self.transition_graph = transition_graph
-        self.refined_result = RefinedProg()
+        self.translated_prog = RefinedProg()
+        self.refined_prog = RefinedProg()
         self.loop_points = set()
         self.transition_paths = []
         self.transition_edges = []
@@ -187,59 +188,35 @@ class ProgramRefine():
 
 
 
-
-    # def program_refine(self):
-    #     self.transition_graph.transition_id_lookup()
-    #     print(self.transition_graph.graph)
-    #     def refine_dfs(curr_label, curr_transition_path, nested_while_path = []):
-    #         print("CURRENT_LABEL: ", curr_label)
-    #         print("CURRENT_Transition_Path: ", curr_transition_path)
-    #         if len(self.transition_graph.graph[curr_label]) == 0:
-    #             return  RefinedProg(RefinedProg.RType.TP, curr_transition_path)
-    #         elif len(self.transition_graph.graph[curr_label]) == 1: 
-    #             next_label = self.transition_graph.graph[curr_label][0]
-    #             edge_id = str(curr_label) + "->" + str(next_label)
-    #             next_transition_id = self.transition_graph.edge_indices[str(curr_label) + "->" + str(next_label)]
-    #             print("Single Path to The Nest Label %d Trough Transition Edge: %s" % (next_label, edge_id))
-    #             if self.transition_graph.transitions[curr_transition_path[0]][0] == next_label:
-    #                 return RefinedProg(RefinedProg.RType.TP, curr_transition_path + [next_transition_id])
-    #                 return RefinedProg(RefinedProg.RType.TP, curr_transition_path[max(0, len(nested_while_path)-1):] + [next_transition_id])
-    #             else:
-    #                 return refine_dfs(next_label, curr_transition_path + [next_transition_id], nested_while_path) 
-    #         else:
-    #             [next_label_true, next_label_false] = self.transition_graph.graph[curr_label]
-    #             print("Building Mutiple Paths From Guard: {} to Its Next Two Labels: {} to the True Path and {} to The False Path".format(curr_label, next_label_true, next_label_false) )
-    #             next_transition_id_true, next_transition_id_false = self.transition_graph.edge_indices[str(curr_label) + "->" + str(next_label_true)], self.transition_graph.edge_indices[str(curr_label) + "->" + str(next_label_false)]
-    #             if self.transition_graph.transitions[next_transition_id_true][1][0].dc_type == DifferenceConstraint.DCType.WHILE:
-    #                 ####################################### FOR DEBUG ###################################################
-    #                 tprog1 = RefinedProg(RefinedProg.RType.TP, curr_transition_path)
-    #                 print("Mutliple Path From While Header to The While Body via The Nest Label %d Through Transition: %d" % (next_label_true, next_transition_id_true))
-    #                 body = refine_dfs(next_label_true, [next_transition_id_true], [])
-    #                 print("Mutliple Path From While Header to The While Exit via The Nest Label %d Through Transition: %d" % (next_label_false, next_transition_id_false))
-    #                 tprog2 = refine_dfs(next_label_false, [next_transition_id_false], nested_while_path + curr_transition_path + [next_transition_id_false])
-    #                 return RefinedProg(RefinedProg.RType.SEQ, [tprog1, RefinedProg(RefinedProg.RType.REPEAT, body, loop_label = curr_label), tprog2])
-    #                 ####################################### FOR RELEASE ###################################################
-    #                 return RefinedProg(RefinedProg.RType.SEQ, [RefinedProg(RefinedProg.RType.TP, curr_transition_path), RefinedProg(RefinedProg.RType.REPEAT, body), refine_dfs(next_label_false, [next_transition_id_false])])
-    #             else:
-    #                 ####################################### FOR DEBUG ###################################################
-    #                 print("Mutliple Path From If Header to The True Branch via The Nest Label %d Through Transition: %d" % (next_label_true, next_transition_id_true))
-    #                 prog_true = refine_dfs(next_label_true, curr_transition_path + [next_transition_id_true], nested_while_path)
-    #                 print("Mutliple Path From If Header to The False Branch via The Nest Label %d Through Transition: %d" % (next_label_true, next_transition_id_true))
-    #                 prog_false = refine_dfs(next_label_false, curr_transition_path + [next_transition_id_false], nested_while_path)
-    #                 return RefinedProg(RefinedProg.RType.CHOICE, [prog_true, prog_false])
-    #                 ####################################### FOR RELEASE ###################################################
-    #                 return RefinedProg(RefinedProg.RType.CHOICE, [refine_dfs(next_label_true, curr_transition_path + [next_transition_id_true]), refine_dfs(next_label_true, curr_transition_path + [next_transition_id_false])])
-    #     return refine_dfs(1, [0], [])
-
     def program_refine(self):
         self.collect_loop_point()
         print("LOOP POINTS: ", self.loop_points)
         self.build_transition_path()
         print("THE SIMPLE TRANSITION PATHS :", self.transition_paths)
-        
-        return self.build_program()
+        self.translated_prog = self.build_program()
+        self.refined_prog = self.optimal_program_refine(self.translated_prog)
+        print("REFINED PROGRAM : {}".format(self.refined_prog.get_signature()))
+        return self.refined_prog
 
-    def get_result(self):
-        print("REFINED PROGRAM : {}".format(self.refined_result.get_signature()))
-        return self.refined_result
+    def get_translated_prog(self):
+        print("THE TRANSLATED PROGRAM: ", self.translated_prog.get_signature())
+        return self.translated_prog
+
+    
+    def get_refined_prog(self):
+        print("REFINED PROGRAM : {}".format(self.refined_prog.get_signature()))
+        return self.refined_prog
+
+    
+    def optimal_program_refine(self, prog):
+        def paths_refine(loop_paths):
+            return loop_paths
+        if prog.type == RefinedProg.RType.CHOICE:
+            return RefinedProg(RefinedProg.RType.CHOICE, paths_refine(prog.get_choices()), None, prog.start_point, prog.end_point)
+        elif prog.type == RefinedProg.RType.REPEAT:
+            return RefinedProg(RefinedProg.RType.REPEAT, self.optimal_program_refine(prog.get_repeat()), prog.start_point, prog.start_point, prog.end_point)
+        elif prog.type == RefinedProg.RType.SEQ:
+            return RefinedProg(RefinedProg.RType.SEQ, [self.optimal_program_refine(p) for p in prog.get_seqs()], None, prog.start_point, prog.end_point)
+        elif prog.type == RefinedProg.RType.TP:
+            return prog
 
