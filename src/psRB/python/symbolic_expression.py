@@ -12,6 +12,8 @@ class SymbolicConst(object):
         self.value = value if value else 0
         self.type = SCType.INF if value == "inf" else SCType.TOP if value == "top" else SCType.INPUT if isinstance(value, str) else SCType.NAT if isinstance(value, int) else SCType.NAT
 
+    def pretty_print(self):
+        return self.value
 
 class SymbolicExpression:
     def __init__(self, value = None, operator = None) -> None:
@@ -53,14 +55,14 @@ class SymbolicExpression:
         else:
             return SymbolicExpression(min(self.value, other.value))
 
-    def pretty_symbolic_expression(self):
+    def pretty_print(self):
         # If the expression is an symbolic const
         if self.operator is None:
-            return self.value.value
+            return self.value.pretty_print()
         elif self.operator == "max" or self.operator == "min":
-            return "{}{{{}}}".format(self.operator, ",".join([v.pretty_symbolic_expression() for v in self.value]))
+            return "{}{{{}}}".format(self.operator, ",".join([v.pretty_print() for v in self.value]))
         else:
-            return "{}{}{}".format(self.value[0].pretty_symbolic_expression(), self.operator, self.value[1].pretty_symbolic_expression())
+            return "{}{}{}".format(self.value[0].pretty_print(), self.operator, self.value[1].pretty_print())
     
 
     # def __lt__(self, other):
