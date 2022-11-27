@@ -29,8 +29,6 @@ class BoundEstimate():
             Bounder.compute_psRB(refiner.get_refined_prog())
             Bounder.print_transition_path_psRB()
             Bounder.print_program_point_psRB()
-            # for program_point, bound in enumerate(Bounder.get_program_point_psRB()):
-            #     self.reachability_bound[program_point] = self.reachability_bound[program_point] + SymbolicExpression(bound)
             return
 
         def dcf_graph_weights_estimate(self):
