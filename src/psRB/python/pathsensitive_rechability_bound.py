@@ -146,7 +146,7 @@ class PathSensitiveReachabilityBound():
                 self.prog_BD_by_path_insensitive_transition_bound(seq_prog)
         # elif prog.type == RefinedProg.RType.TP:
             # self.prog_loc_bound[id] = SymbolicConst(self.transition_bound_path_insensitive.transition_bounds[self.prog_transition_ids(prog)[0]])
-        print("BD of Progam {} by Path Insensitive Bound is {}".format(prog.get_id(), self.prog_loc_bound[prog.get_id()].pretty_print()))
+        # print("BD of Progam {} by Path Insensitive Bound is {}".format(prog.get_id(), self.prog_loc_bound[prog.get_id()].pretty_print()))
         return self.prog_loc_bound[prog.get_id()]
 
     def prog_BD_by_BOUNDFINDER(self, prog):
@@ -207,7 +207,7 @@ class PathSensitiveReachabilityBound():
 
         if not self.loop_chain:
             loop_chain_dfs(prog, [])
-        print("The Loop Chains Are", self.loop_chain)
+        # print("The Loop Chains Are", self.loop_chain)
 
         def compute_transition_path_psRB(prog):
             if prog.type == RefinedProg.RType.TP:
@@ -228,7 +228,7 @@ class PathSensitiveReachabilityBound():
 
     def program_point_psRB_computation(self):
             for transition_path, bound in self.transition_path_psRB.items():
-                print("program_point_psRB computing", bound.pretty_print())
+                # print("program_point_psRB computing", bound.pretty_print())
                 for point in [int(id) for id in (transition_path[1:-1].split(", "))]:
                     self.program_point_psRB[point] = bound if not self.program_point_psRB[point] else  bound + self.program_point_psRB[point]
             return

@@ -169,6 +169,7 @@ class TransitionGraph(DirectedGraph):
         self.transitions = transitions
         self.transition_id = defaultdict(int)
         self.edge_to_transition_id = defaultdict(int)
+        self.transition_num = len(self.transitions)
 
         for id, (l1,_,l2,_) in enumerate(self.transitions):
             self.edge_to_transition_id["{}->{}".format(l1,l2)] = id
