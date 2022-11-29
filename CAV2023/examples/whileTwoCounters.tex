@@ -11,7 +11,7 @@
             \ewhile ~ \clabel{i > 0}^{2} ~ \edo ~ \\
             \qquad \Big(
               \eif(\clabel{j < m}^{3}, \\
-              \qquad \qquad \clabel{\assign{j}{j + 1}}^{4}; 
+              \qquad \qquad \clabel{\assign{j}{j + 1}}^{4}; \\
               \clabel{\assign{i}{i - 1}}^{5},\\
               \qquad \qquad \clabel{\assign{j}{0}}^{6});
               \Big)
@@ -19,7 +19,7 @@
             $
     \caption{}
 \end{subfigure}
-\begin{subfigure}{.4\textwidth}
+\begin{subfigure}{.45\textwidth}
     \begin{centering}
 \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
     \draw[] (-8, 10) circle (0pt) node{{ $0$}};
@@ -47,9 +47,21 @@
         \caption{}
     \end{centering}
 \end{subfigure}
+{\footnotesize
+\begin{subfigure}{.2\textwidth}
+\begin{centering}
+        $\tpath_0 = (0 \to 1 \to 2)$ \\
+        $\tpath_2 = (2 \to 3 \to 6 \to 2)$ \\ 
+        $\tpath_1 = (2 \to 3 \to 4 \to 5 \to 2)$ \\
+        $\tpath_3 = (2 \to \lex)$
+    \caption{}
+\end{centering}
+\end{subfigure}
+}
     \caption{
     (a) An example of multiple paths while loop,
-    (b) the Abstract Transition Graph for $\kw{twoPathsWhile}(n, m)$.}
+    (b) the Abstract Transition Graph for $\kw{twoPathsWhile}(n, m)$,
+    (c) the Simple Transition Paths of $\kw{twoPathsWhile}(n, m)$.}
         \label{fig:whileTwoCounters}
     \end{figure}
     }

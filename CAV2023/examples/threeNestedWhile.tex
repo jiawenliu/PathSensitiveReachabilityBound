@@ -3,32 +3,30 @@
     \begin{figure}
     \centering
     %
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.45\textwidth}
         $
         \begin{array}{l}
             N < m < n\\
             \kw{threeNestedWhile}(n, m, N) \triangleq \\
             \clabel{ \assign{i}{0} }^{0} ; \\
                 L_1: \ewhile ~ \clabel{i < n}^{1} ~ \edo ~ \\
-                \qquad \Big(
+                \quad \Big(
                  \highlight{\clabel{\assign{j}{0}}^{2}} ;\\
-                 L_3:  \qquad \ewhile ~ \clabel{j < m}^{3} ~ \edo ~ \\
-                 \qquad \qquad \Big(
-                  \clabel{\assign{j}{j+1}}^{4};
-                  \highlight{\clabel{\assign{w}{i}}^{5}};\\
-                  L_6:  \qquad \qquad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~
-                  \Big(
-                    \clabel{\assign{w}{w + 1}}^{7}
+                 L_3:  \quad \ewhile ~ \clabel{j < m}^{3} ~ \edo ~ \\
+                \quad \quad \Big( \clabel{\assign{j}{j+1}}^{4};\\
+                  \quad \quad \highlight{\clabel{\assign{w}{i}}^{5}};\\
+                  L_6:  \quad \quad \ewhile ~ \clabel{w < N}^{6} ~ \edo ~ \\
+                  \quad \quad \quad \Big( \clabel{\assign{w}{w + 1}}^{7}
                       \Big); \\
-                      \qquad \qquad \clabel{\assign{i}{w}}^{8}
+                      \quad \quad \clabel{\assign{i}{w}}^{8}
                       \Big); \\
-                      \qquad \clabel{\assign{i}{i+1}}^{9}
+                      \quad \clabel{\assign{i}{i+1}}^{9}
                   \Big)
             \end{array}
             $
     \caption{}
         \end{subfigure}
-    \begin{subfigure}{.4\textwidth}
+    \begin{subfigure}{.45\textwidth}
         \begin{centering}
             \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
                 \draw[] (-7, 10) circle (0pt) node{{ $0$}};
@@ -59,11 +57,11 @@
                 \draw[ thick, -latex] (9, 1.5)  to  [out=120,in=30] node [above] {$w \leq w + 1$}  (6, 1.5);
                 \draw[ thick, -latex] (5, 6.5)  to  [out=120,in=0]  node [right] {$i \leq i - 1$ }(0.5, 9.5);
                 \end{tikzpicture}
-    \caption{}
-    \end{centering}
-    \end{subfigure}
-\begin{subfigure}{.2\textwidth}    
-\begin{centering}
+%     \caption{}
+%     \end{centering}
+%     \end{subfigure}
+% \begin{subfigure}{.2\textwidth}    
+% \begin{centering}
     $
     \begin{array}{l}
         \tpath_0 = (0 \to 1)
@@ -86,7 +84,7 @@ $
 \end{subfigure}
     \caption{
     (a) An example of three nested loops with related iterator variables.
-    (b) The Abstract Transition Graph for $\kw{threeNestedWhile}(n, m, N)$.}
+    (b) The abstract transition graph and simple transition paths.}
         \label{fig:threeWhile}
     \end{figure}
     }
