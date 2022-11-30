@@ -187,6 +187,7 @@ class TransitionBound:
                 continue
             else:
                 var_inc.append("({})*({})".format(self.transition_bounds[t],dc_const))
+        print("variable Incs", v, var_inc)
         self.inc_transitions_bound[v] = "0" if not var_inc else "+".join(var_inc)
         
         '''
@@ -222,14 +223,20 @@ class TransitionBound:
             If it is not yet computed: Recusive Call
             Else: Terminate if there is a Loop Detected
             '''
-            if (not self.var_invariant[v]) and (not visited[v]):
-                visited[v] = True
-                self.compute_var_invariant(v, visited)
-            elif (not self.var_invariant[v]) and visited[v]:
-                self.transition_bounds[t_index], self.var_invariant[v] = "∞", "∞"
-                return "∞"
-            
-            self.transition_bounds[t_index] = self.inc_transitions_bound[v]
+            incs = []
+            vars = [v]
+            for (_, rv, _) in self.reset_transitions[v]:
+                if rv:
+                    vars.append(rv)
+            for u in vars:
+                if (not self.var_invariant[u]) and (not visited[u]):
+                    visited[u] = True
+                    self.compute_var_invariant(u, visited)
+                elif (not self.var_invariant[u]) and visited[u]:
+                    self.transition_bounds[t_index], self.var_invariant[u] = "∞", "∞"
+                    return "∞"  
+                incs.append(self.inc_transitions_bound[u])    
+            self.transition_bounds[t_index] = "+".join(incs)
             
             
             '''
