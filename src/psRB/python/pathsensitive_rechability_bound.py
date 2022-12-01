@@ -228,7 +228,6 @@ class PathSensitiveReachabilityBound():
 
     def program_point_psRB_computation(self):
             for transition_path, bound in self.transition_path_psRB.items():
-                # print("program_point_psRB computing", bound.pretty_print())
                 for point in [int(id) for id in (transition_path[1:-1].split(", "))]:
                     self.program_point_psRB[point] = bound if not self.program_point_psRB[point] else  bound + self.program_point_psRB[point]
             return
@@ -242,7 +241,7 @@ class PathSensitiveReachabilityBound():
         ''' Loop BD - 1: By the Initial State, Final State, Var Decent + SMT Solver:'''
         # self.prog_BD(prog)
         ''' Loop BD - 2: By the Path-insensitive Transition Bound in Paper JAR17:'''
-        self.transition_bound_path_insensitive.compute_transition_bounds()
+        self.transition_bound_path_insensitive.compute_transition_bounds(prog.get_transition_paths())
         self.transition_bound_path_insensitive.print_transition_bounds()
         self.prog_BD_by_path_insensitive_transition_bound(prog)
         ''' Loop BD - 3: By the INIT, NEXT + External API in Paper PLDI09-ProgressInvariants:'''

@@ -1,33 +1,6 @@
 from collections import defaultdict
 from abstract_transition_graph import TransitionGraph, DifferenceConstraint, DirectedGraph
 import copy
-class LocalBound:
-    transition_local_bounds = {}
-    #
-    def __init__(self, transition_graph = TransitionGraph()):
-        self.transition_graph = transition_graph
-    
-    @staticmethod
-    def compute_local_bounds(transition_graph):
-        transition_local_bounds = [("-1", 1)]*(transition_graph.transition_num)
-        for index, (_, dc_set, _, _) in enumerate((transition_graph.transitions)):
-            if not transition_graph.is_in_scc(transition_graph.edges[index]):
-                transition_local_bounds[index] = ("1", 1)
-            else:
-                for dc in dc_set:
-                    if dc.is_dec():
-                        transition_local_bounds[index] = (dc.get_var(), (dc.dc_const))                
-        
-        for index, (local_bound, lb_c) in enumerate(transition_local_bounds):
-            if local_bound == "-1":
-                for i_other, (lb_other, lb_c_other) in enumerate(transition_local_bounds):
-                    if lb_other != "-1" and (not DirectedGraph(transition_graph.vertices_num, transition_graph.edges[:i_other]+transition_graph.edges[i_other+1:]).is_in_scc(transition_graph.edges[index])):
-                        transition_local_bounds[index] = (lb_other, lb_c_other)
-                        continue
-                    elif lb_other != "-1" and (transition_graph.transitions[index][0] == transition_graph.transitions[i_other][0]):
-                        transition_local_bounds[index] = (lb_other, lb_c_other)
-                        continue
-        return transition_local_bounds
 
 
 
@@ -36,10 +9,10 @@ class LocalBound:
 
 class TransitionBound:
     
-    def __init__(self, transition_graph = TransitionGraph()) -> None:
-        self.transition_graph = transition_graph
+    def __init__(self, transition_graph = None) -> None:
+        self.transition_graph = transition_graph if transition_graph else TransitionGraph()
         self.transition_bounds = [""]*(transition_graph.transition_num)
-        self.transition_local_bounds = LocalBound.compute_local_bounds(transition_graph)
+        self.transition_local_bounds = [("-1", 0)]*(transition_graph.transition_num)
         print("THE LOCAL BOUNDS ARE: ", self.transition_local_bounds)
 
 
@@ -59,6 +32,46 @@ class TransitionBound:
         self.all_vars = set([dc_set[0].get_var() for (_, dc_set, _, _) in self.transition_graph.transitions])
         self.var_invariant = {v : "" for v in self.all_vars}
 
+
+    def compute_local_bounds(self, transition_graph, transition_paths):
+        def on_same_transition_path(v1, v2):
+            for path in transition_paths:
+                if v1 in path and v2 in path:
+                    return True
+            return False
+        for index, (l1, dc_set, l2, _) in enumerate((transition_graph.transitions)):
+            if not transition_graph.in_scc((l1, l2)):
+                self.transition_local_bounds[index] = ("1", 1)
+            else:
+                for dc in dc_set:
+                    if dc.is_dec():
+                        self.transition_local_bounds[index] = (dc.get_var(), (dc.dc_const))                
+        
+        print("The computed Local Bounds: ", self.transition_local_bounds)
+        for index, (local_bound, lb_c) in enumerate(self.transition_local_bounds):
+            if local_bound == "-1":
+                (l1, dc, l2, _ ) = transition_graph.transitions[index]
+                for i_other, (lb_other, lb_c_other) in enumerate(self.transition_local_bounds):
+                    if i_other == index or (not (self.transition_local_bounds[index][0] == "-1")) or lb_other == "-1":
+                        continue
+                    new_edges = transition_graph.edges[:i_other]+transition_graph.edges[i_other+1:]
+                    # print("Computing the Local Bound For transition {} and Remove the Edge {}, and Removed Edges are: {}".format(transition_graph.transitions[index], transition_graph.edges[i_other], new_edges))
+                    newgraph = DirectedGraph(transition_graph.vertices_num, new_edges)
+                    print("THE SCC OF THE NEW GRAPH: {} and The COMPUTING EDGE IS {}".format(newgraph.scc_ids, transition_graph.edges[index]))
+                    if (not newgraph.in_scc((l1, l2))):
+                        self.transition_local_bounds[index] = (lb_other, lb_c_other)
+                    elif (transition_graph.transitions[index][0] == transition_graph.transitions[i_other][0] and dc[0].dc_type != DifferenceConstraint.DCType.WHILE):
+                        self.transition_local_bounds[index] = (lb_other, lb_c_other)
+        for index, (local_bound, lb_c) in enumerate(self.transition_local_bounds):
+            if local_bound == "-1":
+                (l1, dc, l2, _ ) = transition_graph.transitions[index]
+                for i_other, (lb_other, lb_c_other) in enumerate(self.transition_local_bounds):
+                    if i_other == index or (not (self.transition_local_bounds[index][0] == "-1")) or lb_other == "-1" or lb_other == "1":
+                        continue
+                    if (on_same_transition_path(index, i_other)):
+                        self.transition_local_bounds[index] = (lb_other, lb_c_other)
+
+        return self.transition_local_bounds
 
 ######################################################################## The Basic Computation Collecting Variable Modification Sets ########################################################################
 
@@ -141,7 +154,7 @@ class TransitionBound:
                 if next_var and not visited[transition_index]:
                     visited[transition_index] = True
                     chains = chains + (dfs(next_var, visited, [(transition_index, next_var, dc_const)] + currrent_chain))
-                elif next_var and visited[next_var]:
+                elif next_var and visited[transition_index]:
                     chains.append(copy.deepcopy(currrent_chain))
                 elif not next_var:
                     chains.append([(transition_index, next_var, dc_const)] + currrent_chain)
@@ -198,12 +211,14 @@ class TransitionBound:
             if reset_var and (not self.var_invariant[reset_var]) and (not visited[reset_var]):
                 visited[reset_var] = True
                 self.compute_var_invariant(reset_var, visited)
+                self.var_invariant[v] = "∞" if self.var_invariant[reset_var] == "∞" else ""
             elif reset_var and (not self.var_invariant[reset_var]) and visited[reset_var]:
                 self.var_invariant[v], self.var_invariant[reset_var], self.inc_transitions_bound[v] = "∞", "∞", "∞"
                 return
-            var_reset.append("({})+({})".format(self.var_invariant[reset_var], reset_const))
+            if not (self.var_invariant[v] == "∞"):
+                var_reset.append("({})+({})".format(self.var_invariant[reset_var], reset_const))
         
-        self.var_invariant[v] = "({})+({})".format(self.inc_transitions_bound[v],"max{{{}}}".format(",".join(var_reset)))
+        self.var_invariant[v] = "∞" if self.var_invariant[v] == "∞" else "({})+({})".format(self.inc_transitions_bound[v],"max{{{}}}".format(",".join(var_reset)))
 
 
     def compute_transition_bound_closure(self, t_index, visited):
@@ -252,6 +267,7 @@ class TransitionBound:
                     '''
                     if self.transition_bounds[reset_t] == "∞":
                         self.transition_bounds[t_index] = "∞"
+                        return "∞"
                         
                     '''
                     Cannot terminate because we need to update the bounds for reset transition and reset varaibles on the other chains.
@@ -290,7 +306,8 @@ class TransitionBound:
 ######################################################################## Computation Intereface ########################################################################
 
 
-    def compute_transition_bounds(self):
+    def compute_transition_bounds(self, transition_paths):
+        self.compute_local_bounds(self.transition_graph, transition_paths)
         self.collect_var_modifications()
         self.build_reset_graph()
         self.print_reset_chains()

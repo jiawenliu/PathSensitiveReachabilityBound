@@ -28,6 +28,7 @@ class RefinedProg():
         self.prog_edges = self.build_edges()
         self.prog_id = self.build_id()
         self.prog_signature = self.build_signature()
+        self.transition_paths = self.collect_transition_paths()
 
 
 ######################################################################## Program Property/Data Intereface ########################################################################
@@ -56,6 +57,9 @@ class RefinedProg():
 
     def get_signature(self):
         return self.prog_signature
+    
+    def get_transition_paths(self):
+        return self.transition_paths
 
 
 ######################################################################## Program Property Computation ########################################################################
@@ -95,6 +99,16 @@ class RefinedProg():
             return "SEQ : (" + ",".join(seq_prog.build_signature() for seq_prog in self.get_seqs()) + ")"
         elif self.type == RefinedProg.RType.TP:
             return str(self.prog)
+
+    def collect_transition_paths(self):
+        if self.type == RefinedProg.RType.CHOICE:
+            return reduce(lambda a, b: a + b, [choice_p.collect_transition_paths() for choice_p in self.get_choices()], [])
+        elif self.type == RefinedProg.RType.REPEAT:
+            return self.get_repeat().collect_transition_paths()
+        elif self.type == RefinedProg.RType.SEQ:
+            return reduce(lambda a, b: a + b, [seq_prog.collect_transition_paths() for seq_prog in self.get_seqs()], [])
+        elif self.type == RefinedProg.RType.TP:
+            return [self.get_tp()]
 
     
     def pretty_print(self):

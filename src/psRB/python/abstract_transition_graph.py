@@ -45,10 +45,9 @@ class DifferenceConstraint:
 
 
 class DirectedGraph:
-    def __init__(self, vertices_num = 1, edges = []) -> None:
-        self.vertices_num = vertices_num
-        self.edges = edges
-        # default dictionary to store graph
+    def __init__(self, vertices_num = None, edges = None) -> None:
+        self.vertices_num = vertices_num if vertices_num else 0
+        self.edges = edges if edges else []
         self.graph = defaultdict(list)
         self.time = 0
         self.scc_ids = [-1] * (self.vertices_num)
@@ -56,7 +55,9 @@ class DirectedGraph:
         self.edge_indices = defaultdict(int)
         self.build_edges()
         self.build_edge_indices()
-        pass
+        self.build_scc()
+        print("BUILD SCC WHEN INITIALIZE THE GRAPH AND THE SCC GRAPH", self.scc_ids)
+
 
     def build_edges(self):
         for (u, v) in self.edges:
@@ -83,9 +84,7 @@ class DirectedGraph:
         dfs(st, [st])
         return r
 
-    def is_in_scc(self, edge):
-        if self.scc_cnt == -1:
-            self.build_scc()
+    def in_scc(self, edge):
         (u, v) = edge
         return self.scc_ids[u] == self.scc_ids[v]
     
@@ -157,20 +156,15 @@ class DirectedGraph:
 #Inherit the Transition Graph and the Data-Flow Graph from the Command Graph Class
 class TransitionGraph(DirectedGraph):
     # locations = [0, 1]
-    def __init__(self, 
-    edges=[(0, 1), (1, 1)], 
-    transitions=[(0, [DifferenceConstraint("x", None, "k", DifferenceConstraint.DCType.RESET)], 1, [0]),
-    (1, [DifferenceConstraint("x", None, "1", DifferenceConstraint.DCType.DEC)], 1, [1, 2])],
-    vertex_num = None
-    ):
-
-        super().__init__(vertex_num if vertex_num else (max(map(lambda x: max(x), edges)) + 1), edges)
-        self.ctl_edges = edges
-        self.transitions = transitions
+    def __init__(self,  edges = None, transitions = None, vertex_num = None ):
+        # self.edges = (edges if edges else [])
+        # self.vertices_num = vertex_num if vertex_num else (max(map(lambda x: max(x), self.edges)) + 1)
+        super(TransitionGraph, self).__init__(vertex_num, edges)
+        self.ctl_edges = edges if edges else []
+        self.transitions = transitions if transitions else []
         self.transition_id = defaultdict(int)
         self.edge_to_transition_id = defaultdict(int)
         self.transition_num = len(self.transitions)
-
         for id, (l1,_,l2,_) in enumerate(self.transitions):
             self.edge_to_transition_id["{}->{}".format(l1,l2)] = id
 
