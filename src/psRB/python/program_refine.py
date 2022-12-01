@@ -1,8 +1,6 @@
 import enum
 from functools import reduce
 from typing import DefaultDict
-from abstract_transition_graph import DifferenceConstraint
-
 
 # ############################################################################################################################################################################
 # ######################################################################## THE REFINED PROGRAM TYPE ########################################################################
@@ -61,6 +59,20 @@ class RefinedProg():
     def get_transition_paths(self):
         return self.transition_paths
 
+######################################################################## Program Type Interface ########################################################################
+
+
+    def is_choice(self):
+        return self.type == self.RType.CHOICE
+    
+    def is_seq(self):
+        return self.type == self.RType.SEQ
+    
+    def is_repeat(self):
+        return self.type == self.RType.REPEAT
+    
+    def is_transition_path(self):
+        return self.type == self.RType.TP
 
 ######################################################################## Program Property Computation ########################################################################
 
@@ -132,7 +144,7 @@ class ProgramRefine():
         pass
 
     def collect_loop_point(self):
-         self.loop_points = set(filter(lambda p : p, [t[0] if t[1][0].dc_type == DifferenceConstraint.DCType.WHILE else None for t in self.transition_graph.transitions]))
+         self.loop_points = set(filter(lambda p : p, [t[0] if t[1][0].is_while() else None for t in self.transition_graph.transitions]))
     
     def build_transition_path(self):
         def dfs(curr_path):

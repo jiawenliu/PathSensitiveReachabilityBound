@@ -11,37 +11,50 @@ class DifferenceConstraint:
         IF = 6
 
     dc_type = 1
-    def __init__(self, var = None, dc_var = None, dc_const = None, dc_type = 1) -> None:
-        self.var = None if dc_type == self.DCType.WHILE or dc_type == self.DCType.IF else var 
+    def __init__(self, var_or_b = None, dc_var = None, dc_const = None, dc_type = None) -> None:
+        if dc_type == self.DCType.WHILE or dc_type == self.DCType.IF:
+            self.var = None
+            self.dc_bexpr = var_or_b 
+        else:
+            self.var = var_or_b 
+            self.dc_bexpr = None
+        
         self.dc_var = dc_var
         self.dc_const = dc_const
         self.dc_type = dc_type
-        self.dc_bexpr = var if dc_type == self.DCType.WHILE or dc_type == self.DCType.IF else None
-        pass
 
     def get_var(self):
         return self.var 
 
+    def get_var_name(self):
+        return self.var
+
+    def get_reset_var(self):
+        return self.dc_var 
+
     def is_reset(self):
-        return self.dc_type == 3
+        return self.dc_type == self.DCType.RESET
     
     def is_inc(self):
-        return self.dc_type == 2
+        return self.dc_type == self.DCType.INC
 
     def is_dec(self):
         return self.dc_type == self.DCType.DEC
-
-    def is_asum(self):
-        return self.dc_type == self.DCType.ASUM
-
-    def get_inc_value(self):
-        return self.inc_value
-
-    def get_dec_value(self):
-        return self.dec_value
     
-    def get_asum(self):
-        return self.dc_bexpr
+    def is_guard(self):
+        return self.dc_type == self.DCType.WHILE or self.dc_type == self.DCType.IF
+
+    def is_while(self):
+        return self.dc_type == self.DCType.WHILE
+    
+    def is_if(self):
+        return self.dc_type == self.DCType.IF
+
+    def get_const(self):
+        return self.dc_const
+    
+    def get_guard_expr(self):
+        return self.dc_bexpr.split(":")[1]
 
 
 class DirectedGraph:

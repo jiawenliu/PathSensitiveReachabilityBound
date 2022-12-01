@@ -67,11 +67,11 @@ class GraphParser(argparse.ArgumentParser):
                     v_set = [int(v)]
                 else:
                     v_set = [int(v)]
-                    (var, avar, c, ctype) = dc.split(",")
-                    dc_type = DifferenceConstraint.DCType.RESET if ctype == "RESET" else DifferenceConstraint.DCType.INC if ctype == "INC" else DifferenceConstraint.DCType.DEC if ctype == "DEC" else DifferenceConstraint.DCType.WHILE if var.startswith("WHILE:") else DifferenceConstraint.DCType.IF
+                    (varname_or_bexpre, avar, c, ctype) = dc.split(",")
+                    dc_type = DifferenceConstraint.DCType.RESET if ctype == "RESET" else DifferenceConstraint.DCType.INC if ctype == "INC" else DifferenceConstraint.DCType.DEC if ctype == "DEC" else DifferenceConstraint.DCType.WHILE if varname_or_bexpre.startswith("WHILE:") else DifferenceConstraint.DCType.IF
                     avar = None if avar == "" else avar
                     c =  None if c == "" else int(c) if isinstance(c, int) else c
-                    dc_set = [DifferenceConstraint(var, avar, c, dc_type)]
+                    dc_set = [DifferenceConstraint(varname_or_bexpre, avar, c, dc_type)]
                 transitions.append((int(l1), dc_set, int(l2), v_set))
             transitions.sort(key=lambda y: y[0]) 
             edges.sort(key=lambda y: y[0])   
