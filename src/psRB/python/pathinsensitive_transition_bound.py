@@ -34,9 +34,9 @@ class TransitionBound:
 
 
     def compute_local_bounds(self, transition_graph, transition_paths):
-        def on_same_transition_path(v1, v2):
+        def on_same_transition_path(e1, e2):
             for path in transition_paths:
-                if v1 in path and v2 in path:
+                if e1[0] in path and e1[1] in path and e2[0] in path and e2[1] in path:
                     return True
             return False
         for index, (l1, dc_set, l2, _) in enumerate((transition_graph.transitions)):
@@ -47,7 +47,8 @@ class TransitionBound:
                     if dc.is_dec():
                         self.transition_local_bounds[index] = (dc.get_var(), (dc.dc_const))                
         
-        print("The computed Local Bounds: ", self.transition_local_bounds)
+        # while True:
+        #     woking = copy.deepcopy(self.transition_local_bounds)
         for index, (local_bound, lb_c) in enumerate(self.transition_local_bounds):
             if local_bound == "-1":
                 (l1, dc, l2, _ ) = transition_graph.transitions[index]
@@ -57,18 +58,21 @@ class TransitionBound:
                     new_edges = transition_graph.edges[:i_other]+transition_graph.edges[i_other+1:]
                     # print("Computing the Local Bound For transition {} and Remove the Edge {}, and Removed Edges are: {}".format(transition_graph.transitions[index], transition_graph.edges[i_other], new_edges))
                     newgraph = DirectedGraph(transition_graph.vertices_num, new_edges)
-                    print("THE SCC OF THE NEW GRAPH: {} and The COMPUTING EDGE IS {}".format(newgraph.scc_ids, transition_graph.edges[index]))
+                    # print("THE SCC OF THE NEW GRAPH: {} and The COMPUTING EDGE IS {}".format(newgraph.scc_ids, transition_graph.edges[index]))
                     if (not newgraph.in_scc((l1, l2))):
                         self.transition_local_bounds[index] = (lb_other, lb_c_other)
                     elif (transition_graph.transitions[index][0] == transition_graph.transitions[i_other][0] and dc[0].dc_type != DifferenceConstraint.DCType.WHILE):
                         self.transition_local_bounds[index] = (lb_other, lb_c_other)
+            # if woking == self.transition_local_bounds:
+            #     break
+        
         for index, (local_bound, lb_c) in enumerate(self.transition_local_bounds):
             if local_bound == "-1":
                 (l1, dc, l2, _ ) = transition_graph.transitions[index]
                 for i_other, (lb_other, lb_c_other) in enumerate(self.transition_local_bounds):
                     if i_other == index or (not (self.transition_local_bounds[index][0] == "-1")) or lb_other == "-1" or lb_other == "1":
                         continue
-                    if (on_same_transition_path(index, i_other)):
+                    if (on_same_transition_path(transition_graph.edges[index], transition_graph.edges[i_other])):
                         self.transition_local_bounds[index] = (lb_other, lb_c_other)
 
         return self.transition_local_bounds

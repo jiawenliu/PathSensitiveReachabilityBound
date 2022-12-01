@@ -56,7 +56,6 @@ class DirectedGraph:
         self.build_edges()
         self.build_edge_indices()
         self.build_scc()
-        print("BUILD SCC WHEN INITIALIZE THE GRAPH AND THE SCC GRAPH", self.scc_ids)
 
 
     def build_edges(self):
@@ -85,8 +84,7 @@ class DirectedGraph:
         return r
 
     def in_scc(self, edge):
-        (u, v) = edge
-        return self.scc_ids[u] == self.scc_ids[v]
+        return self.scc_ids[edge[0]] == self.scc_ids[edge[1]]
     
     def scc_dfs(self,u, low, disc, stackMember, st):
 
@@ -157,8 +155,6 @@ class DirectedGraph:
 class TransitionGraph(DirectedGraph):
     # locations = [0, 1]
     def __init__(self,  edges = None, transitions = None, vertex_num = None ):
-        # self.edges = (edges if edges else [])
-        # self.vertices_num = vertex_num if vertex_num else (max(map(lambda x: max(x), self.edges)) + 1)
         super(TransitionGraph, self).__init__(vertex_num, edges)
         self.ctl_edges = edges if edges else []
         self.transitions = transitions if transitions else []
@@ -166,10 +162,12 @@ class TransitionGraph(DirectedGraph):
         self.edge_to_transition_id = defaultdict(int)
         self.transition_num = len(self.transitions)
         for id, (l1,_,l2,_) in enumerate(self.transitions):
+            l2 = vertex_num if l2 == -1 else l2
             self.edge_to_transition_id["{}->{}".format(l1,l2)] = id
+        
 
     def transition_id_lookup(self, edge):
-        return self.edge_to_transition_id[edge]
+        return self.edge_to_transition_id[edge] if edge in self.edge_to_transition_id.keys() else -1
 
 
 

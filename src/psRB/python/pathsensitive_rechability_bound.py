@@ -20,9 +20,6 @@ class PathSensitiveReachabilityBound():
         self.program_point_psRB = defaultdict(str)
 
 
-
-
-
 ############################################################################################################################################################################
 ######################################################################## THE REWROTE IMPLEMENTATION ########################################################################
 ############################################################################################################################################################################
@@ -37,7 +34,7 @@ class PathSensitiveReachabilityBound():
         r = set()
         for t_id in self.prog_transition_ids(prog):
             r.add(self.transition_bound_path_insensitive.transition_local_bounds[t_id])
-        print("The Set of Ranks for Program : {} Are {}".format(prog.get_signature(), r))
+        # print("The Set of Ranks for Program : {} Are {}".format(prog.get_signature(), r))
         return r
 
     def prog_initial(self, prog):
@@ -61,12 +58,13 @@ class PathSensitiveReachabilityBound():
         for (_, dc_set, _, _) in self.prog_transitions(prog):
             if (dc_set[0].dc_type == DifferenceConstraint.DCType.WHILE or dc_set[0].dc_type == DifferenceConstraint.DCType.IF):
                 (r.add(dc_set[0].dc_bexpr))
-        print("The Guards Of The Program {} Are {}.".format(prog.get_id(), r))
+        # print("The Guards Of The Program {} Are {}.".format(prog.get_id(), r))
         return r
+
 
     ### THE POST CONDITION AFTER THE PROGRAM EXECUTION
     def prog_post(self, prog):
-        print("Program {}'s Post State Is : {}".format(prog.get_id(), "Λ".join(["¬({})".format(g) for g in self.prog_guard(prog)])))
+        # print("Program {}'s Post State Is : {}".format(prog.get_id(), "Λ".join(["¬({})".format(g) for g in self.prog_guard(prog)])))
         return "Λ".join([g for g in self.prog_guard(prog)])
 
     ### THE SATE OF RANKS RIGHT BEFORE THE PROGRAM IS BEEN VISITING THE SECOND TIME
@@ -110,13 +108,13 @@ class PathSensitiveReachabilityBound():
     def var_gd(self, prog):
         if (not self.prog_loc_bound[prog.get_id()]):
            self.prog_loc_bound[prog.get_id()] = self.prog_BD(prog)
-        return {x: "{}×({}-{})".format(self.prog_loc_bound[prog.get_id()], self.prog_initial(prog)[x], self.prog_next(prog)[x]) for x in self.get_ranks(prog)}
+        return {x: "{}×({}-{})".format(self.prog_loc_bound[prog.get_id()].pretty_print(), self.prog_initial(prog)[x], self.prog_next(prog)[x]) for x in self.get_ranks(prog)}
 
     def loop_initial(self, loop_prog, tp_prog):
         return self.prog_initial(tp_prog)
     
     def loop_next(self, loop_prog, tp_prog):
-        return {x: "{}+{}×{}".format(self.prog_initial(loop_prog)[x], self.prog_loc_bound[tp_prog.get_id()], self.prog_next(tp_prog)[x]) for x in self.get_ranks(tp_prog)}
+        return {x: "{}+{}×{}".format(self.prog_initial(loop_prog)[x], self.prog_loc_bound[tp_prog.get_id()].pretty_print(), self.prog_next(tp_prog)[x]) for x in self.get_ranks(tp_prog)}
 
     def prog_BD(self, refined_prog):
         id = refined_prog.get_id()
@@ -134,6 +132,7 @@ class PathSensitiveReachabilityBound():
 
 
     def prog_BD_by_path_insensitive_transition_bound(self, prog):
+        # print("THE PROGAM {} EDGES ARE {} TRANSITION IDS ARE {}".format(prog.get_id(), prog.get_edges(), set(self.prog_transition_ids(prog))))
         self.prog_loc_bound[prog.get_id()] = SymbolicExpression([SymbolicConst(self.transition_bound_path_insensitive.transition_bounds[transition_id]) for transition_id in set(self.prog_transition_ids(prog))], "min")
         id = prog.get_id()
         if prog.type == RefinedProg.RType.CHOICE:
@@ -144,9 +143,6 @@ class PathSensitiveReachabilityBound():
         elif prog.type == RefinedProg.RType.SEQ:
             for seq_prog in prog.get_seqs():
                 self.prog_BD_by_path_insensitive_transition_bound(seq_prog)
-        # elif prog.type == RefinedProg.RType.TP:
-            # self.prog_loc_bound[id] = SymbolicConst(self.transition_bound_path_insensitive.transition_bounds[self.prog_transition_ids(prog)[0]])
-        # print("BD of Progam {} by Path Insensitive Bound is {}".format(prog.get_id(), self.prog_loc_bound[prog.get_id()].pretty_print()))
         return self.prog_loc_bound[prog.get_id()]
 
     def prog_BD_by_BOUNDFINDER(self, prog):
@@ -169,22 +165,23 @@ class PathSensitiveReachabilityBound():
                 self.transition_path_localRB[prog.get_id()] = (L, rp_bound)
             else:
                 return
+
         local_nested_loops_dfs(prog, "1")
 
     def compute_global_psRB(self, tp_prog):
 
-        def compute_loop_reachability_bound(tp_prog, loop_chain):
+        def compute_psRB_through_loop_chain(tp_prog, loop_chain):
             if not (loop_chain): return "1"
             if loop_chain[0][0] == self.transition_path_localRB[tp_prog.get_id()][0]: 
                 return self.transition_path_localRB[tp_prog.get_id()][1]
-            return "({}×{})".format(compute_nested_lpchain_bound(loop_chain[0][1], tp_prog), compute_loop_reachability_bound(tp_prog, loop_chain[1:]))
+            return "({}×{})".format(compute_nested_lpchain_bound(loop_chain[0][1], tp_prog), compute_psRB_through_loop_chain(tp_prog, loop_chain[1:]))
             
 
         def compute_nested_lpchain_bound(loop_prog, tp_prog):
             init, post, next = self.loop_initial(loop_prog, tp_prog), self.prog_post(tp_prog), self.loop_next(loop_prog, tp_prog)
             return "max({})".format(",".join(["{}:({}→{})/({})".format(x[0], init[x], post, next[x]) for x in self.get_ranks(tp_prog)]))
         
-        return compute_loop_reachability_bound(tp_prog, self.loop_chain[tp_prog.get_id()])
+        return compute_psRB_through_loop_chain(tp_prog, self.loop_chain[tp_prog.get_id()])
 
 
 
@@ -207,7 +204,6 @@ class PathSensitiveReachabilityBound():
 
         if not self.loop_chain:
             loop_chain_dfs(prog, [])
-        # print("The Loop Chains Are", self.loop_chain)
 
         def compute_transition_path_psRB(prog):
             if prog.type == RefinedProg.RType.TP:

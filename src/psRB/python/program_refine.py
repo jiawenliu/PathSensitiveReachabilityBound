@@ -72,7 +72,8 @@ class RefinedProg():
             return self.get_repeat().get_edges()
         elif self.type == RefinedProg.RType.SEQ:
             seq1, seq2 = self.get_seqs()
-            return seq1.get_edges() + [(seq1.end_point, seq2.start_point)] + seq2.get_edges()
+            return seq1.get_edges() + seq2.get_edges()
+            return seq1.get_edges() + ["{}->{}".format(seq1.end_point, seq2.start_point)] + seq2.get_edges()
         elif self.type == RefinedProg.RType.TP:
             return list(map(lambda edge: "{}->{}".format(edge[0], edge[1]),  zip(self.get_tp()[:-1], self.get_tp()[1:])))
         
@@ -83,7 +84,7 @@ class RefinedProg():
         elif self.type == RefinedProg.RType.REPEAT:
             return self.get_repeat().build_id()
         elif self.type == RefinedProg.RType.SEQ:
-            return reduce(lambda a, b: a + b, (seq_prog.build_id() for seq_prog in self.get_seqs()), [])
+            return reduce(lambda a, b: a + b[1:], (seq_prog.build_id() for seq_prog in self.get_seqs()), [])
         elif self.type == RefinedProg.RType.TP:
             return (self.get_tp())
 
