@@ -11,9 +11,9 @@
             \ewhile ~ \clabel{i > 0}^{2} ~ \edo ~ \\
             \qquad \Big(
               \eif(\clabel{j < m}^{3}, \\
-              \qquad \qquad \clabel{\assign{j}{j + 1}}^{4}; \\
-              \clabel{\assign{i}{i - 1}}^{5},\\
-              \qquad \qquad \clabel{\assign{j}{0}}^{6});
+              \qquad \ethen  \clabel{\assign{j}{j + 1}}^{4}; \\
+              \qquad \qquad \clabel{\assign{i}{i - 1}}^{5},\\
+              \qquad \eelse \clabel{\assign{j}{0}}^{6});
               \Big)
             \end{array}
             $

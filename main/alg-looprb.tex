@@ -68,11 +68,13 @@
      \rfnext(\tpath) \triangleq 
        \begin{array}{l}
     \sum\limits_{(x, \absevent) \in \inc(x) }
-     \left\{ 
-       { \todo{ \varinvar(y) or \reset(y)} }+ v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \tpath\right\}
-       \\ \qquad 
+     \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
+     \\ \qquad 
+     + \sum\limits_{(x, \absevent) \in \reset(x) }
+        \left\{ \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \tpath\right\}
+        \\ \qquad 
        - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
-         \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \tpath 
+         v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
          \right\}
        \end{array}
      \end{array}
@@ -126,12 +128,17 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
     \begin{array}{l}
   \sum\limits_{(x, \absevent) \in \inc(x) }
   \left\{ 
-    \varinvar(y) + v ~\middle\vert~ \absevent = (l', x' \leq y + v, \_) \land  l' \in \rprog 
-    \land l' \notin \tpath \right\}
-    \\ \qquad 
-    - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
-      \varinvar(y) + v 
-      ~\middle\vert~ \absevent = (l', x' \leq y + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
+      v ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land  l' \in \rprog 
+      \land l' \notin \tpath \right\}
+      \\ \qquad 
+      + \sum\limits_{(x, \absevent) \in \reset(x) }
+         \left\{ \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \rprog \land l \notin \tpath\right\}
+     \\ \qquad 
+      - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
+      v 
+      ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
+      \\ \qquad 
+      + \outinB(\tpath) \times \rfnext(\tpath)
     \end{array}
   \end{array}
   , x = \locbound(\tpath)
