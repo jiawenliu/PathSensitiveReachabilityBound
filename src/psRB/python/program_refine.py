@@ -27,6 +27,10 @@ class RefinedProg():
         self.prog_id = self.build_id()
         self.prog_signature = self.build_signature()
         self.transition_paths = self.collect_transition_paths()
+        self.enclosed_loop = {str(path): None for path in self.transition_paths}
+        self.edge_enclosed_loop = {edge: None for edge in self.prog_edges}
+        self.compute_enclosed_loop()
+        self.build_edge_enclosed_loop()
 
 
 ######################################################################## Program Property/Data Intereface ########################################################################
@@ -58,6 +62,14 @@ class RefinedProg():
     
     def get_transition_paths(self):
         return self.transition_paths
+    
+    def get_enclosed_loop(self):
+        return self.enclosed_loop
+    
+    def get_transition_enclosed_loop(self, edge):
+        return self.edge_enclosed_loop["{}->{}".format(edge[0], edge[1])]
+
+
 
 ######################################################################## Program Type Interface ########################################################################
 
@@ -115,15 +127,32 @@ class RefinedProg():
 
     def collect_transition_paths(self):
         if self.type == RefinedProg.RType.CHOICE:
-            return reduce(lambda a, b: a + b, [choice_p.collect_transition_paths() for choice_p in self.get_choices()], [])
+            return list(reduce(lambda a, b: a + b, [choice_p.collect_transition_paths() for choice_p in self.get_choices()], []))
         elif self.type == RefinedProg.RType.REPEAT:
             return self.get_repeat().collect_transition_paths()
         elif self.type == RefinedProg.RType.SEQ:
-            return reduce(lambda a, b: a + b, [seq_prog.collect_transition_paths() for seq_prog in self.get_seqs()], [])
+            return list(reduce(lambda a, b: a + b, [seq_prog.collect_transition_paths() for seq_prog in self.get_seqs()], []))
         elif self.type == RefinedProg.RType.TP:
             return [self.get_tp()]
 
-    
+    def compute_enclosed_loop(self):
+        def dfs(Loop, prog):
+            L = prog.loop_label if prog.loop_label else Loop
+            if self.type == RefinedProg.RType.CHOICE:
+                return [dfs(L, choice_p) for choice_p in self.get_choices()]
+            elif self.type == RefinedProg.RType.REPEAT:
+                return dfs(L, prog.get_repeat())
+            elif self.type == RefinedProg.RType.SEQ:
+                return [dfs(L, seq_p) for seq_p in self.get_seqs()]
+            elif self.type == RefinedProg.RType.TP:
+                self.enclosed_loop[str(prog.get_tp())] = L
+
+    def build_edge_enclosed_loop(self):
+        for path, loop in self.enclosed_loop.items():
+            for i in range(len(path) - 1):
+                self.edge_enclosed_loop[ "{}->{}".format(path[i], path[i + 1])] = loop
+
+
     def pretty_print(self):
         print(self.get_signature())
     
@@ -136,8 +165,8 @@ class ProgramRefine():
 
     def __init__(self, transition_graph) -> None:
         self.transition_graph = transition_graph
-        self.translated_prog = RefinedProg()
-        self.refined_prog = RefinedProg()
+        self.translated_prog = None
+        self.refined_prog = None
         self.loop_points = set()
         self.transition_paths = []
         self.transition_edges = []

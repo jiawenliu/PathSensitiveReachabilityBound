@@ -21,6 +21,7 @@ class TransitionBound:
 
         ############# The Transitions where Each Variable is Decreased
         self.dec_transitions = defaultdict(list)
+        self.dec_transitions_bound = defaultdict(list)
 
         ############# The Transitions where Each Variable is Reset
         self.reset_transitions = defaultdict(list)
@@ -43,8 +44,8 @@ class TransitionBound:
             else:
                 for dc in dc_set:
                     if dc.is_dec():
-                        self.transition_local_bounds[index] = (dc.get_var_name(), (dc.get_const()))                
-        
+                        self.transition_local_bounds[index] = (dc.get_var_name(), (dc.get_const()))
+                        self.dec_transitions_bound[dc.get_var_name()].append((index, dc.get_const(),  refined_prog.get_transition_enclosed_loop((l1, l2))))
         # while True:
         #     woking = copy.deepcopy(self.transition_local_bounds)
         for index, (local_bound, lb_c) in enumerate(self.transition_local_bounds):
@@ -54,12 +55,10 @@ class TransitionBound:
                     if i_other == index or (not (self.transition_local_bounds[index][0] == "-1")) or lb_other == "-1":
                         continue
                     new_edges = transition_graph.edges[:i_other]+transition_graph.edges[i_other+1:]
-                    # print("Computing the Local Bound For transition {} and Remove the Edge {}, and Removed Edges are: {}".format(transition_graph.transitions[index], transition_graph.edges[i_other], new_edges))
                     newgraph = DirectedGraph(transition_graph.vertices_num, new_edges)
-                    # print("THE SCC OF THE NEW GRAPH: {} and The COMPUTING EDGE IS {}".format(newgraph.scc_ids, transition_graph.edges[index]))
                     if (not newgraph.in_scc((l1, l2))):
                         self.transition_local_bounds[index] = (lb_other, lb_c_other)
-                    elif (transition_graph.transitions[index][0] == transition_graph.transitions[i_other][0] and (not dc[0].is_while())):
+                    elif (transition_graph.transitions[index][0] == transition_graph.transitions[i_other][0] and (dc[0].is_if())):
                         self.transition_local_bounds[index] = (lb_other, lb_c_other)
             # if woking == self.transition_local_bounds:
             #     break
@@ -225,7 +224,9 @@ class TransitionBound:
     def compute_transition_bound_closure(self, t_index, visited):
         if self.transition_bounds[t_index]:
             return self.transition_bounds[t_index]
+
         (v,c) = self.transition_local_bounds[t_index]
+        
         if v == "1":
             self.transition_bounds[t_index] = "1"
             return "1"
@@ -315,10 +316,10 @@ class TransitionBound:
         self.collect_var_modifications()
         self.build_reset_graph()
         
-        visited = {v: False for v in self.all_vars}
+        var_visitation = {v: False for v in self.all_vars}
         for transition_index in (range(self.transition_graph.transition_num)):
             if not self.transition_bounds[transition_index]:
-                self.compute_transition_bound_closure(transition_index, visited)
+                self.compute_transition_bound_closure(transition_index, var_visitation)
         self.print_variable_bounds()
         return self.transition_bounds
 

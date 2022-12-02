@@ -1,4 +1,5 @@
 from collections import defaultdict
+from re import L
 from abstract_transition_graph import TransitionGraph
 from symbolic_expression import SymbolicExpression, SymbolicConst
 from pathinsensitive_transition_bound import TransitionBound
@@ -51,6 +52,7 @@ class PathSensitiveReachabilityBound():
             return ("max{{{}}}".format(",".join([ri for ri in rank_initial_set])))
         return {x : rank_inital(x) for x in self.get_ranks(prog)}
 
+
     def prog_guard(self, prog):
         r = set()
         for (_, dc_set, _, _) in self.prog_transitions(prog):
@@ -64,6 +66,7 @@ class PathSensitiveReachabilityBound():
     def prog_post(self, prog):
         # print("Program {}'s Post State Is : {}".format(prog.get_id(), "Λ".join(["¬({})".format(g) for g in self.prog_guard(prog)])))
         return "Λ".join([g for g in self.prog_guard(prog)])
+
 
     ### THE SATE OF RANKS RIGHT BEFORE THE PROGRAM IS BEEN VISITING THE SECOND TIME
     def prog_next(self, prog):
@@ -109,10 +112,21 @@ class PathSensitiveReachabilityBound():
         return {x: "{}×({}-{})".format(self.prog_loc_bound[prog.get_id()].pretty_print(), self.prog_initial(prog)[x], self.prog_next(prog)[x]) for x in self.get_ranks(prog)}
 
     def loop_initial(self, loop_prog, tp_prog):
-        return self.prog_initial(tp_prog)
+        return self.prog_initial(loop_prog)
     
     def loop_next(self, loop_prog, tp_prog):
-        return {x: "{}+{}×{}".format(self.prog_initial(loop_prog)[x], self.prog_loc_bound[tp_prog.get_id()].pretty_print(), self.prog_next(tp_prog)[x]) for x in self.get_ranks(tp_prog)}
+        return {x: "{}+{}×{}".format(self.prog_next(loop_prog)[x], self.prog_loc_bound[tp_prog.get_id()].pretty_print(), self.prog_next(tp_prog)[x]) for x in self.get_ranks(tp_prog)}
+
+
+    #TODO: Implement the LOCAL variable max value computation
+    def compute_variable_local_bound(self, prog, x):
+        (local_transitions, local_edges) = (zip(*[(self.transition_graph.transitions[i], self.transition_graph.edges[i]) for i in set(self.prog_transition_ids(prog))]))
+        bounder = TransitionBound(TransitionGraph(list(local_edges), list(local_transitions)))
+        bounder.compute_transition_bounds(prog)
+
+        return bounder.var_invariant[x]
+
+
 
     def prog_BD(self, refined_prog):
         id = refined_prog.get_id()
@@ -130,9 +144,11 @@ class PathSensitiveReachabilityBound():
 
 
     def prog_BD_by_path_insensitive_transition_bound(self, prog):
-        # print("THE PROGAM {} EDGES ARE {} TRANSITION IDS ARE {}".format(prog.get_id(), prog.get_edges(), set(self.prog_transition_ids(prog))))
+        (local_transitions, local_edges) = (zip(*[(self.transition_graph.transitions[i], self.transition_graph.edges[i]) for i in set(self.prog_transition_ids(prog))]))
+        bounder = TransitionBound(TransitionGraph(list(local_edges), list(local_transitions)))
+        bounder.compute_transition_bounds(prog)
         self.prog_loc_bound[prog.get_id()] = SymbolicExpression([SymbolicConst(self.transition_bound_path_insensitive.transition_bounds[transition_id]) for transition_id in set(self.prog_transition_ids(prog))], "min")
-        id = prog.get_id()
+        self.prog_loc_bound[prog.get_id()] = SymbolicExpression(SymbolicConst(bounder.transition_bounds[0]))        
         if prog.is_choice():
             for choice_prog in prog.get_choices():
                 self.prog_BD_by_path_insensitive_transition_bound(choice_prog)
@@ -176,6 +192,9 @@ class PathSensitiveReachabilityBound():
             
 
         def compute_nested_lpchain_bound(loop_prog, tp_prog):
+            init, post, next = self.loop_initial(loop_prog, tp_prog), self.prog_post(tp_prog), self.loop_next(loop_prog, tp_prog)
+            return "max{{{}}}".format(",".join(["{}:({})/({})".format(x[0], self.compute_variable_local_bound(loop_prog, x[0]), next[x]) for x in self.get_ranks(tp_prog)]))
+
             init, post, next = self.loop_initial(loop_prog, tp_prog), self.prog_post(tp_prog), self.loop_next(loop_prog, tp_prog)
             return "max({})".format(",".join(["{}:({}→{})/({})".format(x[0], init[x], post, next[x]) for x in self.get_ranks(tp_prog)]))
         

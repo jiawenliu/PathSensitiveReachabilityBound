@@ -59,8 +59,8 @@ class DifferenceConstraint:
 
 class DirectedGraph:
     def __init__(self, vertices_num = None, edges = None) -> None:
-        self.vertices_num = vertices_num if vertices_num else 0
         self.edges = edges if edges else []
+        self.vertices_num = vertices_num if vertices_num else 0 if not edges else max(list(map(lambda x : max(x), edges))) + 1
         self.graph = defaultdict(list)
         self.time = 0
         self.scc_ids = [-1] * (self.vertices_num)
