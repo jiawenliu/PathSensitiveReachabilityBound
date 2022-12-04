@@ -56,7 +56,10 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 We use following notations to represent the sets of corresponding terms:
 \[
 \begin{array}{lll}
-\mathcal{VAR} & : & \mbox{Set of Variables}  
+\vardom & : & \mbox{Set of Variables}  
+\\ 
+%
+\inpvar & : & \mbox{Set of Input Variables}  
 \\ 
 %
 \cdom & : & \mbox{Set of Commands} 
@@ -109,12 +112,12 @@ following by
 Event projection operators $\pi_i$ projects the $i$th element from an event: 
 \\
 $\pi_i : 
-\eventset \to \mathcal{VAR}\cup \mbox{Boolean Expression}  \cup \mathbb{N} $
+\eventset \to \vardom\cup \mbox{Boolean Expression}  \cup \mathbb{N} $
 % \subsubsection{Trace}
 \paragraph*{Trace}
 \input{trace}
 %
-\paragraph{Environment} $ \env : {\tdom}  \to \mathcal{VAR} \to( \mathbb{N} \cup \{\bot\})$
+\paragraph{Environment} $ \env : {\tdom}  \to \vardom \to( \mathbb{N} \cup \{\bot\})$
 \[
 \begin{array}{llll}
 \env(\trace  \traceadd (x, l, v)) x \triangleq v
@@ -188,9 +191,6 @@ by defining $\config{c, \trace_0} \to^{\infty}
 % \config{\cdot, \trace_0 \tracecat []^{\infty} } 
 \triangleq \lim(\config{c, \trace_0} \to^{*})$.
 This follows the maximal trace semantics in \cite{cousot2019abstract} Section 2.5 Equation (12).
-% When the program execution doesn't terminate under $\trace_0$, 
-% we use $\config{c, \trace_0} \to^{\infty} \config{\cdot, \trace_0 \tracecat \trace}$ to
-% represent the non-terminated execution w.r.t. the infinite trace $\trace_0 \in \inftdom$.
 \\
 If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
 So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lemma_sec123}, 
@@ -206,15 +206,18 @@ then there exists a trace $\trace' \in \inftdom$ such that $\trace_0 \tracecat \
 %
 $$
 \forall \trace_0 \in \tdom_0(c), \trace \in \inftdom, c, c' \in \cdom \st
-\Big(
   \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} 
-  % \lor 
-  % \config{c, \trace_0} \rightarrow^{\infty} \config{\cdot, \trace}
-\Big)
 \implies \exists \trace' \in \inftdom \st \trace_0 \tracecat \trace' = \trace
 $$
 \end{lem}
 }
+\todo{Question: this expression $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $ should include its
+limitation case, i.e.,
+if I wrote $\forall \trace_0 \in \tdom_0(c), \trace \in \inftdom, c, c' \in \cdom \st \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $
+then 
+the non-terminating case 
+where
+$\config{c, \trace_0} \rightarrow^{\infty} \land  \counter(\infty, l) = \infty \land f(c, l) (\trace_0) \geq \infty$ is included. }
 
 {
 \begin{mathpar}

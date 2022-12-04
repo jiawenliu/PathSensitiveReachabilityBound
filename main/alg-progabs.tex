@@ -42,14 +42,14 @@ or abstract evaluation of the boolean expression in the guard with label $l$.
 
 \highlight{Notations / Formal Definitions:}
 \begin{itemize}
-\item Operator: $\absexpr : \mathcal{A} \cup \mathcal{B} \to DC(\mathcal{VAR}  \cup \constdom)\cup \booldom \cup \{\top\}$
+\item Operator: $\absexpr : \mathcal{A} \cup \mathcal{B} \to DC(\vardom  \cup \constdom)\cup \booldom \cup \{\top\}$
 %
-\item Constraints $\dcdom^{\top}: DC(\mathcal{VAR}  \cup \constdom) \cup \booldom\cup \{\top\}$  contains:
+\item Constraints $\dcdom^{\top}: DC(\vardom  \cup \constdom) \cup \booldom\cup \{\top\}$  contains:
 %
 \begin{itemize}
-\item The difference constraints $DC(\mathcal{VAR}  \cup \constdom)$ is the set of all the inequality of
-form $x' \leq y + v$ or $x' \leq v$ where $x \in \mathcal{VAR} $, 
-$y \in \mathcal{VAR}$ and $v \in \constdom$.
+\item The difference constraints $DC(\vardom  \cup \constdom)$ is the set of all the inequality of
+form $x' \leq y + v$ or $x' \leq v$ where $x \in \vardom $, 
+$y \in \vardom$ and $v \in \constdom$.
 The \emph{Symbolic Constant} set $\constdom = \mathbb{N} \cup \inpvar \cup \{\infty \}$
 is the set of natural numbers with $\infty$ and the input variables, $\inpvar$.
 An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
@@ -92,17 +92,17 @@ or commands that don't interfere any guard variable.
       \absexpr(y + v, x)  = x' \leq y + v  & x, y \in \grdvar \land v \in \constdom \\
       \absexpr(v, x)  = x' \leq v  & x \in \grdvar \land v \in (\grdvar \cup \constdom) \\
       \absexpr(y + v, x)  = x' \leq y + v, \grdvar = \grdvar \cup \{y\} 
-      & x \in \grdvar \land y \notin \grdvar \land v \in \constdom)  \\
+      & x \in \grdvar \land y \notin \grdvar \land v \in \constdom  \\
       \absexpr(\bexpr, \_) = \bexpr, \grdvar = \grdvar \cup FV(\bexpr) & \bexpr \in \booldom \\
-      \absexpr(\expr, x) = \top &  \todo{o.w.} \\
+      \absexpr(\expr, x) = \top &  {o.w.} \\
     \end{array}
     \]
    $\absexpr(\expr, x)$ is iteratively updating until stabilized over every guard and assignment command in $c$, and $\absexpr(\expr, x)$
    denotes the stabilized result in the following paper.
   \end{defn}
 %
-where $\grdvar$ is the set of the variable used in the expression of every while or if guard in the program $c$ and
-$FV: \expr \to \mathcal{P}(\mathcal{VAR})$, computes the set of free variables in an expression. 
+$\grdvar$ is the set of the variable used in the expression of every while or if guard in the program $c$ and
+$FV: \expr \to \mathcal{P}(\vardom)$, computes the set of free variables in an expression. 
   In the case 4, if a variable $x$, belonging to the set 
   $\grdvar$ is updated by a variable $y$, which isn't in this set, 
   we add $y$ into the set $\grdvar$ and repeat 
@@ -124,7 +124,7 @@ The constraint computation over the \emph{norm} follows the computation steps 1,
 over $\constdom$.
 \end{defn}
 The symbolic expression set is a subset of arithmetic expressions over $\mathbb{N}$ with input variables, 
-i.e., $\scexpr \subseteq \mathcal{A}_{\lin}$.
+i.e., $\scexpr \subseteq \inpexpr$.
 \paragraph{Abstract Initial and Final State Computation}
 This step computes two sets for each command. 
 The initial state is a set that contains the

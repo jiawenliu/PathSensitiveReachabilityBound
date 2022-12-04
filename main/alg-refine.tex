@@ -16,7 +16,10 @@ refined program $\rprog$ for a program $c$ given the input $c^{T}$.
 \end{enumerate}
 
 \paragraph{Rewrite the Program}
-\begin{algorithmic}[1]
+\begin{algorithm}
+  \caption*{Program Rewriting}
+  \label{alg:alg-refine_rewrite}
+  \begin{algorithmic}[1]
     \REQUIRE none
     \STATE finds all $c$'s \emph{simple transition path}s, $\tpath_1, \cdots, \tpath_n \in \paths(\absG(c))$.
     \STATE \textbf{init}: candidate set $W = \{c_1, \cdots, c_n\}$, where $c_i = \tpath_i$ and $i = 1, \cdots, n$
@@ -34,6 +37,7 @@ refined program $\rprog$ for a program $c$ given the input $c^{T}$.
     \\ $c^T = W[0]$
     \RETURN $c^T$.
 \end{algorithmic}
+\end{algorithm}
 %
 Line-2: initialize each candidate $c_i$ with a simple transition path $\tpath_i$.
 \\

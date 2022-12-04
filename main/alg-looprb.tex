@@ -1,16 +1,16 @@
 \textbf{Computation Overview}
 \\
- Loop Reachability Bound
-\[
-  \lpchB(l: \rprog, \tpath) \triangleq
-    \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\tpath)}{\lpnext(l: \rprog, \tpath)}
-\]
- Loop Bound (the alternative computation method):
-  \[
-    BD(\rprepeat(\rprog')) \triangleq
-    \frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog')}
-\]
-  To solve the loop reachability bound and loop bound:
+%  Loop Reachability Bound
+% \[
+%   \lpchB(l: \rprog, \tpath) \triangleq
+%     \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\tpath)}{\lpnext(l: \rprog, \tpath)}
+% \]
+%  Loop Bound (the alternative computation method):
+%   \[
+%     BD(\rprepeat(\rprog')) \triangleq
+%     \frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog')}
+% \]
+  To solve the \emph{loop-reachability bound}, $\lpchB(l: \rprog, \tpath)$ and loop bound, $BD(\rprog)$:
   \\
   1. Compute the ranking function for every transition and estimate its maximum value, as in Section~\ref{sec:rank}.
   \\
@@ -56,8 +56,16 @@
    % \\
    \[
      \rffinal(\rprog) \triangleq 
-     \bigwedge_{b \in \kw{Guard}(\rprog)}
-     \neg b
+     \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
+     \left \{ 
+     x = \arg\min_{l_1}\left\{
+       v_{post} ~\middle\vert~ 
+       \begin{array}{l} 
+        l_1 \geq \absfinal(\rprog)[2]
+       \land \bigwedge_{b \in \kw{Guard}(\rprog)} \neg b
+     \end{array}
+     \right\}
+     \right\}
      \]
     $\kw{Guard}(\rprog)$ is the set of all the unique boolean expressions (i.e., the boolean constraints) on this program.
    \item The \emph{Next State}, $\rfnext(\tpath) \in \mathcal{A}_{in}$ 
@@ -67,13 +75,13 @@
      \begin{array}{l}
      \rfnext(\tpath) \triangleq 
        \begin{array}{l}
-    \sum\limits_{(x, \absevent) \in \inc(x) }
+    \sum\limits_{\absevent \in \inc(x) }
      \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
      \\ \qquad 
-     + \sum\limits_{(x, \absevent) \in \reset(x) }
-        \left\{ \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \tpath\right\}
+     + \arg\max\limits_{l' }
+        \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
         \\ \qquad 
-       - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
+       - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
          v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
          \right\}
        \end{array}
@@ -87,18 +95,20 @@
    It computes the set of next states for every ranking function of the simple transition path $\tpath$ in $\rprog$,
    and recursively computes the loop bound, $BD$ in the meantime.
    \\
-   {$\varGD(\rprepeat(\rprog)) =  BD(\rprepeat(\rprog)) \times {\varGD(\rprog)}$}
+   {$\varGD(\rprepeat(\rprog)) =    BD(\rprog)  \times
+  %  \highlight{\frac{\rfinit(\rprepeat(\rprog)) - \rffinal(\rprepeat(\rprog))}{\varGD(\rprepeat(\rprog))}}  \times 
+ {\varGD(\rprog)}$}
    \\
-   $\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1)+ \varGD(\rprog_2)$
+   $\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1) \cup \varGD(\rprog_2)$
    \\
-   $\varGD(\tpath) =  \rfnext(\tpath)$   
+   $\varGD(\tpath) =  \left\{x = \rfnext(\tpath) ~|~ x = \locbound(\tpath) \right\} $   
 %
    \item 
 %    For a transition path $\tpath \in \paths(\absG(c))$ and a loop label $l$ in this transition path's loop chain.
 % Let $\tpath_l$ be the repeat pattern with label $l$, i.e., $l: \tpath_l \in \rprog$, 
 % the abstract loop chain initial state 
 The loop initial state 
-$\lpinit(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ is symbolic expression as well. 
+$\lpinit(l: \rprog, \tpath) \in \inpexpr$ is symbolic expression as well. 
 It describes the abstract initial value of $\tpath$'s ranking function before
 any visit of $\tpath$ and during the first execution of $l: \rprog$.
 \[
@@ -115,7 +125,7 @@ any visit of $\tpath$ and during the first execution of $l: \rprog$.
   \]
 \item
 The loop next state 
-$\lpnext(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ 
+$\lpnext(l: \rprog, \tpath) \in \inpexpr$ 
 describes how much $\tpath$'s ranking function
 is modified before
 the second visit of $\tpath$ but during the second execution of $l: \rprog$.
@@ -126,15 +136,16 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
   \begin{array}{l}
   \lpnext(l: \rprog, \tpath) \triangleq 
     \begin{array}{l}
-  \sum\limits_{(x, \absevent) \in \inc(x) }
+  \sum\limits_{\absevent \in \inc(x) }
   \left\{ 
       v ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land  l' \in \rprog 
       \land l' \notin \tpath \right\}
       \\ \qquad 
-      + \sum\limits_{(x, \absevent) \in \reset(x) }
-         \left\{ \varinvar(y) + v ~\middle\vert~ \absevent = (l, x' \leq y + v, \_) \land l \in \rprog \land l \notin \tpath\right\}
+      + \arg\max\limits_{l_2 }
+         \left\{ \varinvar(y) + v ~\middle\vert~ 
+         (l_1, x' \leq y + v, l_2) \in \reset(x) \land l_1 \in \rprog \land l_1 \notin \tpath\right\}
      \\ \qquad 
-      - \sum\limits_{(x, \absevent) \in \dec(x) }\left\{ 
+      - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
       v 
       ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
       \\ \qquad 
@@ -157,8 +168,13 @@ Formally
     & \max\left\{ BD(\rprog_1), \cdots, BD(\rprog_m) \right\} \\
     BD(\rprepeat(\rprog')) & \triangleq 
     &
-    \highlight{\frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog')}}
-     \times BD(\rprog')
+    \max\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
+    \Big\{ \highlight{\frac{a - b}{a'}} ~\vert~
+    x = a \in \rfinit(\rprog')
+    \\ & & \qquad \qquad
+    \land x = b \in \rffinal(\rprog')
+    \land x = a' \in \varGD(\rprog')
+     \Big\} 
      \\
     BD(l: \rprog') & \triangleq & BD(\rprog')
   \end{array}

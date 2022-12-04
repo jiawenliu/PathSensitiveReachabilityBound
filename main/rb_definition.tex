@@ -74,6 +74,11 @@ a function $f(c, l) : \tdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Re
   \implies f({c}, l)(\trace_0) \geq \counter(\vtrace, l) 
   \]
 }
+\todo{Question: this expression $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $ should include its
+limitation case as well.
+Specifically, if I wrote $\forall \trace_0 \in \tdom_0(c), \trace \in \inftdom, c, c' \in \cdom \st \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $
+then the non-terminating case where
+$\config{c, \trace_0} \rightarrow^{\infty} \land  \counter(\infty, l) = \infty \land f(c, l) (\trace_0) \geq \infty$ is included. }
 \end{defn}
 \highlight{
 Given a program point $l$ in $c$, our algorithm (defined below) computes a Reachability-Bound for it.

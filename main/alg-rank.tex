@@ -31,22 +31,22 @@ Three steps:
   % $\reset(c, x)$, 
   respectively.
   \\
-  $\inc: \cdom \to \mathcal{VAR} \to \mathcal{P}(\absevent) $
+  $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
   is the set of the edges where the variable increase, 
   \\
   $\inc(c, x) = \{ \absevent | \absevent = (l, l', x' \leq x + v) \land \absevent \in \absflow(c)\}$
   \\
-  $\dec: \mathcal{VAR} \to \mathcal{P}(\absevent) $
+  $\dec: \vardom \to \mathcal{P}(\absevent) $
   is the set of abstract events where the variable decrease,
   \\
   $\dec(c, x) = \{\absevent| \absevent = (l, l', x' \leq x - v) \land \absevent \in \absflow(c)\}$
   \\
-  $\reset: \cdom \to \mathcal{VAR} \to \mathcal{P}(\absevent) $
+  $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $
   is the set of the abstract events where the variable is reset,
   \\
   $\reset(c, x) = \{\absevent| \absevent = (l, l', x' \leq y - v) \land x \neq y \land \absevent \in \absflow(c)\}$
   \\
-  $\resetchain: \cdom \to \mathcal{VAR} \to \mathcal{P}(\mathcal{P}(\absevent)) $
+  $\resetchain: \cdom \to \vardom \to \mathcal{P}(\mathcal{P}(\absevent)) $
   is the set of the chain of abstract events where the variable is reset through the chain.
   \\
   In addition to
@@ -62,9 +62,6 @@ Three steps:
   resets a variable $x_i$ by another variable $x_{i + 1}$ such that $x_{i + 1}$
   is reset on edge $e_{i + 1}$ recursively. The first edge $e_0$ of each sequence resets the variable $x$.}
   % 
-  % Each chain in this set is  where a given variable is reset by the 
-  % variables of the abstract events through the chain.
-  %
   \\
   In the following steps, $c$ is omitted in $\inc(x)$,
   $\dec(x)$ and $\reset(x)$ for concise when the reference of a program $c$ is clear in the context.
@@ -91,8 +88,10 @@ Three steps:
     & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x) \land  \absevent = (\_, \_ , x' \leq x - v) \\
     \locbound(\absevent, c) \triangleq x
     & \absevent \in SCC(\absG(c)) \land 
-    \absevent  \notin \bigcup_{x \in \mathcal{VAR}} \dec(x)
-    \land \absevent \notin SCC(\absG(c) \setminus \dec(x)).
+    \absevent  \notin \bigcup_{x \in \vardom} \dec(x)
+    \land \absevent \notin SCC(\absG(c) \setminus \dec(x))\\
+    \locbound(\absevent, c) \triangleq \infty
+    & o.w..
   \end{array}
   \]
   $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
@@ -105,11 +104,11 @@ Three steps:
     The formal soundness proof is in Lemma~\ref{lem:local_bound_sound} in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
   %
   \subsection{Ranking Function Estimation}
-  This step estimates the upper bound, $\varinvar(x, c) \in \mathcal{A}_{\lin}$
-  on the maximum value for each ranking function   $x \in  \mathcal{VAR} \cup \constdom$.
+  This step estimates the upper bound, $\varinvar(x, c) \in \inpexpr$
+  on the maximum value for each ranking function   $x \in  \vardom \cup \constdom$.
   \\
   For a program $c$, the \emph{ranking function bound},
-  $\varinvar(\locbound(\absevent, c)) \in \mathcal{A}_{\lin}$ is 
+  $\varinvar(\locbound(\absevent, c)) \in \inpexpr$ is 
   the bound on the maximum value of the ranking function  
   assigned to the edge $\absevent \in \absE(c)$, formally in Definition~\ref{def:ranking_bound}.
   \\
@@ -119,37 +118,39 @@ Three steps:
   is computed interactively in a path-insensitive manner.
   % , the 
   \\ 
-  $ \varinvar: (\mathcal{VAR} \cup \constdom  \times \cdom) \to \mathcal{A}_{\lin}$
+  $ \varinvar: (\vardom \cup \constdom  \times \cdom) \to \inpexpr$
   \\
-  $\absclr: (\absevent \times \cdom) \to \mathcal{A}_{\lin}$
+  $\absclr: (\absevent \times \cdom) \to \inpexpr$
   \begin{defn}[Ranking Function Estimation]
     \label{def:ranking_bound}
   For a program $c$ and an edge $\absevent \in \absE(c)$,
-  the \emph{ranking function bound}, $\varinvar(\locbound(\absevent, c))$ for the ranking function $\locbound(\absevent, c)$
+  the \emph{ranking function bound}, 
+  $\varinvar(\locbound(\absevent, c), c)$ for the ranking function $x = \locbound(\absevent, c)$
   of this edge
   is computed as follows,
     \[ 
   \begin{array}{lll}
     \varinvar(x, c) & \triangleq x & x \in \constdom \\
-    \varinvar(x, c) & \triangleq \incrs(x, c) + \max(\{\varinvar(y, c) + c ~\mid~ (l, x' \leq y + c, l') \in \reset(x)\}) & c \notin \constdom
+    \varinvar(x, c) & \triangleq \incrs(x, c) + \max(\{\varinvar(y, c) + v ~\mid~ (l, x' \leq y + v, l') \in \reset(x)\}) & x \notin \constdom
   \end{array}
   \]
   %
-  $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent, c) \times c ~\mid~ \absevent = (l, x' \leq x + c, l')\}$ where 
-  $\absclr(\absevent, c) \in \mathcal{A}_{\lin}$  is computed as below,
+  $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$ where 
+  $\absclr(\absevent, c) \in \inpexpr$  is computed as below,
 \[ 
 \begin{array}{lll}
   \absclr(\absevent, c) 
   & \triangleq \varinvar(\locbound(\absevent, c))  & \\
   & \quad \locbound(\absevent, c) \in \constdom & \\
   \absclr(\absevent, c) 
-  & \triangleq \Big(
+  & \triangleq
     \sum\limits_{y \in \{ y ~|~ 
-    ch \in \resetchain(x), (l_1, x, y, v, l_2) \in ch \} } \incrs(y, c) & \\
+    ch \in \resetchain(x) \land (l_1, x' \leq y + v, l_2) \in ch \} } \incrs(y, c) & \\
     & \quad + 
   \sum\limits_{ch \in \resetchain(x, c)}
-  \big( \min\left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
-  \max\left\{\varinvar(in(ch), c) + \sum\limits_{(l_1, x, y, v, l_2) \in ch } v, 0 \right\}\big) \Big)  & \\
+  \min \left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
+  \big(\varinvar(in(ch), c) 
+  + \sum\limits_{(l_1, x' \leq y + v, l_2) \in ch} v \big) & \\
   &  \quad \locbound(\absevent, c) = x \land x \notin \constdom & ,
 \end{array}
   \]
