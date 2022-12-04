@@ -1,4 +1,4 @@
-\begin{example}[A Simplified Nested Loop with Related Iterator Example]
+\begin{example}[Nested Loop with Related Iterator]
   \label{ex:relatedNestedWhileSim}
   %
   %
@@ -10,17 +10,17 @@
   {\footnotesize
   $
   \begin{array}{l}
-      \kw{relatedNestedWhileSim}(n, m, N) \triangleq \\
-      \clabel{ \assign{i}{0} }^{0} ; \\
-          \ewhile ~ \clabel{i < n}^{1} ~ \edo ~ \\
+      \kw{relatedNestedWhileSim}(n, N) \triangleq \\
+      \clabel{ \assign{i}{n} }^{0} ; \\
+          \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
           \qquad \Big(
-            \clabel{\assign{w}{i}}^{2};\\
-            \qquad \ewhile ~ \clabel{w < N}^{3} ~ \edo ~
+            \clabel{\assign{k}{i - N}}^{2};\\
+            \qquad \ewhile ~ \clabel{k > 0}^{3} ~ \edo ~
             \Big(
-              \clabel{\assign{w}{w + 1}}^{4}
+              \clabel{\assign{k}{k - 1}}^{4}
                 \Big); \\
-                \qquad \clabel{\assign{i}{w}}^{5};
-                \clabel{\assign{i}{i+1}}^{6}
+                \qquad \clabel{\assign{i}{k + N}}^{5};
+                \clabel{\assign{i}{i-1}}^{6}
             \Big)
       \end{array}
   $
@@ -43,15 +43,15 @@
 % Counter Variables
 %
 % Control Flow Edges:
-\draw[ thick, -latex] (-6, 10)  -- node [above] {$i' \leq 0$}(-0.5, 10);
-\draw[ thick, -latex] (0, 9.5)  -- node [left] {$i < n$} (0, 7.5) ;
-\draw[ thick, -latex] (0, 6.5)  -- node [left] {$w' \leq i$} (0, 4.5) ;
-\draw[ thick, -latex] (-0.5, 4)  -- node [below] {$w \geq N$} (-2.5, 4) ;
-\draw[ thick, -latex] (-3.5, 4)  -- node [below] {$i' \leq w$} (-6.5, 4) ;
-\draw[ thick, -latex] (-6.5, 4.5)  to  [out=90,in=180]  node [left] {$i' \leq i + 1$ }(-0.5, 9.5);
-\draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \geq n$}  (5, 10);
-\draw[ thick, -latex] (4, 4.5)  to  [out=120,in=30] node [above] {$w' \leq w + 1$}  (0.5, 4.5);
-\draw[ thick, -latex] (0.5, 4)  -- node [below] {$w < N$}  (3.5, 4);
+\draw[ thick, -latex] (-6, 10)  -- node [above] {$i' \leq n$}(-0.5, 10);
+\draw[ thick, -latex] (0, 9.5)  -- node [left] {$i > 0$} (0, 7.5) ;
+\draw[ thick, -latex] (0, 6.5)  -- node [left] {$k' \leq i - N$} (0, 4.5) ;
+\draw[ thick, -latex] (-0.5, 4)  -- node [below] {$k \leq 0$} (-2.5, 4) ;
+\draw[ thick, -latex] (-3.5, 4)  -- node [below] {$i' \leq k + N$} (-6.5, 4) ;
+\draw[ thick, -latex] (-6.5, 4.5)  to  [out=90,in=180]  node [left] {$i' \leq i - 1$ }(-0.5, 9.5);
+\draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0 $}  (5, 10);
+\draw[ thick, -latex] (4, 4.5)  to  [out=120,in=30] node [above] {$k' \leq k - 1$}  (0.5, 4.5);
+\draw[ thick, -latex] (0.5, 4)  -- node [below] {$k > 0$}  (3.5, 4);
 \end{tikzpicture}
 \caption{}
   \end{centering}
@@ -65,11 +65,11 @@
 \end{example}
 
 \begin{enumerate}
-  \item  \textbf{The Constraint Program (Abstract Control Flow Graph)} is generated in Figure~\ref{fig:threeNestedWhile}(b).
+  \item  \textbf{Abstract Control Flow Graph} is generated in Figure~\ref{fig:relatedNestedWhileSim}(b).
 
   \item \textbf{Program Refinement}
   \\
-  The loop free simple transition paths are computed as follows,
+  The loop free simple transition paths:
   \[
       % \begin{array}{lllll}
           \tpath_0 = (0 \to 1)
@@ -87,59 +87,55 @@
   \[
   \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3); \tpath_4
   \]
-  \item \textbf{Outside-In Algorithm}: The \emph{OutIn} bound for the $\rprog$ and every nested repeat patterns.
-  \\
-$\outinB(\tpath_0) = 1$
+\item {Path Local Reachability Bound}:
+\\
+$\outinB(None, \tpath_0) = 1$ \quad
+$\outinB(1: \rprog_1, \tpath_1) = N$ \quad
+$\outinB(1: \rprog_1, \tpath_3) = N$ \quad
+$\outinB(3: \rprog_3, \tpath_2) = n - N$ \\
+$\outinB(None, \tpath_4) = 1$
+%
+\\
+Loop Bounds:
+\\
+$BD(\tpath_0) = 1$
 \quad
-$\outinB(3: \rprepeat(\tpath_2)) = N $
+$BD(\tpath_4) = 1$
+\quad
+$BD(\rprepeat(\tpath_2)) = n - N $
+\quad
+$BD(\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)) = N $
+%
+\item Loop Reachability Bound:
 \\
-$\outinB(1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)) = n - N $
-\item \textbf{Inside-Out Algorithm}
-\begin{itemize}
-  \item \textbf{Repeat Chain Set}
-  \\
-  $\rpchset(1, \tpath_1) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$
-  \\
-  $\rpchset(1, \tpath_3) = \{\rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)\}$
-  \\
-  $\rpchset(3, \tpath_2) = \{\rprepeat(\tpath_2)\}$ \quad
-  $\rpchset(_, \_) = \emptyset$ 
-  % \\
-  \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
-  \\
-  $\rpchB(1, \tpath_1) = n - N$ \quad
-  $\rpchB(1, \tpath_3) = n - N$ \quad
-  $\rpchB(3, \tpath_2) = N$ \quad
-  $\rpchB(_, \_) = \bot $ 
-  %
-  \item \textbf{Loop Chain}
-  \\
-  $\lpch(\tpath_1) = 1\to \tpath_1$ \quad
-  \highlight{$\lpch(\tpath_2) = 1 \to 3 \to \tpath_2$} \quad
-  $\lpch(\tpath_3) = 1 \to \tpath_3$ \\
-  $\lpch(\tpath_0) = \tpath_0$ \quad
-  $\lpch(\tpath_4) = \tpath_4$
-  \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
-  \\
-  $\rpchB(1, \tpath_1) = n - N$ \quad
-  $\rpchB(1, \tpath_3) = n - N$ \quad
-  \highlight{$\rpchB(1, \tpath_2) = 1$} \quad
-  $\rpchB(3, \tpath_2) = N$ \quad
-  $\rpchB(_, \_) = 1 $ 
-  \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
-  \\
-  $\inoutB(\tpath_1) = n - N$ \quad
-  $\inoutB(\tpath_2) = N$ \quad
-  $\inoutB(\tpath_0) = 1$ 
-  \\
-  \highlight{ $\inoutB(\tpath_3) = n - N$} \quad
-  $\inoutB(\tpath_4) = 1$ 
-  \end{itemize}
-\item \textbf{Path Sensitive Reachability-Bound} on every program control location
+\highlight{
+$\lpchB(1: \rprog_1, \tpath_0) = 0$ \quad
+$\lpchB(1: \rprog_1, \tpath_1) = N$ \quad
+$\lpchB(1: \rprog_1, \tpath_3) = N$ \quad \\
+$\lpchB(1: \rprog_1, \tpath_2) = 1$ \quad
+$\lpchB(1: \rprog_1, \tpath_4) = 0$ \quad
+$\lpchB(1: \rprog_3, \tpath_0) = 0$ \quad\\
+% $\lpchB(1: \rprog_1, \tpath_1) = N$ \quad
+% $\lpchB(1: \rprog_1, \tpath_3) = N$ \quad
+$\lpchB(1: \rprog_3, \tpath_2) = n - N$ \quad
+$\lpchB(1: \rprog_3, \tpath_4) = 0$ \quad
+$\lpchB(3: \rprog_3, \tpath_4) = m$ 
+}
+%
+%
+\item Path Global Reachability Bound:
 \\
-$\psRB(\{0, \lex\}) = 1$ \quad
-$\psRB(\{1\}) = n - N + 1$ \quad
-$\psRB(\{2, 5, 6\}) = n - N$ \\
-\highlight{$\psRB(\{3\}) = N + 1 + n - N = n + 1$} \quad
-$\psRB(\{4\}) = N$
+$\inoutB(\rprog, \tpath_0) = 1$ \quad
+$\inoutB(\rprog, \tpath_1) = N$ \quad
+$\inoutB(\rprog, \tpath_2) = 1 \times (n - N)$ \quad
+$\inoutB(\rprog, \tpath_3) = N$ \quad
+$\inoutB(\rprog, \tpath_4) = 1$
+%
+\item The Reachability Bound:
+\\
+$\psRB(0) = \psRB(\lex) = 1$ \quad
+$\psRB(1) = N + 1$ \quad
+$\psRB(4) = n - N$ \quad \\
+$\psRB(2) = \psRB(5) =  \psRB(6) = N$ \quad
+\highlight{$\psRB(\{3\}) = N + 1 + n - N = n + 1$}
 \end{enumerate}
