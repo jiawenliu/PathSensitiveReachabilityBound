@@ -85,7 +85,7 @@ let _ =
       let oc = Out_channel.create outfile_abscfg in
         (******************** run abscfg  ********************)
         Printf.printf "ABSCFG result:\n";
-        let aflow = Abs.abs_flow (Seq (result, (Skip (Label (-1))))) in
+        let aflow = Abs.abs (Seq (result, (Skip (Label (-1))))) in
         (* let blocks = Cfg.blocks result in *)
         (******************** output abscfg result ********************)
         let _ =  Printf.fprintf oc "%d\n" (List.length blocks + 1)  in 

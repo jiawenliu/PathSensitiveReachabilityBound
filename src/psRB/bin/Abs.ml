@@ -1,5 +1,5 @@
 open Syntax
-open Format
+open Core
 
 type cons_info =
     Symb of string 
@@ -17,31 +17,35 @@ type constriant =
 
 type abs_transition = label * label * constriant
 
-let is_para var =
-  if var.v_name = "k" then true
-  else 
-    if var.v_name = "N" then true 
-    else
-      if var.v_name = "c" then true 
-      else false
+let rec extract_para (lcom : lcommand)
+=
+  match lcom with
+  | Skip _ ->String.Set.empty
+  | Assign (var, _, _ ) -> Set.add (extract_para (Skip Bot)) var.v_name
+  | Query  ( var ,_ , _ ) ->  Set.add (extract_para (Skip Bot)) var.v_name
+  | While ( _ , lc', _ ) ->  extract_para lc'
+  | Seq ( _ ,  lc_2 ) -> extract_para lc_2 
+  | If ( _ , lc_1 , lc_2 , _ ) -> Set.union (extract_para lc_1) (extract_para lc_2)
 
-let abs_expr var e = 
+
+
+let abs_expr var e avars = 
   match e with 
   | Eaexpr a ->
 (    match a with
     | Aint c -> Reset (var, None, Const c)
     | Avar v -> 
-      if is_para v then 
+      if (not (Set.mem avars v.v_name))  then 
         Reset (var, None, Symb v.v_name)
     else
         Reset (var,Some v, Const 0)
     | Aaop (Sub, Avar var', Aint c) -> 
-      if var = var' then 
+      if String.equal var.v_name var'.v_name then 
         Dec (var, None, Const c)
     else
       Reset (var, Some var', Const c)
     | Aaop (Add, Avar var', Aint c) -> 
-      if var = var' then 
+      if String.equal var.v_name var'.v_name then 
         Inc (var, None, Const c)
     else
       Reset (var, Some var', Const c)
@@ -57,32 +61,35 @@ let abs_expr var e =
     | Seq ( lc_1,  _ ) -> abs_init lc_1 
     | If ( _ , _ , _ , l ) -> l
 
-  let rec abs_final (lcom : lcommand) : (label * constriant) list 
+  let rec abs_final (lcom : lcommand) avars : (label * constriant) list 
   =
     match lcom with
     | Skip _ -> []
-    | Assign (var, e, l ) -> [(l, (abs_expr var e))]
+    | Assign (var, e, l ) -> [(l, (abs_expr var e avars))]
     | Query  ( var ,_ , l ) -> [(l, Reset (var, None, Symb "Q" ))]
     | While ( b , _ , l ) -> [(l, (Asum (BNeg b, While)))]
-    | Seq ( _ ,  lc_2 ) -> abs_final lc_2 
-    | If ( _ , lc_1 , lc_2 , _ ) -> (abs_final lc_1) @ (abs_final lc_2)
+    | Seq ( _ ,  lc_2 ) -> abs_final lc_2 avars
+    | If ( _ , lc_1 , lc_2 , _ ) -> (abs_final lc_1 avars) @ (abs_final lc_2 avars)
  
  
    (* Control flow graph *)
  
-let rec abs_flow (lcom : lcommand) : abs_transition list =
+let rec abs_flow (lcom : lcommand) avars : abs_transition list =
   match lcom with
   | Skip _ -> []
   | Assign ( _ , _ , _) -> []
   | Query ( _ ,  _ , _ ) -> []
-  | While ( b , lc , l ) ->   (abs_flow lc) @ [(l, abs_init lc, (Asum (b, While)))] @ 
-    (List.map (fun abs_l -> let (l_1, l_constriant) = abs_l in (l_1, l, l_constriant)) (abs_final lc) ) 
-  | Seq ( lc_1,  lc_2 ) -> (abs_flow lc_1) @ (abs_flow lc_2) @ 
-  (List.map (fun abs_l -> let (l_1, l_constriant) = abs_l in (l_1, abs_init lc_2, l_constriant))  (abs_final lc_1) )
+  | While ( b , lc , l ) ->   (abs_flow lc avars) @ [(l, abs_init lc, (Asum (b, While)))] @ 
+    (List.map  ~f: (fun abs_l -> let (l_1, l_constriant) = abs_l in (l_1, l, l_constriant)) (abs_final lc  avars)   ) 
+  | Seq ( lc_1,  lc_2 ) -> (abs_flow lc_1 avars) @ (abs_flow lc_2 avars) @ 
+  (List.map ~f: (fun abs_l -> let (l_1, l_constriant) = abs_l in (l_1, abs_init lc_2, l_constriant))  (abs_final lc_1  avars) )
 
-  | If ( b , lc_1 , lc_2 , l ) -> [ ( l, abs_init lc_1, (Asum (b, If)) ) ; (l, abs_init lc_2, (Asum ((BNeg b), If))) ] @ (abs_flow lc_1) @ (abs_flow lc_2) 
+  | If ( b , lc_1 , lc_2 , l ) -> [ ( l, abs_init lc_1, (Asum (b, If)) ) ; (l, abs_init lc_2, (Asum ((BNeg b), If))) ] @ (abs_flow lc_1 avars) @ (abs_flow lc_2 avars) 
   
 
+  let abs (lcom : lcommand) : abs_transition list = 
+    let assigned_vars = extract_para lcom in 
+    abs_flow lcom assigned_vars
 
 
 let print_const const = 
@@ -104,12 +111,12 @@ let print_constriant c =
   | Top -> sprintf "[True]"
 
 let print_abs_flow aflow =
-  List.fold_left (fun () (x,  y, c) -> Printf.printf "edge from %d to %d  with constriant: %s \n" (print_label x) (print_label y) 
-  (print_constriant c) ) () aflow 
+  List.fold_left ~init:() aflow ~f: (fun () (x,  y, c) -> Printf.printf "edge from %d to %d  with constriant: %s \n" (print_label x) (print_label y) 
+  (print_constriant c) ) 
 
   
   let print_abs_flow_label aflow =
-    List.fold_left (fun () (x,  y, _) -> Printf.printf "(%d, %d), " (print_label x) (print_label y)) () aflow 
+    List.fold_left ~init:() aflow ~f: (fun () (x,  y, _) -> Printf.printf "(%d, %d), " (print_label x) (print_label y))
 
     let pretty_print_constriant c = 
       match c with
@@ -123,12 +130,11 @@ let print_abs_flow aflow =
       | Top -> sprintf ""
 
       let print_abs_flow_constraints aflow =
-        List.fold_left (
+        List.fold_left  ~init:() aflow ~f: (
           fun () (x, y, c) -> 
           (let _ = Printf.printf "(%d, [%s], %d, [%d])" (print_label x) (pretty_print_constriant c) (print_label y) (print_label x)
-          in let _ = Printf.printf "," in
-          print_newline())
-          ) () aflow
+          in let _ = Printf.printf ",\n" in ())
+          )
           
       
           let print_out_constriant c = 
@@ -143,9 +149,9 @@ let print_abs_flow aflow =
             | Top -> sprintf ""
 
         let print_out_abs_flow oc aflow =
-          List.fold_left (fun () (x,  y, c) -> Printf.fprintf oc "%d;%s;%d;%d\n" (print_label x) (print_out_constriant c) (print_label y) (print_label x)
-           ) () aflow 
+          List.fold_left ~init:() aflow  ~f: (fun () (x,  y, c) -> Printf.fprintf oc "%d;%s;%d;%d\n" (print_label x) (print_out_constriant c) (print_label y) (print_label x)
+           )  
         
 
         let print_out_abs_flow_edges oc aflow =
-          List.fold_left (fun () (x,  y, _) -> Printf.fprintf oc "%d,%d;" (print_label x) (print_label y)) () aflow 
+          List.fold_left ~init:() aflow ~f: (fun () (x,  y, _) -> Printf.fprintf oc "%d,%d;" (print_label x) (print_label y)) 
