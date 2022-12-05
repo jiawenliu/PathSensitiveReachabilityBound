@@ -20,7 +20,7 @@ type abs_transition = label * label * constriant
 let rec extract_para (lcom : lcommand)
 =
   match lcom with
-  | Skip _ ->String.Set.empty
+  | Skip _ -> String.Set.empty
   | Assign (var, _, _ ) -> Set.add (extract_para (Skip Bot)) var.v_name
   | Query  ( var ,_ , _ ) ->  Set.add (extract_para (Skip Bot)) var.v_name
   | While ( _ , lc', _ ) ->  extract_para lc'

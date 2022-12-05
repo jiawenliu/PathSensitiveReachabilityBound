@@ -343,7 +343,7 @@ class TransitionBound:
 
     def print_variable_bounds(self):
         for v, b in self.var_invariant.items():
-            print("Bounds For The Max Value of Variable {} is {}:".format(v, b))
+            print("Bounds For The Max Value of Variable {} is : {}".format(v, b))
     
     def print_reset_chains(self):
         for v, chains in self.var_reset_chains.items():
