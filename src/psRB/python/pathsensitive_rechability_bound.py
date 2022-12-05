@@ -65,11 +65,12 @@ class PathSensitiveReachabilityBound():
     ### THE POST CONDITION AFTER THE PROGRAM EXECUTION
     def prog_post(self, prog):
         # print("Program {}'s Post State Is : {}".format(prog.get_id(), "Λ".join(["¬({})".format(g) for g in self.prog_guard(prog)])))
-        return "Λ".join([g for g in self.prog_guard(prog)])
+        return "¬"+"Λ".join([g for g in self.prog_guard(prog)])
 
 
     ### THE SATE OF RANKS RIGHT BEFORE THE PROGRAM IS BEEN VISITING THE SECOND TIME
     def prog_next(self, prog):
+        start_point, end_point = prog.get_initial_point(), prog.get_last_point()
         def rank_next(rank):
             (x, c) = rank
             if x == "1":
@@ -82,38 +83,39 @@ class PathSensitiveReachabilityBound():
             rank_inc_set = set(["0"])
             for (transition_index, inc_const) in self.transition_bound_path_insensitive.inc_transitions[x]:
                 (ls, dc, le, _) = self.transition_graph.transitions[transition_index]
-                if  ls >= prog.start_point and le <= prog.end_point:
+                if  min(ls, le) >= start_point and max(ls, le) <= end_point:
                     rank_inc_set.add(inc_const)
 
         ### THE VALUE THAT THE RANK IS DECREASE IN ONE EXCUTION OF THE PROGAM
             rank_dec_set = set(["0"])
             for (transition_index, dec_const) in self.transition_bound_path_insensitive.dec_transitions[x]:
                 (ls, dc, le, _) = self.transition_graph.transitions[transition_index]
-                if  ls >= prog.start_point and le <= prog.end_point:
+                if  min(ls, le) >= start_point and max(ls, le) <= end_point:
                     rank_dec_set.add(dec_const)
 
         ### THE VALUE THAT THE RANK IS RESET IN ONE EXCUTION OF THE PROGAM
             rank_reset_value, last_reset_point = "0", prog.start_point
             for (transition_index, reset_var, reset_const) in self.transition_bound_path_insensitive.reset_transitions[x]:
                 (ls, dc, le, _) = self.transition_graph.transitions[transition_index]
-                if ls >= prog.start_point and le <= prog.end_point and ls  >= last_reset_point:
-                    rank_reset_value, last_reset_point = ("({})+({})".format(self.transition_bound_path_insensitive.var_invariant[reset_var], reset_const)), ls
-                    rank_reset_value = "({}+{})".format(self.transition_bound_path_insensitive.var_invariant[reset_var], reset_const) if reset_var else reset_const 
+                if min(ls, le) >= start_point and max(ls, le) <= end_point and ls  >= last_reset_point:
+                    rank_reset_value, last_reset_point = ("{}+{}".format(self.transition_bound_path_insensitive.var_invariant[reset_var], reset_const)), ls
+                    rank_reset_value = "{}+{}".format(self.transition_bound_path_insensitive.var_invariant[reset_var], reset_const) if reset_var else reset_const 
 
-            return "({})+({})-({})".format(x, rank_reset_value, "+".join([v for v in rank_inc_set]), "+ ".join([ri for ri in rank_dec_set]))
+            return "{}+{}-({})".format("+".join([v for v in rank_inc_set]), rank_reset_value,  "+ ".join([ri for ri in rank_dec_set]))
         return {x : rank_next(x) for x in self.get_ranks(prog)}
 
 
     def var_gd(self, prog):
         if (not self.prog_loc_bound[prog.get_id()]):
            self.prog_loc_bound[prog.get_id()] = self.prog_BD(prog)
-        return {x: "{}×({}-{})".format(self.prog_loc_bound[prog.get_id()].pretty_print(), self.prog_initial(prog)[x], self.prog_next(prog)[x]) for x in self.get_ranks(prog)}
+        return {x: "({})×({}-({}))".format(self.prog_loc_bound[prog.get_id()].pretty_print(), self.prog_initial(prog)[x], self.prog_next(prog)[x]) for x in self.get_ranks(prog)}
 
     def loop_initial(self, loop_prog, tp_prog):
         return self.prog_initial(loop_prog)
     
     def loop_next(self, loop_prog, tp_prog):
-        return {x:"{}+{}×{}".format(self.prog_next(loop_prog)[x], self.prog_loc_bound[tp_prog.get_id()].pretty_print(), self.prog_next(tp_prog)[x]) for x in self.get_ranks(tp_prog)}
+        return {x:"({})+{}-({})".format(self.prog_post(tp_prog), self.prog_next(loop_prog)[x], self.prog_next(tp_prog)[x]) for x in self.get_ranks(tp_prog)}
+        return {x:"{}+({})×({})".format(self.prog_next(loop_prog)[x], self.prog_loc_bound[tp_prog.get_id()].pretty_print(), self.prog_next(tp_prog)[x]) for x in self.get_ranks(tp_prog)}
 
 
     def compute_variable_local_bound(self, prog, x):
@@ -141,11 +143,14 @@ class PathSensitiveReachabilityBound():
 
 
     def prog_BD_by_path_insensitive_transition_bound(self, prog):
-        (local_transitions, local_edges) = (zip(*[(self.transition_graph.transitions[i], self.transition_graph.edges[i]) for i in set(self.prog_transition_ids(prog))]))
-        bounder = TransitionBound(TransitionGraph(list(local_edges), list(local_transitions)))
-        bounder.compute_transition_bounds(prog)
+
         self.prog_loc_bound[prog.get_id()] = SymbolicExpression([SymbolicConst(self.transition_bound_path_insensitive.transition_bounds[transition_id]) for transition_id in set(self.prog_transition_ids(prog))], "min")
-        self.prog_loc_bound[prog.get_id()] = SymbolicExpression(SymbolicConst(bounder.transition_bounds[0]))        
+
+        # (local_transitions, local_edges) = (zip(*[(self.transition_graph.transitions[i], self.transition_graph.edges[i]) for i in set(self.prog_transition_ids(prog))]))
+        # bounder = TransitionBound(TransitionGraph(list(local_edges), list(local_transitions)))
+        # bounder.compute_transition_bounds(prog)
+        # self.prog_loc_bound[prog.get_id()] = SymbolicExpression(SymbolicConst(bounder.transition_bounds[0]))        
+
         if prog.is_choice():
             for choice_prog in prog.get_choices():
                 self.prog_BD_by_path_insensitive_transition_bound(choice_prog)
@@ -168,7 +173,7 @@ class PathSensitiveReachabilityBound():
                 for choice_prog in prog.get_choices():
                     (local_nested_loops_dfs(choice_prog, rp_bound, L))
             elif prog.is_repeat():
-                local_nested_loops_dfs(prog.get_repeat(), "({}×{})".format(self.prog_loc_bound[prog.get_id()].pretty_print(), rp_bound), L)
+                local_nested_loops_dfs(prog.get_repeat(), "({})×({})".format(self.prog_loc_bound[prog.get_id()].pretty_print(), rp_bound), L)
             elif prog.is_seq():
                 for seq_prog in prog.get_seqs():
                     (local_nested_loops_dfs(seq_prog, rp_bound, L))
@@ -183,13 +188,16 @@ class PathSensitiveReachabilityBound():
 
         def compute_psRB_through_loop_chain(tp_prog, loop_chain):
             if not (loop_chain): return "1"
+
             if loop_chain[0][0] == self.transition_path_localRB[tp_prog.get_id()][0]: 
                 return self.transition_path_localRB[tp_prog.get_id()][1]
-            return "({}×{})".format(compute_nested_lpchain_bound(loop_chain[0][1], tp_prog), compute_psRB_through_loop_chain(tp_prog, loop_chain[1:]))
+            return "({})×({})".format(compute_nested_lpchain_bound(loop_chain[0][1], tp_prog), compute_psRB_through_loop_chain(tp_prog, loop_chain[1:]))
             
 
         def compute_nested_lpchain_bound(loop_prog, tp_prog):
             init, post, next = self.loop_initial(loop_prog, tp_prog), self.prog_post(tp_prog), self.loop_next(loop_prog, tp_prog)
+            lpbound = "max{{{}}}".format(",".join(["{}:({})/({})".format(x[0], self.compute_variable_local_bound(loop_prog, x[0]), next[x]) for x in self.get_ranks(tp_prog)]))
+            print("THE LOOP REACHABILITY BOUND OF LOOP {} W.R.T. {} IS : {}".format(loop_prog.get_signature(), tp_prog.get_signature(), lpbound))
             return "max{{{}}}".format(",".join(["{}:({})/({})".format(x[0], self.compute_variable_local_bound(loop_prog, x[0]), next[x]) for x in self.get_ranks(tp_prog)]))
 
             init, post, next = self.loop_initial(loop_prog, tp_prog), self.prog_post(tp_prog), self.loop_next(loop_prog, tp_prog)
@@ -268,7 +276,7 @@ class PathSensitiveReachabilityBound():
         '''        
         self.path_reachability_bound(prog)
         print("PATH GLOBAL REACHABILITY BOUND IS : ", self.transition_path_psRB)
-
+        self.print_loop_chain()
         ''' 
         Compute The Reachability Bound of Each Program Point
         '''        
@@ -292,12 +300,9 @@ class PathSensitiveReachabilityBound():
 ######################################################################## Pretty Print Intereface ########################################################################
 
     def print_loop_chain(self):
-        for prog, loop_chains in self.loop_chain.items():
-            print("Loop Chains for the transition path at : ", prog, " are : ")
-            for loop_ch in loop_chains:
-                print("loop chain: ")
-                for (loop_id, lprog) in loop_ch:
-                    print("→:L-", loop_id, "prog: ", lprog.get_id())
+        for prog, loop_chain in self.loop_chain.items():
+            print("Loop Chains for the transition path : ", prog, " is : ")
+            print("→ L-".join(["{}:{}".format(loop_label, loop_prog.get_signature()) for (loop_label, loop_prog) in loop_chain ]))
 
     def print_transition_path_psRB(self):
         print("Number of Bounds Computed for the Transition Path is : ", len(self.transition_path_psRB))

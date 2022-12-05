@@ -68,6 +68,12 @@ class RefinedProg():
     
     def get_transition_enclosed_loop(self, edge):
         return self.edge_enclosed_loop["{}->{}".format(edge[0], edge[1])]
+    
+    def get_initial_point(self):
+        return min(self.prog_id)
+
+    def get_last_point(self):
+        return max(self.prog_id)
 
 
 

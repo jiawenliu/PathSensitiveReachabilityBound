@@ -24,10 +24,8 @@ let rec extract_para (lcom : lcommand)
   | Assign (var, _, _ ) -> Set.add (extract_para (Skip Bot)) var.v_name
   | Query  ( var ,_ , _ ) ->  Set.add (extract_para (Skip Bot)) var.v_name
   | While ( _ , lc', _ ) ->  extract_para lc'
-  | Seq ( _ ,  lc_2 ) -> extract_para lc_2 
+  | Seq ( lc_1 ,  lc_2 ) -> Set.union (extract_para lc_1) (extract_para lc_2)
   | If ( _ , lc_1 , lc_2 , _ ) -> Set.union (extract_para lc_1) (extract_para lc_2)
-
-
 
 let abs_expr var e avars = 
   match e with 
@@ -38,18 +36,45 @@ let abs_expr var e avars =
       if (not (Set.mem avars v.v_name))  then 
         Reset (var, None, Symb v.v_name)
     else
-        Reset (var,Some v, Const 0)
-    | Aaop (Sub, Avar var', Aint c) -> 
+        Reset (var, Some v, Const 0)
+    | Aaop (Sub, Avar var', c) -> 
       if String.equal var.v_name var'.v_name then 
-        Dec (var, None, Const c)
+      ( match c with
+      | Aint c ->  Dec (var, None, Const c)
+      | Avar v -> 
+        if (not (Set.mem avars v.v_name))  then 
+          Dec (var, None, Symb v.v_name)
+        else Dec (var, None, Symb "DECBYVAR")
+       | _ -> Dec (var, None, Symb "DECBYEXPR")
+       ) 
     else
-      Reset (var, Some var', Const c)
-    | Aaop (Add, Avar var', Aint c) -> 
+      ( match c with
+      | Aint c ->  Reset (var, Some var', Const c)
+      | Avar v -> 
+        if (not (Set.mem avars v.v_name))  then 
+          Reset (var, Some var', Symb v.v_name)
+        else Reset (var, Some var', Symb "RESETBYEXPR")
+       | _ -> Reset (var, Some var', Symb "RESETBYEXPR")     
+       )  
+    | Aaop (Add, Avar var', c) -> 
       if String.equal var.v_name var'.v_name then 
-        Inc (var, None, Const c)
+      ( match c with
+      | Aint c ->  Inc (var, None, Const c)
+      | Avar v -> 
+        if (not (Set.mem avars v.v_name))  then 
+          Inc (var, None, Symb v.v_name)
+        else Inc (var, None, Symb "INCBYVAR")
+       | _ -> Inc (var, None, Symb "INCBYEXPR")) 
     else
-      Reset (var, Some var', Const c)
-      | _ -> Reset (var, None, Symb "INF"))
+      (match c with
+      | Aint c ->  Reset (var, Some var', Const c)
+      | Avar v -> 
+        if (not (Set.mem avars v.v_name))  then 
+          Reset (var, Some var', Symb v.v_name)
+        else Reset (var, Some var', Symb "RESETBYEXPR")
+      | _ -> Reset (var, Some var', Symb "RESETBYEXPR") ) 
+    | _ -> Reset (var, None, Symb "RESETBYUNHANDLEDEXPRE")
+    )
   | Ebexpr _ -> Reset (var, None, Const 1)
 
   let rec abs_init lcom = 

@@ -75,7 +75,7 @@ class GraphParser(argparse.ArgumentParser):
                 transitions.append((int(l1), dc_set, int(l2), v_set))
             transitions.sort(key=lambda y: y[0]) 
             edges.sort(key=lambda y: y[0])   
-            print("The Input ABS Transition Graph: ", n, edges, transitions)
+            print("The Input ABS Transition Graph: ", n, edges, [(t[0], t[1][0].pretty_print(), t[2], t[3]) for t in transitions])
             return TransitionGraph(edges, transitions, n)
 
         pass

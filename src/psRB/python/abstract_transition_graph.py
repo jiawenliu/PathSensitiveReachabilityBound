@@ -55,6 +55,17 @@ class DifferenceConstraint:
     
     def get_guard_expr(self):
         return self.dc_bexpr.split(":")[1]
+    
+    def pretty_print(self):
+        if self.is_inc():
+            return "Increase {}' = {} - {}".format(self.var, self.var, self.dc_const)
+        if self.is_dec():
+            return "Decrease {}' = {} - {}".format(self.var, self.var, self.dc_const)
+        if self.is_reset():
+            return "Reset {}' = {} - {}".format(self.var, self.dc_var, self.dc_const)
+        if self.is_guard():
+            return "Guard {}".format(self.dc_bexpr)
+        return ""
 
 
 class DirectedGraph:

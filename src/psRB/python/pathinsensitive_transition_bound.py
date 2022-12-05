@@ -29,7 +29,7 @@ class TransitionBound:
         ############# The Variables that Each Variable Is Nested Reset
         self.var_reset_chains = defaultdict(list)
 
-        self.all_vars = set([dc_set[0].get_var_name() for (_, dc_set, _, _) in self.transition_graph.transitions])
+        self.all_vars = set([dc_set[0].get_var_name() for (_, dc_set, _, _) in self.transition_graph.transitions]).union(set([dc_set[0].get_reset_var() for (_, dc_set, _, _) in self.transition_graph.transitions]))
         self.var_invariant = {v : "" for v in self.all_vars}
 
 
