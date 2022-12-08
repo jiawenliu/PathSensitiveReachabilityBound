@@ -50,38 +50,38 @@
     \]
 \end{proof}
   
-\begin{lem}[Uniqueness of the enclosed Loop and enclosing Loop]
-\label{lem:nestloop_unique}
-    For every program $c$, let $\rprog$ be the corresponded refined program, 
-    then for each of the transition path $\tpath \in \rprog$, there is at most one nested loop chain $lpch(\tpath) \in lp\mathcal{C}(\tpath)$.
-    \[
-    \forall c \in \cdom \st \rprog = REFINE(c) \land \tpath \in \rprog \implies 
-    |lp\mathcal{C}(\tpath)| \leq 1
-    \]
-\end{lem}
-Proof Summary:
-\\
-By induction on the program.
-\\
-Or by showing contradiction.
-\begin{proof}
-    Taking an arbitrary program $c$, let $\rprog$ be its  refined program.
-    By the label consistency, for any transition path $\tpath$, $\tpath$ cannot be in two different while commands.
-    \\
-    It is sufficient to show the existence of a contradiction by assuming that 
-    $\tpath$ is contained in two different while commands as follows,
-    \\
-    $c_1 = \ewhile \clabel{b_1}^{l_1} \edo c_{w1}$ and $c_2 = \ewhile \clabel{b_2}^{l_2} \edo c_{w2}$, 
-    \\
-    such that $c_1 \not\in c_2$ and $c_2 \not\in c_1$,
-    $c_1 \in c$ and $c_2 \in c$.
-    \\
-    By $c_1 \not\in c_2$ and $c_2 \not\in c_1$ and the label consistency, we know 
-    $\lvar(c_{w1}) \cap \lvar(c_2) = \emptyset$.
-    \\
-    By $\tpath \in c_{w1}$ and $\tpath \in c_{w2}$, we know 
-    % \\
-    $\lvar(c_{w1}) \cap \lvar(c_2) = \lvar(\tpath) \neq \emptyset$.
-    \\
-    Then we have a contradiction and this Lemma is proved.    
-\end{proof}
+% \begin{lem}[Uniqueness of the Enclosed Loop]
+% \label{lem:nestloop_unique}
+%     For every program $c$, let $\rprog$ be the corresponded refined program, 
+%     then for each of the transition path $\tpath \in \rprog$, there is at most one nested loop chain $lpch(\tpath) \in lp\mathcal{C}(\tpath)$.
+%     \[
+%     \forall c \in \cdom \st \rprog = REFINE(c) \land \tpath \in \rprog \implies 
+%     |lp\mathcal{C}(\tpath)| \leq 1
+%     \]
+% \end{lem}
+% Proof Summary:
+% \\
+% By induction on the program.
+% \\
+% Or by showing contradiction.
+% \begin{proof}
+%     Taking an arbitrary program $c$, let $\rprog$ be its  refined program.
+%     By the label consistency, for any transition path $\tpath$, $\tpath$ cannot be in two different while commands.
+%     \\
+%     It is sufficient to show the existence of a contradiction by assuming that 
+%     $\tpath$ is contained in two different while commands as follows,
+%     \\
+%     $c_1 = \ewhile \clabel{b_1}^{l_1} \edo c_{w1}$ and $c_2 = \ewhile \clabel{b_2}^{l_2} \edo c_{w2}$, 
+%     \\
+%     such that $c_1 \not\in c_2$ and $c_2 \not\in c_1$,
+%     $c_1 \in c$ and $c_2 \in c$.
+%     \\
+%     By $c_1 \not\in c_2$ and $c_2 \not\in c_1$ and the label consistency, we know 
+%     $\lvar(c_{w1}) \cap \lvar(c_2) = \emptyset$.
+%     \\
+%     By $\tpath \in c_{w1}$ and $\tpath \in c_{w2}$, we know 
+%     % \\
+%     $\lvar(c_{w1}) \cap \lvar(c_2) = \lvar(\tpath) \neq \emptyset$.
+%     \\
+%     Then we have a contradiction and this Lemma is proved.    
+% \end{proof}
