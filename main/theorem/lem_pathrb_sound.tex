@@ -1,43 +1,95 @@
-\begin{lem}[Soundness of Path Reachability Bound]
-    For every program $c$ with it refined program $\rprog$ and 
-    every simple transition path $\tpath$ in this program,
-     the $\inoutB(\tpath, \rprog)$
-  is a sound bound on the execution times of $\tpath$ in $c$.
-    \[
-      \begin{array}{l}
-      \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
-      % \rprog \in \rprog \land
-      \rprog = Alg.4(c)
-      % \\ \qquad
-      \land
-      \config{c, \trace_0} \to^* 
-      % \config{\highlight{\tpath; \rprog', \trace_0 \tracecat \trace_1} 
-      % \land 
-      % \config{\rprog, \trace_0 \tracecat \trace_1} \to^* 
-      \config{{\eskip, \trace_0 \tracecat \trace}}
-      \\ \qquad
-      \implies
-      \counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
-      \end{array}
-      \]
-  \end{lem}
-  \emph{Soundness} of the \emph{Path Reachability Bound}  
-For every simple transition path $\tpath$, the $\inoutB(\tpath, \rprog)$
-is a sound upper bound on its execution times globally.
-\\
-In every base case, a simple transition path not nested in any loop, or just inside one loop.
-Then $\inoutB(\tpath, \rprog) = \outinB(\rprog, \tpath)$, which is the bound on its execution times without considering
-outside loops' executions. Since there isn't any outside loop, this operation is sound.
-In the same time, the soundness is guaranteed by the $\outinB(\rprog, \tpath)$.
-\\
-For every simple transition path nested in multiple loops, if $l$ is the closest loop $\tpath$ comes from, then
-$\inoutB(\tpath, \rprog) =
-\prod\limits_{l' \in \lpch(\tpath, \rprog)} \rpchB(l', \tpath, \rprog) \times \outinB(\rprog, \tpath)$.
-Since $\lpchB(l', \tpath, \rprog)$ bounds the number of $l'$'s iteration numbers,
-%  will 
-% bound the execution times of $L_{t_0}$
-% in each single execution of the $L_{t_i}$ for every
-such that during these iterations, the $\tpath$ will be executed,
-it is sound to multiply these bounds by $\outinB(\rprog, \tpath)$.
-In the same time, the soundness also relies on the soundness of $\outinB(\rprog, \tpath)$ and $\rpchB(l', \tpath, \rprog)$. 
+\begin{lemma}[Soundness of Path Reachability Bound]
+  % \label{lem:pathrb-sound}
+  For any program with its refined program $\rprog$ and a simple transition path $\tpath$ in this program,
+  the execution times of $\tpath$ when executing the $\rprog$ is bounded by $\inoutB(\rprog, \tpath)$.
+  \[
+    \begin{array}{l}
+    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
+    \rprog = REFINE(c)
+    \land
+    \config{c, \trace_0} \to^* 
+    \config{{\eskip, \trace_0 \tracecat \trace}}
+    \\ \qquad
+    \implies
+    \counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
+    \end{array}
+    \]
+\end{lemma}
 %
+\begin{proof}
+\emph{Soundness} of the \emph{Path Reachability Bound}.
+\\
+Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in this program.
+\\
+Let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested.
+\\
+Let $\trace_0 \in \tdom_0(c)$ be an arbitrary initial trace.
+\\
+To show $\counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0)$, by induction on the loop program $\rprog_l$,
+we have the following cases:
+\caseL{$\rprog_l = \tpath$}
+By Definition~\ref{def:pathrb}, we have $\inoutB(\tpath, \tpath) = 1$.
+This is sound.
+\caseL{$\rprog_l = \tpath'$}
+By Definition~\ref{def:pathrb}, we have $\inoutB(\tpath', \tpath) = \highlight{0} $
+\caseL{$\rprog_l = \rprog_1;\rprog_2$}
+By Definition~\ref{def:pathrb}, we have $\inoutB(\rprog_1;\rprog_2, \tpath) = \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) $.
+Then we have this case is sound by induction hypothesis.
+\caseL{$\rprog_l = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
+By Definition~\ref{def:pathrb}, we have $\inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) = \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\}$ 
+Then we have this case is sound by induction hypothesis and the $\max$ operation.
+\caseL{$\rprog_l = l': \rprog'$ }
+By Definition~\ref{def:pathrb}, we have 
+\[  
+  \begin{array}{rcl}
+    \inoutB(l: \rprog', \tpath) & \triangleq & 
+\highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
+\\ &  \triangleq & 
+0, \qquad \qquad \qquad \quad ~~ \text{if }  \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
+\\ &  \triangleq & 
+\highlight{
+  \lpchB(l:\rprog', \tpath ) }
+\highlight{\times \max\limits_{l = \kw{enclosed}(l':\rprog'')}
+\{\inoutB(l':\rprog'', \tpath)\} } \footnotemark, o.w. 
+\end{array}
+\]
+%
+Then, we have the following three cases:
+\subcaseL{$l': \rprog' = \kw{enclosed}(\tpath)$ }
+In this case, we have $\inoutB(l': \rprog', \tpath) = {\outinB(\rprog', \tpath)}$.
+\\
+Since $l': \rprog' = \kw{enclosed}(\tpath)$, we know $\tpath$ is not nested in any loop, or just inside one loop.
+\\
+By Lemma~\ref{lem:pathlocalrb-sound}, we know $\outinB(\rprog', \tpath)$ is the
+sound upper bound on $\tpath$'s reaching times when executing $l': \rprog'$.
+%
+\\
+Then $\inoutB(\tpath, \rprog) = \inoutB(\rprog, \tpath)$, which is the bound on its execution times without considering
+outside loops' executions. 
+Since there isn't any outside loop, $\inoutB(l': \rprog', \tpath)$ is sound.
+\subcaseL{ $\kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')$}
+In this case, we have $\inoutB(l: \rprog', \tpath) = 0$ since $\tpath$ doesn't belong to this loop.
+%
+\subcaseL{ $o.w.$ }
+In this case, we have 
+\[
+  \inoutB(l': \rprog', \tpath) = \highlight{ \lpchB(l:\rprog', \tpath) }
+\highlight{\times \max\limits_{l':\rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\} }.
+\]
+By induction hypothesis on $l'':\rprog''$, we know  $\inoutB(l'':\rprog'', \tpath)$ is sound bound on the number of $l'':\rprog''$'s iteration numbers, such that during these iterations, the $\tpath$ will be executed.
+\\
+In this sense, it is sound to multiply it by $\inoutB(\rprog, \tpath)$.
+%
+\caseL{$\rprog_l = \rprepeat(\rprog')$}
+By Definition~\ref{def:pathrb}, we have
+\[
+  \inoutB(\rprepeat(\rprog'), \tpath) = \inoutB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath).
+\]
+We will never meet this case if $\rprog$ is a well-defined refined program of $c$.
+\\
+Because $\rprepeat(\rprog')$ only shows up in a loop, we always match the case $l' : \rprepeat(\rprog')$ in the previous case before match this case.
+%
+\end{proof}
+
+
+

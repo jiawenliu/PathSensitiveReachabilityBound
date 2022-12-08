@@ -1,12 +1,12 @@
 
 \subsection{Loop Bound}
-There are three methods for computing the $BD(\rprepeat(\rprog'))$:
+There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'))$ for every loop $\rprepeat(\rprog')$ in a refined program $\rprog$:
 \begin{enumerate}
-  \item Estimated by Equation~\ref{eq:absBD} in Section~\ref{sec:rank} path-insensitively.
-  \item Estimated by $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ from paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops. 
-  We provide an alternative computation method based on \cite{sinn2017complexity} in Definition~\ref{def:loopbound}.
-  \item Computing the rank functions' abstract states, $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ and $\varGD(\rprog, \rprog')$ as in Definition~\ref{def:alg-absstate}.
-  Then compute $BD(\rprepeat(\rprog'))$ by Definition~\ref{def:loopbound} using SMT solver.
+  \item Estimated by Equation~\ref{eq:absBD} in Section~\ref{sec:rank} path-insensitively. This bound is precise when there is only one path in this loop but not for loops with multiple paths.
+  \item Estimated by $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ from paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops but not for nested loops. 
+  \item   We provide an alternative computation method using the variable invariant estimation idea from~\cite{sinn2017complexity} in Definition~\ref{def:loopbound} and the progress invariant idea from~\cite{GulwaniJK09}.
+  We compute the rank functions' abstract states, $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ and $\varGD(\rprog, \rprog')$ as in Definition~\ref{def:alg-absstate}.
+  Then we compute $BD(\rprepeat(\rprog'))$ by Definition~\ref{def:loopbound} using SMT solver.
 \end{enumerate}
 %
 \begin{defn}[Rank Abstract States Computation]
@@ -96,8 +96,8 @@ $\varGD(\rprog)$ involves the computation of $BD(\rprog)$ recursively as follows
     \begin{array}{rcl}
       BD(\tpath) & \triangleq & 1 \\
       BD(\rprog_1;\rprog_2) & \triangleq & BD(\rprog_1) + BD(\rprog_2) \\
-      BD(\rpchoose{\rprog_1, \cdots, \rprog_m }) & \triangleq 
-      & \max\left\{ BD(\rprog_1), \cdots, BD(\rprog_m) \right\} \\
+      BD(\rpchoose{\rprog_1, \ldots, \rprog_m }) & \triangleq 
+      & \max\left\{ BD(\rprog_1), \ldots, BD(\rprog_m) \right\} \\
       BD(\rprepeat(\rprog')) & \triangleq 
       &
       \max\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
@@ -112,8 +112,14 @@ $\varGD(\rprog)$ involves the computation of $BD(\rprog)$ recursively as follows
     \end{array}
     \]
   \end{defn}
-
-  \subsection{Path Local Reachability-Bound}
+We show that Definition~\ref{def:loopbound} computes a sound loop bound for every loop in a refined program below in Lemma~\ref{lem:loopbound_sound} with proof in Appendix~\ref{apdx:loopbound-sound}.
+\begin{lem}[Soundness of Loop Bound]
+  \label{lem:loopbound_sound}
+  For every program $c$ with it refined program $\rprog$,
+  for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
+  $BD(\rprepeat(\rprog'))$ is a sound upper bound on the execution times of this loop when executing the program $c$.
+\end{lem}
+\subsection{Path Local Reachability-Bound}
 We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \text{the closest loop} inside the $\rprog$, where $\tpath$ is located.
 Then based on the loop bound computed above in either way, we compute the \emph{path local reachability-bound} of
 the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlocalrb}.
@@ -128,8 +134,8 @@ the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlo
       \outinB(\tpath, \tpath) & \triangleq & 1 \\
       \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
       \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
-      \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
-      & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
+      \outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
+      & \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\} \\
       \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
       & BD(\rprepeat(\rprog'))
        \times \outinB(\rprog', \tpath)

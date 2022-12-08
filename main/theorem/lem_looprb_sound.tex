@@ -1,15 +1,62 @@
-In a refined program $\rprog$,
-for its every loop at the program point $l$ and a transition path $\tpath$ inside this loop,
-the \emph{Relative Loop Bound} $\lpchB(l: \rprog, \tpath)$ is a symbolic bound
-on the number of $l$'s iteration numbers,
-%  will 
-% bound the execution times of $L_{t_0}$
-% in each single execution of the $L_{t_i}$ for every
-such that during these iterations, the closest loop $l'$ enclosing $\tpath$ will be executed.
+\begin{lemma}[Soundness of the Loop Reachability-Bound]
+    For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l':\rprog'$ is the closest loop enclosing the $\tpath$, then the entering times of $l':\rprog'$ when executing the $l: \rprog$, is bounded by $\lpchB(l: \rprog, \tpath)$.
+  \end{lemma}
+  \begin{proof}
+    \emph{Loop Reachability-Bound} Soundness.
+    \\
+$\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ 
+Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in this program.
 \\
+Let $l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested
+and $l: \rprog_l \in \rprog$ be any loop in this program where $\tpath$ is nested.
+\\
+Let $\trace_0 \in \tdom_0(c)$ be an arbitrary initial trace.
+\\
+To show that $\lpchB(l: \rprog_l, \tpath)$ bounds the iteration numbers of the loop $l$ w.r.t.
+the inner loop $l_t: \rprog_t$ 
+such that during the iterations of loop $l$, the nested loop $l_t: \rprog_t$ is executed,
+by Definition~\ref{def:looprb}, we have
+\[
+    \lpchB(l: \rprog_l, \tpath) \triangleq
+    \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\tpath)}{\lpnext(l: \rprog, \tpath)}.
+\]
 The soundness is guaranteed by the operation
- $\frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}$.
- In this operation, $\lpnext(\rprog, \tpath)$ computes the variables states of the $\tpath$
-after visited the program point $l$ the second time and before visiting any other program point.
-% it is 
-In the same time, the soundness also relies on an external solver. 
+ $\frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpnext(\rprog, \tpath)}$ and the three states,
+ $\lpinit(\rprog, \tpath)$, $\rffinal(\rprog, \tpath)$, $\lpnext(\rprog, \tpath)$ computed in Definition~\ref{def:alg-loopabsstate}
+ as follows.
+\begin{itemize}
+  \item \emph{Loop Initial State} Soundness.
+    By Definition~\ref{def:alg-loopabsstate}, we have $\lpinit(\rprog, \tpath)$ 
+    \[
+      \lpinit(l: \rprog, \tpath) \triangleq 
+      \arg\max_{l_1}\left\{
+          \varinvar(y) + v ~\middle\vert~ 
+          \begin{array}{l} 
+            (l_1, x' \leq y + v, l_2) \in \reset(x) 
+            \\
+            \land \absinit(\rprog) \leq l_1 \leq \absinit(\tpath)
+          \end{array}
+        \right\}, x = \locbound(\tpath)
+      \]
+  By the soundness of the rank estimation in Lemma~\ref{lem:local_bound_sound} and Theorem~\ref{thm:pathinsensitive_rb_soundness}, we know $\varinvar(\locbound(\tpath))$ is a sound upper bound on $\tpath$'s ranking function,
+  and $\varinvar(y)$ is also sound upper bound on all the variables that reset $\locbound(\tpath)$.
+  \\
+  In this sense, we have $\arg\max_{l_1}\left\{
+    \varinvar(y) + v ~\middle\vert~ 
+    \begin{array}{l} 
+      (l_1, x' \leq y + v, l_2) \in \reset(x) 
+      \\
+      \land \absinit(\rprog) \leq l_1 \leq \absinit(\tpath)
+    \end{array}
+  \right\}, x = \locbound(\tpath)$
+  is a sound initial value estimation of $\locbound(\tpath)$.
+  %
+  \item $\rffinal(\tpath)$ computes the value of $\locbound(\tpath)$ after the iteration of $l_t:\rprog_t$ finished.
+  In this sense, $\rffinal(\tpath)$ is the correct value of $\locbound(\tpath)$ after the first execution of $l_t:\rprog_t$.
+  %
+  \item  $\lpnext(\rprog, \tpath)$ computes the variables states of the $\tpath$
+  after visited the program point $l$ the second time and before visiting any other program point.
+  In the same time, the soundness also relies on an external solver. 
+\end{itemize}
+By the soundness of the three states above, we know $\frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpnext(\rprog, \tpath)}$ soundly computes the maximum number of $l: \rprog_l$'s iteration times such that during these iterations, the nested loop $l_t: \rprog_t$ is executed.
+\end{proof}

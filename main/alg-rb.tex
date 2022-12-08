@@ -1,9 +1,9 @@
-\subsection{Path Reachability-Bound}
+\subsection{Path Global Reachability-Bound}
 \label{sec:pathrb}
 We first compute $\kw{enclosing}(\rprog)$, which is the set containing \text{all the loops $l:\rprog$ which are nested inside } $\rprog$.
 Then, the path reachability-bound, $\inoutB(\rprog, \tpath)$ for a \emph{simple transition path} $\tpath$ is computed in Definition~\ref{def:pathrb}.
 %
-\begin{defn}[]
+\begin{defn}[Path Reachability-Bound]
   \label{def:pathrb}
 \[
   \begin{array}{rcl}
@@ -21,8 +21,8 @@ Then, the path reachability-bound, $\inoutB(\rprog, \tpath)$ for a \emph{simple 
       \lpchB(l:\rprog', \tpath ) }
     \highlight{\times \max\limits_{l = \kw{enclosed}(l':\rprog'')}
    \{\inoutB(l':\rprog'', \tpath)\} } \footnotemark, o.w. \\
-    \inoutB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
-    & \max\left\{ \inoutB(\rprog_1, \tpath), \cdots, \inoutB(\rprog_m, \tpath) \right\} 
+    \inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
+    & \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
     \\
     \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
     &  & \text{this case will never be matched}
@@ -32,12 +32,24 @@ Then, the path reachability-bound, $\inoutB(\rprog, \tpath)$ for a \emph{simple 
 \footnotetext{There is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$, all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$}%
 We show that $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ during the execution of $\rprog$
 
-We show the \emph{path reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing the program in Lemma~\ref{lem:pathrb-sound}, with the proof in \todo{Appendix~\ref{apdx:pathrb-sound}}
+We show the \emph{path reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing the program in Lemma~\ref{lem:pathrb-sound}, with the proof in \todo{Appendix~\ref{apdx:pathrb-sound}}.
 \begin{lem}[Soundness of the Path Reachability-Bound]
   \label{lem:pathrb-sound}
-  For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
+  For any program with its refined program $\rprog$ and a simple transition path $\tpath$ in this program,
   the execution times of $\tpath$ when executing the $\rprog$ is bounded by $\inoutB(\rprog, \tpath)$.
-\end{lem}
+  \[
+    \begin{array}{l}
+    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
+    \rprog = REFINE(c)
+    \land
+    \config{c, \trace_0} \to^* 
+    \config{{\eskip, \trace_0 \tracecat \trace}}
+    \\ \qquad
+    \implies
+    \counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
+    \end{array}
+    \]
+  \end{lem}
 
 \subsection{Program Points Path-sensitive Reachability-Bound}
 \label{sec:point-psrb}

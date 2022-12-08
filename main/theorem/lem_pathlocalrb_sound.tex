@@ -1,14 +1,41 @@
-\emph{Path Local Reachability Bound}  $\outinB(\rprog, \tpath)$.
-For a simple transition path $\tpath$ with its closest enclosing while loop at $l$ in a program $\rprog$, 
-$\outinB(\rprog, \tpath)$
-is a sound bound on its execution times in side $l$.
+\begin{lemma}[Soundness of the Path Local Reachability-Bound]
+    For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
+    if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
+    then the execution times of $\tpath$ when executing the $\rprog_l$ is bounded by $\outinB(\rprog_l, \tpath)$.
+  \end{lemma}
+\begin{proof}
+\emph{Path Local Reachability-Bound} Soundness.
 \\
+Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in this program.
+\\
+Let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested.
+\\
+Let $\trace_0 \in \tdom_0(c)$ be an arbitrary initial trace.
+\\
+To show $\outinB(\rprog_l, \tpath) \geq \counter(\trace, L(\tpath))$, by induction on the loop program $\rprog_l$,
+we have the following cases:
+\caseL{$\rprog_l = \tpath$}
+$\outinB(\tpath, \tpath) = 1$
+\caseL{$\rprog_l = \tpath'$}
+$\outinB(\tpath', \tpath) = \highlight{0} $
+\caseL{$\rprog_l = \rprog_1;\rprog_2$}
+$\outinB(\rprog_1;\rprog_2, \tpath) = \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) $
+\caseL{$\rprog_l = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
+$\outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) = \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}$ 
+Sound by induction hypothesis and the $\max$ operation.
+\caseL{$\rprog_l = \rprepeat(\rprog')$ }
+$\outinB(\rprepeat(\rprog'), \tpath) = BD(\rprepeat(\rprog')) \times \outinB(\rprog', \tpath)$
 For a simple transition path $\tpath$ only enclosed by one transition path $\rprepeat(\tpath)$, 
 we know $\outinB(\rprog, \tpath) = \outinB(\rprepeat(\tpath), \rprog)$.
 Since $\outinB(\rprepeat(\tpath), \rprog)$ is a sound local bound on the iteration times
 of $\rprepeat(\tpath)$ by assuming all the outside loops executes only once.
 In this sense, $\outinB(\rprepeat(\tpath), \rprog)$ is also a sound bound on the iteration times globally.
 \\
-For a simple transition path $\tpath$ nested in multiple transition paths $\rprog_1, \cdots, \rprog_m$,
-we know $\outinB(\rprog, \tpath) = \prod\limits_{i = 1, \cdots, m}\outinB(\rprog_i, \rprog)$.
+For a simple transition path $\tpath$ nested in multiple transition paths $\rprog_1, \ldots, \rprog_m$,
+we know $\outinB(\rprog, \tpath) = \prod\limits_{i = 1, \ldots, m}\outinB(\rprog_i, \rprog)$.
 By the same guarantee from $\outinB(\rprog_i, \rprog)$, it is sound to multiply each of them.
+\caseL{$\rprog_l = l': \rprog'$}
+$\outinB(l': \rprog', \tpath) = \outinB(\rprog', \tpath)$ 
+\text{this case always equals to } 0 because $\rprog_l$ is the enclosed loop where $\tpath$ is nested, and there doesn't exist two different $\kw{enclosed}(\rprog, \tpath)$.
+
+\end{proof}

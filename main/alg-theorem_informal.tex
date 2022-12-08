@@ -1,77 +1,7 @@
 \subsection{Loop Bound}
-
-\subsubsection{Soundness}
-We present two ways for computing a loop bound on a single while loop path, both of them are sound.
-
-\highlight{\textbf{Loop Bound Soundness Discussion - 1}}
-The second on in Equation.~\ref{eq:absBD} relies on the soundness of the $\absclr(\absevent, c)$
-in Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
-For a program $c$ and an edge $\absevent \in \absE(c)$, $\absclr(\absevent, c)$ is a sound upper bound on the execution times of this transition,
-formally in Theorem~\ref{thm:pathinsensitive_rb_soundness}. 
-Proof of this theorem is in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
-
-\highlight{\textbf{Loop Bound Soundness Discussion - 2}}
-The first computation method in Section~\ref{sec:looprb} is based on the in Definition~\ref{def:loopbound} and also relies on external SMT solver.
-For every transition path $\rprog$, the $BD(\rprog)$
-is a sound upper bound on its execution times locally.
-\\
-This bound is sound locally by assuming
-that all the loops and transition paths where $\rprog$ is nested execute only once.
-This assumption comes from the computation of the $\varGD$ and the depth first search strategy.
-\\
-For every base case, i.e., a simple transition path, 
-$\varGD(\rprog) =  \rfinit(\tpath) - \rfnext(\rprog)$
-counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
-In the other two cases,  $\varGD(\rprepeat(\rprog))$ and $\varGD(\rpseq(\rprog_1, \rprog_2))$
-has the same assumption when compute the variables' changes.
-The soundness also relies on the operation $\frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$,
-which can be solved by external SMT solver,
-or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
-%
-\begin{thm}[Soundness of Loop Bound]
-\label{thm:sound_outsidein}
-For every program $c$ with it refined program $\rprog$,
-if $\rprog$ is a transition path of this program, then the $BD(\rprog)$
-is a sound local bound on the execution times of $\rprog$ in program $c$.
-\[
-    \begin{array}{l}
-    \forall c \in \cdom, \rprog, \rprog, \trace_0 \in \tdom_0(\rprog), \trace_1, \trace \in \tdom \st 
-    \rprog \in \rprog \land
-    \rprog = Alg.4(c)
-    \\ \qquad
-    \land
-    \config{c, \trace_0} \to^* \config{\highlight{\ewhile (\rprog, \cdots)}, \trace_0 \tracecat \trace_1} 
-    \land 
-    \config{\rprog, \trace_0 \tracecat \trace_1} \to^* \config{{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace}}
-    \\ \qquad
-    \implies {\counter(\trace, L(\rprog))} \leq BD(\rprog)(\trace_0 \tracecat \trace_1).
-    \end{array}
-\]
-\end{thm}
-\highlight{Informal Discussion}
-\\
-Theorem~\ref{thm:sound_outsidein} guarantees that
-the bound for every transition path $\rprog$, the $BD(\rprog)$
-is a sound upper bound on its execution times, by assuming
-that all the loops and transition paths where $\rprog$ is nested execute only once.
-\\
-In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
-$v$ is a local bound if it has the same decreasing time as the transition's execution time.
-By assuming that certain program parts (those were e increases) are not executed,
-then value of $v$ can limit the execution time of that transition.
-\\
-In our soundness, we assume all the code pieces not inside this transition path are executed at most once (once if they show up in front of the program
-zero time if not).
-In this case, this bound limits the execution time of this transition path.
-
-\subsubsection{Path-sensitivity}
 $BD(\rprepeat({\rprog}))$  is path-insensitive because we only compute the loop bound
 for the single loop path in a refined program $\rprog$.
 But our alternative computation method in Section~\ref{sec:looprb} has a better performance in the following sense.
-
-\highlight{
-  \textbf{Improvement Discussion:}
-\\
 The computation of $BD(\rprepeat({\rprog}))$ 
 as below is more efficient and accurate than existing techniques.
 \\
@@ -88,10 +18,8 @@ The efficiency and accuracy of this computation fully depend on this arbitrary i
 \\
 In comparison to them, the alternative loop bound computation method in 
 Definition~\ref{def:loopbound} based on the abstract transition graph $\absG(c)$ is more accurate.
-}
 
-\subsection{Path Local Reachability Bound}
-\subsubsection{Path-sensitivity}
+\subsection{Path Local Reachability-Bound}
 \highlight{
   The computation
   filters out the execution of other transition paths that are nested in the same loop as $\tpath$.
@@ -111,47 +39,28 @@ Definition~\ref{def:loopbound} based on the abstract transition graph $\absG(c)$
   $\outinB(\tpath) = 1$ is sound and tight because it bounds one execution of the while body accurate.
   \\
   If a simple transition path is nested in some $\rprepeat$ annotations,
-  $\rpch(l: \rprog, \tpath) \triangleq \rprog_m \to \rprog_{n-1} \to \cdots \to \rprog_{0} \to \tpath$, we have the following guarantees.
+  $\rpch(l: \rprog, \tpath) \triangleq \rprog_m \to \rprog_{n-1} \to \ldots \to \rprog_{0} \to \tpath$, we have the following guarantees.
   \\
   1. $\rprog_n$ is a unique transition path of this loop,
   and isn't a sub-pattern of any other transition paths in this loop.
   \\
-  2. for every $i = n, \cdots, 0$, $\outinB(\rprog_{i - 1})$ bounds the execution time of $\rprog_{i - 1}$ with the assumption that $\rprog_{i}$ executes only once.
+  2. for every $i = n, \ldots, 0$, $\outinB(\rprog_{i - 1})$ bounds the execution time of $\rprog_{i - 1}$ with the assumption that $\rprog_{i}$ executes only once.
   \\
   3. $\tpath$ only shows up once inside $\rprog_n$.
   \\
-  By 1. 2. 3. guarantees, multiplication of $\outinB(\rprog_{i - 1})$ for every $i = n, \cdots, 0$ is the accurate execution time of this
+  By 1. 2. 3. guarantees, multiplication of $\outinB(\rprog_{i - 1})$ for every $i = n, \ldots, 0$ is the accurate execution time of this
   simple transition path in the transition path $\rprog_n$.
   \\
-  In the case that loop has multiple transition paths, $\rpchoose{l: \rprog_1, \cdots, l: \rprog_n}$,
+  In the case that loop has multiple transition paths, $\rpchoose{l: \rprog_1, \ldots, l: \rprog_n}$,
   \\
   We first find every repeat chain of this loop for this simple transition path.
   Then we compute the execution time of $\tpath$ on every repeat chain and take the maximum value.
 
-\subsubsection{Soundness}
-\emph{Soundness}
-    \\
-    \emph{Path Local Reachability Bound}  $\outinB(\rprog, \tpath)$.
-    For a simple transition path $\tpath$ with its closest enclosing while loop at $l$ in a program $\rprog$, 
-    $\outinB(\rprog, \tpath)$
-    is a sound bound on its execution times in side $l$.
-    \\
-    For a simple transition path $\tpath$ only enclosed by one transition path $\rprepeat(\tpath)$, 
-    we know $\outinB(\rprog, \tpath) = \outinB(\rprepeat(\tpath), \rprog)$.
-    Since $\outinB(\rprepeat(\tpath), \rprog)$ is a sound local bound on the iteration times
-    of $\rprepeat(\tpath)$ by assuming all the outside loops executes only once.
-    In this sense, $\outinB(\rprepeat(\tpath), \rprog)$ is also a sound bound on the iteration times globally.
-    \\
-    For a simple transition path $\tpath$ nested in multiple transition paths $\rprog_1, \cdots, \rprog_m$,
-    we know $\outinB(\rprog, \tpath) = \prod\limits_{i = 1, \cdots, m}\outinB(\rprog_i, \rprog)$.
-    By the same guarantee from $\outinB(\rprog_i, \rprog)$, it is sound to multiply each of them.
-    
-  %  
-
-
-\subsection{Loop Reachability Bound}
-\subsubsection{Path-sensitivity}
-$\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ bounds the iteration numbers of the loop $l$ w.r.t.
+\subsection{Loop Reachability-Bound}
+\highlight{
+  \emph{Improvements}
+  \\
+  $\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ bounds the iteration numbers of the loop $l$ w.r.t.
 the inner loop $l'$ that is $\tpath$'s closest enclosing loop,
 such that,
 during these iterations of loop $l$, the nested loop $l'$ is executed.
@@ -162,18 +71,13 @@ for the inner loop w.r.t one iteration of the outside loop where it is nested.
 the outside loop $l$,
 such that during these iterations of the outside loop $l$, the inner loop $l'$ is entered. 
 }
-
-\highlight{
-  \emph{Improvements}
-  \\
-  $\lpinit(l, \tpath)$, and $\lpnext(l, \tpath)$ can be computed using the 
+$\lpinit(l, \tpath)$, and $\lpnext(l, \tpath)$ can be computed using the 
   $\kw{INIT}(c, i, \absinit(\tpath))$ and $\kw{NEXT}(c, i, \absinit(\tpath))$ from paper \cite{GulwaniJK09}.
   % \\
 Then, based on the same semantics and syntax,
 the $\lpchB(l, \tpath)$ can be computed as
 \\
 $I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$.
-% from paper \cite{GulwaniJK09}.
 \\
 There are two improvements comparing to their method.
 \\
@@ -191,85 +95,5 @@ In comparison to them, the computation method in Definition~\ref{def:looprb} bas
 ranking functions and abstract states over the abstract transition graph $\absG(c)$ is more accurate.
  }
 
-\subsubsection{Soundness}
-\emph{Soundness}
-\\
-\emph{Relative-Loop Bound} $\lpchB(l: \rprog, \tpath)$. In a refined program $\rprog$,
-for its every loop at the program point $l$ and a transition path $\tpath$ inside this loop,
-the \emph{Relative Loop Bound} $\lpchB(l: \rprog, \tpath)$ is a symbolic bound
-on the number of $l$'s iteration numbers,
-%  will 
-% bound the execution times of $L_{t_0}$
-% in each single execution of the $L_{t_i}$ for every
-such that during these iterations, the closest loop $l'$ enclosing $\tpath$ will be executed.
-\\
-The soundness is guaranteed by the operation
- $\frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}$.
- In this operation, $\lpnext(\rprog, \tpath)$ computes the variables states of the $\tpath$
-after visited the program point $l$ the second time and before visiting any other program point.
-% it is 
-In the same time, the soundness also relies on an external solver. 
-
-
-
-\subsection{Path Reachability Bound}
+\subsection{Path Global Reachability-Bound}
 \subsubsection{Path-sensitivity}
-\subsubsection{Soundness}
-
-
-\emph{Soundness} of the \emph{Path Reachability Bound}  
-For every simple transition path $\tpath$, the $\inoutB(\tpath, \rprog)$
-is a sound upper bound on its execution times globally.
-\\
-In every base case, a simple transition path not nested in any loop, or just inside one loop.
-Then $\inoutB(\tpath, \rprog) = \outinB(\rprog, \tpath)$, which is the bound on its execution times without considering
-outside loops' executions. Since there isn't any outside loop, this operation is sound.
-In the same time, the soundness is guaranteed by the $\outinB(\rprog, \tpath)$.
-\\
-For every simple transition path nested in multiple loops, if $l$ is the closest loop $\tpath$ comes from, then
-$\inoutB(\tpath, \rprog) =
-\prod\limits_{l' \in \lpch(\tpath, \rprog)} \rpchB(l', \tpath, \rprog) \times \outinB(\rprog, \tpath)$.
-Since $\lpchB(l', \tpath, \rprog)$ bounds the number of $l'$'s iteration numbers,
-%  will 
-% bound the execution times of $L_{t_0}$
-% in each single execution of the $L_{t_i}$ for every
-such that during these iterations, the $\tpath$ will be executed,
-it is sound to multiply these bounds by $\outinB(\rprog, \tpath)$.
-In the same time, the soundness also relies on the soundness of $\outinB(\rprog, \tpath)$ and $\rpchB(l', \tpath, \rprog)$. 
-% Since 
-% In this way, it assumes all the outside patterns and loop execution only once.
-% In the other two cases,  $\varGD(\rprog, \rprepeat(\rprog))$ and $\varGD(\rprog, \rpseq(\rprog_1, \rprog_2))$
-% has the same assumption.
-% \todo{reference}
-% \end{itemize}
-%
-\begin{thm}[Soundness of Path Reachability Bound]
-  \label{thm:sound_path-rb}
-  For every program $c$ with it refined program $\rprog$ and 
-  every simple transition path $\tpath$ in this program,
-   the $\inoutB(\tpath, \rprog)$
-is a sound bound on the execution times of $\tpath$ in $c$.
-  \[
-    \begin{array}{l}
-    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
-    % \rprog \in \rprog \land
-    \rprog = Alg.4(c)
-    % \\ \qquad
-    \land
-    \config{c, \trace_0} \to^* 
-    % \config{\highlight{\tpath; \rprog', \trace_0 \tracecat \trace_1} 
-    % \land 
-    % \config{\rprog, \trace_0 \tracecat \trace_1} \to^* 
-    \config{{\eskip, \trace_0 \tracecat \trace}}
-    \\ \qquad
-    \implies
-    \counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
-    \end{array}
-    \]
-\end{thm}
-\todo{Formalize the Proof}
-\\
-Theorem~\ref{thm:sound_path-rb} guarantees that
-for every simple transition path $\tpath$ in a program $c$ with its refined program $\rprog$,
-the $\inoutB(\tpath, \rprog)$
-is a sound upper bound on its execution times in $c$.
