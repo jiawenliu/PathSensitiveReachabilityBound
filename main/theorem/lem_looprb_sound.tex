@@ -1,0 +1,15 @@
+In a refined program $\rprog$,
+for its every loop at the program point $l$ and a transition path $\tpath$ inside this loop,
+the \emph{Relative Loop Bound} $\lpchB(l: \rprog, \tpath)$ is a symbolic bound
+on the number of $l$'s iteration numbers,
+%  will 
+% bound the execution times of $L_{t_0}$
+% in each single execution of the $L_{t_i}$ for every
+such that during these iterations, the closest loop $l'$ enclosing $\tpath$ will be executed.
+\\
+The soundness is guaranteed by the operation
+ $\frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}$.
+ In this operation, $\lpnext(\rprog, \tpath)$ computes the variables states of the $\tpath$
+after visited the program point $l$ the second time and before visiting any other program point.
+% it is 
+In the same time, the soundness also relies on an external solver. 

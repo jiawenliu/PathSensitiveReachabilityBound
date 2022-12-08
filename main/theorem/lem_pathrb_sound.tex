@@ -1,0 +1,43 @@
+\begin{lem}[Soundness of Path Reachability Bound]
+    For every program $c$ with it refined program $\rprog$ and 
+    every simple transition path $\tpath$ in this program,
+     the $\inoutB(\tpath, \rprog)$
+  is a sound bound on the execution times of $\tpath$ in $c$.
+    \[
+      \begin{array}{l}
+      \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
+      % \rprog \in \rprog \land
+      \rprog = Alg.4(c)
+      % \\ \qquad
+      \land
+      \config{c, \trace_0} \to^* 
+      % \config{\highlight{\tpath; \rprog', \trace_0 \tracecat \trace_1} 
+      % \land 
+      % \config{\rprog, \trace_0 \tracecat \trace_1} \to^* 
+      \config{{\eskip, \trace_0 \tracecat \trace}}
+      \\ \qquad
+      \implies
+      \counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
+      \end{array}
+      \]
+  \end{lem}
+  \emph{Soundness} of the \emph{Path Reachability Bound}  
+For every simple transition path $\tpath$, the $\inoutB(\tpath, \rprog)$
+is a sound upper bound on its execution times globally.
+\\
+In every base case, a simple transition path not nested in any loop, or just inside one loop.
+Then $\inoutB(\tpath, \rprog) = \outinB(\rprog, \tpath)$, which is the bound on its execution times without considering
+outside loops' executions. Since there isn't any outside loop, this operation is sound.
+In the same time, the soundness is guaranteed by the $\outinB(\rprog, \tpath)$.
+\\
+For every simple transition path nested in multiple loops, if $l$ is the closest loop $\tpath$ comes from, then
+$\inoutB(\tpath, \rprog) =
+\prod\limits_{l' \in \lpch(\tpath, \rprog)} \rpchB(l', \tpath, \rprog) \times \outinB(\rprog, \tpath)$.
+Since $\lpchB(l', \tpath, \rprog)$ bounds the number of $l'$'s iteration numbers,
+%  will 
+% bound the execution times of $L_{t_0}$
+% in each single execution of the $L_{t_i}$ for every
+such that during these iterations, the $\tpath$ will be executed,
+it is sound to multiply these bounds by $\outinB(\rprog, \tpath)$.
+In the same time, the soundness also relies on the soundness of $\outinB(\rprog, \tpath)$ and $\rpchB(l', \tpath, \rprog)$. 
+%

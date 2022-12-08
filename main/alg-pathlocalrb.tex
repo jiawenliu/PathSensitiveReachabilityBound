@@ -1,0 +1,148 @@
+
+\subsection{Loop Bound}
+There are three methods for computing the $BD(\rprepeat(\rprog'))$:
+\begin{enumerate}
+  \item Estimated by Equation~\ref{eq:absBD} in Section~\ref{sec:rank} path-insensitively.
+  \item Estimated by $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ from paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops. 
+  We provide an alternative computation method based on \cite{sinn2017complexity} in Definition~\ref{def:loopbound}.
+  \item Computing the rank functions' abstract states, $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ and $\varGD(\rprog, \rprog')$ as in Definition~\ref{def:alg-absstate}.
+  Then compute $BD(\rprepeat(\rprog'))$ by Definition~\ref{def:loopbound} using SMT solver.
+\end{enumerate}
+%
+\begin{defn}[Rank Abstract States Computation]
+  \label{def:alg-absstate}
+  We compute four different abstract states for rank functions in a refined program, $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ and $\varGD(\rprog, \rprog')$ as follows.
+ \begin{itemize}
+  \item The \emph{Initial State}, 
+  $\rfinit(\rprog)$ is a set of equations $x = e$, where $e \in \mathcal{A}_{in}$ is a
+  symbolic expression describing the initial value of $x$ before executing $\rprog$.
+  Each $x$ is the ranking function of a simple transition path $\tpath$ in this program. 
+  It contains the initial value for every ranking function of the simple transition path $\tpath$ in this program.
+ \[
+   \rfinit(\rprog) \triangleq 
+   \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
+   \left \{ 
+   x = \arg\max_{l_1}\left\{
+     \varinvar(y) + v ~\middle\vert~ 
+     \begin{array}{l} 
+       (l_1, x' \leq y + v, l_2) \in \reset(x) 
+       \\
+     \land l_1 \leq \absinit(\rprog)
+   \end{array}
+   \right\}
+   \right\}
+   \]
+ $\rfinit(\tpath)$ can also be computed using the function $\kw{INIT(c, l_0, \absinit(\rprog))}$ in \cite{GulwaniJK09}. 
+ $\kw{INIT(c, l_0, \absinit(\rprog))}$ computes the equivalent results.
+ %
+ \item  The \emph{Final State}, $\rffinal(\rprog)$ a conjunction of boolean expressions.
+ It is the post-condition
+ after the execution of $\rprog$.
+ % \\
+ \[
+   \rffinal(\rprog) \triangleq 
+   \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
+   \left \{ 
+   x = \arg\min_{l_1}\left\{
+     v_{post} ~\middle\vert~ 
+     \begin{array}{l} 
+      l_1 \geq \absfinal(\rprog)[2]
+     \land \bigwedge_{b \in \kw{Guard}(\rprog)} \neg b
+   \end{array}
+   \right\}
+   \right\}
+   \]
+  $\kw{Guard}(\rprog)$ is the set of all the unique boolean expressions (i.e., the boolean constraints) on this program.
+ \item The \emph{Next State}, $\rfnext(\tpath) \in \mathcal{A}_{in}$ 
+ is a
+ symbolic expression describing how much $\tpath$'s ranking function ($\locbound(\tpath)$) is changed after the first execution of $\rprog$ and before the second execution.
+ \[
+   \begin{array}{l}
+   \rfnext(\tpath) \triangleq 
+     \begin{array}{l}
+  \sum\limits_{\absevent \in \inc(x) }
+   \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
+   \\ \qquad 
+   + \arg\max\limits_{l' }
+      \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
+      \\ \qquad 
+     - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
+       v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
+       \right\}
+     \end{array}
+   \end{array}
+   , x = \locbound(\tpath)
+ \]
+ Indeed we only compute the $\rfnext(\tpath)$ because that the recursion is exhausted into the base case, i.e. $\tpath$ when computing $\varGD(\rprog)$ as below.
+ \item  The \emph{Variable Gradient Decent}, 
+ $\varGD(\rprog)$
+ is a set of equations $x = e$ for the same variables in the $\rfinit(\rprog)$.
+ It computes the set of next states for every ranking function of the simple transition path $\tpath$ in $\rprog$,
+ and recursively computes the loop bound, $BD$ in the meantime.
+ \\
+ {$\varGD(\rprepeat(\rprog)) =  BD(\rprog)  \times
+{\varGD(\rprog)}$}
+ \\
+ $\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1) \cup \varGD(\rprog_2)$
+ \\
+ $\varGD(\tpath) =  \left\{x = \rfnext(\tpath) ~|~ x = \locbound(\tpath) \right\} $  
+\end{itemize}
+\end{defn}
+The computation of the \emph{Variable Gradient Decent}, 
+$\varGD(\rprog)$ involves the computation of $BD(\rprog)$ recursively as follows.
+\begin{defn}[Loop Bound Computation]
+  \label{def:loopbound}
+  \[
+    \begin{array}{rcl}
+      BD(\tpath) & \triangleq & 1 \\
+      BD(\rprog_1;\rprog_2) & \triangleq & BD(\rprog_1) + BD(\rprog_2) \\
+      BD(\rpchoose{\rprog_1, \cdots, \rprog_m }) & \triangleq 
+      & \max\left\{ BD(\rprog_1), \cdots, BD(\rprog_m) \right\} \\
+      BD(\rprepeat(\rprog')) & \triangleq 
+      &
+      \max\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
+      \Big\{ \highlight{\frac{a - b}{a'}} ~\vert~
+      x = a \in \rfinit(\rprog')
+      \\ & & \qquad \qquad
+      \land x = b \in \rffinal(\rprog')
+      \land x = a' \in \varGD(\rprog')
+       \Big\} 
+       \\
+      BD(l: \rprog') & \triangleq & BD(\rprog')
+    \end{array}
+    \]
+  \end{defn}
+
+  \subsection{Path Local Reachability-Bound}
+We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \text{the closest loop} inside the $\rprog$, where $\tpath$ is located.
+Then based on the loop bound computed above in either way, we compute the \emph{path local reachability-bound} of
+the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlocalrb}.
+\begin{defn}[Path Local Reachability-Bound]
+    \label{def:pathlocalrb}
+    Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
+    let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in this program,
+    $\tpath$'s local reachability-bound w.r.t. $l: \rprog_l$
+    is computed recursively as follows. 
+  \[
+    \begin{array}{rcl}
+      \outinB(\tpath, \tpath) & \triangleq & 1 \\
+      \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
+      \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
+      \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
+      & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
+      \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
+      & BD(\rprepeat(\rprog'))
+       \times \outinB(\rprog', \tpath)
+       \\
+      \outinB(l': \rprog', \tpath) & \triangleq & \outinB(\rprog', \tpath) \\
+      &  & \text{this case always equals to } 0 \\
+    \end{array}
+    \]
+\end{defn}
+We show the \emph{path local reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing its enclosed loop $\kw{enclosed}(\rprog, \tpath)$ in Lemma~\ref{lem:pathlocalrb-sound}, with the proof in \todo{Appendix~\ref{apdx:pathlocalrb-sound}}.
+\begin{lem}[Soundness of the Path Local Reachability-Bound]
+  \label{lem:pathlocalrb-sound}
+  For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
+  if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
+  then the execution times of $\tpath$ when executing the $\rprog_l$ is bounded by $\outinB(\rprog_l, \tpath)$.
+\end{lem}

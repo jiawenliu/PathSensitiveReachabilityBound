@@ -47,16 +47,16 @@ Three steps:
   Additionally,
   we also compute the reset graph $resetG(c)$ and the reset chain, $\resetchain(c, x) \in \mathcal{P}(\mathcal{P}(\absevent))$ for every rank $x$.
   The $\resetchain(c, x)$ for every rank $x$ contains all the paths in $resetG(c)$ that are end at $x$.
-  The computation of $resetG(c)$ and $\resetchain(c, x)$ follows the Definition~20 in \cite{sinn2017complexity}.
+  The computation of $resetG(c)$ and $\resetchain(c, x)$ follows the Definition~20 in~\cite{sinn2017complexity}.
   \[resetG(c) = (resetV(c), resetE(c))\]
   \[resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(x) \land \absevent = (l, x' \leq y + c, l') \right\} \]
   \[resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in resetE(c) \lor (\_, \_, x) \in resetE(c) \right\} \]
-  In a variable $x$'s reset chain set, $\resetchain(c, x)$, in each chain $(e_0, \cdots, e_m) \in \resetchain(c, x)$
+  In a variable $x$'s reset chain set, $\resetchain(c, x)$, in each chain $(e_0, \ldots, e_m) \in \resetchain(c, x)$
   a variable $x_i$ is reset by another variable $x_{i + 1}$ on edge $e_{i}$
   and $x_{i + 1}$ is reset on edge $e_{i + 1}$ recursively
-  for every $i = 0, \cdots, m - 1$.
+  for every $i = 0, \ldots, m - 1$.
   $x$ is reset on the first edge $e_0$ of every sequence in $\resetchain(c, x)$.
-  {Each edge $e_i$ in a sequence $(e_0, \cdots, e_m) \in \resetchain(c, x)$
+  {Each edge $e_i$ in a sequence $(e_0, \ldots, e_m) \in \resetchain(c, x)$
   resets a variable $x_i$ by another variable $x_{i + 1}$ such that $x_{i + 1}$
   is reset on edge $e_{i + 1}$ recursively. The first edge $e_0$ of each sequence resets the variable $x$.}
   % 
@@ -67,10 +67,10 @@ Three steps:
   \subsection{Assigning The Ranking Function to An Edge}
   For each edge in the transition graph $\absG(c)$ of a program $c$,
   this step assigns the variable that decreases on this edge as the ranking function of this edge.
-  This step adopts the local bound computation method in Section 4 of \cite{sinn2017complexity} to assign the local bound to each edge,
+  This step adopts the local bound computation method in Section 4 of~\cite{sinn2017complexity} to assign the local bound to each edge,
   formally as follows.
   \begin{defn}[Ranking Function Generatation]
-    \label{def:ranking_gen}
+  \label{def:ranking_gen}
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
   its \emph{ranking function/local bound}, $\locbound(\absevent, c)$
   is the variable that decreases on this edge, computed as follows,
@@ -97,7 +97,7 @@ Three steps:
     the labeled command with the label $l$ will be 
     evaluated at most once. 
     The second and third cases are guaranteed by the \emph{Discussion on Soundness} in Section 4 in~\cite{sinn2017complexity}.
-    The formal soundness proof is in Lemma~\ref{lem:local_bound_sound} in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+    The soundness is formalized in Lemma~\ref{lem:local_bound_sound} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
   %
   \subsection{Ranking Function Estimation}
   This step estimates the upper bound, $\varinvar(x, c) \in \inpexpr$
@@ -150,6 +150,30 @@ Three steps:
  where $in(ch)$ is the first vertex of the reset chain $ch$.
 \end{defn}
   %
+We also have the soundness of this path-insensitive transition bound. For a program $c$ and an edge $\absevent \in \absE(c)$,
+$\absclr(\absevent)$ is a sound upper bound
+on the execution times of this transition by paper~\cite{sinn2017complexity}, formally below in Theorem~\ref{thm:pathinsensitive_rb_soundness} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+%
+\begin{thm}[Soundness of the Path-insensitive Transition Bound]
+  \label{thm:pathinsensitive_rb_soundness}
+For each program ${c}$ and an edge $\absevent = (l, \_, \_) \in \absG(c)$, if $l$ is the label of an assignment command,
+%  label $l \in \lvar(c)$,
+then its \emph{path-insensitive transition bound} $\absclr(\absevent, c)$ 
+ is a sound upper bound on 
+the execution times of this assignment command in $c$.
+  \[
+    \begin{array}{l}
+      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
+      \trace \in \mathcal{T}, v \in \mathbb{N}
+       \st 
+       \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\trace} 
+       \land \config{\absclr(\absevent, c), \trace_0} \aarrow v
+       \land
+      \counter(\trace, l) \leq v
+    \end{array}
+    \]
+\end{thm}
+%
 
 \subsection{Estimating the Loop Bound} 
 The $BD(\rprog)$ for the refined program $\rprog$ can also be estimated by $\absclr(\absevent, c)$ by taking the

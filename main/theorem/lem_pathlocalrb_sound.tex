@@ -1,0 +1,14 @@
+\emph{Path Local Reachability Bound}  $\outinB(\rprog, \tpath)$.
+For a simple transition path $\tpath$ with its closest enclosing while loop at $l$ in a program $\rprog$, 
+$\outinB(\rprog, \tpath)$
+is a sound bound on its execution times in side $l$.
+\\
+For a simple transition path $\tpath$ only enclosed by one transition path $\rprepeat(\tpath)$, 
+we know $\outinB(\rprog, \tpath) = \outinB(\rprepeat(\tpath), \rprog)$.
+Since $\outinB(\rprepeat(\tpath), \rprog)$ is a sound local bound on the iteration times
+of $\rprepeat(\tpath)$ by assuming all the outside loops executes only once.
+In this sense, $\outinB(\rprepeat(\tpath), \rprog)$ is also a sound bound on the iteration times globally.
+\\
+For a simple transition path $\tpath$ nested in multiple transition paths $\rprog_1, \cdots, \rprog_m$,
+we know $\outinB(\rprog, \tpath) = \prod\limits_{i = 1, \cdots, m}\outinB(\rprog_i, \rprog)$.
+By the same guarantee from $\outinB(\rprog_i, \rprog)$, it is sound to multiply each of them.
