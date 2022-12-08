@@ -94,13 +94,16 @@ class PathSensitiveReachabilityBound():
                     rank_dec_set.add(dec_const)
 
         ### THE VALUE THAT THE RANK IS RESET IN ONE EXCUTION OF THE PROGAM
-            rank_reset_value, last_reset_point = "0", prog.start_point
+            rank_reset_value, last_reset_point, rank_reset_set = "0", prog.start_point, set(["0"])
             for (transition_index, reset_var, reset_const) in self.transition_bound_path_insensitive.reset_transitions[x]:
                 (ls, dc, le, _) = self.transition_graph.transitions[transition_index]
-                if min(ls, le) >= start_point and max(ls, le) <= end_point and ls  >= last_reset_point:
+                if min(ls, le) >= start_point and max(ls, le) <= end_point and ls > last_reset_point:
                     rank_reset_value, last_reset_point = ("{}+{}".format(self.transition_bound_path_insensitive.var_invariant[reset_var], reset_const)), ls
                     rank_reset_value = "{}+{}".format(self.transition_bound_path_insensitive.var_invariant[reset_var], reset_const) if reset_var else reset_const 
+                if min(ls, le) >= start_point and max(ls, le) <= end_point:
+                    rank_reset_set.add("{}+{}".format(self.transition_bound_path_insensitive.var_invariant[reset_var], reset_const) if reset_var else reset_const)
 
+            return "{}+max{{{}}}-({})".format("+".join([v for v in rank_inc_set]), ",".join([v for v in rank_reset_set]),  "+".join([ri for ri in rank_dec_set]))
             return "{}+{}-({})".format("+".join([v for v in rank_inc_set]), rank_reset_value,  "+ ".join([ri for ri in rank_dec_set]))
         return {x : rank_next(x) for x in self.get_ranks(prog)}
 
@@ -122,7 +125,7 @@ class PathSensitiveReachabilityBound():
         (local_transitions, local_edges) = (zip(*[(self.transition_graph.transitions[i], self.transition_graph.edges[i]) for i in set(self.prog_transition_ids(prog))]))
         bounder = TransitionBound(TransitionGraph(list(local_edges), list(local_transitions)))
         bounder.compute_transition_bounds(prog)
-
+        return self.transition_bound_path_insensitive.var_invariant[x]
         return bounder.var_invariant[x]
 
 
@@ -141,11 +144,8 @@ class PathSensitiveReachabilityBound():
             self.prog_loc_bound[id] = SymbolicExpression(SymbolicConst(1))
         return self.prog_loc_bound[id]
 
-
     def prog_BD_by_path_insensitive_transition_bound(self, prog):
-
         self.prog_loc_bound[prog.get_id()] = SymbolicExpression([SymbolicConst(self.transition_bound_path_insensitive.transition_bounds[transition_id]) for transition_id in set(self.prog_transition_ids(prog))], "min")
-
         # (local_transitions, local_edges) = (zip(*[(self.transition_graph.transitions[i], self.transition_graph.edges[i]) for i in set(self.prog_transition_ids(prog))]))
         # bounder = TransitionBound(TransitionGraph(list(local_edges), list(local_transitions)))
         # bounder.compute_transition_bounds(prog)

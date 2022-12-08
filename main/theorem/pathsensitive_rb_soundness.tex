@@ -1,9 +1,21 @@
+\subsection{Proof of Lemma~\ref{lem:pathlocalrb-sound}}
+\label{apdx:pathlocalrb-sound}
+\input{theorem/lem_pathlocalrb_sound}
+
+\subsection{Proof of Lemma~\ref{lem:looprb-sound}}
+\label{apdx:looprb-sound}
+\input{theorem/lem_looprb_sound}
+
+\subsection{Proof of Lemma~\ref{lem:pathrb-sound}}
+\label{apdx:pathrb-sound}
+\input{theorem/lem_pathrb_sound}
+
+\subsection{Proof of Soundness of Path-Sensitive Reachability Bounds Estimation, Theorem~\ref{thm:pathsensitive_rb_soundness}}
+\label{apdx:psrb-sound}
 \begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
   Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
   and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
-  % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
   and $\config{ppsRB(l), \trace_0} \earrow v$,
-  % for some generated evaluation trace $\vtrace \in \mathcal{T}$,
   we have $ w(\trace_0) \leq v $.
   %
   \[

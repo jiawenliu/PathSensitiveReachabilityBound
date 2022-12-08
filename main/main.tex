@@ -30,10 +30,10 @@
 %
 \tableofcontents
 
-% \input{example_cousot}
-% \clearpage
+
+\section{Introduction}
 % %
-\section{{While Language}}
+\section{{Language and Program Model}}
 \label{sec:language}
 \input{language}
 % %
@@ -54,14 +54,16 @@
 \section{Path-sensitive Reachability-Bound Analysis}
 \label{sec:psrb}
 \input{alg-psrb}
-  
-\section{Loop Reachability Bound and Loop Bound Computation}
-\label{sec:looprb}
-\input{alg-looprb}
 \section{Ranking Function Computation and Estimation}
 \label{sec:rank}
 \input{alg-rank}
-\section{Reachability Bound Computation}
+\section{Path Local Reachability-Bound and Loop Bound Computation}
+\label{sec:pathlocalrb}
+\input{alg-pathlocalrb}
+\section{Loop Reachability Bound Computation}
+\label{sec:looprb}
+\input{alg-looprb}
+\section{Path and Program Point Reachability Bound Computation}
 \label{sec:alg-rb}
 \input{alg-rb}
 
@@ -70,36 +72,29 @@
 \label{sec:thminformal}
 \input{alg-theorem_informal}
 
-% \cleardoublepage
-% \section{Path-sensitive Reachability-Bound Computation}
-% \label{sec:inoutalg}
-% \input{alg-inoutalg}
-% % % % 
-
 \section{Examples}
 \label{sec:example}
 \input{examples/whileTwoCounters}
 \input{examples/threeNestedWhile}
 \input{examples/relatedNestedWhileSim}
 \input{examples/nestedWhileResetChain}
-% \input{examples/whileOdd}
-% \input{examples/whileSigle}
-
+\input{examples/nestedWhileOdd}
+\section{Evaluation}
+\section{Related Work}
 %
 \clearpage
 \appendix
 \addcontentsline{toc}{section}{Appendices}
 \section*{Appendices}
-\section{Proofs of Lemmas in Section 1, 2 and 3}
-\label{apdx:lemma_sec123}
-\input{theorem/lem_section123}
+\section{Proofs of Lemmas in Language Model}
+\label{apdx:lem_language}
+\input{theorem/lem_language}
 \clearpage
-\clearpage
-\section{Soundness of Path-Insensitive Reachability Bounds Estimation}
+\section{Soundness of Path-insensitive Reachability Bounds Estimation}
 \label{apdx:pathinsensitive_rb_soundness}
 \input{theorem/pathinsensitive_rb_soundness}
 \clearpage
-\section{Soundness of Path-Sensitive Reachability Bounds Estimation}
+\section{Soundness of Path-sensitive Reachability Bounds Estimation, Theorem~\ref{thm:pathsensitive_rb_soundness}}
 \label{apdx:pathsensitive_rb_soundness}
 \input{theorem/pathsensitive_rb_soundness}
 

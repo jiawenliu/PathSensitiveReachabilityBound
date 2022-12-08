@@ -151,31 +151,15 @@ Definition~\ref{def:loopbound} based on the abstract transition graph $\absG(c)$
 
 \subsection{Loop Reachability Bound}
 \subsubsection{Path-sensitivity}
-$\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$.
-\\
-For every simple transition path $\tpath$
-and a loop whose header is at program point $l$ in a refined program $\rprog$,
- $\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ computes a symbolic expression in $\mathcal{A}_{\lin}$
-as the \emph{Relative Loop Bound} for the $\tpath$ and loop $l$.
-\\
-It bounds the iteration numbers of the loop $l$ w.r.t.
+$\lpchB(l: \rprog, \tpath) \in \mathcal{A}_{\lin}$ bounds the iteration numbers of the loop $l$ w.r.t.
 the inner loop $l'$ that is $\tpath$'s closest enclosing loop,
 such that,
-% the simple transition path $\tpath$.
-% This $\tpath$'s closest enclosing loop has the loop header at $l'$ and $l'$ is nested inside the loop $l$.
-% \\
-% It estimates the iteration numbers of loop $l$ such that 
 during these iterations of loop $l$, the nested loop $l'$ is executed.
 \highlight{
-% the for every program control location,
-% how many times the innermost loop of this control location will be touched w.r.t. every
-% outside loop it is nested in.
 This is distinguished from the traditional methods, which only compute the bound on the iteration number
 for the inner loop w.r.t one iteration of the outside loop where it is nested.
 \emph{Relative Loop Bound} for $\tpath$ and $l$ bounds the number of the iterations for
 the outside loop $l$,
-% w.r.t. an inner loop.
-%  of every control location.
 such that during these iterations of the outside loop $l$, the inner loop $l'$ is entered. 
 }
 
@@ -208,7 +192,6 @@ ranking functions and abstract states over the abstract transition graph $\absG(
  }
 
 \subsubsection{Soundness}
-
 \emph{Soundness}
 \\
 \emph{Relative-Loop Bound} $\lpchB(l: \rprog, \tpath)$. In a refined program $\rprog$,

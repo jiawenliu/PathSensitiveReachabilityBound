@@ -33,32 +33,30 @@ Three steps:
   \\
   $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
   is the set of the edges where the variable increase, 
-  \\
-  $\inc(c, x) = \{ \absevent | \absevent = (l, l', x' \leq x + v) \land \absevent \in \absflow(c)\}$
-  \\
+  %\\
+  \[ \inc(c, x) = \left\{ \absevent | \absevent = (l, l', x' \leq x + v) \land \absevent \in \absflow(c) \right\} \]
+  %\\
   $\dec: \vardom \to \mathcal{P}(\absevent) $
   is the set of abstract events where the variable decrease,
-  \\
-  $\dec(c, x) = \{\absevent| \absevent = (l, l', x' \leq x - v) \land \absevent \in \absflow(c)\}$
-  \\
-  $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $
-  is the set of the abstract events where the variable is reset,
-  \\
-  $\reset(c, x) = \{\absevent| \absevent = (l, l', x' \leq y - v) \land x \neq y \land \absevent \in \absflow(c)\}$
-  \\
-  $\resetchain: \cdom \to \vardom \to \mathcal{P}(\mathcal{P}(\absevent)) $
-  is the set of the chain of abstract events where the variable is reset through the chain.
-  \\
-  In addition to
-  collect the edge set that $x$ is reset on every edge in this set, i.e., compute the $\reset(c, x)$,
-  we also compute a set, $\resetchain(c, x)$ contains sequences of edges for $x$
-  based on the Definition.20 in \cite{sinn2017complexity}.
-  In each sequence, $(e_0, \cdots, e_m) \in \resetchain(c, x)$
+  %\\
+  \[\dec(c, x) = \left\{\absevent| \absevent = (l, l', x' \leq x - v) \land \absevent \in \absflow(c) \right\}\]
+  %\\
+  $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset,
+%
+  \[\reset(c, x) = \left\{ \absevent| \absevent = (l, l', x' \leq y - v) \land x \neq y \land \absevent \in \absflow(c) \right\}\]
+  Additionally,
+  we also compute the reset graph $resetG(c)$ and the reset chain, $\resetchain(c, x) \in \mathcal{P}(\mathcal{P}(\absevent))$ for every rank $x$.
+  The $\resetchain(c, x)$ for every rank $x$ contains all the paths in $resetG(c)$ that are end at $x$.
+  The computation of $resetG(c)$ and $\resetchain(c, x)$ follows the Definition~20 in \cite{sinn2017complexity}.
+  \[resetG(c) = (resetV(c), resetE(c))\]
+  \[resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(x) \land \absevent = (l, x' \leq y + c, l') \right\} \]
+  \[resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in resetE(c) \lor (\_, \_, x) \in resetE(c) \right\} \]
+  In a variable $x$'s reset chain set, $\resetchain(c, x)$, in each chain $(e_0, \cdots, e_m) \in \resetchain(c, x)$
   a variable $x_i$ is reset by another variable $x_{i + 1}$ on edge $e_{i}$
   and $x_{i + 1}$ is reset on edge $e_{i + 1}$ recursively
   for every $i = 0, \cdots, m - 1$.
   $x$ is reset on the first edge $e_0$ of every sequence in $\resetchain(c, x)$.
-  \highlight{Rephrase: Each edge $e_i$ in a sequence $(e_0, \cdots, e_m) \in \resetchain(c, x)$
+  {Each edge $e_i$ in a sequence $(e_0, \cdots, e_m) \in \resetchain(c, x)$
   resets a variable $x_i$ by another variable $x_{i + 1}$ such that $x_{i + 1}$
   is reset on edge $e_{i + 1}$ recursively. The first edge $e_0$ of each sequence resets the variable $x$.}
   % 
@@ -68,13 +66,11 @@ Three steps:
 
   \subsection{Assigning The Ranking Function to An Edge}
   For each edge in the transition graph $\absG(c)$ of a program $c$,
-  this step assigns the variable that decreases on this edge as the ranking function   of this edge.
+  this step assigns the variable that decreases on this edge as the ranking function of this edge.
   This step adopts the local bound computation method in Section 4 of \cite{sinn2017complexity} to assign the local bound to each edge,
   formally as follows.
-  \begin{defn}[Ranking Function   Generatation]
+  \begin{defn}[Ranking Function Generatation]
     \label{def:ranking_gen}
-  % Given a program $c$ with its abstract transition graph 
-  % $\absG(c) = (\absV, \absE)$,
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
   its \emph{ranking function/local bound}, $\locbound(\absevent, c)$
   is the variable that decreases on this edge, computed as follows,
@@ -113,10 +109,8 @@ Three steps:
   assigned to the edge $\absevent \in \absE(c)$, formally in Definition~\ref{def:ranking_bound}.
   \\
   In order to estimate the maximum value of $\locbound(\absevent, c)$ assigned to edge $\absevent \in \absE(c)$,
-  % for each (ranking function's) maximum value,
   the bound on the iteration times of each corresponding edge, $\absclr(\absevent, c)$ 
   is computed interactively in a path-insensitive manner.
-  % , the 
   \\ 
   $ \varinvar: (\vardom \cup \constdom  \times \cdom) \to \inpexpr$
   \\
@@ -131,12 +125,12 @@ Three steps:
     \[ 
   \begin{array}{lll}
     \varinvar(x, c) & \triangleq x & x \in \constdom \\
-    \varinvar(x, c) & \triangleq \incrs(x, c) + \max(\{\varinvar(y, c) + v ~\mid~ (l, x' \leq y + v, l') \in \reset(x)\}) & x \notin \constdom
+    \varinvar(x, c) & \triangleq \incrs(x, c) + \max\left\{\varinvar(y, c) + v ~\mid~ (l, x' \leq y + v, l') \in \reset(x) \right\} & x \notin \constdom
   \end{array}
   \]
   %
-  $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$ where 
-  $\absclr(\absevent, c) \in \inpexpr$  is computed as below,
+  where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
+  The path-insensitive bound, $\absclr(\absevent, c) \in \inpexpr$  on the execution times of the transition $\absevent$, is interactively computed as well as below,
 \[ 
 \begin{array}{lll}
   \absclr(\absevent, c) 
@@ -144,25 +138,27 @@ Three steps:
   & \quad \locbound(\absevent, c) \in \constdom & \\
   \absclr(\absevent, c) 
   & \triangleq
-    \sum\limits_{y \in \{ y ~|~ 
-    ch \in \resetchain(x) \land (l_1, x' \leq y + v, l_2) \in ch \} } \incrs(y, c) & \\
+    \sum \left\{ \incrs(y, c) | ch \in \resetchain(x) \land y \in ch \right\} & \\
     & \quad + 
   \sum\limits_{ch \in \resetchain(x, c)}
   \min \left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
   \big(\varinvar(in(ch), c) 
-  + \sum\limits_{(l_1, x' \leq y + v, l_2) \in ch} v \big) & \\
+  + \sum\limits_{(\_, (\_, x' \leq y + v, \_), \_) \in ch} v \big) & \\
   &  \quad \locbound(\absevent, c) = x \land x \notin \constdom & ,
 \end{array}
   \]
- where $in(ch)$ is the variable on the last edge on the reset chain $ch$.
+ where $in(ch)$ is the first vertex of the reset chain $ch$.
 \end{defn}
   %
-$\absclr$ can also be used to estimate the loop bound, $BD(\rprog)$ for the refined program $\rprog$ as follows
-where $\absevent \in \rprog$ denotes $\absevent$ is an edge on path $\rprog$.
+
+\subsection{Estimating the Loop Bound} 
+The $BD(\rprog)$ for the refined program $\rprog$ can also be estimated by $\absclr(\absevent, c)$ by taking the
+minimum value over all $\absevent \in \rprog$.
+We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
 \begin{equation}
   \label{eq:absBD}
   BD(\rprog) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog \right\}.
 \end{equation}
 %
-This bound is accurate on the iteration numbers of a loop, but not tight on the iterations of different paths inside the loop.
+This bound is accurate on the iteration numbers of a single loop, but neither tight on the iterations of different paths inside the loop, nor the nested loop.
 %

@@ -1,20 +1,42 @@
-Two steps:
+Three steps:
 \begin{enumerate}
-    \item \textbf{Rewrite the Program}
-    It first rewrites the program $c$ by syntax in \cite{GulwaniJK09} and preserves the same semantics, based on $\absG(c)$.
-\\
-Each \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ in the rewritten program
-corresponds to a path $\rho$ in the flatten program by Definition~4.1 in \cite{GulwaniJK09}.
+  \item It first collects all \emph{simple transition paths}.
+  Every \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ 
+  contains only the edges of atomic assignment or guard transitions without interleaving other paths.
+  Each of them corresponds to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
 %
-It contains only the edges of atomic assignment or guard transition.
+    \item \textbf{Rewrite the Program}
+    Then it rewrites the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics.
 \item \textbf{Refined Program}
 Then it computes the 
 refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
 \\
-This step invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
-refined program $\rprog$ for a program $c$ given the input $c^{T}$.
+This step invokes the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+refined program $\rprog$ for a program $c$ given the rewritten program as input.
 \end{enumerate}
 
+\subsection{Collect Simple Transition Path}
+\begin{defn}[Simple Tansition Path]
+  \label{def:tpath}
+A simple transition path
+$\tpath \in \paths(\absG(c))$ for the program $c$, is a path on the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
+\begin{itemize}
+\item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
+%
+\item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
+\end{itemize}
+%
+satisfying:
+\begin{itemize}
+  \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
+  \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+  i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
+  \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
+  i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$.
+\end{itemize}
+\end{defn}
+
+\subsection{Rewrite and Refine the Program}
 \paragraph{Rewrite the Program}
 \begin{algorithm}
   \caption*{Program Rewriting}
@@ -49,26 +71,7 @@ Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex 
 \\
 We use simple depth first search strategy computes all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath} below.
 It guarantees that  every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
-  \begin{defn}[Simple Tansition Path]
-    \label{def:tpath}
-  A simple transition path
-  $\tpath \in \paths(\absG(c))$ for the program $c$, is a path on the program $c$ abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
-  \begin{itemize}
-  \item a vertices sequence $(l_0, \cdots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \cdots, n$ and
-  %
-  \item an edge sequence $(e_1, \cdots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \cdots, n$,
-  \end{itemize}
-  %
-  satisfying:
-  \begin{itemize}
-    \item $l_i \neq l_j$ for every $i = 0, \cdots, n$ and $j = 0, \cdots, {n - 1}$,
-    \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
-    i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
-    \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
-    i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$.
-  \end{itemize}
-  \end{defn}
 
 \paragraph{Refined Program}
-This step simply invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
-refined program $\rprog$ for a program $c$ given the input $c^{T}$.
+We implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+refined program $\rprog$ for a rewritten program $c$.

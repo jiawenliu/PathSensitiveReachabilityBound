@@ -1,112 +1,21 @@
 \textbf{Computation Overview}
-\\
-%  Loop Reachability Bound
-% \[
-%   \lpchB(l: \rprog, \tpath) \triangleq
-%     \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\tpath)}{\lpnext(l: \rprog, \tpath)}
-% \]
-%  Loop Bound (the alternative computation method):
-%   \[
-%     BD(\rprepeat(\rprog')) \triangleq
-%     \frac{\rfinit(\rprog') - \rffinal(\rprog')}{\varGD(\rprog')}
-% \]
-  To solve the \emph{loop-reachability bound}, $\lpchB(l: \rprog, \tpath)$ and loop bound, $BD(\rprog)$:
+To solve the \emph{loop-reachability bound}, $\lpchB(l: \rprog, \tpath)$
   \\
-  1. Compute the ranking function for every transition and estimate its maximum value, as in Section~\ref{sec:rank}.
-  \\
-  2. Compute the abstract states,
+  1. Compute the loop abstract states,
   $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$, $\varGD(\rprog, \rprog')$, 
   $\lpinit(l: \rprog, \tpath)$, and $\lpnext(l: \rprog, \tpath)$ using ranking function,
   as in Definition~\ref{def:alg-absstate}.
   \\
   3. Solve the equation using abstract states above and SMT solver.
   % \\
-\begin{defn}[Abstract States Computation]
-    \label{def:alg-absstate}
+\begin{defn}[Loop Abstract States Computation]
+    \label{def:alg-loopabsstate}
    The computations of 
    $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$, $\varGD(\rprog, \rprog')$, 
    $\lpinit(l: \rprog, \tpath)$, and $\lpnext(l: \rprog, \tpath) \in \mathcal{A}_{in}$
    are formally presented as follows.
-   \begin{itemize}
-    \item The \emph{Initial State}, 
-    $\rfinit(\rprog)$ is a set of equations $x = e$, where $e \in \mathcal{A}_{in}$ is a
-    symbolic expression describing the initial value of $x$ before executing $\rprog$.
-    Each $x$ is the ranking function of a simple transition path $\tpath$ in this program. 
-    It contains the initial value for every ranking function of the simple transition path $\tpath$ in this program.
-   \[
-     \rfinit(\rprog) \triangleq 
-     \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
-     \left \{ 
-     x = \arg\max_{l_1}\left\{
-       \varinvar(y) + v ~\middle\vert~ 
-       \begin{array}{l} 
-         (l_1, x' \leq y + v, l_2) \in \reset(x) 
-         \\
-       \land l_1 \leq \absinit(\rprog)
-     \end{array}
-     \right\}
-     \right\}
-     \]
-   $\rfinit(\tpath)$ can also be computed using the function $\kw{INIT(c, l_0, \absinit(\rprog))}$ in \cite{GulwaniJK09}. 
-   $\kw{INIT(c, l_0, \absinit(\rprog))}$ computes the equivalent results.
-   %
-   \item  The \emph{Final State}, $\rffinal(\rprog)$ a conjunction of boolean expressions.
-   It is the post-condition
-   after the execution of $\rprog$.
-   % \\
-   \[
-     \rffinal(\rprog) \triangleq 
-     \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
-     \left \{ 
-     x = \arg\min_{l_1}\left\{
-       v_{post} ~\middle\vert~ 
-       \begin{array}{l} 
-        l_1 \geq \absfinal(\rprog)[2]
-       \land \bigwedge_{b \in \kw{Guard}(\rprog)} \neg b
-     \end{array}
-     \right\}
-     \right\}
-     \]
-    $\kw{Guard}(\rprog)$ is the set of all the unique boolean expressions (i.e., the boolean constraints) on this program.
-   \item The \emph{Next State}, $\rfnext(\tpath) \in \mathcal{A}_{in}$ 
-   is a
-   symbolic expression describing how much $\tpath$'s ranking function ($\locbound(\tpath)$) is changed after the first execution of $\rprog$ and before the second execution.
-   \[
-     \begin{array}{l}
-     \rfnext(\tpath) \triangleq 
-       \begin{array}{l}
-    \sum\limits_{\absevent \in \inc(x) }
-     \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
-     \\ \qquad 
-     + \arg\max\limits_{l' }
-        \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
-        \\ \qquad 
-       - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
-         v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
-         \right\}
-       \end{array}
-     \end{array}
-     , x = \locbound(\tpath)
-   \]
-   Indeed we only compute the $\rfnext(\tpath)$ because that the recursion is exhausted into the base case, i.e. $\tpath$ when computing $\varGD(\rprog)$ as below.
-   \item  The \emph{Variable Gradient Decent}, 
-   $\varGD(\rprog)$
-   is a set of equations $x = e$ for the same variables in the $\rfinit(\rprog)$.
-   It computes the set of next states for every ranking function of the simple transition path $\tpath$ in $\rprog$,
-   and recursively computes the loop bound, $BD$ in the meantime.
-   \\
-   {$\varGD(\rprepeat(\rprog)) =    BD(\rprog)  \times
-  %  \highlight{\frac{\rfinit(\rprepeat(\rprog)) - \rffinal(\rprepeat(\rprog))}{\varGD(\rprepeat(\rprog))}}  \times 
- {\varGD(\rprog)}$}
-   \\
-   $\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1) \cup \varGD(\rprog_2)$
-   \\
-   $\varGD(\tpath) =  \left\{x = \rfnext(\tpath) ~|~ x = \locbound(\tpath) \right\} $   
-%
+   \begin{itemize}%
    \item 
-%    For a transition path $\tpath \in \paths(\absG(c))$ and a loop label $l$ in this transition path's loop chain.
-% Let $\tpath_l$ be the repeat pattern with label $l$, i.e., $l: \tpath_l \in \rprog$, 
-% the abstract loop chain initial state 
 The loop initial state 
 $\lpinit(l: \rprog, \tpath) \in \inpexpr$ is symbolic expression as well. 
 It describes the abstract initial value of $\tpath$'s ranking function before
@@ -157,29 +66,7 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
     \end{itemize}
 \end{defn}
 
-Formally
-\begin{defn}[Loop Bound (Alternative Computation Method)]
-\label{def:loopbound}
-\[
-  \begin{array}{rcl}
-    BD(\tpath) & \triangleq & 1 \\
-    BD(\rprog_1;\rprog_2) & \triangleq & BD(\rprog_1) + BD(\rprog_2) \\
-    BD(\rpchoose{\rprog_1, \cdots, \rprog_m }) & \triangleq 
-    & \max\left\{ BD(\rprog_1), \cdots, BD(\rprog_m) \right\} \\
-    BD(\rprepeat(\rprog')) & \triangleq 
-    &
-    \max\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
-    \Big\{ \highlight{\frac{a - b}{a'}} ~\vert~
-    x = a \in \rfinit(\rprog')
-    \\ & & \qquad \qquad
-    \land x = b \in \rffinal(\rprog')
-    \land x = a' \in \varGD(\rprog')
-     \Big\} 
-     \\
-    BD(l: \rprog') & \triangleq & BD(\rprog')
-  \end{array}
-  \]
-\end{defn}
+
 
 \begin{defn}[Loop Reachability Bound]
   \label{def:looprb}
@@ -189,3 +76,16 @@ Formally
       \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\tpath)}{\lpnext(l: \rprog, \tpath)}
   \]
 \end{defn}
+
+We show that $\lpchB(l: \rprog, \tpath)$
+is a sound upper bound on iteration numbers of the outside loop $l$,
+such that,
+during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached in Lemma~\ref{lem:looprb-sound} with proof in \todo{Appendix~\ref{apdx:looprb-sound}}.
+\begin{lem}[Soundness of the Loop Reachability-Bound]
+  \label{lem:looprb-sound}
+  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l':\rprog'$ is the closest loop enclosing the $\tpath$, then the entering times of $l':\rprog'$ when executing the $l: \rprog$, is bounded by $\lpchB(l: \rprog, \tpath)$.
+\end{lem}
+
+$\lpchB(l:\rprog, \tpath)$ is over-approximated by
+$I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in paper\cite{GulwaniJK09}.
+$I(l, l')$ computes the iteration numbers of $l'$ in one iteration of $l$.
