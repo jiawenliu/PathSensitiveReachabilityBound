@@ -1,0 +1,50 @@
+
+The three loop bound computation methods all computes the sound upper bounds, $BD(\rprepeat(\rprog'))$ for every loop $\rprepeat(\rprog')$ in a refined program $\rprog$:
+\begin{enumerate}
+    \item The Equation~\ref{eq:absBD} in Section~\ref{sec:rank} is path-insensitively and sound.
+    Its soundness relies on the soundness of the $\absclr(\absevent, c)$ in Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
+    For a program $c$ and an edge $\absevent \in \absE(c)$, $\absclr(\absevent, c)$ is a sound upper bound on the execution times of this transition, formally in Theorem~\ref{thm:pathinsensitive_rb_soundness} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}    
+    \item The second computation fully relies on the soundness of $BOUND(\rprepeat(\rprog'))$ from paper\cite{GulwaniJK09}, we do not repeat their soundness in this paper.
+    \item   The soundness of the alternative computation method we provided in Definition~\ref{def:loopbound} is presented below.
+  \end{enumerate}
+
+For every transition path $\rprog$, the $BD(\rprog)$
+is a sound upper bound on its execution times.
+\\
+This bound is sound locally by assuming
+that all the loops and transition paths where $\rprog$ is nested execute only once.
+This assumption comes from the computation of the $\varGD$ and the depth first search strategy.
+\\
+%
+\begin{lemma}[Soundness of Loop Bound]
+    % \label{lem:loopbound_sound}
+    For every program $c$ with it refined program $\rprog$,
+    for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
+    $BD(\rprepeat(\rprog'))$ is a sound upper bound on the execution times of this loop when executing the program $c$.
+  \end{lemma}
+\begin{proof}
+Lemma~\ref{lem:loopbound_sound} guarantees that
+the bound for every transition path $\rprog$, the $BD(\rprog)$
+is a sound upper bound on its execution times, by assuming
+that all the loops and transition paths where $\rprog$ is nested execute only once.
+\caseL{$\rprog' = \tpath$ is a simple transition path}
+For every base case, i.e., a simple transition path, 
+$\varGD(\rprog) =  \rfinit(\tpath) - \rfnext(\rprog)$
+counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
+In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
+$v$ is a local bound if it has the same decreasing time as the transition's execution time.
+By assuming that certain program parts (those were e increases) are not executed,
+then value of $v$ can limit the execution time of that transition.
+\\
+In our soundness, we assume all the code pieces not inside this transition path are executed at most once (once if they show up in front of the program
+zero time if not).
+In this case, this bound limits the execution time of this transition path.
+\\
+The soundness also relies on the operation $\frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$,
+which can be solved by external SMT solver,
+or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
+\caseL{$\rprog' = \rpchoose{\rprog_1, \ldots}$}
+Sound by taking the maximum.
+\caseL{$\rprog' = \rprog_1; \rprog_2$}
+Sound by taking the sum.
+\end{proof}

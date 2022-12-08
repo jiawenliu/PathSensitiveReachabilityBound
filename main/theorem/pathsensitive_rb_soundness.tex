@@ -1,99 +1,34 @@
-\begin{thm}[Soundness of the Path Sensitive Reachability Bound Estimation]
-  Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
-  and any initial trace $\trace_0 \in \mathcal{T}_0(c)$ with 
-  and $\config{ppsRB(l), \trace_0} \earrow v$,
-  we have $ w(\trace_0) \leq v $.
-  %
-  \[
-    \begin{array}{l}
-    \forall (l, w_{t}) \in \exeRB(c),
-    % (x^l, w_{p}) \in \progV, 
-    \trace_0 \in \mathcal{T}_0(c), 
-    v \in \mathbb{N} \st
-    \config{psRB(l), \trace_0} \earrow v
-    \implies
-    % \right\} 
-    w_{t}(\trace_0) \leq v
-    \end{array}
+\begin{theorem}[Soundness of the Path-sensitive Reachability Bound]
+  % \label{thm:pathsensitive_rb_soundness}
+For every program ${c}$ and every label $l$ in this program,
+$\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
+\[
+  \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
+  \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
+  \implies \config{\psRB(c, l)}(\trace_0) \geq \counter(\vtrace, l) 
   \]
-  \end{thm}
-Proof Summary:
-\begin{enumerate}
-\item Step 1 - 2: rely on soundness of path insensitive reachability bound by Theorem~\ref{thm:pathinsensitive_rb_soundness}
-\\
-\item Step 3: Program Rephrase : soundness of Step - 1
-By the soundness of the abstract execution trace in Lemma~\ref{lem:abscfg_sound}
-and the uniqueness of the abstract execution trace in Lemma~\ref{lem:absevent_unique},
-the rephrased program $p$ is equivalent to the program $c$.
-\\
-\item Step 4: While loop Refinement : soundness of Paper \cite{GulwaniJK09}
-\\
-\item Step 5: Outside-In 
-$rLB(\rprog)$ is local bound of execution time of $\rprog$ without considering outside loops.
-\\
-\item Step 6: Inside-Out
-\begin{enumerate}
-\item: $rpLB(LOOP_t, \tpath)$, the local bound of execution time of 
-transition path in the closest $LOOP$.
-by repeat chain 
-\item $RB(\tpath)$, the bound of execution time for every transition path in the program
-\\
-By collecting loop chains.
-\\
-For every $LOOP_i$ on loop chain of $\tpath$, $lpRB(LOOP_i, LOOP_t)$ bound 
-% the execution times of $LOOP_t$ inside the $LOOP_i$
-% bound for 
-the number of $LOOP_i$'s execution iterations
-        %  will 
-        % bound the execution times of $LOOP_{t_0}$
-        % in each single execution of the $LOOP_{t_i}$ for every
-        such that, during these iterations, $\tpath$ will be executed. 
-\\
-Then, $lRB(LOOP_t) = \prod\limits_{LOOP_i} lpRB(LOOP_i, LOOP_t)$ is the bound of execution time for the $LOOP_t$ in program, globally.
-\\
-$RB(\tpath) = lRB(LOOP_t) \times rpLB(LOOP_t, \tpath) $ is the bound of execution time for transition path $\tpath$ 
-in program globally.
-\end{enumerate}
-\item Reachability Bound for every location.
-$RB(l) = \sum_{l \in \tpath}RB(\tpath)$ is the bound of execution times for location $l$.
+\end{theorem}
+  \begin{proof} \emph{Path-sensitive Reachability Bound} Soundness.
 
-\end{enumerate}
-  \begin{proof}
-        Taking arbitrary program $c$, a pair  $(l, w) \in \exeRB(c)$, 
-        and an initial trace $\trace_0 \in \mathcal{T}_0(c)$,  
-        we know $w_t$ is the execution-based 
-        reachability bound 
-        for label $l \in \lvar(c)$, 
-        % with a natural number
-        % $v \in \mathbb{N}$ satisfying
-        % $\config{psRB(l), \trace_0} \earrow v$, 
-        it is sufficient to show,
-        % \\
+  Taking arbitrary program $c$, a program point $l \in \lvar(c)$, an initial trace $\trace_0 \in \mathcal{T}_0(c)$ and an execution trace $\trace \in \tdom$
+  such that $\config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}$,
+  it is sufficient to show,
+%
+\[
+  \config{\psRB(c, l)}(\trace_0) \geq \counter(\vtrace, l) .
+\]
+By Definition~\ref{def:point_psrb}, it is sufficient to show 
         \[
-            \forall v \in \mathbb{N} \st \config{psRB(l), \trace_0} \earrow v
-            \implies w_{t}(\trace_0) \leq v.\]
-        By the Definition~\ref{def:exe_rb}, 
-        let $\trace \in \mathcal{T}$ be an arbitrary execution trace 
-        satisfying 
-        $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} $,
-        it is sufficient to show 
-        \[
-            \counter(\vtrace, l) \leq v.
-        \]
-        Let $\rprog$ be the rephrased program for $c$,
-        by computation of $psRB(l)$ in Definition~\ref{def:label_psrb}, it is sufficient to show 
-        \[
-          \forall v \in \mathbb{N} \st 
           \config{\sum\limits_{\tpath \in \rprog \land 
-          l \in \tpath} tRB(\tpath), \trace_0
-          } \earrow v \implies  \counter(\vtrace, l) \leq v\]
+          l \in \tpath} \inoutB(\tpath), \trace_0
+          }(\trace_0)  \geq  \counter(\vtrace, l)\]
           %
-          By the soundness of the abstract execution trace in Lemma~\ref{lem:abscfg_sound}, 
-          the uniqueness of the abstract execution trace in Lemma~\ref{lem:absevent_unique},
-          we have an abstract event $\absevent = (l, \_, \_) \in \absE(c)$.
-          \\
-          Then we know there exists $\tpath \in \paths(\absG(c))$ such that 
-          $l \in \tpath$.
+          % By the soundness of the abstract execution trace in Lemma~\ref{lem:abscfg_sound}, 
+          % the uniqueness of the abstract execution trace in Lemma~\ref{lem:absevent_unique},
+          % we have an abstract event $\absevent = (l, \_, \_) \in \absE(c)$.
+          % \\
+          % Then we know there exists $\tpath \in \paths(\absG(c))$ such that 
+          % $l \in \tpath$.
           \\
           There are two cases as follows,
         $\tpath \in SCC(\absG(c))$ and $\tpath \notin SCC(\absG(c))$.
