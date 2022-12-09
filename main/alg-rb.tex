@@ -47,7 +47,7 @@ We show the \emph{path reachability-bound} of the simple transition path $\tpath
     \config{{\eskip, \trace_0 \tracecat \trace}}
     \\ \qquad
     \implies
-    \counter(\trace, L(\tpath)) \leq \inoutB(\tpath, \rprog)(\trace_0).
+    \config{\inoutB(\rprog, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)).
     \end{array}
     \]
   \end{lem}
