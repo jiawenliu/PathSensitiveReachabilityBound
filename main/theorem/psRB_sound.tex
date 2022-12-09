@@ -3,12 +3,12 @@
     For every program ${c}$ and every label $l$ in this program,
     $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
     \[
-    \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
+    \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \inftdom \st 
     \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
     \implies \config{\psRB(c, l)}(\trace_0) \geq \counter(\vtrace, l) 
     \]
 \end{theorem}
-
+%
 \begin{proof} \emph{Path-sensitive Reachability Bound} Soundness.
 
     Taking arbitrary program $c$, a program point $l \in \lvar(c)$, an initial trace $\trace_0 \in \mathcal{T}_0(c)$ and an execution trace $\trace \in \tdom$

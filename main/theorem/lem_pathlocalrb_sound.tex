@@ -2,7 +2,24 @@
     For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
     if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
     then the execution times of $\tpath$ when executing the $\rprog_l$ is bounded by $\outinB(\rprog_l, \tpath)$.
-  \end{lemma}
+    \[
+      \begin{array}{l}
+      \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c_l), \trace \in \inftdom, \rprog \st 
+      \rprog = REFINE(c)
+      \land
+      l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
+      \\ \qquad
+      \land 
+      \rprog_l = \algrewrite(c_l)
+      \land
+      \config{c_l, \trace_0} \to^* 
+      \config{\eskip, \trace_0 \tracecat \trace}
+      \\ \qquad
+      \implies
+      \config{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)).
+      \end{array}
+    \]  
+\end{lemma}
 \begin{proof}
 \emph{Path Local Reachability-Bound} Soundness.
 \\

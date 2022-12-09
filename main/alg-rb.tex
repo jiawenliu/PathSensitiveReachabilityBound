@@ -40,7 +40,7 @@ We show the \emph{path reachability-bound} of the simple transition path $\tpath
   the execution times of $\tpath$ when executing the $\rprog$ is bounded by $\inoutB(\rprog, \tpath)$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
+    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \inftdom, \rprog \st 
     \rprog = REFINE(c)
     \land
     \config{c, \trace_0} \to^* 
@@ -72,14 +72,14 @@ its \emph{path-sensitive reachability-bound}, $\psRB(c, l)$ is a sound upper bou
   $l \in \tpath$ denotes that the program point $l$ is a vertex on $\tpath$ 
   and $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path of program $c$.
  \end{defn}
-We show that $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for every program point $l$ in a program $c$ with proof in Appendix~\ref{apdx:psrb-sound}.
+We show that $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for every program point $l$ in a program $c$ with proof in \highlight{Appendix~\ref{apdx:psrb-sound}}.
 \begin{thm}[Soundness of the Path-sensitive Reachability Bound Estimation]
     \label{thm:pathsensitive_rb_soundness}
   For every program ${c}$ and every label $l$ in this program,
   $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
   %
   \[
-    \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
+    \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \inftdom \st 
     \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
     \implies \config{\psRB(c, l)}(\trace_0) \geq \counter(\vtrace, l) 
     \]

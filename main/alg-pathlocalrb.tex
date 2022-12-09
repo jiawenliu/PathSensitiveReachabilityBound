@@ -148,10 +148,27 @@ the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlo
     \end{array}
     \]
 \end{defn}
-We show the \emph{path local reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing its enclosed loop $\kw{enclosed}(\rprog, \tpath)$ in Lemma~\ref{lem:pathlocalrb-sound}, with the proof in \todo{Appendix~\ref{apdx:pathlocalrb-sound}}.
+We show the \emph{path local reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing its enclosed loop $\kw{enclosed}(\rprog, \tpath)$ in Lemma~\ref{lem:pathlocalrb-sound}, with the proof in \highlight{Appendix~\ref{apdx:pathlocalrb-sound}}.
 \begin{lem}[Soundness of the Path Local Reachability-Bound]
   \label{lem:pathlocalrb-sound}
   For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
   if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
   then the execution times of $\tpath$ when executing the $\rprog_l$ is bounded by $\outinB(\rprog_l, \tpath)$.
+  \[
+    \begin{array}{l}
+    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c_l), \trace \in \inftdom, \rprog \st 
+    \rprog = REFINE(c)
+    \land
+    l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
+    \\ \qquad
+    \land 
+    \rprog_l = \algrewrite(c_l)
+    \land
+    \config{c_l, \trace_0} \to^* 
+    \config{\eskip, \trace_0 \tracecat \trace}
+    \\ \qquad
+    \implies
+    \config{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)).
+    \end{array}
+  \]  
 \end{lem}

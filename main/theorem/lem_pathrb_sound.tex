@@ -4,7 +4,7 @@
   the execution times of $\tpath$ when executing the $\rprog$ is bounded by $\inoutB(\rprog, \tpath)$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
+    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \inftdom, \rprog \st 
     \rprog = REFINE(c)
     \land
     \config{c, \trace_0} \to^* 
@@ -28,65 +28,51 @@ Taking an arbitrary initial trace $\trace_0 \in \tdom_0(c)$  and an execution tr
  \[
  \config{\inoutB(\rprog, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)) .
  \]
-By induction on the loop program $\rprog_l$, we have the following cases:
-\caseL{$\rprog_l = \tpath$}
-By Definition~\ref{def:pathrb}, we have $\inoutB(\tpath, \tpath) = 1$.
-This is sound.
-\caseL{$\rprog_l = \tpath'$}
+By induction on program $\rprog$, we have the same cases as in the proof of \emph{Path Local Reachability-Bound} Soundness in Appendix~\ref{apdx:pathlocalrb-sound}.
+The proof of the first four cases are almost the same as the proof of Lemma~\ref{lem:pathlocalrb-sound}, I don't unfold and repeat all the detail in this proof.
+\caseL{$\rprog = \tpath$}
+By Definition~\ref{def:pathrb}, we have $\inoutB(\tpath, \tpath) = 1$, which is sound.
+\caseL{$\rprog = \tpath'$}
 By Definition~\ref{def:pathrb}, we have $\inoutB(\tpath', \tpath) = \highlight{0}$.
-Since $\tpath' \neq \tpath$, we know $\tpath$ isn't executed when executing $\tpath'$. This is sound.
-\caseL{$\rprog_l = \rprog_1;\rprog_2$}
+\\
+Since $\tpath' \neq \tpath$, we know $\tpath$ isn't executed when executing $\tpath'$, which is sound.
+\caseL{$\rprog = \rprog_1;\rprog_2$}
 By Definition~\ref{def:pathrb}, we have $\inoutB(\rprog_1;\rprog_2, \tpath) = \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) $.
-Then we have this case proved by induction hypothesis on $\inoutB(\rprog_1, \tpath)$ and $\inoutB(\rprog_2, \tpath) $.
-\caseL{$\rprog_l = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
+\\
+Then we have this case proved by induction hypothesis on $\inoutB(\rprog_1, \tpath)$ and $\inoutB(\rprog_2, \tpath)$ in the same way as in Appendix~\ref{apdx:pathlocalrb-sound}.
+\caseL{$\rprog = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
 By Definition~\ref{def:pathrb}, we have $\inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) = 
 \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\}$ 
-By induction hypothesis on $\rprog_1, \ldots, \rprog_m$,
-we know 
-\\
-$\config{\inoutB(\rprog_1, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)) $
-\\
-$\ldots$
-\\
-$\config{\inoutB(\rprog_m, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)) $
-\\
-Then we have 
-\[
-  \max\left\{\config{\inoutB(\rprog_1, \tpath)}(\trace_0), \ldots, \config{\inoutB(\rprog_m, \tpath)}(\trace_0) \right\}
-  \geq \counter(\vtrace, L(\tpath)).
-\]
-So we can get 
-\[
-  \config{\max\left\{\inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\}}(\trace_0)
-  \geq \counter(\vtrace, L(\tpath))
-\]
-and this case is proved.
-\caseL{$\rprog_l = l': \rprog'$ }
+By induction hypothesis on $\rprog_1, \ldots, \rprog_m$, we have this case proved in the same way.
+
+\caseL{$\rprog = l': \rprog'$ }
 By Definition~\ref{def:pathrb}, we have 
 \[  
   \begin{array}{rcl}
-    \inoutB(l: \rprog', \tpath) & \triangleq & 
-\highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
-\\ &  \triangleq & 
-0, \qquad \qquad \qquad \quad ~~ \text{if }  \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
-\\ &  \triangleq & 
-\highlight{
-  \lpchB(l:\rprog', \tpath ) }
-\highlight{\times \max\limits_{l = \kw{enclosed}(l':\rprog'')}
-\{\inoutB(l':\rprog'', \tpath)\} } \footnotemark, o.w. 
-\end{array}
+  \inoutB(l': \rprog', \tpath) & \triangleq & 
+  \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l': \rprog' = \kw{enclosed}(\tpath)}
+  \\ &  \triangleq & 
+  0, \qquad \qquad \qquad \quad ~~ \text{if }  \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
+  \\ &  \triangleq & 
+  \lpchB(l':\rprog', \tpath )
+  \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')}
+  \left\{ \inoutB(l'':\rprog'', \tpath) \right\}, o.w. 
+  \end{array}
 \]
 %
 Then, we have the following three cases:
 \subcaseL{$l': \rprog' = \kw{enclosed}(\tpath)$ }
-In this case, we have $\inoutB(l': \rprog', \tpath) = {\outinB(\rprog_l, \tpath)}$.
+In this case, we have $\inoutB(l': \rprog', \tpath) = {\outinB(\rprog, \tpath)}$.
 \\
-Since $l': \rprog' = \kw{enclosed}(\tpath)$, we know $\tpath$ is not nested in any loop, or just inside one loop.
+Since $l': \rprog' = \kw{enclosed}(\tpath)$, we know $l': \rprog'$ is the closet loop where $\tpath$ is nested.
 \\
 By Lemma~\ref{lem:pathlocalrb-sound}, we know $\outinB(\rprog', \tpath)$ is the
-sound upper bound on $\tpath$'s reaching times when executing $l': \rprog'$.
+sound upper bound on $\tpath$'s reaching times when executing $l': \rprog'$. 
 \\
-Then $\inoutB(\tpath, \rprog) = \outinB(\rprog, \tpath)$ and this case is proved by Lemma~\ref{lem:pathlocalrb-sound}.
+So we have this case proved by
+\[
+  \config{\inoutB(\rprog, \tpath)}(\trace_0) = \config{\outinB(\rprog, \tpath)}(\trace_0) \geq \counter(\trace, L(\tpath)).
+\]
 %
 \subcaseL{$\kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')$}
 In this case, we have $\inoutB(l: \rprog_l, \tpath) = 0$.
@@ -96,21 +82,110 @@ Since $\tpath$ doesn't belong to this loop, $0$ is sound because $\tpath$ will n
 \subcaseL{ $o.w.$ }
 In this case, we have 
 \[
-  \inoutB(l': \rprog', \tpath) = \highlight{ \lpchB(l:\rprog', \tpath) }
-\highlight{\times \max\limits_{l':\rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\} }.
+  \inoutB(l': \rprog', \tpath) = \lpchB(l':\rprog', \tpath )
+  \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')}
+  \{\inoutB(l'':\rprog'', \tpath)\}.
 \]
-By induction hypothesis on $l'':\rprog''$, we know  $\inoutB(l'':\rprog'', \tpath)$ is sound upper bound on $\tpath$'s execution times during the execution of $l'':\rprog''$.
-\\
-By Lemma~\ref{lem:looprb-sound}, we know $\lpchB(l:\rprog', \tpath)$ is a sound upper bound on the maximum number of $l: \rprog_l$'s iteration times such that during these iterations, the $\tpath$ is executed.
-\\
-In this sense, $\lpchB(l:\rprog', \tpath) \times \inoutB(\rprog, \tpath)$ is a sound upper bound on $\tpath$'s execution times during the execution of $l': \rprog'$, and we have this case proved.
+Then we need to show:
+\[
+  \config{\lpchB(l':\rprog', \tpath )
+  \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')}
+  \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0) 
+  \geq \counter(\trace, L(\tpath)).
+  \]
 %
-\caseL{$\rprog_l = \rprepeat(\rprog')$}
+Since $\rprog = l': \rprog'$, according to Algorithm~\ref{alg:alg-refine_rewrite}, we know $c$ has the form
+$\ewhile \clabel{\bexpr}^{l'} \edo c'$ for some boolean expression $\bexpr$.
+\\
+For each $l'':\rprog''$ such that $l': \rprog' = \kw{enclosed}(l'':\rprog'')$, 
+let $c''\in \cdom$ be the while program corresponding to $\rprog''$ such that $\algrewrite(c'') = \rprog''$,
+$c_1, c_2 \in \cdom$ such that $c' = c_1; c''; c_2$
+$\trace'' \in \inftdom$ be the execution trace of $c''$ and $\trace_1, \trace_2 \in \inftdom$ be the execution traces before and after executing $c''$, then we have
+\[
+  \begin{array}{l}
+  \config{c, \trace_0} \to \config{c';c, \trace_0 \tracecat [(\bexpr, l', \etrue)]} \\
+  \to^* \config{c'';c_2;c, \trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1} \\
+  \to^* \config{c_2;c, \trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace''} \\
+  \to^* \config{\eskip, \trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace'' \tracecat \trace_2}
+  \end{array}
+\]
+By the trace non-decreasing property in Lemma~\ref{lem:tracenondec},
+we know $\trace = [(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace'' \tracecat \trace_2$.
+\\
+By induction hypothesis on $\inoutB(l'':\rprog'', \tpath)$ and $c''$, we have
+\[
+  \config{\inoutB(l'':\rprog'', \tpath)}(\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1) 
+  \geq \counter(\trace'', L(\tpath)).
+\]
+Then for all $l'':\rprog''$ such that $l': \rprog' = \kw{enclosed}(l'':\rprog'')$, we have 
+\[
+  \begin{array}{l}
+  \config{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}
+  (\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1)
+  \geq \counter(\trace'', L(\tpath))
+  \end{array}
+\]
+Since $\trace''$ is the execution trace for $c''$ in one iteration of $c'$,
+we know $\trace_2$ contains multiple execution traces of  $c''$ in all iterations of $c'$.
+\\
+There are two ways to prove the soundness.
+\\
+By Lemma~\ref{apdx:loopbound-sound}, we know $BD(l':\rprog') \geq$ the iteration numbers of $c'$. Then we have
+\[
+  \begin{array}{l}
+  \config{ BD(l':\rprog')}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \geq \counter(\trace'' \tracecat \trace_2, L(\tpath)) \\
+  = \counter([(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace'' \tracecat \trace_2)\\
+  = \counter(\trace, L(\tpath))
+  \end{array}
+\]
+Then we have this case proved as the following.
+\[
+  \begin{array}{l}
+  \config{ BD(l':\rprog') \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0)\\
+  \geq \config{ BD(l':\rprog')}(\trace_0) \times 
+  \config{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}
+  (\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1)\\
+  \geq \config{ BD(l':\rprog')}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \geq \counter(\trace, L(\tpath))
+  \end{array}
+\]
+However, this isn't precise enough since $\tpath$ might not be executed in every iteration of $c'$ because it is located in nested loops. 
+\\
+In this sense, we prove the soundness of the tighter bound based on $\lpchB(l:\rprog', \tpath)$ and Lemma~\ref{lem:looprb-sound}.
+\\
+By Lemma~\ref{lem:looprb-sound}, we know $\lpchB(l:\rprog', \tpath)$ is a sound upper bound on the maximum number of $l': \rprog'$'s iteration times such that during these iterations, the $\tpath$ is executed.
+\\
+In this sense, $\lpchB(l:\rprog', \tpath) \times \inoutB(\rprog, \tpath)$ is a sound upper bound on $\tpath$'s execution times during the execution of $l': \rprog'$.
+\\
+Then we have
+\[
+  \begin{array}{l}
+  \config{ \lpchB(l:\rprog', \tpath)}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \geq \counter(\trace'' \tracecat \trace_2, L(\tpath))\\
+  = \counter([(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace'' \tracecat \trace_2)\\
+  = \counter(\trace, L(\tpath))
+  \end{array}
+\]
+Then we have this case proved as the following.
+\[
+  \begin{array}{l}
+  \inoutB(l':\rprog') \\
+  = \config{ \lpchB(l:\rprog', \tpath) \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0) \\
+  \geq \config{ \lpchB(l:\rprog', \tpath) }(\trace_0) \times
+  \config{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}} 
+  (\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1) \\
+  \geq \config{ \lpchB(l:\rprog', \tpath)}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \geq \counter(\trace, L(\tpath))
+  \end{array}
+\]
+%
+\caseL{$\rprog = \rprepeat(\rprog')$}
 By Definition~\ref{def:pathrb}, we have
 \[
   \inoutB(\rprepeat(\rprog'), \tpath) = \inoutB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath).
 \]
-We will never meet this case if $\rprog$ is a well-defined refined program of $c$.
+We will never meet this case by the program rewriting in Algorithm~\ref{alg:alg-refine_rewrite}.
 \\
 Because $\rprepeat(\rprog')$ only shows up in a loop, we always match the case $l' : \rprepeat(\rprog')$ in the previous case before match this case.
 %
