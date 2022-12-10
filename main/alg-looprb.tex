@@ -6,10 +6,9 @@ To solve the \emph{loop-reachability bound}, $\lpchB(l: \rprog, \tpath)$
   $\lpinit(l: \rprog, \tpath)$, and $\lpnext(l: \rprog, \tpath)$ using ranking function,
   as in Definition~\ref{def:alg-absstate}.
   \\
-  3. Solve the equation using abstract states above and SMT solver.
-  % \\
+  2. Solve the equation using abstract states above and SMT solver.
 \begin{defn}[Loop Abstract States Computation]
-    \label{def:alg-loopabsstate}
+\label{def:alg-loopabsstate}
    The computations of 
    $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$, $\varGD(\rprog, \rprog')$, 
    $\lpinit(l: \rprog, \tpath)$, and $\lpnext(l: \rprog, \tpath) \in \mathcal{A}_{in}$
@@ -73,19 +72,36 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
   Loop Reachability Bound
   \[
     \lpchB(l: \rprog, \tpath) \triangleq
-      \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\tpath)}{\lpnext(l: \rprog, \tpath)}
+    \frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}
   \]
 \end{defn}
 
 We show that $\lpchB(l: \rprog, \tpath)$
 is a sound upper bound on iteration numbers of the outside loop $l$,
 such that,
-during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached in Lemma~\ref{lem:looprb-sound} with proof in \todo{Appendix~\ref{apdx:looprb-sound}}.
+during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached in Lemma~\ref{lem:looprb-sound} with proof in \highlight{Appendix~\ref{apdx:looprb-sound}}.
 \begin{lem}[Soundness of the Loop Reachability-Bound]
   \label{lem:looprb-sound}
-  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l':\rprog'$ is the closest loop enclosing the $\tpath$, then the entering times of $l':\rprog'$ when executing the $l: \rprog$, is bounded by $\lpchB(l: \rprog, \tpath)$.
+  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$, is bounded by $\lpchB(l: \rprog, \tpath)$.
+  \[
+    \begin{array}{l}
+    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c_l), \trace \in \inftdom, \rprog \st 
+    \rprog = REFINE(c)
+    \land
+    l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
+    \\ \qquad
+    \land 
+    \rprog_l = \algrewrite(c_l)
+    \land
+    \config{c_l, \trace_0} \to^* 
+    \config{\eskip, \trace_0 \tracecat \trace}
+    \\ \qquad
+    \implies
+    \config{\lpchB(l: \rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, l').
+    \end{array}
+  \]  
 \end{lem}
-
+%
 $\lpchB(l:\rprog, \tpath)$ is over-approximated by
 $I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in paper\cite{GulwaniJK09}.
 $I(l, l')$ computes the iteration numbers of $l'$ in one iteration of $l$.

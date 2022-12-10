@@ -34,23 +34,23 @@ Three steps:
   $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
   is the set of the edges where the variable increase, 
   %\\
-  \[ \inc(c, x) = \left\{ \absevent | \absevent = (l, l', x' \leq x + v) \land \absevent \in \absflow(c) \right\} \]
+  \[ \inc(c, x) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absflow(c) \right\} \]
   %\\
   $\dec: \vardom \to \mathcal{P}(\absevent) $
   is the set of abstract events where the variable decrease,
   %\\
-  \[\dec(c, x) = \left\{\absevent| \absevent = (l, l', x' \leq x - v) \land \absevent \in \absflow(c) \right\}\]
+  \[\dec(c, x) = \left\{\absevent| \absevent = (l,  x' \leq x - v, l') \land \absevent \in \absflow(c) \right\}\]
   %\\
   $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset,
 %
-  \[\reset(c, x) = \left\{ \absevent| \absevent = (l, l', x' \leq y - v) \land x \neq y \land \absevent \in \absflow(c) \right\}\]
+  \[\reset(c, x) = \left\{ \absevent| \absevent = (l,  x' \leq y - v, l') \land x \neq y \land \absevent \in \absflow(c) \right\}\]
   Additionally,
-  we also compute the reset graph $resetG(c)$ and the reset chain, $\resetchain(c, x) \in \mathcal{P}(\mathcal{P}(\absevent))$ for every rank $x$.
-  The $\resetchain(c, x)$ for every rank $x$ contains all the paths in $resetG(c)$ that are end at $x$.
-  The computation of $resetG(c)$ and $\resetchain(c, x)$ follows the Definition~20 in~\cite{sinn2017complexity}.
-  \[resetG(c) = (resetV(c), resetE(c))\]
-  \[resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(x) \land \absevent = (l, x' \leq y + c, l') \right\} \]
-  \[resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in resetE(c) \lor (\_, \_, x) \in resetE(c) \right\} \]
+  we also compute the reset graph $\resetG(c)$ and the reset chain, $\resetchain(c, x) \in \mathcal{P}(\mathcal{P}(\absevent))$ for every rank $x$.
+  The $\resetchain(c, x)$ for every rank $x$ contains all the paths in $\resetG(c)$ that are end at $x$.
+  The computation of $\resetG(c)$ and $\resetchain(c, x)$ follows the Definition~20 in~\cite{sinn2017complexity}.
+  \[\resetG(c) = (\resetV(c), \resetE(c))\]
+  \[\resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(x) \land \absevent = (l, x' \leq y + c, l') \right\} \]
+  \[\resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in \resetE(c) \lor (\_, \_, x) \in \resetE(c) \right\} \]
   In a variable $x$'s reset chain set, $\resetchain(c, x)$, in each chain $(e_0, \ldots, e_m) \in \resetchain(c, x)$
   a variable $x_i$ is reset by another variable $x_{i + 1}$ on edge $e_{i}$
   and $x_{i + 1}$ is reset on edge $e_{i + 1}$ recursively
