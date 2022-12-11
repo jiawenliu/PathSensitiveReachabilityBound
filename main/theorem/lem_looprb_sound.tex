@@ -1,3 +1,15 @@
+% \begin{defn}[Value Sequence $\seq(\trace, x^l)$]
+%   \label{def:vseq}
+%   \[
+% \begin{array}{l}
+%   \seq(\trace :: (x, l, v, \bullet), x^l) \triangleq \seq(\trace)::v  \qquad
+%   \seq(\trace :: (x, l, v, \qval), x^l) \triangleq \seq(\trace):: \qval \qquad
+%   \seq([]) \triangleq []\\
+%   \seq(\trace :: (y, j, \_, \_), x^l) \triangleq \seq(\trace) \quad y \neq x \lor j \neq l 
+% \end{array}
+% \]
+% \end{defn}
+
 \begin{lemma}[Soundness of the Loop Reachability-Bound]
     For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$, is bounded by $\lpchB(l: \rprog, \tpath)$.
     \[
@@ -8,13 +20,17 @@
       l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
       \\ \qquad
       \land 
-      \rprog_l = \algrewrite(c_l)
+      \rprog = \algrewrite(c_l)
       \land
       \config{c_l, \trace_0} \to^* 
       \config{\eskip, \trace_0 \tracecat \trace}
       \\ \qquad
       \implies
-      \config{\lpchB(l: \rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, l').
+      \config{\lpchB(l: \rprog, \tpath)}(\trace_0) 
+      \\ \qquad \geq 
+      \# \left\{\trace_{l \to l_t} ~\vert~ \trace_{l \to l_t}, \trace' \in \trace \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' :: (\_, l_t, \etrue)
+      \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
+      \right\}.
       \end{array}
     \]  
   \end{lemma}
@@ -24,24 +40,29 @@
 Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in this program.
 \\
 Let $l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested
-and $l: \rprog_l \in \rprog$ be any loop in this program.
+and $l: \rprog \in \rprog$ be any loop in this program.
 \\
 Let $\trace_0 \in \tdom_0(c_l)$ be an arbitrary initial trace and $\trace \in \inftdom(c_l)$ be an execution trace such that $\config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}$.
 \\
-To show that $\lpchB(l: \rprog_l, \tpath)$ bounds the iteration numbers of the loop $l$ w.r.t.
+To show that $\lpchB(l: \rprog, \tpath)$ bounds the iteration numbers of the loop $l$ w.r.t.
 the inner loop $l_t: \rprog_t$ 
 such that during the iterations of loop $l$, the nested loop $l_t: \rprog_t$ is executed,
 it is sufficient to show
 \[
-  \config{\lpchB(l: \rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, l')
+  \begin{array}{l}
+    \config{\lpchB(l: \rprog, \tpath)}(\trace_0) 
+    \\ \qquad \geq 
+    \# \left\{\trace_{l \to l_t} ~\vert~ \trace_{l \to l_t}, \trace' \in \trace \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' :: (\_, l_t, \etrue)
+    \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
+    \right\}.
+\end{array}
 \]
 By Definition~\ref{def:looprb}, we have
 \[
-    \lpchB(l: \rprog_l, \tpath) \triangleq
+    \lpchB(l: \rprog, \tpath) \triangleq
     \frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}.
 \]
-The soundness is guaranteed by the operation
- $\frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpnext(\rprog, \tpath)}$ and the three states,
+The soundness is guaranteed by the three states,
  $\lpinit(\rprog, \tpath)$, $\rffinal(\rprog, \tpath)$, $\lpnext(\rprog, \tpath)$ computed in Definition~\ref{def:alg-loopabsstate}.
 \\
 Let $x = \locbound(\tpath)$ be the ranking function of this path and $c_t \in \cdom$ such that $\rprog_t = REFINE(c_t)$, we prove the soundness of the three states respectively as follows.
@@ -114,11 +135,11 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
         v 
         ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
         \\ \qquad 
-        + \outinB(\tpath) \times \rfnext(\tpath)
+        + BD(\rprog_t) \times \rfnext(\tpath)
       \end{array}
     \end{array}
   \]
-  Let $\trace' \in \tdom$ be the execution trace before the execution of $l_t: \rprog_t$ in the second iteration of $l:\rprog_l$, then we have
+  Let $\trace' \in \tdom$ be the execution trace before the execution of $l_t: \rprog_t$ in the second iteration of $l:\rprog$, then we have
   \[
     \config{c_l, \trace_0} \to^* \config{c_t;c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
   \]
@@ -126,7 +147,7 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
     for each variable $y$ such that $(l_1, x' \leq y + v, l_2) \in \reset(x) $,
     $\varinvar(y)$ is the sound upper bound on its maximum value during the execution. Then we have
     \[
-      \config{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \env(\trace) y = v \right\}  \geq \env(\trace') y 
+      \config{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y 
     \]
     Same for each abstract event such that $((l', x' \leq x + v, \_) \in \inc(x) $ and $(l', x' \leq x + v, \_) \in \dec(x)$,
     we know 
@@ -137,14 +158,16 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
       \land l' \notin \tpath \right\}
       \\ \qquad 
       + \arg\max\limits_{l_2 }
-          \left\{ \varinvar(y) + v ~\middle\vert~ 
-          (l_1, x' \leq y + v, l_2) \in \reset(x) \land l_1 \in \rprog \land l_1 \notin \tpath\right\}
+          \left\{ 
+            \varinvar(y) + v ~\middle\vert~ 
+          (l_1, x' \leq y + v, l_2) \in \reset(x) \land l_1 \in \rprog \land l_1 \notin \tpath
+          \right\}
       \\ \qquad 
       - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
       v 
       ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
     \end{array}
-    $ bounds the value modification of $x$ in one iteration of $l: \rprog_l$.
+    $ bounds the value modification of $x$ in one iteration of $l: \rprog$.
   %
   \\
   By Lemma~\ref{lem:pathlocalrb-sound} and Lemma~\ref{lem:loopbound_sound}, we also know $BD(\rprog_t)$ is sound upper bound of $l_t$'s iterations and $\rfnext(\tpath)$ is the upper bound of $x$'s value modification in one iteration of $l_t: \rprog_t$.
@@ -164,10 +187,10 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
       v 
       ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
       \\ \qquad 
-      + BD(l_t: \rprog_t) \times \rfnext(\tpath)
+      + BD(\rprog_t) \times \rfnext(\tpath)
     \end{array}
     $
-    is a sound upper bound on the value of $x$ modified from first iteration of $l: \rprog$ until the second iteration and before the execution of $l_t: \rprog_t$, i.e.,
+    is a sound upper bound on the modified value of $x$ from first iteration of $l: \rprog$ until the second iteration and before the execution of $l_t: \rprog_t$, i.e.,
     \[
       \begin{array}{l}
         \config{
@@ -191,13 +214,13 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
             + BD(l_t: \rprog_t) \times \rfnext(\tpath)
           \end{array}
       }(\trace_0) \\
-      \leq \max \left\{ v ~|~  \env(\trace) x = v \right\}  \leq \env(\trace') x
+      \leq \env(\trace') x
     \end{array}
     \]
   %
   \item $\rffinal(\tpath)$ computes the value of $\locbound(\tpath)$ after the iteration of $l_t:\rprog_t$ finished.
   \\
-  Let $\trace' \in \tdom$ be the execution trace after the execution of $l_t: \rprog_t$ in the first iteration of $l:\rprog_l$ and the $c'$ be the program after the execution of $c_t$ in the first iteration of $l:\rprog_l$,  then we have
+  Let $\trace' \in \tdom$ be the execution trace after the execution of $l_t: \rprog_t$ in the first iteration of $l:\rprog$ and the $c'$ be the program after the execution of $c_t$ in the first iteration of $l:\rprog$,  then we have
   \[
     \config{c_l, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
   \]
@@ -207,11 +230,11 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
   $\rffinal(\tpath) \leq \env(\trace') x$ and $\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath) \geq \env(\trace') x$.
 \end{itemize}
 Then there are two cases as follows.
-\caseL{$l_t: \rprog_t \notin \rprog_l$}
+\caseL{$l_t: \rprog_t \notin \rprog$}
 In this case, we know loop $l_t: \rprog_t$ will never be entered, and this case is proved.
 
-\caseL{$l_t: \rprog_t \in \rprog_l$}
+\caseL{$l_t: \rprog_t \in \rprog$}
 In this case, based on the soundness of the three states above, we know 
 $\frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}$ 
-soundly computes the maximum number of $l: \rprog_l$'s iteration times such that during these iterations, the nested loop $l_t: \rprog_t$ is executed.
+soundly computes the maximum number of $l: \rprog$'s iteration times such that during these iterations, the nested loop $l_t: \rprog_t$ is executed.
 \end{proof}

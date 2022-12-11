@@ -92,15 +92,19 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
     l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
     \\ \qquad
     \land 
-    \rprog_l = \algrewrite(c_l)
+    \rprog = \algrewrite(c_l)
     \land
     \config{c_l, \trace_0} \to^* 
     \config{\eskip, \trace_0 \tracecat \trace}
     \\ \qquad
     \implies
-    \config{\lpchB(l: \rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, l').
+    \config{\lpchB(l: \rprog, \tpath)}(\trace_0) 
+    \\ \qquad \geq 
+    \# \left\{\trace_{l \to l_t} ~\vert~ \trace_{l \to l_t}, \trace' \in \trace \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' :: (\_, l_t, \etrue)
+    \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
+    \right\}.
     \end{array}
-  \]  
+  \]
 \end{lem}
 %
 $\lpchB(l:\rprog, \tpath)$ is over-approximated by

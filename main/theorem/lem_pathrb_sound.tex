@@ -50,13 +50,12 @@ By Definition~\ref{def:pathrb}, we have
 \[  
   \begin{array}{rcl}
   \inoutB(l': \rprog', \tpath) & \triangleq & 
-  \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l': \rprog' = \kw{enclosed}(\tpath)}
-  \\ &  \triangleq & 
-  0, \qquad \qquad \qquad \quad ~~ \text{if }  \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
-  \\ &  \triangleq & 
-  \lpchB(l':\rprog', \tpath )
+  \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
+  \\ &  & 
+  \highlight{
+    \lpchB(l':\rprog', \tpath )
   \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')}
-  \left\{ \inoutB(l'':\rprog'', \tpath) \right\}, o.w. 
+  \{\inoutB(l'':\rprog'', \tpath)\} }, o.w.
   \end{array}
 \]
 %
@@ -74,11 +73,11 @@ So we have this case proved by
   \config{\inoutB(\rprog, \tpath)}(\trace_0) = \config{\outinB(\rprog, \tpath)}(\trace_0) \geq \counter(\trace, L(\tpath)).
 \]
 %
-\subcaseL{$\kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')$}
-In this case, we have $\inoutB(l: \rprog_l, \tpath) = 0$.
-\\
-Since $\tpath$ doesn't belong to this loop, $0$ is sound because $\tpath$ will not be executed during the execution of $\rprog_l$.
-%
+% \subcaseL{$\kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')$}
+% In this case, we have $\inoutB(l: \rprog_l, \tpath) = 0$.
+% \\
+% Since $\tpath$ doesn't belong to this loop, $0$ is sound because $\tpath$ will not be executed during the execution of $\rprog_l$.
+% %
 \subcaseL{ $o.w.$ }
 In this case, we have 
 \[

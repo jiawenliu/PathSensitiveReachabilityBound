@@ -1,8 +1,7 @@
 \subsection{Path Global Reachability-Bound}
 \label{sec:pathrb}
-We first compute $\kw{enclosing}(\rprog)$, which is the set containing \text{all the loops $l:\rprog$ which are nested inside } $\rprog$.
-\\
-Then, the path global reachability-bound, $\inoutB(\rprog, \tpath)$ for a \emph{simple transition path} $\tpath$ is computed as in Definition~\ref{def:pathrb}.
+% We first compute $\kw{enclosing}(\rprog)$, which is the set containing \text{all the loops $l:\rprog$ which are nested inside } $\rprog$.
+The path global reachability-bound, $\inoutB(\rprog, \tpath)$ for a \emph{simple transition path} $\tpath$ is computed as in Definition~\ref{def:pathrb}.
 %
 \begin{defn}[Path Reachability-Bound]
   \label{def:pathrb}
@@ -14,17 +13,14 @@ Then, the path global reachability-bound, $\inoutB(\rprog, \tpath)$ for a \emph{
     \inoutB(\tpath, \tpath) & \triangleq & 1  \\
     \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
     \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
-    \inoutB(l: \rprog', \tpath) & \triangleq & 
+    \inoutB(l: \rprog_l, \tpath) & \triangleq & 
     \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
     \\
-    &  \triangleq & 
-   0, \qquad \qquad \qquad \quad ~~ \text{if }  \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
-    \\
-    &  \triangleq & 
+    &  & 
     \highlight{
-      \lpchB(l:\rprog', \tpath ) }
-    \highlight{\times \max\limits_{l = \kw{enclosed}(l':\rprog'')}
-   \{\inoutB(l':\rprog'', \tpath)\} } \footnotemark, o.w. \\
+      \lpchB(l:\rprog_l, \tpath ) }
+    \highlight{\times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
+   \{\inoutB(l':\rprog', \tpath)\} } \footnotemark, o.w. \\
     \inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
     & \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
     \\
