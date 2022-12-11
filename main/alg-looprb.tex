@@ -57,25 +57,26 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
       v 
       ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
       \\ \qquad 
-      + \outinB(\tpath) \times \rfnext(\tpath)
+      + BD(\kw{enclosed}(\tpath)) \times \rfnext(\tpath)
     \end{array}
   \end{array}
   , x = \locbound(\tpath)
   \]
     \end{itemize}
 \end{defn}
-
-
-
-\begin{defn}[Loop Reachability Bound]
+%
+\begin{defn}[Loop Reachability-Bound]
   \label{def:looprb}
-  Loop Reachability Bound
+  Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
+  let $l: \rprog_l$ be a loop program in $\rprog$,
+  then $l: \rprog_l$'s \emph{loop reachability-bound} w.r.t. $\tpath$
+  is computed recursively as follows. 
   \[
     \lpchB(l: \rprog, \tpath) \triangleq
     \frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}
   \]
 \end{defn}
-
+%
 We show that $\lpchB(l: \rprog, \tpath)$
 is a sound upper bound on iteration numbers of the outside loop $l$,
 such that,
