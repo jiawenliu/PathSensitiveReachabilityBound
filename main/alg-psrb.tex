@@ -2,90 +2,82 @@
 Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and refined program $\rprog$,
 \begin{enumerate}
   \item $\outinB(\rprog, \tpath)$, \emph{Path Local Reachability-Bound}:
-  \\
-  The local reachability-bound of a \emph{simple transition path}. 
-  \\
-  $\outinB(\rprog, \tpath)$ bounds the execution times of $\tpath$ when executing program $\rprog$,
-  and $\rprog$ is the closest loop where $\tpath$ is nested.
-  The local reachability-bound  considers only the influence of $\tpath$'s closest enclosing loop, i.e., $\kw{enclosed}(\tpath)$.
-  %
-  \[
-    \begin{array}{rcl}
-      \outinB(\tpath, \tpath) & \triangleq & 1 \\
-      \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
-      \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
-      \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
-      & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
-      \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
-      & BD(\rprepeat(\rprog'))
-       \times \outinB(\rprog', \tpath)
-       \\
-      \outinB(l: \rprog', \tpath) & \triangleq & \outinB(\rprog', \tpath) \\
-      &  & \text{this case always equals to } 0 \\
-    \end{array}
-    \]
-  
-    The loop bound $BD(\rprepeat(\rprog')) = BOUND(\rprepeat(\rprog'))$ by paper\cite{GulwaniJK09}, which is precise for simple loop without nested loops. 
-    We provide an alternative computation method based on \cite{sinn2017complexity} in Definition~\ref{def:loopbound}.
-    \item $\lpchB(l: \rprog, \tpath)$,
-    {Loop Reachability-Bound}:
-    \highlight{
+      \\
+      The local reachability-bound of a \emph{simple transition path}. 
+      \\
+      $\outinB(\rprog, \tpath)$ bounds the execution times of $\tpath$ when executing program $\rprog$,
+      and $\rprog$ is the closest loop where $\tpath$ is nested.
+      The local reachability-bound  considers only the influence of $\tpath$'s closest enclosing loop, i.e., $\kw{enclosed}(\tpath)$.
+      %
       \[
-        \lpchB(l: \rprog, \tpath) \triangleq
-        \frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}
-      \]    
-    }
+        \begin{array}{rcl}
+        \outinB(\tpath, \tpath) & \triangleq & 1 \\
+        \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
+        \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
+        \outinB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
+        & \max\left\{ \outinB(\rprog_1, \tpath), \cdots, \outinB(\rprog_m, \tpath) \right\} \\
+        \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
+        & BD(\rprepeat(\rprog'))
+        \times \outinB(\rprog', \tpath)
+        \\
+        \outinB(l: \rprog', \tpath) & \triangleq & \outinB(\rprog', \tpath) \\
+        &  & \text{this case always equals to } 0 \\
+        \end{array}
+      \]
+      There are three methods for computing the loop bound, $BD(\rprog')$ for every loop $\rprog'$ in a refined program $\rprog$, by either Equation~\ref{eq:absBD} in Section~\ref{sec:rank} path-insensitively, or BOUND$(\rprog')$ from paper\cite{GulwaniJK09} or the method we provided in Definition~\ref{def:loopbound}.
+      Each of the methods has advantages and weakness with more details in Section~\ref{sec:pathlocalrb}.
+  \item 
+      {Loop Reachability-Bound},
       $\lpchB(l: \rprog, \tpath)$
       is the bound on iteration numbers of the outside loop $l$,
       such that,
       during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
-      
-      $\lpchB(l:\rprog, \tpath)$ is over-approximated by
-      $I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in paper\cite{GulwaniJK09}.
-      $I(l, l')$ computes the iteration numbers of $l'$ in one iteration of $l$.
-      \item $\inoutB(\rprog, \tpath) $, Path Reachability-Bound:  
-      \\
-      The reachability-bound of a \emph{simple transition path}.
-      \\
-      $\inoutB(\rprog, \tpath) $ bounds the execution times of $\tpath$ during the execution of $\rprog$.
-  %
-  \[
-    \begin{array}{rcl}
-      \inoutB(\tpath, \tpath) & \triangleq & 1  \\
-      \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
-      \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
-      \inoutB(l: \rprog_l, \tpath) & \triangleq & 
-      \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
-      \\
-      &  & 
       \highlight{
-        \lpchB(l:\rprog_l, \tpath ) }
-      \highlight{\times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
-     \{\inoutB(l':\rprog', \tpath)\} } \footnotemark, o.w. \\
-      \inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
-      & \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
+      \[
+        \lpchB(l: \rprog, \tpath) \triangleq
+        \frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}
+      \]    
+      }
+      The computation of the abstract loop states, $\lpinit$ and $\lpnext$ are provided in Definition~\ref{def:alg-loopabsstate} with the detail in Section~\ref{sec:looprb}.
+  \item The \emph{Path Reachability-Bound}, $\inoutB(\rprog, \tpath) $.
       \\
-      \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
-      &  & \text{this case will never be matched}
-      \end{array}
-    \]
-        \footnotetext{There is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$, 
-        all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$}%
-        $\kw{enclosed}(\rprog)$: \text{the closest loop where } $\rprog$ is nested
+      The reachability-bound of a \emph{simple transition path}, $\inoutB(\rprog, \tpath) $ is an upper bound on the execution times of $\tpath$ during the execution of $\rprog$.
+      %
+      \[
+        \begin{array}{rcl}
+        \inoutB(\tpath, \tpath) & \triangleq & 1  \\
+        \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
+        \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
+        \inoutB(l: \rprog_l, \tpath) & \triangleq & 
+        \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
         \\
-        $\kw{enclosing}(\rprog)$: \text{all the loops which are nested inside } $\rprog$
-      \item The \emph{Reachability-Bound} for program points.
-    
-    The reachability-bound of each program point $l \in \lvar(c)$, $\psRB(c, l)$
-    \footnote{$l \in \tpath$: the $\in$ notation is abused to denote
-    the program point $l$ is a vertex on this path.}
-   \[ 
-     \psRB(c, l) = 
-     \sum\limits_{\tpath \in \rprog \land 
-   l \in \tpath} 
-   \inoutB(\rprog, \tpath)
-   \]
-   % 
-   This bound sums up all the path reachability-bounds, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$.
+        &  & 
+        \highlight{
+        \lpchB(l:\rprog_l, \tpath ) }
+        \highlight{\times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
+        \{\inoutB(l':\rprog', \tpath)\} } \footnotemark, o.w. \\
+        \inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
+        & \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
+        \\
+        \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
+        &  & \text{this case will never be matched}
+        \end{array}
+      \]
+      \footnotetext{There is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$, 
+      all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$}%
+      $\kw{enclosed}(\rprog)$: \text{the closest loop where } $\rprog$ is nested
+  \item The \emph{Reachability-Bound} for program points.
+
+      The reachability-bound of each program point $l \in \lvar(c)$, $\psRB(c, l)$
+      \footnote{$l \in \tpath$: the $\in$ notation is abused to denote
+      the program point $l$ is a vertex on this path.}
+      \[ 
+      \psRB(c, l) = 
+      \sum\limits_{\tpath \in \rprog \land 
+      l \in \tpath} 
+      \inoutB(\rprog, \tpath)
+      \]
+      % 
+      This bound sums up all the path reachability-bounds, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$.
 %
 \end{enumerate}

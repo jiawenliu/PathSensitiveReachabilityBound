@@ -107,6 +107,7 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
   \]
 \end{lem}
 %
-$\lpchB(l:\rprog, \tpath)$ is over-approximated by
+The $\lpchB(l:\rprog, \tpath)$ 
+can also be computed by
 $I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in paper\cite{GulwaniJK09}.
-$I(l, l')$ computes the iteration numbers of $l'$ in one iteration of $l$.
+However, $I(l, l')$ over-approximates this value, because it computes the bound on iteration numbers of $l'$ in one iteration of $l$.
