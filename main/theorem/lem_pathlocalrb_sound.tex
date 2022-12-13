@@ -54,7 +54,7 @@ it is sufficient to show
 Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = c_1; c_2$.
 \\
-According to the operational semantics, let $\trace_1, \trace_2 \in \inftdom(c_l)$ be two execution traces such that 
+According to the operational semantics, let $\trace_1, \trace_2 \in \inftdom$ be two execution traces such that 
 \[
   \config{c_1; c_2, \trace_0} \to^* \config{c_2, \trace_0 \tracecat \trace_1} \to^* \config{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace_2}
 \]

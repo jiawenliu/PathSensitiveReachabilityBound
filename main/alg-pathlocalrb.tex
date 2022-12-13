@@ -14,7 +14,7 @@ There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'))$ f
   We compute four different abstract states for rank functions in a refined program, $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ and $\varGD(\rprog, \rprog')$ as follows.
  \begin{itemize}
   \item The \emph{Initial State}, 
-  $\rfinit(\rprog)$ is a set of equations $x = e$, where $e \in \mathcal{A}_{in}$ is a
+  $\rfinit(\rprog)$ is a set of equations $x = e$, where $e \in \scexpr$ is a
   symbolic expression describing the initial value of $x$ before executing $\rprog$.
   Each $x$ is the ranking function of a simple transition path $\tpath$ in this program. 
   It contains the initial value for every ranking function of the simple transition path $\tpath$ in this program.
@@ -53,7 +53,7 @@ There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'))$ f
    \right\}
    \]
   $\kw{Guard}(\rprog)$ is the set of all the unique boolean expressions (i.e., the boolean constraints) on this program.
- \item The \emph{Next State}, $\rfnext(\tpath) \in \mathcal{A}_{in}$ 
+ \item The \emph{Next State}, $\rfnext(\tpath) \in \scexpr$ 
  is a
  symbolic expression describing how much $\tpath$'s ranking function ($\locbound(\tpath)$) is changed after the first execution of $\rprog$ and before the second execution.
  \[
@@ -91,11 +91,11 @@ There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'))$ f
 The computation of the \emph{Variable Gradient Decent}, 
 $\varGD(\rprog)$ involves the computation of $BD(\rprog)$ recursively as follows.
 \begin{defn}[Loop Bound Computation]
-  \label{def:loopbound}
+\label{def:loopbound}
   \[
     \begin{array}{rcl}
       BD(\tpath) & \triangleq & 1 \\
-      BD(\rprog_1;\rprog_2) & \triangleq & BD(\rprog_1) + BD(\rprog_2) \\
+      BD(\rprog_1;\rprog_2) & \triangleq & \min \left\{BD(\rprog_1), BD(\rprog_2) \right\} \\
       BD(\rpchoose{\rprog_1, \ldots, \rprog_m }) & \triangleq 
       & \max\left\{ BD(\rprog_1), \ldots, BD(\rprog_m) \right\} \\
       BD(\rprepeat(\rprog')) & \triangleq 
@@ -106,18 +106,18 @@ $\varGD(\rprog)$ involves the computation of $BD(\rprog)$ recursively as follows
       \\ & & \qquad \qquad
       \land x = b \in \rffinal(\rprog')
       \land x = a' \in \varGD(\rprog')
-       \Big\} 
-       \\
-      BD(l: \rprog') & \triangleq & BD(\rprog')
+      \Big\} 
+      \\
+      BD(l: \rprog_l) & \triangleq & BD(\rprog_l)
     \end{array}
-    \]
-  \end{defn}
+  \]
+\end{defn}
 We show that Definition~\ref{def:loopbound} computes a sound loop bound for every loop in a refined program below in Lemma~\ref{lem:loopbound_sound} with proof in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
 \begin{lem}[Soundness of Loop Bound]
   \label{lem:loopbound_sound}
   For every program $c$ with it refined program $\rprog$,
-  for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
-  $BD(\rprepeat(\rprog'))$ is a sound upper bound on the execution times of this loop, $\rprog'$ when executing the program $c$.
+  % for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
+  $BD(\rprog)$ is a sound upper bound on the iterating times of this program.
 \end{lem}
 
 

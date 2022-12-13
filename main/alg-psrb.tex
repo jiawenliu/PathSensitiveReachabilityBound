@@ -32,8 +32,8 @@ Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and re
     \highlight{
       \[
         \lpchB(l: \rprog, \tpath) \triangleq
-        \frac{\lpinit(l: \rprog, \tpath) - \rffinal(\tpath)}{\lpnext(l: \rprog, \tpath)}
-    \]
+        \frac{\lpinit(\rprog, \tpath) - \rffinal(\rprog, \tpath)}{\lpinit(\rprog, \tpath) - \lpnext(\rprog, \tpath)}
+      \]    
     }
       $\lpchB(l: \rprog, \tpath)$
       is the bound on iteration numbers of the outside loop $l$,
@@ -49,29 +49,26 @@ Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and re
       \\
       $\inoutB(\rprog, \tpath) $ bounds the execution times of $\tpath$ during the execution of $\rprog$.
   %
-      \[
-        \begin{array}{rcl}
-          \inoutB(\tpath, \tpath) & \triangleq & 1  \\
-          \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
-          \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
-          \inoutB(l: \rprog', \tpath) & \triangleq & 
-          \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
-          \\
-          &  \triangleq & 
-         0, \qquad \qquad \qquad \quad ~~ \text{if }  \kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')
-          \\
-          &  \triangleq & 
-          \highlight{
-            \lpchB(l:\rprog', \tpath ) }
-          \highlight{\times \max\limits_{l = \kw{enclosed}(l':\rprog'')}
-         \{\inoutB(l':\rprog'', \tpath)\} } \footnotemark, o.w. \\
-          \inoutB(\rpchoose{\rprog_1, \cdots, \rprog_m }, \tpath) & \triangleq 
-          & \max\left\{ \inoutB(\rprog_1, \tpath), \cdots, \inoutB(\rprog_m, \tpath) \right\} 
-          \\
-          \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
-          &  & \text{this case will never be matched}
-          \end{array}
-        \]
+  \[
+    \begin{array}{rcl}
+      \inoutB(\tpath, \tpath) & \triangleq & 1  \\
+      \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
+      \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
+      \inoutB(l: \rprog_l, \tpath) & \triangleq & 
+      \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
+      \\
+      &  & 
+      \highlight{
+        \lpchB(l:\rprog_l, \tpath ) }
+      \highlight{\times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
+     \{\inoutB(l':\rprog', \tpath)\} } \footnotemark, o.w. \\
+      \inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
+      & \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
+      \\
+      \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
+      &  & \text{this case will never be matched}
+      \end{array}
+    \]
         \footnotetext{There is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$, 
         all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$}%
         $\kw{enclosed}(\rprog)$: \text{the closest loop where } $\rprog$ is nested
