@@ -15,7 +15,7 @@ This step invokes the algorithm REFINE from paper~\cite{GulwaniJK09} and compute
 refined program $\rprog$ for a program $c$ given the rewritten program as input.
 \end{enumerate}
 
-\subsection{Collect Transition Path}
+\subsection{Collecting The Simple Transition Path}
 % \begin{defn}[Loop Path]
 %   \label{def:looppath}
 % A simple transition path
@@ -36,9 +36,9 @@ refined program $\rprog$ for a program $c$ given the rewritten program as input.
 % \end{itemize}
 % \end{defn}
 
-\begin{defn}[Tansition Path]
+\begin{defn}[Simple Tansition Path]
   \label{def:tpath}
-A transition path
+A \emph{simple transition path}
 $\tpath \in \paths(\absG(c))$ for the program $c$, is either a simple cyclic path, which has the same start- and end-point
 or a simple path has either different while loop headers, or program entrance or exit as start- and end-point.
 \\
@@ -53,9 +53,15 @@ satisfies
   \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
   i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
   \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
-  i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$.
+  i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$,
+  \item and $l_i \notin \loopl(c) \cup \{ \lex \}$ for every $i = 1, \ldots, n-1$.
 \end{itemize}
 \end{defn}
+
+\paragraph{Example.}
+$2 \to 3 \to 6 \to 2$ is a transition path on $\absG(\kw{twoPathsWhile}(n, m))$ in Figure~\ref{fig:twoPathsWhile_abscfg}(b).
+However, $2 \to 3 \to 6 \to 2 \to 3 \to 4 \to 5 \to 2$ is not a transition path because it is not simple (the program points $2$ and $3$ are visited twice).
+In Figure~\ref{fig:threeWhile-overview}(b) above, $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a transition path on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
 
 \subsection{Rewrite and Refine the Program}
 \paragraph{Rewrite the Program}
