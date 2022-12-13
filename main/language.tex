@@ -25,19 +25,18 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \\  
 %
 \mbox{Value} 
-& v & ::= & { n ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
+& v & ::= & { n \in \mathbb{N}^{\infty} ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
 %
 % \\%
 \mbox{Label} 
 & l & \in & (\mathbb{N} \cup \{\lin, \lex\}) 
-% ~|~ (l, n)
 \\ 
 %
 \mbox{Labeled Command} 
 & {c} & ::= &  
 \clabel{\assign{x}{\expr}}^l 
 ~|~  \clabel{\eskip}^l
-~|~ \ewhile \clabel{\bexpr}^{l} \edo {c}
+~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c}  
 \\ 
@@ -193,7 +192,7 @@ by defining $\config{c, \trace_0} \to^{\infty}
 This follows the maximal trace semantics in \cite{cousot2019abstract} Section 2.5 Equation (12).
 \\
 If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
-So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lemma_sec123}, 
+So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lem_language}, 
 specifically the trace has the property that its length never decreases during the program execution.
 \begin{lem}
 [Trace Non-Decreasing]

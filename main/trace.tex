@@ -11,24 +11,26 @@ collecting the events generated along the program execution.
 A trace can be regarded as the program history, 
 which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
 \\
-\highlight{If a program doesn't terminate when executing under some initial trace,
+\highlight{
+A trace can be finite ($\trace \in \ftdom$) or infinite $\trace \in \tdom^{\infty}$ where is the set of all finite or infinite traces.
+If a program doesn't terminate when executing under some initial trace,
 it produces the infinite trace 
-% $[]^{\infty}$.
-% $\inftdom = \ftdom \cup \{[]^{\infty}\}$ 
-from $\inftdom$, which is the set of all finite or infinite traces.
+from $ \tdom^{\infty}$, which records a non-terminating computation.
+So $\inftdom = \ftdom \cup \tdom^{\infty}$.
 The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in \cite{cousot2019abstract}.}
 \\
-Below are some useful operators on trace.
+Trace concatenation $\tracecat$ is defined as follows.
 \highlight{
-\begin{defn}[Trace Concatenation, $\tracecat: \inftdom \to \ftdom\to \inftdom $]
-Given two traces $\trace_1 \in \inftdom, \trace_2 \in \ftdom$, the trace concatenation operator 
+\begin{defn}[Trace Concatenation, $\tracecat: \inftdom \to \inftdom\to \inftdom $]
+Given two traces $\trace_1 \in \inftdom, \trace_2 \in \inftdom$, the trace concatenation operator 
 $\tracecat$ is defined as:
 \[
 \trace_1 \tracecat \trace_2 \triangleq
 \left\{
 \begin{array}{ll} 
-  \trace_1 & \trace_2 = [] \\
-  (\trace_1  \tracecat \trace_2'):: \event & \trace_2 = \trace_2' :: \event
+  \trace_1 & \trace_2 = [] \lor \trace_1 \in \tdom^{\infty} \\
+  \trace_2 & \trace_1 = [] \lor \trace_2 \in \tdom^{\infty} \\
+  (\trace_1  \tracecat \trace_2'):: \event & \trace_1, \trace_2 \in \ftdom \land \trace_2 = \trace_2' :: \event
 \end{array}
 \right.
 \]
@@ -55,16 +57,18 @@ As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't be
 The counting operator $\counter : \inftdom \to \ldom \to (\mathbb{N} \cup \{\infty\})$
 counts the appearance of a label in a trace.
 \[
-\begin{array}{lll}
-\counter(\trace :: (x, l, v), l ) \triangleq \counter(\trace, l) + 1
+\begin{array}{llll}
+\counter(\trace :: (x, l, v), l ) \triangleq \counter(\trace, l) + 1 & \text{if}~ l = l
 &
-\counter(\trace  ::(b, l, v), l) \triangleq \counter(\trace, l) + 1
+\counter(\trace  ::(b, l, v), l) \triangleq \counter(\trace, l) + 1 & \text{if}~ l = l
+\\
+\counter(\trace  :: (x, l', v), l) \triangleq \counter(\trace, l)   & \text{if}~ l' \neq l
+&
+\counter(\trace  :: (b, l', v), l) \triangleq \counter(\trace, l)   & \text{if}~ l' \neq l
+\\
+\counter(\trace, l) \triangleq \infty & \text{if}~ \trace \in \tdom^{\infty}
 &
 \counter({[]}, l) \triangleq 0
-\\
-\counter(\trace  :: (x, l', v), l) \triangleq \counter(\trace, l), l' \neq l
-&
-\counter(\trace  :: (b, l', v), l) \triangleq \counter(\trace, l), l' \neq l
 \end{array}
 \]
 \highlight{When the input trace is infinite, $\counter$ returns $\infty$.}
