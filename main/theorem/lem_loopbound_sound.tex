@@ -294,11 +294,6 @@ By the label consistency, we know
 % $\absinit(c) = \absinit(c_1) = \absinit(c_1)$, $\absfinal(c) = \absfinal(c_2)$ and $(\absinit(c_2), \_) \in \absfinal(c_1)$. 
 % \\
 % Because $c_1$ and $c_2$ are sub-loop program of $c$,
-\caseL{$\rprog = l : \rprog_l$}
-In this case, we have
-\[
-  BD(l: \rprog_l) = BD(\rprog_l)
-\]
 \caseL{$\rprog = \rprepeat(\rprog')$}
 In this case, we have
 \[
@@ -434,17 +429,19 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
    \end{array}
    \]
  %
- \item $\rffinal(\tpath)$ computes the value of $\locbound(\tpath)$ after the iteration of $l_t:\rprog_t$ finished.
+ \item $\rffinal(\rprog)$ computes the value of $\locbound(\rprog)$ after the iteration of $l_t:\rprog_t$ finished.
  \\
- Let $\trace' \in \tdom$ be the execution trace after the execution of $l_t: \rprog_t$ in the first iteration of $l:\rprog$ and the $c'$ be the program after the execution of $c_t$ in the first iteration of $l:\rprog$,  then we have
+ Let $\trace' \in \tdom$ be the execution trace after the execution of $\rprog$,  then we have
  \[
-   \config{c_l, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
  \]
-And $\rffinal(\tpath)$ computes the lower bound on the value of $\locbound(\tpath)$ after the iteration of $l_t:\rprog_t$ finished.
- \\
-Then we know $\rffinal(\tpath) \leq \env(\trace') x$ and this case is proved by
+So we know for each $\tpath$ in $\rprog$ with $x = \locbound(\tpath)$,
+$\rffinal(\rprog)$ computes the lower bound on the value of $x$ after the execution of $\rprog$ finished.
+\\
+Then we know for each $ x = a \in \rfinit(\rprog) $ and $ x = b \in \rffinal(\rprog) $
+the following holds and this case is proved.
 \[
-  \rfinit(\rprog) - \rffinal(\rprog) \geq \env(\trace') x.
+  a - b \geq \env(\trace') x.
 \]
 \item   \emph{Variable Gradient Decent} Soundness.
 $\varGD(\rprog)$ contains the equations $x = e$, where $e \in \scexpr$ is a
@@ -533,4 +530,15 @@ Then we have this case proved by
     \Big\}.
     \end{array}
 \]
+\caseL{$\rprog = l : \rprog_l$}
+In this case, we have
+\[
+  BD(l: \rprog_l) = BD(\rprog_l)
+\]
+Let $c_l \in \cdom$ be the while program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
+\\
+According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refinement algorithm REFINE, we know
+$c = c_l$.
+\\
+Then we have this case proved trivially by induction hypothesis on $\rprog_l$ and $c_l$ with the same initial and execution trace.
 \end{proof}
