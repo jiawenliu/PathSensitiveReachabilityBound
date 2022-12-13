@@ -14,38 +14,31 @@
   \]
   \end{lem}
   \begin{proof}
-    Taking arbitrary $\trace_0 \in \mathcal{T}$, and an arbitrary event $\event = (\_, l, \_) \in \eventset$, it is sufficient to show:
+    Taking an arbitrary initial trace $\trace_0 \in \tdom_0(c)$, an arbitrary event $\event = (\_, l, \_) \in \eventset$ and an execution trace $\trace \in \tdom$
+    such that $\config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}$,
+    it is sufficient to show,
     \[
-    \begin{array}{l}
-      \forall \trace \in \mathcal{T} \st
-  \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
-  \land \event \in \trace 
-  \\
-  \qquad \implies 
-  % \exists \absevent = (l, \_, \_) \in Label(c) \times Label(c) \times \absdom \st 
-  % \absevent \in \absflow(c)
-  \exists \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
-  \absevent \in \absflow(c)
-  \end{array}
-  \]
+      \exists \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
+      \absevent \in \absflow(c)
+    \]
     By induction on program $c$, we have the following cases:
     \caseL{$c = [\assign{x}{\expr}]^{l'}$}
     By the evaluation rule $\rname{assn}$, we have
     $
     {
-    \config{[\assign{{x}}{\aexpr}]^{l'},  \trace } 
+    \config{[\assign{{x}}{\aexpr}]^{l'},  \trace_0 \tracecat \trace } 
     \xrightarrow{} 
     \config{\eskip, \trace \tracecat [({x}, l', v) ]}
     }$, for some $v \in \mathbb{N}$ and $\trace = [({x}, l', v) ]$.
     \\
     There are 2 cases, where $l' = l$ and $l' \neq l$.
     \\
-    In case of $l' \neq l$, we know $\event \not\eventin \trace$, then this Lemma is vacuously true.
+    In case of $l' \neq l$, we know $\event \not\in \trace$, then this Lemma is vacuously true.
       \\
       In case of $l' = l$, by the abstract Execution Trace computation, we know 
-      $\absflow(c) = \absflow'([x := \expr]^{l}; \clabel{\eskip}^{l_e}) = \{(l, \absexpr(\expr), l_e)\}$  
+      $\absflow(c) = \absflow'([x := \expr]^{l}; \clabel{\eskip}^{\lex}) = \{(l, \absexpr(\expr), \lex)\}$  
       \\
-    Then we have $\absevent = (l, \absexpr(\expr), l_e) $ and $\absevent \in \absflow(c)$.
+    Then we have $\absevent = (l, \absexpr(\expr), \lex) $ and $\absevent \in \absflow(c)$.
     \\
     This case is proved.
     \caseL{$\ewhile [b]^{l_w} \edo c$}
@@ -70,13 +63,14 @@
     \trace_0 \tracecat [(b, l_w, \etrue)] \tracecat \trace_w}}
   $
   \\
-  Then we have the following execution:
-  \\
-  $\config{{\ewhile [b]^{l_w} \edo c_w, \trace}}
+  Then we have the following execution
+\[
+  \begin{array}{l}
+    \config{{\ewhile [b]^{l_w} \edo c_w, \trace}}
   \xrightarrow{} 
   \config{{
   c_w; \ewhile [b]^{l_w} \edo c_w,
-  \trace_0 \tracecat [(b, l_w, \etrue)]}}
+  \trace_0 \tracecat [(b, l_w, \etrue)]}} \\
   \xrightarrow{*} 
   \config{{
     \ewhile [b]^{l_w} \edo c_w,
@@ -85,14 +79,16 @@
   \config{{
   \eskip,
   \trace_0 \tracecat [(b, l_w, \etrue)] \tracecat \trace_w \tracecat \trace_1}}
-  $ for some $\trace_1 \in \mathcal{T}$ and $\trace = [(b, l_w, \etrue)] \tracecat \trace_w \tracecat \trace_1$.
+  \end{array}
+ \]
+  for some $\trace_1 \in \mathcal{T}$ and $\trace = [(b, l_w, \etrue)] \tracecat \trace_w \tracecat \trace_1$.
   \\
   Then we have 3 cases: 
   (1) $\event \eventeq (b, l_w, \etrue)$, 
   (2) $\event \in \trace_w$ or 
   (3) $\event \in \trace_1$.
-    \\
-  In case of (1). $\event \eventeq (b, l_w, \etrue)$, since $\absflow(c) = \absflow'(c;\clabel{\eskip}^{l_e}) = \{(l, \top, \init(c_w))\} \cup \cdots $, we have $\absevent = (l, \top, \init(c_w))$ and this case is proved.
+  \\
+  In case of (1). $\event \eventeq (b, l_w, \etrue)$, since $\absflow(c) = \absflow'(c;\clabel{\eskip}^{\lex}) = \{(l, \top, \init(c_w))\} \cup \cdots $, we have $\absevent = (l, \top, \init(c_w))$ and this case is proved.
   \\
   In case of (2). $\event \in \trace_w$,
   by induction hypothesis on 
@@ -105,22 +101,22 @@
     \eskip,
     \trace_0 \tracecat [(b, l_w, \etrue)] \tracecat \trace_w}}$ and trace $\trace_w$, 
     we know there is an abstract event of the form 
-    $\absevent' = (l, \_, \_ ) \in \absflow(c_w)$ where $\absflow(c_w) = \absflow'(c_w;\clabel{\eskip}^{l_e})$.
+    $\absevent' = (l, \_, \_ ) \in \absflow(c_w)$ where $\absflow(c_w) = \absflow'(c_w;\clabel{\eskip}^{\lex})$.
     \\
     Let $\absevent' = (l, dc, l')$ for some $dc$ and $l'$ such that $\absevent \in \absflow(c)$.
     \\
     By definition of $\absflow'$, we have 
-    $ \absflow'(c_w;\clabel{\eskip}^{l_e}) = 
-    \absflow'(c_w) \cup  \{ (l', dc, l_e) | (l', dc) \in \absfinal(c_w) \} $.
+    $ \absflow'(c_w;\clabel{\eskip}^{\lex}) = 
+    \absflow'(c_w) \cup  \{ (l', dc, \lex) | (l', dc) \in \absfinal(c_w) \} $.
     \\
     There are 2 subcases: (2.1) $\absevent' \in \absflow'(c_w)$ or 
-    $ (2.2) \absevent' \in \{ (l', dc, l_e) | (l', dc) \in \absfinal(c_w) \}$.
+    $ (2.2) \absevent' \in \{ (l', dc, \lex) | (l', dc) \in \absfinal(c_w) \}$.
     \subcaseL{(2.1)}
     Since $\absflow(c) = \absflow'(c_w) \cup \{(l', dc, l_w)| (l', dc) \in \absfinal(c_w) \} \cup \cdots $, 
     we know the abstract event $\absevent' \in \absflow(c)$. 
     \\
     This case is proved.
-    \subcaseL{(2.2) $\absevent' \in \{ (l', dc, l_e) | (l', dc) \in \absfinal(c_w) \}$ }
+    \subcaseL{(2.2) $\absevent' \in \{ (l', dc, \lex) | (l', dc) \in \absfinal(c_w) \}$ }
     In this case, we know $(l, dc) \in \absfinal(c_w)$.
     \\
     Since $\absflow(c) = \absflow'(c_w) \cup \{(l', dc, l_w)| (l', dc) \in \absfinal(c_w) \} \cup \cdots $, 
@@ -144,7 +140,7 @@
       \eskip,
       \trace_0 \tracecat [(b, l_w, \efalse)]}}
     }$,
-    In this case, we have $\trace = [(b, l_w, \efalse)]$ and $\event = (b, l_w, \efalse)$ (o.w., $\event \not\eventin \trace$ and this lemma is vacuously true) with $l = l_w$.
+    In this case, we have $\trace = [(b, l_w, \efalse)]$ and $\event = (b, l_w, \efalse)$ (o.w., $\event \not\in \trace$ and this lemma is vacuously true) with $l = l_w$.
     \\
     By the abstract execution trace computation, $\absflow(c) = \{(l, \top, \init(c_w))\} \cup \cdots $, 
     we have $\absevent = (l, \top, \init(c_w))$  and $\absevent \in \absflow(c)$.
