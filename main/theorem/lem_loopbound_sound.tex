@@ -343,24 +343,23 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
  In this sense, we have 
  $
  \arg\max_{l_1}\left\{
-   \varinvar(y) + v ~\middle\vert~ 
-   \begin{array}{l} 
-     (l_1, x' \leq y + v, l_2) \in \reset(x) 
-     \\
-     \land \absinit(\rprog) \leq l_1 \leq \absinit(\tpath)
-   \end{array}
- \right\}$
- is a sound initial value estimation of the value of $x$ before first execution of $l_t: \rprog_t$, i.e.,
+  \varinvar(y) + v ~\middle\vert~ 
+  \begin{array}{l} 
+    (l_1, x' \leq y + v, l_2) \in \reset(x) \\
+    \land l_1 \leq \absinit(\rprog)
+\end{array}
+\right\}
+ $
+ is a sound initial value estimation of the value of $x$ before first execution of $\rprog$, i.e.,
  \[
    \config{\arg\max_{l_1}\left\{
-     \varinvar(y) + v ~\middle\vert~ 
-     \begin{array}{l} 
-       (l_1, x' \leq y + v, l_2) \in \reset(x) 
-       \\
-       \land \absinit(\rprog) \leq l_1 \leq \absinit(\tpath)
-     \end{array}
-   \right\}}(\trace_0) 
-   \geq \max \left\{ v ~|~  \env(\trace) x = v \right\}  \geq \env(\trace') x
+    \varinvar(y) + v ~\middle\vert~ 
+    \begin{array}{l} 
+      (l_1, x' \leq y + v, l_2) \in \reset(x) \\
+      \land l_1 \leq \absinit(\rprog)
+  \end{array}
+  \right\}}(\trace_0) 
+   \geq \env(\trace') x
    \]
  %
  \item  
@@ -384,37 +383,33 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
       \right\}
     \end{array}
   \end{array}
-  , x = \locbound(\tpath)
 \]
- Let $\trace' \in \tdom$ be the execution trace before the execution of $l_t: \rprog_t$ in the second iteration of $l:\rprog$, then we have
+ Let $\trace' \in \tdom$ be the execution trace before the second execution of $\tpath$, then we have
  \[
-   \config{c_l, \trace_0} \to^* \config{c_t;c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
  \]
    By the soundness of the rank estimation in Lemma~\ref{lem:local_bound_sound} and Theorem~\ref{thm:pathinsensitive_rb_soundness}, we know 
    for each variable $y$ such that $(l_1, x' \leq y + v, l_2) \in \reset(x) $,
-   $\varinvar(y)$ is the sound upper bound on its maximum value during the execution. Then we have
+   $\varinvar(y)$ is the sound upper bound on its maximum value during the execution. 
+   Then we have
    \[
      \config{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y 
    \]
    Same for each abstract event such that $((l', x' \leq x + v, \_) \in \inc(x) $ and $(l', x' \leq x + v, \_) \in \dec(x)$,
    we know 
-   $ \begin{array}{l}
-     \sum\limits_{\absevent \in \inc(x) }
-     \left\{ 
-     v ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land  l' \in \rprog 
-     \land l' \notin \tpath \right\}
+   $      
+   \begin{array}{l}
+    \sum\limits_{\absevent \in \inc(x) }
+     \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
      \\ \qquad 
-     + \arg\max\limits_{l_2 }
-         \left\{ 
-           \varinvar(y) + v ~\middle\vert~ 
-         (l_1, x' \leq y + v, l_2) \in \reset(x) \land l_1 \in \rprog \land l_1 \notin \tpath
+     + \arg\max\limits_{l' }
+        \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
+        \\ \qquad 
+       - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
+         v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
          \right\}
-     \\ \qquad 
-     - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
-     v 
-     ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
-   \end{array}
-   $ bounds the value modification of $x$ in one iteration of $\rprog$.
+       \end{array}
+   $ bounds the value modification of $x$ in one execution of $\tpath$.
  %
  i.e.,
    \[
@@ -423,20 +418,17 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
        \rfinit(l: \rprog)}(\trace_0)
        -
      \config{
-         \begin{array}{l}
-           \sum\limits_{\absevent \in \inc(x) }
-           \left\{ 
-           v ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land  l' \in \rprog 
-           \land l' \notin \tpath \right\}
-           \\ \qquad 
-           + \arg\max\limits_{l_2 }
-               \left\{ \varinvar(y) + v ~\middle\vert~ 
-               (l_1, x' \leq y + v, l_2) \in \reset(x) \land l_1 \in \rprog \land l_1 \notin \tpath\right\}
-           \\ \qquad 
+      \begin{array}{l}
+        \sum\limits_{\absevent \in \inc(x) }
+         \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
+         \\ \qquad 
+         + \arg\max\limits_{l' }
+            \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
+            \\ \qquad 
            - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
-           v 
-           ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
-         \end{array}
+             v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
+             \right\}
+           \end{array}
      }(\trace_0) \\
      \leq \env(\trace') x
    \end{array}
@@ -454,18 +446,55 @@ Then we know $\rffinal(\tpath) \leq \env(\trace') x$ and this case is proved by
 \[
   \rfinit(\rprog) - \rffinal(\rprog) \geq \env(\trace') x.
 \]
-\item  The \emph{Variable Gradient Decent}, 
- $\varGD(\rprog)$
- is a set of equations $x = e$ for the same variables in the $\rfinit(\rprog)$.
- It computes the set of next states for every ranking function of the simple transition path $\tpath$ in $\rprog$,
- and recursively computes the loop bound, $BD$ in the meantime.
- \\
- {$\varGD(\rprepeat(\rprog)) =  BD(\rprog)  \times
-{\varGD(\rprog)}$}
- \\
- $\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1) \cup \varGD(\rprog_2)$
- \\
- $\varGD(\tpath) =  \left\{x = \rfnext(\tpath) ~|~ x = \locbound(\tpath) \right\} $  
+\item   \emph{Variable Gradient Decent} Soundness.
+$\varGD(\rprog)$ contains the equations $x = e$, where $e \in \scexpr$ is a
+  symbolic expression describing the value of $x$ before the second execution of $\rprog$,
+  for each transition path $\tpath$ in this program with $x$ as the ranking function.
+\\
+ By induction on the $\rprog$, we have the following subcases.
+ \subcaseL{$\rprog = \tpath$}
+ By Definition~\ref{def:alg-absstate}, we have
+\[
+   \varGD(\tpath) =  \left\{x = \rfnext(\tpath) ~|~ x = \locbound(\tpath) \right\}
+\]
+In this case, we have the soundness guaranteed by the soundness of $\rfnext(\tpath)$ for each transition path $\tpath$.
+ \subcaseL{$\rprog = \rprog_1;\rprog_2$}
+ By Definition~\ref{def:alg-absstate}, we have
+\[
+\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1) \cup \varGD(\rprog_2)
+\]
+By induction hypothesis on $\rprog_1$ and $\rprog_2$, we know
+\\
+for each $\tpath_1 \in \rprog_1$ with $x_1$ as its ranking function,
+$\varGD(\rprog_1)$ contains the equations $x_1 = \expr_1$, where $\expr_1 \in \scexpr$ is a
+symbolic expression describing the value of $x_1$ before the second execution of $\rprog_1$;
+\\
+for each $\tpath_2 \in \rprog_2$ with $x_2$ as its ranking function,
+$\varGD(\rprog_2)$ contains the equations $x_2 = \expr_2$, where $\expr_2 \in \scexpr$ is a
+symbolic expression describing the value of $x_2$ before the second execution of $\rprog_2$.
+\\
+By the operational semantics, we know the second execution before $\rprog$ is also the second execution of both $\rprog_1$ and $\rprog_2$.
+\\
+Then we have this case proved by taking the union of them, i.e., $\varGD(\rprog_1) \cup \varGD(\rprog_2)$.
+\subcaseL{$\rprog = \rprepeat(\rprog')$}
+ By Definition~\ref{def:alg-absstate}, we have
+\[
+  \varGD(\rprepeat(\rprog')) =  BD(\rprog')  \times
+  {\varGD(\rprog')}
+\]
+By induction hypothesis on $\rprog'$, we know
+\\
+for each $\tpath' \in \rprog'$ with $x'$ as its ranking function,
+$\varGD(\rprog')$ contains the equations $x' = \expr'$, where $\expr' \in \scexpr$ is a
+symbolic expression describing the value of $x'$ before the second execution of $\rprog'$.
+\\
+We also know $BD(\rprog')$ computes the maximum iteration times of $\rprog'$ from $\absinit(c')$ until the $l_f$ where $(l_f, \_) \in \absfinal(c')$ where $\rprog' = REFINE(c')$.
+\\
+Then we know $BD(\rprog')  \times
+{\varGD(\rprog')}$
+computes the value of $x'$ before the second execution of $\rprepeat(\rprog')$ for each each $\tpath' \in \rprog'$ with $x'$ as its ranking function.
+\\
+Then we have this case proved.
 \end{itemize}
 Based on the soundness of the three states above, we know that the initial value of the ranking function
 subtracts its final value divided by the modified value soundly computes the maximum iteration times of this program from $\absinit(c)$ until the $l_f$ where $(l_f, \_) \in \absfinal(c)$.
