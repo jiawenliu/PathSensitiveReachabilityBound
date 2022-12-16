@@ -1,0 +1,21 @@
+public static String joinWith(final String separator, final Object... objects) {
+    if (objects == null) {
+        throw new IllegalArgumentException("Object varargs must not be null");
+    }
+
+    final String sanitizedSeparator = defaultString(separator);
+
+    final StringBuilder result = new StringBuilder();
+
+    final Iterator<Object> iterator = Arrays.asList(objects).iterator();
+    while (iterator.hasNext()) {
+        final String value = Objects.toString(iterator.next(), "");
+        result.append(value);
+
+        if (iterator.hasNext()) {
+            result.append(sanitizedSeparator);
+        }
+    }
+
+    return result.toString();
+}

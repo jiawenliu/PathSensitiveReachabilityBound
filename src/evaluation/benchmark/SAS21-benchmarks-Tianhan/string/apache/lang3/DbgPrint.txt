@@ -1,0 +1,12 @@
+static String dbgPrint(final boolean[] src) {
+    final StringBuilder sb = new StringBuilder();
+    for (final boolean e : src) {
+        if (e) {
+            sb.append("1, ");
+        } else {
+            sb.append("0, ");
+        }
+    }
+    final String out = sb.toString();
+    return out.substring(0, out.length() - 1);
+}

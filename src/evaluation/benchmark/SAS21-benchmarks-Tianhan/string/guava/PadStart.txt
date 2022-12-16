@@ -1,0 +1,14 @@
+public static String padStart(String string, int minLength, char padChar) {
+  checkNotNull(string); // eager for GWT.
+  if (string.length() >= minLength) {
+    return string;
+  }
+  StringBuilder sb = new StringBuilder(minLength);
+  for (int i = string.length(); i < minLength; i++) {
+    sb.append(padChar);
+  }
+  sb.append(string);
+  return sb.toString();
+}
+
+https://github.com/google/guava/blob/5345f11f280c6ce8ff37065a71acd8cb0a54d660/guava/src/com/google/common/base/Strings.java

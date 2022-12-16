@@ -1,0 +1,18 @@
+public String toString(final ToStringStyle style) {
+    if (diffs.isEmpty()) {
+        return OBJECTS_SAME_STRING;
+    }
+
+    final ToStringBuilder lhsBuilder = new ToStringBuilder(lhs, style);
+    final ToStringBuilder rhsBuilder = new ToStringBuilder(rhs, style);
+
+    for (final Diff<?> diff : diffs) {
+        lhsBuilder.append(diff.getFieldName(), diff.getLeft());
+        rhsBuilder.append(diff.getFieldName(), diff.getRight());
+    }
+
+    return String.format("%s %s %s", lhsBuilder.build(), DIFFERS_STRING,
+            rhsBuilder.build());
+}
+
+src\main\java\org\apache\commons\lang3\builder\DiffResult.java

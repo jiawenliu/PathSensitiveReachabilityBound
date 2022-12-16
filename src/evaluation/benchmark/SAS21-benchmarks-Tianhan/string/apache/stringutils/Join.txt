@@ -1,0 +1,16 @@
+public static String join(final byte[] array, final char separator, final int startIndex, final int endIndex) {
+    if (array == null) {
+        return null;
+    }
+    final int noOfItems = endIndex - startIndex;
+    if (noOfItems <= 0) {
+        return EMPTY;
+    }
+    final StringBuilder buf = newStringBuilder(noOfItems);
+    buf.append(array[startIndex]);
+    for (int i = startIndex + 1; i < endIndex; i++) {
+        buf.append(separator);
+        buf.append(array[i]);
+    }
+    return buf.toString();
+}

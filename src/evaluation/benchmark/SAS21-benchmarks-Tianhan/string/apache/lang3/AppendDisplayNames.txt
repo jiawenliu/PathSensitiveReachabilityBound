@@ -1,0 +1,44 @@
+private static Map<String, Integer> appendDisplayNames(final Calendar cal, final Locale locale, final int field, final StringBuilder regex) {
+    final Map<String, Integer> values = new HashMap<>();
+
+    final Map<String, Integer> displayNames = cal.getDisplayNames(field, Calendar.ALL_STYLES, locale);
+    final TreeSet<String> sorted = new TreeSet<>(LONGER_FIRST_LOWERCASE);
+    for (final Map.Entry<String, Integer> displayName : displayNames.entrySet()) {
+        final String key = displayName.getKey().toLowerCase(locale);
+        if (sorted.add(key)) {
+            values.put(key, displayName.getValue());
+        }
+    }
+    for (final String symbol : sorted) {
+        simpleQuote(regex, symbol).append('|');
+    }
+    return values;
+}
+
+private static StringBuilder simpleQuote(final StringBuilder sb, final String value) {
+    for (int i = 0; i < value.length(); ++i) {
+        final char c = value.charAt(i);
+        switch (c) {
+        case '\\':
+        case '^':
+        case '$':
+        case '.':
+        case '|':
+        case '?':
+        case '*':
+        case '+':
+        case '(':
+        case ')':
+        case '[':
+        case '{':
+            sb.append('\\');
+        default:
+            sb.append(c);
+        }
+    }
+    if (sb.charAt(sb.length() - 1) == '.') {
+        // trailing '.' is optional
+        sb.append('?');
+    }
+    return sb;
+}

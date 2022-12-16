@@ -1,0 +1,32 @@
+public static String squeeze(final String str, final String... set) {
+    if (StringUtils.isEmpty(str) || deepEmpty(set)) {
+        return str;
+    }
+    final CharSet chars = CharSet.getInstance(set);
+    final StringBuilder buffer = new StringBuilder(str.length());
+    final char[] chrs = str.toCharArray();
+    final int sz = chrs.length;
+    char lastChar = chrs[0];
+    char ch = ' ';
+    Character inChars = null;
+    Character notInChars = null;
+    buffer.append(lastChar);
+    for (int i = 1; i < sz; i++) {
+        ch = chrs[i];
+        if (ch == lastChar) {
+            if (inChars != null && ch == inChars) {
+                continue;
+            }
+            if (notInChars == null || ch != notInChars) {
+                if (chars.contains(ch)) {
+                    inChars = ch;
+                    continue;
+                }
+                notInChars = ch;
+            }
+        }
+        buffer.append(ch);
+        lastChar = ch;
+    }
+    return buffer.toString();
+}

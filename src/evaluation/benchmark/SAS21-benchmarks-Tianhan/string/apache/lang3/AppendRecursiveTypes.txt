@@ -1,0 +1,24 @@
+private static void appendRecursiveTypes(final StringBuilder builder, final int[] recursiveTypeIndexes,
+    final Type[] argumentTypes) {
+    for (int i = 0; i < recursiveTypeIndexes.length; i++) {
+        appendAllTo(builder.append('<'), ", ", argumentTypes[i].toString()).append('>');
+    }
+
+    final Type[] argumentsFiltered = ArrayUtils.removeAll(argumentTypes, recursiveTypeIndexes);
+
+    if (argumentsFiltered.length > 0) {
+        appendAllTo(builder.append('<'), ", ", argumentsFiltered).append('>');
+    }
+}
+
+private static <T> StringBuilder appendAllTo(final StringBuilder builder, final String sep,
+    @SuppressWarnings("unchecked") final T... types) {
+    Validate.notEmpty(Validate.noNullElements(types));
+    if (types.length > 0) {
+        builder.append(toString(types[0]));
+        for (int i = 1; i < types.length; i++) {
+            builder.append(sep).append(toString(types[i]));
+        }
+    }
+    return builder;
+}

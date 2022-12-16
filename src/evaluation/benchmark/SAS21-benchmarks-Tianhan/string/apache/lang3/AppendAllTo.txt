@@ -1,0 +1,15 @@
+private static <T> StringBuilder appendAllTo(final StringBuilder builder, final String sep,
+    @SuppressWarnings("unchecked") final T... types) {
+    Validate.notEmpty(Validate.noNullElements(types));
+    if (types.length > 0) {
+        builder.append(toString(types[0]));
+        for (int i = 1; i < types.length; i++) {
+            builder.append(sep).append(toString(types[i]));
+        }
+    }
+    return builder;
+}
+
+private static <T> String toString(final T object) {
+    return object instanceof Type ? toString((Type) object) : object.toString();
+}
