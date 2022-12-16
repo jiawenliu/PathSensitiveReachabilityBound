@@ -1,25 +1,28 @@
 \begin{lemma}[Soundness of the Path Local Reachability-Bound]
-    For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
-    if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
-    then the execution times of $\tpath$ when executing the $\rprog_l$ is bounded by $\outinB(\rprog_l, \tpath)$.
-    \[
-      \begin{array}{l}
-      \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c_l), \trace \in \inftdom, \rprog \st 
-      \rprog = REFINE(c)
-      \land
-      l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
-      \\ \qquad
-      \land 
-      \rprog_l = \algrewrite(c_l)
-      \land
-      \config{c_l, \trace_0} \to^* 
-      \config{\eskip, \trace_0 \tracecat \trace}
-      \\ \qquad
-      \implies
-      \config{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)).
-      \end{array}
-    \]  
-\end{lemma}
+  For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
+  if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
+  then the execution times of $\tpath$ when executing the $\rprog_l$ under initial trace $\trace_0 \in \ftdom_0(c_l)$ is bounded by $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0)$.
+  \[
+    \begin{array}{l}
+    \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, \rprog \st 
+    \rprog = REFINE(c)
+    \land
+    l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
+    \\ \qquad
+    \land 
+    \rprog_l = \algrewrite(c_l)
+    \land
+    \Big(
+    \config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+    \lor \config{c_l, \trace_0} \to^\infty \config{c_l', \trace_0 \tracecat \trace} 
+    \Big)
+    \\ \qquad
+    \implies
+    \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
+    \end{array}
+  \]  
+ 
+  \end{lemma}
 \begin{proof}
 \emph{Path Local Reachability-Bound} Soundness.
 \\
@@ -27,66 +30,66 @@ Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath
 \\
 Let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested and $c_l$ be the While program of $\rprog_l$ such that $\kw{Rewrite(c_l)} = \rprog_l$. 
 \\
-Let $\trace_0 \in \tdom_0(c_l)$ be an arbitrary initial trace of the closest loop $c_l$, and $\trace \in \inftdom(c_l)$ be an execution trace such that $\config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}$.
+Let $\trace_0 \in \ftdom_0(c_l)$ be an arbitrary initial trace of the closest loop $c_l$, and $\trace \in \tdom(c_l)$ be an execution trace such that $\config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}$.
 \\
 To show $\outinB(\rprog_l, \tpath)$ is a sound upper bound of the execution times of $\tpath$ when executing the $\rprog_l$, it is sufficient to show:
 \[
-  \config{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \counter(\trace, L(\tpath))
+  \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath))
   \]
 By induction on the loop program $\rprog_l$,
 we have the following cases:
 \caseL{$\rprog_l = \tpath$}
 In this case, $\outinB(\tpath, \tpath) = 1$. 
-Since $\tpath$ doesn't contain any loop, we know it will be executed at most once and $\counter(\trace, L(\tpath)) \leq 1$
+Since $\tpath$ doesn't contain any loop, we know it will be executed at most once and $\lcounter(\trace, \pathl(\tpath)) \leq 1$
 \\
-We have $\config{\outinB(\rprog_l, \tpath)}(\trace_0) = 1 \geq \counter(\trace, L(\tpath)) $ and this case is proved.
+We have $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0) = 1 \geq \lcounter(\trace, \pathl(\tpath)) $ and this case is proved.
 \caseL{$\rprog_l = \tpath'$}
 In this case, we have $\outinB(\tpath', \tpath) = \highlight{0} $ by Definition~\ref{def:pathlocalrb}.
-Since $\tpath' \neq \tpath$, we know $\tpath$ isn't executed when executing $c_l$ and $\counter(\trace, L(\tpath)) = 0$.
+Since $\tpath' \neq \tpath$, we know $\tpath$ isn't executed when executing $c_l$ and $\lcounter(\trace, \pathl(\tpath)) = 0$.
 \\
-So we have $\config{\outinB(\rprog_l, \tpath)}(\trace_0) = 0 = \counter(\trace, L(\tpath)) $ and this case is proved.
+So we have $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0) = 0 = \lcounter(\trace, \pathl(\tpath)) $ and this case is proved.
 \caseL{$\rprog_l = \rprog_1;\rprog_2$}
 In this case, we have $\outinB(\rprog_1;\rprog_2, \tpath) = \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) $ by Definition~\ref{alg:alg-refine_rewrite}, and
 it is sufficient to show
 \[
-  \config{\outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath)}(\trace_0) \geq \counter(\trace, L(\tpath)) 
+  \econfig{\outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
 Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = c_1; c_2$.
 \\
-According to the operational semantics, let $\trace_1, \trace_2 \in \inftdom$ be two execution traces such that 
+According to the operational semantics, let $\trace_1, \trace_2 \in \tdom$ be two execution traces such that 
 \[
   \config{c_1; c_2, \trace_0} \to^* \config{c_2, \trace_0 \tracecat \trace_1} \to^* \config{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace_2}
 \]
 By the trace non-decreasing property in Lemma~\ref{lem:tracenondec}, we have $\trace = \trace_1 \tracecat \trace_2$ and 
 \[
-  \counter(\trace, L(\tpath))  = \counter(\trace_1, L(\tpath))  + \counter(\trace_2, L(\tpath)) 
+  \lcounter(\trace, \pathl(\tpath))  = \counter(\trace_1, L(\tpath))  + \counter(\trace_2, L(\tpath)) 
 \]
 By induction hypothesis on $\trace_0$, $c_1$, $\trace_1$ and $c_2$, we have
 \[
-  \config{\outinB(\rprog_1, \tpath)}(\trace_0) \geq \counter(\trace_1, L(\tpath)) 
+  \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) \geq \counter(\trace_1, L(\tpath)) 
 \]
  and 
   \[
-    \config{\outinB(\rprog_2, \tpath)}(\trace_0 \tracecat \trace_1) \geq \counter(\trace_2, L(\tpath)) 
+    \econfig{\outinB(\rprog_2, \tpath)}(\trace_0 \tracecat \trace_1) \geq \counter(\trace_2, L(\tpath)) 
   \]
 Then we have this case proved as
 \[
   \begin{array}{l}
-  \config{\outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath)}(\trace_0)
+  \econfig{\outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath)}(\trace_0)
   \\
-  \geq \config{\outinB(\rprog_1, \tpath)}(\trace_0) + \config{\outinB(\rprog_2, \tpath)}(\trace_0 \tracecat \trace_1)
+  \geq \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) + \econfig{\outinB(\rprog_2, \tpath)}(\trace_0 \tracecat \trace_1)
   \\
   \geq \counter(\trace_1, L(\tpath))  + \counter(\trace_2, L(\tpath)) 
   \\
-  = \counter(\trace, L(\tpath))
+  = \lcounter(\trace, \pathl(\tpath))
   \end{array}
   \] 
 \caseL{$\rprog_l = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
 We have $\outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) = \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}$ by Definition~\ref{alg:alg-refine_rewrite}, and
 it is sufficient to show
 \[
-  \config{\max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}}(\trace_0) \geq \counter(\trace, L(\tpath)) 
+  \econfig{\max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
 Let $c_1, \ldots, c_m \in \cdom$ be the while program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
 \\
@@ -108,13 +111,13 @@ We have $\outinB(\rprepeat(\rprog'), \tpath) = BD(\rprepeat(\rprog')) \times \ou
 by Definition~\ref{alg:alg-refine_rewrite}, and
 it is sufficient to show
 \[
-  \config{ BD(\rprepeat(\rprog')) \times \outinB(\rprog', \tpath)} (\trace_0) \geq \counter(\trace, L(\tpath)) 
+  \econfig{ BD(\rprepeat(\rprog')) \times \outinB(\rprog', \tpath)} (\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
 Let $c' \in \cdom$ be the while program corresponding to $\rprog'$ such that $\algrewrite(c') = \rprog'$.
-According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = \ewhile \clabel{\bexpr} \edo c'$.
+According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = \ewhile \clabel{\bexpr}^{l} \edo c'$.
 \\
-According to the operational semantics, let $\trace' \in \inftdom(c')$ be the execution trace of executing $c'$ one time,
-and $\trace' \in \inftdom(c')$  such that 
+According to the operational semantics, let $\trace' \in \tdom(c')$ be the execution trace of executing $c'$ one time,
+and $\trace' \in \tdom(c')$  such that 
 \[
   \config{\ewhile \clabel{\bexpr}^{l'} \edo c', \trace_0} \to \config{c_2, \trace_0 \tracecat (\bexpr, \etrue, l')} \to^* \config{\ewhile \clabel{\bexpr}^{l'} \edo c', \trace_0 \tracecat (\bexpr, \etrue, l') \tracecat \trace'}
   \to^* \config{\eskip, \trace_0 \tracecat \trace}
@@ -123,23 +126,23 @@ By the trace non-decreasing property in Lemma~\ref{lem:tracenondec}, we know $\t
 \\
 By Lemma~\ref{lem:loopbound_sound}, we know $BD(\rprepeat(\rprog'))$ bounds the iterations of $c_l$. We have
 \[
-  BD(\rprepeat(\rprog')) \times \counter(\trace', L(\tpath))  \geq \counter(\trace, L(\tpath)) 
+  BD(\rprepeat(\rprog')) \times \counter(\trace', L(\tpath))  \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
 By induction hypothesis on $c'$, we also have
 \[
-  \config{\outinB(\rprog_1, \tpath)}(\trace_0) \geq \counter(\trace', L(\tpath)) 
+  \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) \geq \counter(\trace', L(\tpath)) 
 \]
 Then we have this case proved by
 \[
   \begin{array}{l}
-  \config{BD(\rprepeat(\rprog')) \times \outinB(\rprog_1, \tpath)}(\trace_0) 
+  \econfig{BD(\rprepeat(\rprog')) \times \outinB(\rprog_1, \tpath)}(\trace_0) 
   \\
   \geq
-  BD(\rprepeat(\rprog')) \times \config{\outinB(\rprog_1, \tpath)}(\trace_0) 
+  BD(\rprepeat(\rprog')) \times \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) 
   \\
   \geq BD(\rprepeat(\rprog')) \times \counter(\trace', L(\tpath))  
   \\
-  \geq \counter(\trace, L(\tpath)) 
+  \geq \lcounter(\trace, \pathl(\tpath)) 
   \end{array}
   \]
 \caseL{$\rprog_l = l': \rprog'$}

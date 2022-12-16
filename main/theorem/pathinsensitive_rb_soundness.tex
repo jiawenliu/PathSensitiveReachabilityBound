@@ -36,20 +36,19 @@
   %
   \begin{thm}[Soundness of the Path-insensitive Transition Bound]
     % \label{thm:pathinsensitive_rb_soundness}
-  For each program ${c}$ and an edge $\absevent = (l, \_, \_) \in \absG(c)$, 
-  its \emph{path-insensitive transition bound} $\absclr(\absevent, c)$ 
-   is a sound upper bound on 
-  the evaluation times of the command with label $l$ during the execution of $c$.
-    \[
-      \begin{array}{l}
-        \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
-        \trace \in \mathcal{T}, v \in \mathbb{N}
-         \st 
-         \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\trace} 
-         \land \config{\absclr(\absevent, c), \trace_0} \aarrow v
-         \land
-        \counter(\trace, l) \leq v
-      \end{array}
+    For each program ${c}$ and an edge $\absevent = (l, \_, \_) \in \absG(c)$, if $l$ is the label of an assignment command,
+    then its \emph{path-insensitive transition bound} $\absclr(\absevent, c)$ 
+     is a sound upper bound on 
+    the execution times of this assignment command in $c$.
+      \[
+        \begin{array}{l}
+          \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom, l \in \lvar(c) \st
+          \Big( \config{c, \trace_0} \rightarrow^{*} \config{\eskip, \trace_0 \tracecat \trace} 
+            \lor  \config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace_0 \tracecat \trace} \Big)
+           \\ \qquad \qquad
+           \implies \exists \absevent = (\_, l, \_) \in \absflow(c) \land
+          \counter(\trace, l) \leq \econfig{\absclr(\absevent, c)}(\trace_0)
+        \end{array}
       \]
   \end{thm}
   % \begin{thm}[Soundness of the Path-insensitive Transition Bound]
@@ -79,36 +78,25 @@
   % \end{thm}
 %
 \begin{proof}
-  Taking an arbitrary program ${c}$, $l \in \lvar(c)$,
-  and arbitrary $\vtrace, \trace' \in \mathbb{T}$ satisfying
-  \\
-  $\config{{c}, \trace} 
-  \to^{*} \config{\eskip, \trace\tracecat\vtrace'} 
-  % \land 
-  $
-  \\
+  Taking arbitrary $\trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom$ and a program point
+  such that
+  \[
+    \Big( \config{c, \trace_0} \rightarrow^{*} \config{\eskip, \trace_0 \tracecat \trace} 
+    \lor  \config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace_0 \tracecat \trace} \Big)
+  \]
   Then it is sufficient to show 
   \[
-    \forall v \in \mathbb{N}
-    \st \config{\trace, w_p} \earrow v \implies
-    \counter(\vtrace', l) \leq v
-    \]
-  By $(l, w_p) \in \absW(c)$, we know 
-  $  w_p = \max \{ \absclr(\absevent) | \absevent = (l, \_, \_)\}$.
-  \\
+    \forall l \in \lvar(c) \exists \absevent = (\_, l, \_) \in \absflow(c) \land
+    \counter(\trace', l) \leq \econfig{\absclr(\absevent, c)}(\trace_0)
+  \]
+  Let $l \in \lvar(c)$ be arbitrary program point,
   By Lemma~\ref{lem:abscfg_sound}, there exists an abstract event in $\absflow(c)$ of form $(\absevent) = (l, \_, \_)$,
   corresponding to the assignment command associated to labeled variable $x^l$. 
   \\
   Let $(\absevent) = (l, dc, l') \in \absflow(c)$ be this event for some $dc$ and $l'$ such that  $(\absevent) = (l, dc, l') \in \absflow(c)$,
-  by the last step of phase 2, we know
-  $
-  w_p  \triangleq \absclr(\absevent)
-  $.
-   Then, it is sufficient to show:
+   then it is sufficient to show:
   \[
-  \forall v \in \mathbb{N} \st 
-  \config{\absclr(\absevent), \trace} \earrow v \implies
-  \counter(\vtrace', l) \leq v
+    \counter(\trace, l) \leq \econfig{\absclr(\absevent, c)}(\trace_0)
   \]
   By definition of $\absclr(\absevent)$:
   \[
@@ -126,24 +114,22 @@
 To show:
 \[
   \begin{array}{l}
-    \max \left\{ \counter(\vtrace') l ~ \middle\vert~
+    \max \left\{ \counter(\vtrace',  l) ~ \middle\vert~
 \forall \vtrace \in \mathcal{T} \st \config{{c}, \trace} \to^{*} \config{\eskip, \trace\tracecat\vtrace'} \right\} 
 \\
 \leq 
-\inc(\locbound(\absevent)) + 
-\sum\{\absclr(\absevent') \times \max(\varinvar(a) + c, 0) | (\absevent', a, c) \in \reset(\locbound(\absevent))\} 
+\econfig{\inc(\locbound(\absevent))}(\trace_0) + 
+\sum\{\econfig{\absclr(\absevent') \times \max(\varinvar(a) + c, 0)}(\trace_0) | (\absevent', a, c) \in \reset(\locbound(\absevent))\} 
 \end{array}
 \]
-  % \caseL{$l \in prel$}
-  % \\
   Taking an arbitrary initial trace
   $\trace_0 \in \mathcal{T}$, 
   executing $c$ with $\trace_0$, let $\trace$ be the trace after evaluation, i.e., $\config{{c}, \trace_0} \to^{*} \config{\eskip,\vtrace}$, it is sufficient to show:
   \[ 
     \begin{array}{l}
-      \counter(\vtrace') l \leq 
-    \inc(\locbound(\absevent)) + 
-    \sum\{\absclr(\absevent') \times \max(\varinvar(a) + c, 0) | (\absevent', a, c) \in \reset(\locbound(\absevent))\}
+      \counter(\vtrace',  l) \leq 
+    \econfig{\inc(\locbound(\absevent)) + 
+    \sum\{\absclr(\absevent') \times \max(\varinvar(a) + c, 0) | (\absevent', a, c) \in \reset(\locbound(\absevent))\}}(\trace_0)
   \end{array}
   \]
 %

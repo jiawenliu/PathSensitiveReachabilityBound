@@ -1,19 +1,22 @@
 \begin{lemma}[Soundness of Path Reachability Bound]
   % \label{lem:pathrb-sound}
   For any program with its refined program $\rprog$ and a simple transition path $\tpath$ in this program,
-  the execution times of $\tpath$ when executing the $\rprog$ is bounded by $\inoutB(\rprog, \tpath)$.
+  the execution times of $\tpath$ when executing the $\rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$ is bounded by $\econfig{\inoutB(\rprog, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \inftdom, \rprog \st 
+    \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
     \rprog = REFINE(c)
+    \\ \qquad
     \land
-    \config{c, \trace_0} \to^* 
-    \config{{\eskip, \trace_0 \tracecat \trace}}
+    \Big(
+    \config{c, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+    \lor \config{c, \trace_0} \to^\infty \config{c', \trace_0 \tracecat \trace} 
+    \Big)
     \\ \qquad
     \implies
-    \config{\inoutB(\rprog, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)).
+    \econfig{\inoutB(\rprog, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
     \end{array}
-    \]
+  \]
 \end{lemma}
 %
 \begin{proof}
@@ -21,12 +24,12 @@
   \\
   Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in this program.
   \\
-Taking an arbitrary initial trace $\trace_0 \in \tdom_0(c)$  and an execution trace $\trace \in \tdom$
- such that $\config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}$,
+Taking an arbitrary initial trace $\trace_0 \in \ftdom_0(c)$  and an execution trace $\trace \in \tdom$
+ such that $\econfig{{c}, \trace} \to^{*} \econfig{\eskip, \trace_0 \tracecat \trace}$,
  it is sufficient to show,
  %
  \[
- \config{\inoutB(\rprog, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)) .
+ \econfig{\inoutB(\rprog, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) .
  \]
 By induction on program $\rprog$, we have the same cases as in the proof of \emph{Path Local Reachability-Bound} Soundness in Appendix~\ref{apdx:pathlocalrb-sound}.
 The proof of the first four cases are almost the same as the proof of Lemma~\ref{lem:pathlocalrb-sound}, I don't unfold and repeat all the detail in this proof.
@@ -70,7 +73,7 @@ sound upper bound on $\tpath$'s reaching times when executing $l': \rprog'$.
 \\
 So we have this case proved by
 \[
-  \config{\inoutB(\rprog, \tpath)}(\trace_0) = \config{\outinB(\rprog, \tpath)}(\trace_0) \geq \counter(\trace, L(\tpath)).
+  \econfig{\inoutB(\rprog, \tpath)}(\trace_0) = \econfig{\outinB(\rprog, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
 \]
 %
 % \subcaseL{$\kw{enclosed}(\tpath) \notin \kw{enclosing}(\rprog')$}
@@ -87,10 +90,10 @@ In this case, we have
 \]
 Then we need to show:
 \[
-  \config{\lpchB(l':\rprog', \tpath )
+  \econfig{\lpchB(l':\rprog', \tpath )
   \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')}
   \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0) 
-  \geq \counter(\trace, L(\tpath)).
+  \geq \lcounter(\trace, \pathl(\tpath)).
   \]
 %
 Since $\rprog = l': \rprog'$, according to Algorithm~\ref{alg:alg-refine_rewrite}, we know $c$ has the form
@@ -99,7 +102,7 @@ $\ewhile \clabel{\bexpr}^{l'} \edo c'$ for some boolean expression $\bexpr$.
 For each $l'':\rprog''$ such that $l': \rprog' = \kw{enclosed}(l'':\rprog'')$, 
 let $c''\in \cdom$ be the while program corresponding to $\rprog''$ such that $\algrewrite(c'') = \rprog''$,
 $c_1, c_2 \in \cdom$ such that $c' = c_1; c''; c_2$
-$\trace'' \in \inftdom$ be the execution trace of $c''$ and $\trace_1, \trace_2 \in \inftdom$ be the execution traces before and after executing $c''$, then we have
+$\trace'' \in \tdom$ be the execution trace of $c''$ and $\trace_1, \trace_2 \in \tdom$ be the execution traces before and after executing $c''$, then we have
 \[
   \begin{array}{l}
   \config{c, \trace_0} \to \config{c';c, \trace_0 \tracecat [(\bexpr, l', \etrue)]} \\
@@ -113,13 +116,13 @@ we know $\trace = [(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace'' \
 \\
 By induction hypothesis on $\inoutB(l'':\rprog'', \tpath)$ and $c''$, we have
 \[
-  \config{\inoutB(l'':\rprog'', \tpath)}(\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1) 
+  \econfig{\inoutB(l'':\rprog'', \tpath)}(\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1) 
   \geq \counter(\trace'', L(\tpath)).
 \]
 Then for all $l'':\rprog''$ such that $l': \rprog' = \kw{enclosed}(l'':\rprog'')$, we have 
 \[
   \begin{array}{l}
-  \config{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}
+  \econfig{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}
   (\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1)
   \geq \counter(\trace'', L(\tpath))
   \end{array}
@@ -132,21 +135,21 @@ There are two ways to prove the soundness.
 By Lemma~\ref{apdx:loopbound-sound}, we know $BD(l':\rprog') \geq$ the iteration numbers of $c'$. Then we have
 \[
   \begin{array}{l}
-  \config{ BD(l':\rprog')}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \econfig{ BD(l':\rprog')}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
   \geq \counter(\trace'' \tracecat \trace_2, L(\tpath)) \\
   = \counter([(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace'' \tracecat \trace_2)\\
-  = \counter(\trace, L(\tpath))
+  = \lcounter(\trace, \pathl(\tpath))
   \end{array}
 \]
 Then we have this case proved as the following.
 \[
   \begin{array}{l}
-  \config{ BD(l':\rprog') \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0)\\
-  \geq \config{ BD(l':\rprog')}(\trace_0) \times 
-  \config{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}
+  \econfig{ BD(l':\rprog') \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0)\\
+  \geq \econfig{ BD(l':\rprog')}(\trace_0) \times 
+  \econfig{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}
   (\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1)\\
-  \geq \config{ BD(l':\rprog')}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
-  \geq \counter(\trace, L(\tpath))
+  \geq \econfig{ BD(l':\rprog')}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \geq \lcounter(\trace, \pathl(\tpath))
   \end{array}
 \]
 However, this isn't precise enough since $\tpath$ might not be executed in every iteration of $c'$ because it is located in nested loops. 
@@ -160,22 +163,22 @@ In this sense, $\lpchB(l:\rprog', \tpath) \times \inoutB(\rprog, \tpath)$ is a s
 Then we have
 \[
   \begin{array}{l}
-  \config{ \lpchB(l:\rprog', \tpath)}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \econfig{ \lpchB(l:\rprog', \tpath)}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
   \geq \counter(\trace'' \tracecat \trace_2, L(\tpath))\\
   = \counter([(\bexpr, l', \etrue)] \tracecat \trace_1 \tracecat \trace'' \tracecat \trace_2)\\
-  = \counter(\trace, L(\tpath))
+  = \lcounter(\trace, \pathl(\tpath))
   \end{array}
 \]
 Then we have this case proved as the following.
 \[
   \begin{array}{l}
   \inoutB(l':\rprog') \\
-  = \config{ \lpchB(l:\rprog', \tpath) \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0) \\
-  \geq \config{ \lpchB(l:\rprog', \tpath) }(\trace_0) \times
-  \config{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}} 
+  = \econfig{ \lpchB(l:\rprog', \tpath) \times \max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}}(\trace_0) \\
+  \geq \econfig{ \lpchB(l:\rprog', \tpath) }(\trace_0) \times
+  \econfig{\max\limits_{l': \rprog' = \kw{enclosed}(l'':\rprog'')} \{\inoutB(l'':\rprog'', \tpath)\}} 
   (\trace_0 \tracecat [(\bexpr, l', \etrue)] \tracecat \trace_1) \\
-  \geq \config{ \lpchB(l:\rprog', \tpath)}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
-  \geq \counter(\trace, L(\tpath))
+  \geq \econfig{ \lpchB(l:\rprog', \tpath)}(\trace_0) \times \counter(\trace'', L(\tpath)) \\
+  \geq \lcounter(\trace, \pathl(\tpath))
   \end{array}
 \]
 %

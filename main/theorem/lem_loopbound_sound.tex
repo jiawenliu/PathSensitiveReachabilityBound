@@ -19,19 +19,20 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
 \begin{lemma}[Soundness of Loop Bound]
     % \label{lem:loopbound_sound}
     For every program $c$ with its refined program $\rprog$,
-    % for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
     $BD(\rprog)$ is a sound upper bound on the iterating times of this program.
     \[
       \begin{array}{l}
-      \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \inftdom, \rprog \st 
+      \forall c, c' \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
       \rprog = REFINE(c)
       \\ \qquad
       \land 
-      \config{c, \trace_0} \to^* 
-      \config{\eskip, \trace_0 \tracecat \trace}
+      \Big(
+        \config{c, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+        \lor \config{c, \trace_0} \to^\infty \config{c', \trace_0 \tracecat \trace} 
+        \Big)
       \\ \qquad
       \implies
-      \config{BD(\rprog)}(\trace_0) 
+      \econfig{BD(\rprog)}(\trace_0) 
       \\ \qquad \geq 
       \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
       \\ \qquad \qquad
@@ -42,14 +43,13 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
       \end{array}
     \]
     \end{lemma}
-    Informal Discussion:
-    \\
+  Informal Discussion: \\
   Lemma~\ref{lem:loopbound_sound} guarantees that
   the bound for every transition path $\rprog$, the $BD(\rprog)$
   is a sound upper bound on its execution times, by assuming
   that all the loops and transition paths where $\rprog$ is nested execute only once.
-  
-  For every base case, i.e., a simple transition path, 
+
+For every base case, i.e., a simple transition path, 
 $\varGD(\rprog) =  \rfinit(\tpath) - \rfnext(\rprog)$
 counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
 In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
@@ -70,12 +70,12 @@ or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
   \\
   Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in this program.
   \\
-Taking an arbitrary initial trace $\trace_0 \in \tdom_0(c)$  and an execution trace $\trace \in \tdom$
+Taking an arbitrary initial trace $\trace_0 \in \ftdom_0(c)$  and an execution trace $\trace \in \tdom$
  such that $\config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}$,
  it is sufficient to show,
  \[
   \begin{array}{l}
-  \config{BD(\rprog)}(\trace_0) 
+  \econfig{BD(\rprog)}(\trace_0) \geq
   \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
   \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(c)
@@ -118,7 +118,7 @@ According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refineme
 In this sense, each $c_i$ is a loop program and execution of each $c_i$ corresponds to one possible execution of $c$.
 %  with only one new execution path. 
 \\
-According to the operational semantics, let $\trace_1, \ldots, \trace_m \in \inftdom$ be the execution traces such that 
+According to the operational semantics, let $\trace_1, \ldots, \trace_m \in \tdom$ be the execution traces such that 
 \[
   \config{c_i, \trace_0} \to^* 
   \config{\eskip, \trace_0 \tracecat \trace_i}
@@ -126,7 +126,7 @@ According to the operational semantics, let $\trace_1, \ldots, \trace_m \in \inf
 By induction hypothesis, for each $c_i$, $\rprog_i$ and the execution trace $\trace_i$, we have 
 \[
   \begin{array}{l}
-  \config{BD(\rprog_i)}(\trace_0) 
+  \econfig{BD(\rprog_i)}(\trace_0) \geq
   \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_i \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
   \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(c_i)
@@ -140,7 +140,7 @@ $\trace = \trace_i$ where $i$ could be either $1, \ldots, m$.
 So we have for each $\trace_i$ if $\trace = \trace_i$, 
 \[
   \begin{array}{l}
-    \config{BD(\rprog_i)}(\trace_0) \geq
+    \econfig{BD(\rprog_i)}(\trace_0) \geq
     \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_i)
@@ -152,8 +152,8 @@ So we have for each $\trace_i$ if $\trace = \trace_i$,
 Then we have for all $\rprog_i$ the following and this case is proved.
 \[
   \begin{array}{l}
-    \config{BD(\rprog)}(\trace_0) = 
-    \max\left\{ \config{BD(\rprog_1)}(\trace_0), \ldots, \config{BD(\rprog_m)(\trace_0)} \right\}
+    \econfig{BD(\rprog)}(\trace_0) = 
+    \max\left\{ \econfig{BD(\rprog_1)}(\trace_0), \ldots, \econfig{BD(\rprog_m)(\trace_0)} \right\}
     \\ \qquad 
     \geq
     \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
@@ -172,7 +172,7 @@ In this case, we have
 \]
 Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 \\
-According to the operational semantics, let $\trace_1, \trace_2 \in \inftdom$ be two execution traces such that 
+According to the operational semantics, let $\trace_1, \trace_2 \in \tdom$ be two execution traces such that 
 \[
   \config{c_1; c_2, \trace_0} \to^* \config{c_2, \trace_0 \tracecat \trace_1} \to^* \config{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace_2}
 \]
@@ -183,7 +183,7 @@ According to the Algorithm~\ref{alg:alg-refine_rewrite} and REFINE algorithm, we
 By induction hypothesis on $\trace_0$, $c_1$, $\trace_1$ and $c_2$, we also have
 \[
   \begin{array}{l}
-    \config{BD(\rprog_1)}(\trace_0)
+    \econfig{BD(\rprog_1)}(\trace_0)
     \geq
     \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
@@ -196,7 +196,7 @@ By induction hypothesis on $\trace_0$, $c_1$, $\trace_1$ and $c_2$, we also have
 %
 \[
   \begin{array}{l}
-    \config{BD(\rprog_2)}(\trace_0)
+    \econfig{BD(\rprog_2)}(\trace_0)
     \geq
     \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_2 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
@@ -272,8 +272,8 @@ By the label consistency, we know
     Then we have this case proved by
     \[
       \begin{array}{l}
-        \config{BD(\rprog)}(\trace_0) =
-        \min \Big\{ \config{BD(\rprog_2)}(\trace_0), \config{BD(\rprog_2)}(\trace_0) \Big\}
+        \econfig{BD(\rprog)}(\trace_0) =
+        \min \Big\{ \econfig{BD(\rprog_2)}(\trace_0), \econfig{BD(\rprog_2)}(\trace_0) \Big\}
         \\
         \geq
         \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
@@ -332,7 +332,7 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
  for each variable $y$ such that $(l_1, x' \leq y + v, l_2) \in \reset(x) $,
  $\varinvar(y)$ is the sound upper bound on its maximum value during the execution. Then we have
  \[
-   \config{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \env(\trace) y = v \right\}  \geq \env(\trace') y 
+   \econfig{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \env(\trace) y = v \right\}  \geq \env(\trace') y 
  \]
 %
  In this sense, we have 
@@ -347,7 +347,7 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
  $
  is a sound initial value estimation of the value of $x$ before first execution of $\rprog$, i.e.,
  \[
-   \config{\arg\max_{l_1}\left\{
+   \econfig{\arg\max_{l_1}\left\{
     \varinvar(y) + v ~\middle\vert~ 
     \begin{array}{l} 
       (l_1, x' \leq y + v, l_2) \in \reset(x) \\
@@ -388,7 +388,7 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
    $\varinvar(y)$ is the sound upper bound on its maximum value during the execution. 
    Then we have
    \[
-     \config{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y 
+     \econfig{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y 
    \]
    Same for each abstract event such that $((l', x' \leq x + v, \_) \in \inc(x) $ and $(l', x' \leq x + v, \_) \in \dec(x)$,
    we know 
@@ -409,10 +409,10 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
  i.e.,
    \[
      \begin{array}{l}
-       \config{
+       \econfig{
        \rfinit(l: \rprog)}(\trace_0)
        -
-     \config{
+     \econfig{
       \begin{array}{l}
         \sum\limits_{\absevent \in \inc(x) }
          \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
@@ -441,7 +441,7 @@ $\rffinal(\rprog)$ computes the lower bound on the value of $x$ after the execut
 Then we know for each $ x = a \in \rfinit(\rprog) $ and $ x = b \in \rffinal(\rprog) $
 the following holds and this case is proved.
 \[
-  a - b \geq \env(\trace') x.
+  \econfig{a - b}(\trace_0) \geq \env(\trace') x.
 \]
 \item   \emph{Variable Gradient Decent} Soundness.
 $\varGD(\rprog)$ contains the equations $x = e$, where $e \in \scexpr$ is a
@@ -502,7 +502,7 @@ such that $x = a \in \rfinit(\rprog')$, $x = b \in \rffinal(\rprog')$ and $x = a
 the following holds.
 \[
   \begin{array}{l}
-  \frac{a - b}{a'} \geq
+  \econfig{\frac{a - b}{a'}}(\trace_0) \geq
     \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_2 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_2)
@@ -514,7 +514,7 @@ the following holds.
 Then we have this case proved by
 \[
   \begin{array}{l}
-    \config{
+    \econfig{
       \max\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
     \Big\{ \highlight{\frac{a - b}{a'}} ~\vert~ x = a \in \rfinit(\rprog')
     \land x = b \in \rffinal(\rprog') 
