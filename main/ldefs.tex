@@ -212,7 +212,7 @@
 
 % Operational Semantics
 \newcommand{\env}{\rho}
-\newcommand{\rname}[1]{\textsf{\small{#1}}}
+\newcommand{\rname}[1]{\textbf{\small{#1}}}
 \newcommand{\aarrow}{\Downarrow_a}
 \newcommand{\barrow}{\Downarrow_b}
 \newcommand{\earrow}{\Downarrow_e}
@@ -224,9 +224,9 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Trace and Events %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Trace 
-\newcommand{\tdom}{\mathcal{T}}
-\newcommand{\inftdom}{\tdom^{+\infty}}
-\newcommand{\ftdom}{\tdom^{+}}
+\newcommand{\tdom}{\mathcal{T}^{+\infty}}
+\newcommand{\inftdom}{\mathcal{T}^{\infty}}
+\newcommand{\ftdom}{\mathcal{T}^{+}}
 
 %annotated variables
 \newcommand{\av}{\kw{av}}
@@ -238,6 +238,9 @@
 
 
 \newcommand{\counter}{\kw{cnt}}
+
+\newcommand{\lcounter}{\kw{lcnt}}
+
 
 \newcommand{\postevent}{{\kw{\epsilon}}}
 
@@ -328,9 +331,8 @@
 \newcommand{\progwalks}{\mathcal{WK}^{\kw{prog}}}
 
 \newcommand{\len}{\kw{len}}
-\newcommand{\lvar}{\mathbb{L}}
-\newcommand{\avar}{\mathbb{AV}}
-\newcommand{\qvar}{\mathbb{QV}}
+\newcommand{\lvar}{\kw{L}}
+\newcommand{\avar}{\kw{AV}}
 \newcommand{\qdep}{\mathsf{DEP_{q}}}
 \newcommand{\vardep}{\mathsf{DEP_{var}}}
 \newcommand{\avdep}{\mathsf{DEP_{\av}}}
@@ -340,7 +342,6 @@
 
 \newcommand{\llabel}{\iota}
 \newcommand{\entry}{\kw{entry}}
-\newcommand{\tlabel}{\mathbb{TL}}
 
 \newcommand{\traceG}{\kw{{G_{trace}}}}
 \newcommand{\traceV}{\kw{{V_{trace}}}}
@@ -351,6 +352,8 @@
 
 
 \newcommand{\loopl}{\lvar_{\kw{loop}}}
+\newcommand{\tracel}{\lvar_\kw{{trace}}}
+\newcommand{\pathl}{\lvar_\kw{path}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -516,5 +519,4 @@
 \newcommand{\mgside}[1]{}
 \newcommand{\wq}[1]{}
 \newcommand{\wqside}[1]{}
-\newcommand{\rname}[1]{$\textbf{#1}$}
 \fi
