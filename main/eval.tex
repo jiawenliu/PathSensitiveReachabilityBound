@@ -1,39 +1,83 @@
-as a tool which takes a labeled command as input  
+As a tool which takes a labeled command as input  
 and outputs 
 This implementation consists of the 
 program abstraction from Section~\ref{sec:progabs} in OCaml,
 
+Benchmark sources:
+\\
+Icra~\hyperlink{Icra}{https://github.com/icra-team/icra}
+\\
+LoopusJAR~\hyperlink{LoopusJAR}{https://forsyte.at/static/people/sinn/loopusJAR/index.html}
+\\
+Loopus15~\hyperlink{Loopus15}{https://forsyte.at/static/people/sinn/loopus2015/index.html}
+\\
+CoFloCo \& KoAT~\hyperlink{CoFloCo \& KoAT}{https://forsyte.at/static/people/sinn/loopus2015/index.html}
+\\
+Tianhan~\hyperlink{Tianhan}{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}
+
+
+Tool Sources:
+\\
+CoFloCo~\hyperlink{CoFloCo}{https://github.com/aeflores/CoFloCo/tree/master/src}
+\\
+Icra~\hyperlink{Icra}{https://github.com/icra-team/icra}
+\\
+Tianhan~\hyperlink{Tianhan}{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}
+\\
+LoopusJAR~\hyperlink{LoopusJAR}{https://forsyte.at/software/loopus/}
+\\
+KoAT~\hyperlink{KoAT}{https://github.com/s-falke/kittel-koat}
+
+Paper and Technique Reports:
+\\
+PathREFINE~\cite{GulwaniJK09}
+\\
+LoopusJAR~\cite{sinn2017complexity}
+\\
+CoFloCo~\cite{Montoya17, Flores-Montoya16, Flores-MontoyaH14}
+\\
+KoAT~\cite{BrockschmidtEFFG14, FalkeKS12, FalkeKS11}
+\\
+Icra~\cite{KincaidBCR19, CyphertBKR19}
+\\
+Tianhan~\cite{LuCT21}
+
+
 \begin{table}[H]
-\caption{The Success Rate results Evaluation}
+\caption{The Success Rate}
 \label{tb:success-eval}
 \centering
-{\small
-\begin{tabular}{ >{\small}c | c | c | c | c | c | c | c }
-L.O.C & Multiple Paths Loop \# & Nested Loop \# & {\THESYSTEM} & \cite{GulwaniJK09} & Loopus17~\cite{sinn2017complexity} & CoFloCo & KoAT \\
-\hline
-Benchmark 1 & \# & Nested Loop &  &   &   & & \\
-\hline
-Benchmark 2 & & & & & & \\
-\hline
-Benchmark 3 & & & & & & \\
-\hline
-\end{tabular}
-}
+    {\small
+    \begin{tabular}{ >{\small}c | c | c | c | c | c | c | c | c | c }
+        L.O.C & M.P.L \# & Nested Loop \# & {\THESYSTEM} & PathREFINE & LoopusJAR & CoFloCo & KoAT & Icra & Tianhan \\
+        \hline
+        Icra & \# &  &  &   &  & & & & \\
+        \hline
+        LoopusJAR & & & & & & & & \\
+        \hline
+        Tianhan & & & & & & & & \\
+        \hline
+        Challenging & & & & & & & & \\
+        \hline
+    \end{tabular}
+    }
 \end{table}
 
 \begin{table}[H]
-    \caption{The Accuracy results Evaluation of {\THESYSTEM} implementation}
+    \caption{The Accuracy Evaluation of {\THESYSTEM} implementation}
     \label{tb:accuracy-eval}
     \centering
     {\small
-    \begin{tabular}{ >{\small}c | c | c | c | c }
-    M.P.L \# & Nested Loop & {\THESYSTEM} & \cite{GulwaniJK09} & Loopus17~\cite{sinn2017complexity} \\
+    \begin{tabular}{ >{\small}c | c | c | c | c | c | c | c | c }
+    M.P.L \# & Nested Loop \# & {\THESYSTEM} & PathREFINE & LoopusJAR & CoFloCo & KoAT & Icra & Tianhan \\
     \hline
-    Benchmark 1 & & & \\
+    Icra & \# &  &  &   &  & & &  \\
     \hline
-    Benchmark 2 & & & \\
+    LoopusJAR & & & & & & &  \\
     \hline
-    Benchmark 3 & & & \\
+    Tianhan & & & & & & & & \\
+    \hline
+    Challenging & & & & & & & \\
     \hline
     \end{tabular}
     }
