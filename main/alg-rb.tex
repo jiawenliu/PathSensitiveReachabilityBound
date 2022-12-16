@@ -36,19 +36,22 @@ We show the \emph{path reachability-bound} of the simple transition path $\tpath
 \begin{lem}[Soundness of the Path Reachability-Bound]
   \label{lem:pathrb-sound}
   For any program with its refined program $\rprog$ and a simple transition path $\tpath$ in this program,
-  the execution times of $\tpath$ when executing the $\rprog$ is bounded by $\inoutB(\rprog, \tpath)$.
+  the execution times of $\tpath$ when executing the $\rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$ is bounded by $\econfig{\inoutB(\rprog, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \inftdom, \rprog \st 
+    \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
     \rprog = REFINE(c)
+    \\ \qquad
     \land
-    \config{c, \trace_0} \to^* 
-    \config{{\eskip, \trace_0 \tracecat \trace}}
+    \Big(
+    \config{c, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+    \lor \config{c, \trace_0} \to^\infty \config{c', \trace_0 \tracecat \trace} 
+    \Big)
     \\ \qquad
     \implies
-    \config{\inoutB(\rprog, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)).
+    \econfig{\inoutB(\rprog, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
     \end{array}
-    \]
+  \]
   \end{lem}
 
 \subsection{Program Points Path-sensitive Reachability-Bound}
@@ -75,11 +78,20 @@ We show that $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for every pro
 \begin{thm}[Soundness of the Path-sensitive Reachability Bound Estimation]
     \label{thm:pathsensitive_rb_soundness}
   For every program ${c}$ and every label $l$ in this program,
-  $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
+  $\econfig{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
   %
   \[
-    \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \inftdom \st 
-    \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
-    \implies \config{\psRB(c, l)}(\trace_0) \geq \counter(\vtrace, l) 
-    \]
+    \begin{array}{l}
+      \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
+      \rprog = REFINE(c)
+      \\ \qquad
+      \land
+      \Big(
+      \config{c, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+      \lor \config{c, \trace_0} \to^\infty \config{c', \trace_0 \tracecat \trace} 
+      \Big)
+      \\ \qquad
+      \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)
+    \end{array}.
+  \]
   \end{thm}

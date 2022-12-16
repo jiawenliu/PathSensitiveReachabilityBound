@@ -16,6 +16,21 @@ refined program $\rprog$ for a program $c$ given the rewritten program as input.
 \end{enumerate}
 
 \subsection{Collecting The Simple Transition Path}
+We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
+\begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
+  \label{def:loopl}
+  \[
+  \loopl(c) \triangleq 
+  \left\{
+    \begin{array}{ll}
+      \{\}  & {c} = [{\assign x e}]^{l} \\
+      \loopl({c_1}) \cup \loopl({{c_2}})  & {c} = {c_1};{c_2} \\
+      \loopl(c_1) \cup \loopl({{c_2}})   & {c} =\eif([\bexpr]^{l}, c_1, c_2) \\
+  \loopl(c') \cup \{l\}, &  {c}   = \ewhile ([\bexpr]^{l}, {c}')
+  \end{array}
+\right.
+\]
+  \end{defn}
 % \begin{defn}[Loop Path]
 %   \label{def:looppath}
 % A simple transition path
@@ -40,28 +55,29 @@ refined program $\rprog$ for a program $c$ given the rewritten program as input.
   \label{def:tpath}
 A \emph{simple transition path}
 $\tpath \in \paths(\absG(c))$ for the program $c$, is either a simple cyclic path, which has the same start- and end-point
-or a simple path has either different while loop headers, or program entrance or exit as start- and end-point.
+or a simple path has either different while loop headers, the program entrance or exit as its start- and end-point
+without visiting any loop header inside the path.
 \\
-Specifically, a transition path $l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots l_n \in \paths(\absG(c))$ with the
+Specifically, a path $l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots l_n \in \paths(\absG(c))$ with the
 vertices sequence $(l_0, \ldots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \ldots, n$ and
 %
 the edge sequence $(e_1, \ldots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \ldots, n$,
 %
-satisfies
+is a \emph{simple transition path} if and only if it satisfies,
 \begin{itemize}
   \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 0, \ldots, {n - 1}$,
   \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
   i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
   \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
   i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$,
-  \item and $l_i \notin \loopl(c) \cup \{ \lex \}$ for every $i = 1, \ldots, n-1$.
+  \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
 \end{itemize}
 \end{defn}
 
 \paragraph{Example.}
 $2 \to 3 \to 6 \to 2$ is a transition path on $\absG(\kw{twoPathsWhile}(n, m))$ in Figure~\ref{fig:twoPathsWhile_abscfg}(b).
 However, $2 \to 3 \to 6 \to 2 \to 3 \to 4 \to 5 \to 2$ is not a transition path because it is not simple (the program points $2$ and $3$ are visited twice).
-In Figure~\ref{fig:threeWhile-overview}(b) above, $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a transition path on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
+In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a transition path on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
 
 \subsection{Rewrite and Refine the Program}
 \paragraph{Rewrite the Program}

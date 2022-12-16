@@ -239,14 +239,17 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
 \label{lem:abscfg_sound}
 For every program $c$ and
 the execution trace $\trace \in \tdom$ which is generated w.r.t.
-an initial trace  $\vtrace_0 \in \tdom_0(c)$,
+an initial trace  $\trace_0 \in \ftdom_0(c)$,
 there is an abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
 for every event $\event \in \trace$ having the same label $l$, i.e., $\event = (\_, l, \_)$.
 %
 \[
 \begin{array}{l}
-  \forall c \in \cdom, \vtrace_0 \in \tdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset \st
-  \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
+  \forall c, c' \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset \st
+  \big(\config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
+  \lor 
+  \config{{c}, \trace_0} \to^{\infty} \config{c', \trace_0 \tracecat \trace} 
+  \big)
   \land \event \in \trace 
   \\
   \qquad \implies \exists \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
@@ -258,24 +261,27 @@ If $l$ is the label of an assignment command in a program $c$,
 then there is a unique abstract event in the program's abstract events set
 $\absevent \in \absflow(c)$ of form $(l, \_, \_)$. This uniqueness property is formally below as Lemma~\ref{lem:abscfg_unique} below
 and proved in Appendix~\ref{apdx:abs_sound}.
-\begin{lem}[Uniqueness of the Abstract Events Computation]
+\begin{lem}[Uniqueness of the Abstract Events]
 \label{lem:abscfg_unique}
 For every program $c$ and
 an execution trace $\trace \in \tdom$ that is generated w.r.t.
-an initial trace $\vtrace_0 \in \tdom_0(c)$,
+an initial trace $\trace_0 \in \ftdom_0(c)$,
 there is a unique abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
 for every assignment event $\event \in \eventset^{\asn}$ in the
 execution trace having the label $l$, i.e., $\event = (\_, l, \_)$ and $\event \in \trace$.
 %
 \[
   \begin{array}{l}
-    \forall c \in \cdom, \vtrace_0 \in \tdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
-\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
-\land \event \in \trace 
-\\
-\qquad \implies \exists! \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
-\absevent \in \absflow(c)
-\end{array}
+  \forall c, c'\in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
+  \big(\config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
+  \lor 
+  \config{{c}, \trace_0} \to^{\infty} \config{c', \trace_0 \tracecat \trace} 
+  \big)
+  \land \event \in \trace 
+  \\
+  \qquad \implies \exists! \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
+  \absevent \in \absflow(c)
+  \end{array}
 \]
 \end{lem}
 %
@@ -305,7 +311,9 @@ A path on $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc
 %
 \item the edge sequence $(e_0, \ldots)$, where $e_i = (l_{i}, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, 1, \ldots$.
 \end{itemize}
-A path is cyclic, if it has the same start- and end-point. A path is simple, if it does not visit a location twice except for start- and end-location. We use $\paths(\absG(c))$ to denote the set of all the paths on $\absG(c)$.
+A path is cyclic, if it has the same start- and end-point. A path is simple, if it does not visit a location twice except for start- and end-location. We use $\paths(\absG(c))$ to denote the set of all the paths on $\absG(c)$,
+and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
+where $\pathl : \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
 \end{defn}
 % \\
 \subsection{Abstract Transition Graph through An Example}

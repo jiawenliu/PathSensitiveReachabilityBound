@@ -40,18 +40,18 @@ There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'))$ f
  after the execution of $\rprog$.
  % \\
  \[
-   \rffinal(\rprog) \triangleq 
-   \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
+  \begin{array}{l} 
+    \rffinal(\rprog) \triangleq 
+   \bigcup\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
    \left \{ 
-   x = \arg\min_{l_1}\left\{
-     v_{post} ~\middle\vert~ 
-     \begin{array}{l} 
-      l_1 \geq \absfinal(\rprog)[2]
-     \land \bigwedge_{b \in \kw{Guard}(\rprog)} \neg b
-   \end{array}
+   x = \min\limits_{ \left\{ l_1 ~|~ l_1 \geq \pi_2(\absfinal(\rprog)) \right\} }
+   \max\left\{
+     v ~\middle\vert~ 
+     \left( (x = v) \land \bigwedge\limits_{b \in \kw{Guard}(\rprog)} \neg b \right) \neq \efalse
    \right\}
    \right\}
-   \]
+  \end{array}
+  \]
   $\kw{Guard}(\rprog)$ is the set of all the unique boolean expressions (i.e., the boolean constraints) on this program.
  \item The \emph{Next State}, $\rfnext(\tpath) \in \scexpr$ 
  is a
@@ -153,10 +153,10 @@ We show the \emph{path local reachability-bound} of the simple transition path $
   \label{lem:pathlocalrb-sound}
   For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
   if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
-  then the execution times of $\tpath$ when executing the $\rprog_l$ is bounded by $\outinB(\rprog_l, \tpath)$.
+  then the execution times of $\tpath$ when executing the $\rprog_l$ under initial trace $\trace_0 \in \ftdom_0(c_l)$ is bounded by $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c_l), \trace \in \inftdom, \rprog \st 
+    \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, \rprog \st 
     \rprog = REFINE(c)
     \land
     l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
@@ -164,11 +164,13 @@ We show the \emph{path local reachability-bound} of the simple transition path $
     \land 
     \rprog_l = \algrewrite(c_l)
     \land
-    \config{c_l, \trace_0} \to^* 
-    \config{\eskip, \trace_0 \tracecat \trace}
+    \Big(
+    \config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+    \lor \config{c_l, \trace_0} \to^\infty \config{c_l', \trace_0 \tracecat \trace} 
+    \Big)
     \\ \qquad
     \implies
-    \config{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \counter(\vtrace, L(\tpath)).
+    \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
     \end{array}
   \]  
 \end{lem}

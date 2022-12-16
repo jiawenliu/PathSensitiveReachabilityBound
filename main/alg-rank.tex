@@ -163,18 +163,17 @@ then its \emph{path-insensitive transition bound} $\absclr(\absevent, c)$
 the execution times of this assignment command in $c$.
   \[
     \begin{array}{l}
-      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \mathcal{T}_0(c), 
-      \trace \in \mathcal{T}, v \in \mathbb{N}
-       \st 
-       \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\trace} 
-       \land \config{\absclr(\absevent, c), \trace_0} \aarrow v
-       \land
-      \counter(\trace, l) \leq v
+      \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom, l \in \lvar(c) \st
+      \Big( \config{c, \trace_0} \rightarrow^{*} \config{\eskip, \trace_0 \tracecat \trace} 
+        \lor  \config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace_0 \tracecat \trace} \Big)
+       \\ \qquad \qquad
+       \implies
+       \exists \absevent = (\_, l, \_) \in \absflow(c) \land
+      \counter(\trace, l) \leq \econfig{\absclr(\absevent, c)}(\trace_0)
     \end{array}
-    \]
+  \]
 \end{thm}
 %
-
 \subsection{Estimating the Loop Bound} 
 The $BD(\rprog)$ for the refined program $\rprog$ can also be estimated by $\absclr(\absevent, c)$ by taking the
 minimum value over all $\absevent \in \rprog$.
