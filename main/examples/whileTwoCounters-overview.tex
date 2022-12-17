@@ -2,7 +2,7 @@
     \begin{figure}
     \centering
     %
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.27\textwidth}
         $
         \begin{array}{l}
           \kw{twoPathsWhile}(n, m) \triangleq \\
@@ -30,8 +30,7 @@
     \draw[] (-8, 4) circle (0pt) node{{ $5$}};
     \draw[] (4, 4) circle (0pt) node{{ $6$}};
     % Counter Variables
-    \draw[] (6, 10) circle (0pt) node {\textbf{$\lex$}};
-    % \draw[] (6, 4) circle (0pt) node {{ $ex$}};
+    \draw[] (5, 10) circle (0pt) node {\textbf{$\lex$}};
     %
     % Control Flow Edges:
     \draw[ thick, -latex] (-7, 10)  -- node [above] {$i' \leq n$}(-4.5, 10);
@@ -42,13 +41,13 @@
     \draw[ thick, -latex] (4.5, 4)  to  [out=70,in=0]   node [right] {$j' \leq 0 $}(0.5, 9.5);
     \draw[ thick, -latex]  (-0.5, 7) -- node  {$j < m$}  (-3, 4.5) ;
     \draw[ thick, -latex]  (-3.5, 4) -- node [above] {$j' \leq j + 1$}  (-7, 4) ;
-    \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (5.5, 10);
+    \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (4.5, 10);
   \end{tikzpicture}
         \caption{}
     \end{centering}
 \end{subfigure}
 {\footnotesize
-\begin{subfigure}{.2\textwidth}
+\begin{subfigure}{.25\textwidth}
 \begin{centering}
         $\tpath_0 = (0 \to 1 \to 2)$ \\
         $\tpath_2 = (2 \to 3 \to 6 \to 2)$ \\ 

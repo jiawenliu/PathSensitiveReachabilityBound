@@ -94,7 +94,7 @@
   \rprog = \tpath_0 ; 2: \rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3); \tpath_4
   \]
 Let $\rprog_2 = \rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3)$
-\item {Path Local Reachability Bound}:
+\item {Path Local Reachability-bound}:
 \\
 $\outinB(\rprog, \tpath_0) = 1$ \quad
 $\outinB(\rprog, \tpath_4) = 1$ \\
@@ -113,7 +113,7 @@ $BD(\rprepeat(\tpath_2)) = n + 1 $
 \\
 $BD(\rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3)) = n $
 %
-\item Loop Reachability Bound:
+\item Loop Reachability-bound:
 \\
 \highlight{
 $\lpchB(2: \rprog_2, \tpath_1) = n$ \quad
@@ -127,7 +127,7 @@ $\lpchB(2: \rprog_2, \tpath_0) = 0$ \quad
 }
 %
 %
-\item Path Global Reachability Bound:
+\item Path Global Reachability-bound:
 \\
 $\inoutB(\rprog, \tpath_0) = 1$ \quad
 $\inoutB(\rprog, \tpath_1) = n$ \quad
@@ -135,7 +135,7 @@ $\inoutB(\rprog, \tpath_2) = \frac{(n + 1)^2}{n}$ \\
 $\inoutB(\rprog, \tpath_3) = n$ \quad
 $\inoutB(\rprog, \tpath_4) = 1$
 %
-\item The Reachability Bound:
+\item The Reachability-bound:
 \\
 $\psRB(0) = \psRB(1) = \psRB(\lex) = 1$ \quad
 $\psRB(2) = n + 1$ \\

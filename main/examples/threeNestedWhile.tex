@@ -106,15 +106,15 @@ $
 \\
 $
   \rprog = \tpath_0 ; 
-1: \rpchoose{\rprepeat(\tpath_1; 3: \rpchoose{\rprepeat(\tpath_2; 6 : \rpchoose{\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5)}; \tpath_6
+1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6: \rprepeat(\tpath_3); \tpath_4); \tpath_5); \tpath_6
 $
 \\
-Let $\rprog_1 = \rpchoose{\rprepeat(\tpath_1; 3: \rpchoose{\rprepeat(\tpath_2; 6 : \rpchoose{\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5)}$
+Let $\rprog_1 = \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2; 6: \rprepeat(\tpath_3); \tpath_4); \tpath_5)$
 \\
-$\rprog_3 = \rpchoose{\rprepeat(\tpath_2; 6 : \rpchoose{\rprepeat(\tpath_3)}; \tpath_4)}$
+$\rprog_3 = \rprepeat(\tpath_2; 6: \rprepeat(\tpath_3); \tpath_4)$
 \\
-$\rprog_6 = \rpchoose{\rprepeat(\tpath_3)}$
-  \item {Path Local Reachability Bound}:
+$\rprog_6 = \rprepeat(\tpath_3)$
+  \item {Path Local Reachability-bound}:
 \\
 $\outinB(1: \rprog_1, \tpath_1) = n - N$ \quad
 $\outinB(1: \rprog_1, \tpath_5) = n - N$ \quad
@@ -135,7 +135,7 @@ $BD(\rprog_3) = m $
 \quad
 $BD(\rprog_1) = n - N $
 %
-\item Loop Reachability Bound:
+\item Loop Reachability-bound:
 \\
 \highlight{
 $\lpchB(1: \rprog_1, \tpath_1) = n - N$ \quad
@@ -150,7 +150,7 @@ $\lpchB(6: \rprog_6, \tpath_3) = N$
 }
 %
 %
-\item Path Global Reachability Bound:
+\item Path Global Reachability-bound:
 \\
 $\inoutB(\rprog, \tpath_1) = n - N$ \quad
 $\inoutB(\rprog, \tpath_2) = n \times m$ \quad
@@ -162,7 +162,7 @@ $\inoutB(\rprog, \tpath_6) = 1$
 \quad
 $\inoutB(\rprog, \tpath_3) = N$
 %
-\item The Reachability Bound:
+\item The Reachability-bound:
 \\
 $\psRB(0) = \psRB(\lex) = 1$ \quad
 $\psRB(1) = n - N + 1$ \quad

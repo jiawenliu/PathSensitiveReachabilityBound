@@ -99,17 +99,17 @@ For concise, it is omitted since all the arguments in the following computations
 \\
 $
   \tpath_0 ; 
-  2: \rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
-  \rprepeat_1(\tpath_1) }; \tpath_3
+  \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
+  2: \rprepeat_1(\tpath_1) }; \tpath_3
 $
 %
-\item {Path Local Reachability Bound}:
+\item {Path Local Reachability-bound}:
 \\
-$\outinB(2 :\rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
-\rprepeat_1(\tpath_1) } , \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ 
+$\outinB(\rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
+2: \rprepeat_1(\tpath_1) } , \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ 
 \\
-$\outinB(2: \rpchoose{\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
-\rprepeat_1(\tpath_1) }, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
+$\outinB(\rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2) , 
+2: \rprepeat_1(\tpath_1) }, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ 
 %
 \\
 Loop Bounds:
@@ -120,15 +120,15 @@ Loop Bounds:
       \quad
       $BD(\rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2)) = \lfloor\frac{n}{m}\rfloor$
 %
-\item Path Global Reachability Bound:
+\item Path Global Reachability-bound:
 \\
 $\inoutB(\rprog, \tpath_1) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ \quad
 $\inoutB(\rprog, \tpath_2) = \lfloor\frac{n}{m}\rfloor$ \quad
 $\inoutB(\rprog, \tpath_0) = \inoutB(\rprog, \tpath_3) = 1$ 
 %
-\item Loop Reachability Bound:
+\item Loop Reachability-bound:
 No nested loop.%
-\item The Reachability Bound:
+\item The Reachability-bound:
 \\
 $\psRB(0) = \psRB(1) = \psRB(\lex) = 1$ \qquad
 $\psRB(4) = \psRB(5) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$ 

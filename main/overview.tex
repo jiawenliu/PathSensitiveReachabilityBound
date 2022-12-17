@@ -151,7 +151,7 @@ and then computes its refined program,
 $\rprog = \tpath_0; 1: \rprepeat(\tpath_1;$ 
 $3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5);$ 
 $\tpath_6$,
-where the $\tpath_0, \ldots$ are shown below the graph in Figure~\ref{fig:threeWhile-overview}(b).
+where the $\tpath_0, \ldots$ are shown in Figure~\ref{fig:threeWhile-overview}(b).
 We use $\rprog_1$ to denote ${\rprepeat(\tpath_1; 3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5)}$
 and $\rprog_3 = {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}$
 for simplicity.
@@ -159,9 +159,6 @@ Then we compute \emph{loop reachability-bound} for these simple paths w.r.t. eac
 For example, for $\tpath_3$ w.r.t. the loop $L_1$ and $L_3$, we compute
 $\lpchB(1: \rprog_1, \tpath_3) = 1$ and
 $\lpchB(3: \rprog_3, \tpath_3) = 1$ because loop $L_6$ will only be entered once among all iterations of $L_1$ and $L_3$.
-% $\lpchB(3: \rprog_3, \tpath_3) = 1$
-% means that during all iterations of the loop at $1$, there is only $1$ iteration where the loop at $6$
-% (the closest loop enclosing $\tpath_3$) is executed.
 Among all the other $n - 1$ iterations of $L_1$, the loop $L_6$ isn't executed at all.
 So we compute the \emph{loop reachability-bound}  of the loop $L_3$
 w.r.t to this path is $1$.
