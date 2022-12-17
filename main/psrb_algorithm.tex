@@ -503,14 +503,14 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
      \label{lem:abscfg_sound}
      For every program $c$ and
      an execution trace $\trace \in \tdom$ that is generated w.r.t.
-     an initial trace  $\vtrace_0 \in \tdom_0(c)$,
+     an initial trace  $\vtrace_0 \in \ftdom_0(c)$,
      there is an abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
      % with initial label $l$
      for every event $\event \in \trace$ having the label $l$, i.e., $\event = (\_, l, \_)$.
       %
    \[
      \begin{array}{l}
-       \forall c \in \cdom, \vtrace_0 \in \tdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset \st
+       \forall c \in \cdom, \vtrace_0 \in \ftdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset \st
    \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
    \land \event \in \trace 
    \\
@@ -531,7 +531,7 @@ there is a unique abstract event in the program's abstract events set $\absevent
   \label{lem:abscfg_unique}
   For every program $c$ and
   an execution trace $\trace \in \tdom$ that is generated w.r.t.
-  an initial trace  $\vtrace_0 \in \tdom_0(c)$,
+  an initial trace  $\vtrace_0 \in \ftdom_0(c)$,
   there is a unique abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
   % with initial label $l$
   for every assignment event $\event \in \eventset^{\asn}$ in the
@@ -539,7 +539,7 @@ there is a unique abstract event in the program's abstract events set $\absevent
 %
 \[
   \begin{array}{l}
-    \forall c \in \cdom, \vtrace_0 \in \tdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
+    \forall c \in \cdom, \vtrace_0 \in \ftdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
 \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
 \land \event \in \trace 
 \\
@@ -1176,7 +1176,7 @@ The performance improvement comes from the same two lines.
 %   Algorithm~\ref{alg:prog-refine} computes a set of repeat patterns for this loop.
 %   % \[
 %   %   \begin{array}{l}
-%   %   \forall c \in \cdom, l \in \lvar(c), \vtrace_0 \in \tdom_0(c), \trace \in \tdom , 
+%   %   \forall c \in \cdom, l \in \lvar(c), \vtrace_0 \in \ftdom_0(c), \trace \in \tdom , 
 %   %   % \event = (\_, l, \_) \in \eventset 
 %   %   \st
 %   %   \exists \ewhile \clabel{\bexpr}^l \edo c_w \in c 
@@ -1532,7 +1532,7 @@ It is formally proved in Theorem~\ref{thm:sound_refined-prog} with details in Ap
   \label{thm:sound_refined-prog}
   For every program $c$ and the refined program computed from Alg.\ref{alg:prog-refine}, $\rprog = Alg.4(c)$,
   the two execution traces $\trace, \trace' \in \tdom$
-  from executing $c$ and $\rprog$ w.r.t. an initial trace $\trace_0 \in \tdom_0(c)$ are identical.
+  from executing $c$ and $\rprog$ w.r.t. an initial trace $\trace_0 \in \ftdom_0(c)$ are identical.
 \end{thm}
 \todo{Formalize Proof}
 In \cite{GulwaniJK09}, they claim a semantics equivalence relation (property)
@@ -1856,7 +1856,7 @@ the execution times of this assignment command in $c$.
   %
   \[
     \begin{array}{l}
-      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \tdom_0(c), 
+      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \ftdom_0(c), 
       \trace \in \tdom, v \in \mathbb{N}
        \st 
        \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat\vtrace} 
@@ -1876,7 +1876,7 @@ $\config{RB(\absevent, c)}$
   %
   \[
     \begin{array}{l}
-      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \tdom_0(c), 
+      \forall c \in \cdom, l \in \lvar(c),\trace_0 \in \ftdom_0(c), 
       \trace \in \tdom, v \in \mathbb{N}
       % , (v, n) \in \mathcal{VAR} \times \mathbb{N} \times \mathbb{N}
        \st 
@@ -2098,7 +2098,7 @@ which is solved by Definition~\ref{def:edge_pathinsensitivebound} and~\ref{def:r
 is a sound local bound on the execution times of $\rpattern$ in program $c$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \rpattern, \rprog, \trace_0 \in \tdom_0(\rpattern), \trace_1, \trace \in \tdom \st 
+    \forall c \in \cdom, \rpattern, \rprog, \trace_0 \in \ftdom_0(\rpattern), \trace_1, \trace \in \tdom \st 
     \rpattern \in \rprog \land
     \rprog = Alg.4(c)
     \\ \qquad
@@ -2753,7 +2753,7 @@ In the same time, the soundness also relies on the soundness of $\rpchB(l, \tpat
 is a sound bound on the execution times of $\tpath$ in $c$.
   \[
     \begin{array}{l}
-    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom_0(c), \trace \in \tdom, \rprog \st 
+    \forall c \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
     % \rpattern \in \rprog \land
     \rprog = Alg.4(c)
     % \\ \qquad
@@ -2806,7 +2806,7 @@ l \in \tpath} \inoutB(\tpath, \rprog)
 For every program ${c}$ and every label $l$ in this program,
 %  $c$,
 % such that $(l, w) \in \exeRB(c)$, 
-% and any initial trace $\trace_0 \in \tdom_0(c)$ with 
+% and any initial trace $\trace_0 \in \ftdom_0(c)$ with 
 % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
 % and $\config{\psRB(c, l), \trace_0} \earrow v$,
 % % for some generated evaluation trace $\vtrace \in \tdom$,
@@ -2814,7 +2814,7 @@ For every program ${c}$ and every label $l$ in this program,
 $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 %
 \[
-  \forall c \in \cdom, \trace_0 \in \tdom_0(c), \trace \in \tdom \st 
+  \forall c \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom \st 
   \config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
   \implies \config{\psRB(c, l)}(\trace_0) \geq \vcounter(\vtrace, l) 
   \]
@@ -2823,7 +2823,7 @@ $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 % \begin{thm}[Soundness of the Path-sensitive Reachability Bound Estimation]
 %   \label{thm:pathsensitive_rb_soundness}
 % Given a program ${c}$, for every label $l$ of this program $c$ such that $(l, w) \in \exeRB(c)$, 
-% and any initial trace $\trace_0 \in \tdom_0(c)$ with 
+% and any initial trace $\trace_0 \in \ftdom_0(c)$ with 
 % % $\config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0\tracecat \vtrace} $ 
 % and $\config{\psRB(c, l), \trace_0} \earrow v$,
 % % for some generated evaluation trace $\vtrace \in \tdom$,
@@ -2833,7 +2833,7 @@ $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 %   \begin{array}{l}
 %   \forall (l, w_{t}) \in \exeRB(c),
 %   % (x^l, w_{p}) \in \progV, 
-%   \trace_0 \in \tdom_0(c), 
+%   \trace_0 \in \ftdom_0(c), 
 %   v \in \mathbb{N} \st
 %   \config{\psRB(c, l), \trace_0} \earrow v
 %   \implies
