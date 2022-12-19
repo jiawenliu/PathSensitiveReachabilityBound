@@ -20,3 +20,13 @@ void Ex1(int n, int A[]) {
 //Bound: n^2
 //Reachability Bound for ConsumeResource(): n
 
+[ i <- n ] 0;
+while [ > (i, 0) ] 1 do {
+    [ j <- i ] 2;
+    while [ > ( j , 0 ) ] 3 do {
+        [ j <- + ( j , 1 ) ] 4;
+        [ i <- - ( i , 1 ) ] 5;
+        [ j <- - ( j , 1 ) ] 6
+    };
+    [ i <- - ( i , 1 ) ] 7
+ }

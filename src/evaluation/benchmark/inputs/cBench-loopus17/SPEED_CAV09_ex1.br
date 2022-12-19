@@ -1,12 +1,20 @@
 int foo(int m) {
   int x = 0; int y = 0;
   while (x < 100) {
-    if (y <m)
+    if (y < m)
       y = y + 1;
     else
-      x = x+ 1;
+      x = x + 1;
   }
   return 1;
 }
 
 //Bound according to paper: 100 + max(0, m)
+
+[ x <- 100 ] 0 ;
+[ y <- 0 ] 1 ;
+while [  > (x , 0) ] 2 do {
+	if [ > ( y , m) ] 3     
+	then {  [ y <- + ( y, 1 ) ] 4 }
+	else {  [ x <- - ( x, 1 ) ] 5 }
+}

@@ -12,3 +12,12 @@ int foo(int n, int m) {
 }
 
 //bound according to paper: n * (m+1)
+
+[ x <- n ] 0 ;
+[ y <- 0 ] 1 ;
+while [  > (x , 0) ] 2 do {
+if [ > ( m , y ) ] 3     
+then {  [ y <- + ( y, 1 ) ] 4 }
+else {  [ x <- - ( x, 1 ) ] 5;
+        [ y <- 0 ] 6  }
+}

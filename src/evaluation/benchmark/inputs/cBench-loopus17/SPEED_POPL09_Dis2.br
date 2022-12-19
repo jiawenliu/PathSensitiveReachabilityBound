@@ -10,3 +10,11 @@ void Dis2(int x0, int z0, int n) {
 
 //Bound: Max(0, n - x0) + Max(0, n - z0)
 
+
+[ x <- - ( n , x0 ) ] 0 ;
+[ z <- z0 ] 1 ;
+while [ > ( x , 0 ) ] 2 do {
+  if [ < ( z , x ) ] 3     
+  then {  [ z <- + ( z , 1 ) ] 4 }
+  else {  [ x <- - ( x , 1 ) ] 5 }
+}

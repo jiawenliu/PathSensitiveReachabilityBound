@@ -11,3 +11,11 @@ int Example5(int m, int n, int dir, int fwd) {
 
 //Bound: max(m, n-m)
 
+
+[ i <- m ] 0 ;
+[ j <- - ( n, m ) ] 1 ;
+while [  && ( > (i , 0), > (j , 0) ) ] 2 do {
+  if [ < ( a , b ) ] 3     
+  then {  [ i <- - ( i , 1 ) ] 4 }
+  else {  [ j <- - ( j , 1 ) ] 5 }
+}

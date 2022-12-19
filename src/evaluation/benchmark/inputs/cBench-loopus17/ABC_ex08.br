@@ -6,11 +6,11 @@ int foo(int n, int m) {
 }
 
 [ i <- n ] 0 ;
-while [  > (i, a) ] 1 do {
-	[ i <- - ( i, 1 )  ] 2;
-	[ j <- m  ] 3;
-while [ > (j, 0)] 4 do
-{
-	[ j <- - ( j, 1 )  ] 5
-}
+while [  > (i, 0) ] 1 do {
+	[ j <- m  ] 2;
+	while [ > (j, 0)] 3 do
+	{
+		[ j <- - ( j, 1 )  ] 4
+	};
+	[ i <- - ( i, 1 )  ] 5
 }

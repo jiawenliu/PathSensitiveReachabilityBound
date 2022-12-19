@@ -4,3 +4,10 @@ void Example3(int b, int x) {
     else x = x - 1;
   }
 }
+[ i <- x ] 0 ;
+[ j <- - ( 255, x ) ] 1 ;
+while [  > (i, 0) ] 2 do {
+	if [ > ( a, b ) ] 3
+	then { [ i <- - ( i, 1 ) ] 4 }
+	else { [ j <- - ( j, 1 ) ] 5 }
+}

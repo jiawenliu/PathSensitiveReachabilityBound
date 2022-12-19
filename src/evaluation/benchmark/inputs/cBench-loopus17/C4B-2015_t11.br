@@ -7,3 +7,10 @@ void start(int x, int y, int n, int m)
       x = x+1;
   }
 }
+[ i <- - (n, x) ] 0 ;
+[ j <- - (m, y) ] 1 ;
+while [  (> (i , 0) ] 2 do {
+	if [ > ( j , 0) ] 3     
+	then {  [ j <- - (j, 1) ] 4 }
+	else {  [ i <- - (i, i) ] 5 }
+}

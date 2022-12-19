@@ -14,3 +14,12 @@ int foo(int n) {
 }
 
 //bound according to paper: n
+
+[ x <- n ] 0 ;
+[ y <- 0 ] 1 ;
+while [  > ( x, 0 ) ] 2 do {
+   	[ y <- x ] 3
+	while [  > ( y , 0) ] 4 do 
+	{ [ y <- - ( y, 1) ] 5  };
+	[ x <- - ( y , 1)  ] 6
+}

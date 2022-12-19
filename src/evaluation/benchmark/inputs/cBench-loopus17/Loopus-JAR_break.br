@@ -8,3 +8,7 @@ void foo(unsigned int n) {
   }
 }
 
+[ x <- n ] 0 ;
+while [  > (x, 0) ] 1 do {
+  [ i <- - ( i, 1 ) ] 2
+}

@@ -14,3 +14,20 @@ int Example6(int m, int n) {
 
 //Bound: n + 2m
 
+[ i <- n ] 0 ;
+[ j <- m ] 1 ;
+[ k <- m ] 2 ;
+while [  > ( i , 0 ) ] 3 do { 
+  if [ < ( a , b ) ] 4     
+  then {  while [  > ( k , 0 ) ] 5 do 
+  			{
+  				[ j <- - ( j, 1 ) ] 6
+  			}
+  		}
+  else {  while [  > ( k , 0 ) ] 7 do 
+  			{
+  				[ k <- - ( k, 1 ) ] 8
+  			}
+  		 }
+  	[ i <- - ( i, 1 ) ] 9
+}

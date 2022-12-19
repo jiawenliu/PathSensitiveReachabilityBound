@@ -11,3 +11,15 @@ void SimpleSingle2(int n, int m) {
 
 //Bound: n
 
+[ x <- 0 ] 0 ;
+[ y <- 0 ] 1 ;
+while [  true ] 2 do {
+	if [ < ( x , n ) ] 3     
+	then {  [ y <- + ( y , 1 ) ] 4;
+			[ x <- + ( x , 1 ) ] 5 }
+	else {  if [ < ( y , m ) ] 6     
+			then {  [ y <- + ( y , 1 ) ] 7;
+					[ x <- + ( x , 1 ) ] 8 }
+			else {  [ skip ] 9  }  
+		  }
+}

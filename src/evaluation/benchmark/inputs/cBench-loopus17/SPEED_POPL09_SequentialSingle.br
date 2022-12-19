@@ -10,3 +10,9 @@ void SequentialSingle(int n) {
 
 //Bound: n
 
+[ x <- n ] 0 ;
+while [ > ( x , 0 ) ] 1 do {
+	[ x <- - ( x , 1) ] 2
+};
+while [ > ( x , 0) ] 3 do 
+	{ [ x <- - ( x, 1) ] 4 }

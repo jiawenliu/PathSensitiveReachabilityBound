@@ -10,7 +10,7 @@ void gcd(int x, int y) {
 [ i <- x ] 0 ;
 [ j <- y ] 1 ;
 while [  && ((> (i , 0)), (> (j , 0))) ] 2 do {
-if [ > ( i , j) ] 3     
-then {  [ i <- - (i, j) ] 4 }
-else {  [ j <- - (j, i) ] 5 }
- }
+	if [ > ( i , j) ] 3     
+	then {  [ i <- - (i, j) ] 4 }
+	else {  [ j <- - (j, i) ] 5 }
+}

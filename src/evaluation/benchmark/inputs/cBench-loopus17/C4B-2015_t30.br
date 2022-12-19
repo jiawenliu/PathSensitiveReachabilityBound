@@ -8,3 +8,12 @@ void start(int x, int y)
   }
 }
 
+[ t <- 0 ] 0 ;
+[ xx <- x ] 1 ;
+[ yy <- y ] 2 ;
+while [  > (xx, 0) ] 3 do {
+	[ xx <- - ( xx, 1 ) ] 4;
+	[ t <- xx ] 5;
+	[ xx <- yy ] 6;
+	[ yy <- t ] 7
+};

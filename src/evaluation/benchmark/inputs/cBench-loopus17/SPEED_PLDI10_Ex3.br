@@ -8,3 +8,10 @@ void Ex3(int n, int A[]) {
 
 //Bound: n
 
+[ x <- n ] 0 ;
+[ y <- 0 ] 1 ;
+while [  > ( x, 0 ) ] 2 do {
+   	[ y <- x ] 3
+	while [  > ( x , 0) ] 4 do 
+	{ [ x <- - ( x , 1) ] 5  }
+}

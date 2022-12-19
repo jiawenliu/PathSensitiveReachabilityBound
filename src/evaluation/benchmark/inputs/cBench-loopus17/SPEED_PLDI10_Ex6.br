@@ -7,3 +7,10 @@ void Ex6(int n, int x, int z) {
  }
 }
 
+[ x <- n ] 0 ;
+[ z <- m ] 1 ;
+while [  > ( x , 0 ) ] 2 do {
+  if [ > ( z , x ) ] 3     
+  then {  [ x <- - ( x , 1 ) ] 4 }
+  else {  [ z <- - ( z , 1 ) ] 5 }
+}

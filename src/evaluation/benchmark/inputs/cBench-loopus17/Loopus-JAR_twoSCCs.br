@@ -16,3 +16,16 @@ void twoSCCs(unsigned int n, unsigned int m1, unsigned int m2) {
           z--;
 }
 
+[ x <- 0 ] 0 ;
+[ y <- n ] 1 ;
+if [ > ( a, b ) ] 2     
+then {  [ x <- m1 ] 3 }
+else {  [ x <- m2 ] 4 };
+while [  > ( y, 0 ) ] 5 do {
+	[ y <- - ( y, 1 ) ] 6
+	[ x <- + ( x, 2 ) ] 7
+};
+[ z <- x ] 8;
+while [  > ( z, 0 ) ] 9 do {
+	[ z <- - ( z, 1 ) ] 10
+}

@@ -9,3 +9,11 @@ void NestedMultiple(int x0, int y0, int n, int m) {
   }
 }
 //Bound: 
+
+[ x <- - ( n , x0 ) ] 0 ;
+[ y <- - ( m , y0 ) ] 1 ;
+while [ > ( x , 0 ) ] 2 do {
+	while [ > ( y , 0) ] 3 do 
+	{ [ y <- - ( y, 1) ] 4 };
+	[ x <- - ( x , 1) ] 5
+}

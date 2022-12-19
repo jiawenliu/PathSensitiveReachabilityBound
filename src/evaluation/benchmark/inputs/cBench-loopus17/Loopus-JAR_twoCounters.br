@@ -13,3 +13,12 @@ void twoCounters(unsigned int n) {
   } 
 }
 
+
+[ x <- n ] 0 ;
+[ y <- 0 ] 1 ;
+while [  > (x , 0) ] 2 do {
+if [ > ( y , 0) ] 3     
+then {  [ y <- - ( y, 1 ) ] 4 }
+else {  [ x <- - ( x, 1 ) ] 5;
+        [ y <- + ( y, 1 ) ] 6  }
+}

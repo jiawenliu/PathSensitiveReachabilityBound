@@ -12,3 +12,12 @@ void start(int x, int y)
   }
 }
 
+[ i <- - (x, y) ] 0 ;
+while [  > (i, 0) ] 1 do {
+	[ i <- -( - ( i, 1 ), y)  ] 2
+	[ z <- y  ] 3;
+	while [ > (z, 0)] 4 do
+	{
+		[ z <- - ( z, 1 )  ] 5
+	}
+}

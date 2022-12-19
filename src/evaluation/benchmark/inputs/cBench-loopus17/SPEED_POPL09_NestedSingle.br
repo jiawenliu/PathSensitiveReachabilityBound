@@ -11,3 +11,10 @@ void NestedSingle(int n) {
 }
 //Bound: n
 
+[ x <- n ] 0 ;
+while [ > ( x , 0 ) ] 1 do {
+	[ y <- m ] 2 ;
+	while [ > ( x , 0) ] 3 do 
+	{ [ x <- - ( x, 1) ] 4 }
+	[ x <- - ( x , 1) ] 5;
+}

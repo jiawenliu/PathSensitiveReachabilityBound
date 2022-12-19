@@ -19,3 +19,21 @@ int srch(int t[], int n, int p[], int m, int b[])
   return i;
 }
 
+[ i <- n ] 0 ;
+[ j <- m  ] 1;
+[ k <- -1  ] 2;
+while [  > (i, 0) ] 3 do {
+  while [ > (j, 0)] 4 do
+  {
+    [ k <- b  ] 5;
+    if [ && ((<= (k , 0)), (> (k , + (j, 1)))) ] 6     
+      then {  [ skip ] 7 }
+      else {  [ skip ] 8 };
+    [ j <- - ( j, k )  ] 9;
+    if [ = ( m , j) ] 20     
+      then {  [ skip ] 11 }
+      else {  [ skip ] 12 };
+  };
+  [ i <- - ( i, 1 )  ] 13;
+  [ j <- - ( j, 1 )  ] 14
+}
