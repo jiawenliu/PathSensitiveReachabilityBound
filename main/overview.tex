@@ -108,16 +108,17 @@ So far, the loop bound analysis method in \cite{GulwaniJK09} can only give a loo
 the DC-based algorithm in \cite{sinn2017complexity} is able to
 compute a better combined loop bound of $n + m^2 - m \times N$ but still loose.
 \\
-None of the state-of-art methods can give the precise \emph{reachability-bounds} for every location in these nested loops.
-\\
-And it is not trivial to compute the \emph{reachability-bound} for every locations in nested loops even though knowing the loop bound,
+None of the state-of-art methods can give the precise \emph{reachability-bounds} for every location in these nested loops,
+% And it is not trivial to compute the \emph{reachability-bound} for every locations in nested loops 
+and they are non-trivial to compute even though knowing the loop bound,
 especially the locations which are similar to $7$ in $\kw{threeNestedWhile}$.
 \\
 \highlight{
-In order to precisely compute how many times the location $7$ is reached, we need to know
-the numbers of iterations of the outside loop $L_3$ and $L_1$, 
-during which the loop $L_6$ is entered. 
-We call this the \emph{loop reachability} of the loops $L_3$ and $L_1$ w.r.t to the location $7$, and we multiply the loop bounds of the $L_6$ with the \emph{loop reachability} where $L_6$ is nested to get the precise
+For example, in order to precisely compute how many times the location $7$ is reached, we need to know
+the numbers of iterations of the outside loop $L_3$ and $L_1$ such that,
+during these iterations, the loop $L_6$ is entered. 
+We call this the \emph{loop reachability} of the loops $L_3$ and $L_1$ w.r.t the location $7$.
+Then by multiplying the loop bounds of the $L_6$ with the \emph{loop reachability} of $L_3$ and $L_1$ w.r.t the $L_6$, we get the precise
 \emph{reachability-bounds} for location $7$.
 }
 \\
@@ -138,7 +139,7 @@ We are still unable to know the precise \emph{reachability-bound} for the locati
 }
 \paragraph*{Loop reachability-bound.}
 The second key idea of our path-sensitive reachability analysis algorithm is the
-\emph{loop reachability-bound} for each transition path $\tpath$ w.r.t a loop where it is nested,
+\emph{loop reachability-bound} for each transition path $\tpath$ w.r.t the loop in which $\tpath$ is nested,
 $\lpchB(L:\rprog, \tpath)$.
 \highlight{It is a bound on the iterations for
 the outside $L:\rprog$ w.r.t. the innermost loop where $\tpath$ is enclosed.

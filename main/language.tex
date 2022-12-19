@@ -61,6 +61,9 @@ We use following notations to represent the sets of corresponding terms:
 \inpvar & : & \mbox{Set of Input Variables}  
 \\ 
 %
+\booldom & : & \mbox{Set of Boolean Expressions}  
+\\ 
+%
 \cdom & : & \mbox{Set of Commands} 
 \\ 
 %
@@ -112,10 +115,10 @@ following by
   ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
 \end{array}
 \]
-Event projection operators $\pi_i$ projects the $i$th element from an event: 
-\\
+Event projection operators $\pi_i$ projects the $i^{th}$ element from an event: 
+% \\
 $\pi_i : 
-\eventset \to \vardom\cup \mbox{Boolean Expression}  \cup \mathbb{N} $
+\eventset \to \vardom \cup \booldom \cup \ldom $
 
 \paragraph{Trace.}
 \input{trace}
@@ -424,14 +427,21 @@ then the program's execution terminates and produces a finite execution trace $\
   \label{def:non-terminating}
   Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$,
   when $c$ executes with $\trace_0$,  we define $c$ is non-terminating under $\trace_0$ as 
-  $\config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace'} \in \lim(\to)$ for some $c' \in \cdom, \trace' \in \tdom$
+  $\config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace'} \in \lim(\rightarrow)$ for some $c' \in \cdom, \trace' \in \inftdom$
   where the limit is 
   \[
     \begin{array}{l}
-      \lim(\to) \in \left( (\cdom \times \tdom) \times (\cdom \times \tdom) \right) \triangleq 
+      \lim(\rightarrow) 
+      % \in \left( (\cdom \times \ftdom) \times (\cdom \times \inftdom) \right) 
+      \triangleq 
     \\ \quad
     \Big\{
-      (\config{c, \trace}, \config{c', \trace'}) ~\vert~ \trace' \in \tdom
+      (\config{c, \trace}, \config{c', \trace'}) ~\vert~ 
+      c, c' \in \cdom, \trace \in \ftdom_0(c),
+      \trace' \in \inftdom 
+      \land \exists \trace_0 \in \tdom, c_0 \in \cdom \st 
+      \config{c, \trace} \to \config{c_0, \trace_0}
+      \\ \qquad \qquad \qquad  \qquad 
       \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \tdom, c_i, c_{i + 1} \in \cdom \st 
       \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}  
     \Big\}
@@ -459,9 +469,38 @@ then the program's execution terminates and produces a finite execution trace $\
     f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}} \land \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}
     \end{array}
   \]
-  Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$, if $\config{c, \trace_0} \uparrow^{\infty}$, let $f$ be the function such that for every $i \in \mathbb{N}$,  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ where $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$, we have $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$. 
-  Let $\pi_2 : (\cdom \times \tdom) \to \tdom$ be the projector which projects the trace from a configuration.
-  Then $\config{c, \trace_0} \uparrow^{\infty}$ produces an infinite trace $\pi_2(\lim(f)) \in \inftdom$.
+  Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$, if $\config{c, \trace_0} \uparrow^{\infty}$, 
+  let $f$ be the function such that for every $i \in \mathbb{N}$,  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ where $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$, we have $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$. 
+  Let $\pi_2 : (\cdom \times \tdom) \to \tdom$ be the projector which projects the trace from a configuration,
+  then we define $\config{c, \trace_0} \uparrow^{\infty} \trace'$ produces an infinite trace $\trace' = \pi_2(\lim\limits_{i \to \infty}(f(i))) \in \inftdom$.
+  \[ \trace' = \lim( \pi_2 \circ (f(i))). \]
+\end{defn}
+%
+
+\begin{defn}[Non-terminating and Infinite Trace (third way)]
+  \label{def:infinite-trace}
+  Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$,
+  when $c$ executes with $\trace_0$,  we define $c$ is non-terminating under $\trace_0$, denoted as $\config{c, \trace_0} \uparrow^{\infty} \trace'$ and produce an infinite trace $\trace' \in \inftdom$ 
+  if and only if there exists a function
+  $f : \mathbb{N} \to \cdom \times \tdom$ such that $f(0) = \config{c, \trace_0}$ and
+  for every $i \in \mathbb{N}$ there exist  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ such that  $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$ and
+  $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$. 
+  \[
+    \begin{array}{l}
+    \forall \trace_0 \in \ftdom_0(c), \trace' \in \inftdom, c \in \cdom \st
+    \config{c, \trace_0} \uparrow^{\infty} \trace'
+    \\
+    \iff \exists f : \mathbb{N} \to \cdom \times \tdom \st 
+    f(0) = \config{c, \trace_0}
+    \\ \qquad \land
+    \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \tdom, c_i, c_{i + 1} \in \cdom\st 
+    \\ \qquad \quad
+    f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}} \land \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}.
+    \end{array}
+  \]
+  Let $\pi_2 : (\cdom \times \tdom) \to \tdom$ be the projector which projects the trace from a configuration,
+  then the infinite trace $\trace'$ produced by $\config{c, \trace_0} \uparrow^{\infty} \trace'$ is
+  \[ \trace' = \pi_2(\lim\limits_{i \to \infty}(f(i))) \in \inftdom. \]
 \end{defn}
 %
 This follows the maximal trace semantics in \cite{cousot2019abstract} Section 2.5 Equation (12).
