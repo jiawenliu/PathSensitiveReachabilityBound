@@ -51,7 +51,7 @@ a function $f(c, l) : \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{R
   \Big(
     \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace} 
     \lor 
-    \config{{c}, \trace_0} \to^{\infty} \config{c', \trace_0 \tracecat \trace} 
+    \config{{c}, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
   \Big)
   \implies f({c}, l)(\trace_0) \geq \counter(\trace, l) 
   \]
@@ -74,7 +74,7 @@ $\exeRB({c}, l): \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Precis
   \Big(
     \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace} 
     \lor 
-    \config{{c}, \trace_0} \to^{\infty} \config{c', \trace_0 \tracecat \trace} 
+    \config{{c}, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
   \Big)
   \implies \exeRB({c}, l)(\trace_0) = \counter(\trace, l) 
   \]

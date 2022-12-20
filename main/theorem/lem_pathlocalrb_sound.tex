@@ -1,10 +1,11 @@
 \begin{lemma}[Soundness of the Path Local Reachability-Bound]
+  % \label{lem:pathlocalrb-sound}
   For any refined program $\rprog$ and a simple transition path $\tpath$ in this program,
   if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested,
   then the execution times of $\tpath$ when executing the $\rprog_l$ under initial trace $\trace_0 \in \ftdom_0(c_l)$ is bounded by $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, \rprog \st 
+    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
     \rprog = REFINE(c)
     \land
     l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
@@ -13,16 +14,15 @@
     \rprog_l = \algrewrite(c_l)
     \land
     \Big(
-    \config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
-    \lor \config{c_l, \trace_0} \to^\infty \config{c_l', \trace_0 \tracecat \trace} 
+    \config{c_l, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+    \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
     \Big)
     \\ \qquad
     \implies
     \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
     \end{array}
   \]  
- 
-  \end{lemma}
+\end{lemma}
 \begin{proof}
 \emph{Path Local Reachability-Bound} Soundness.
 \\
@@ -30,24 +30,38 @@ Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath
 \\
 Let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested and $c_l$ be the While program of $\rprog_l$ such that $\kw{Rewrite(c_l)} = \rprog_l$. 
 \\
-Let $\trace_0 \in \ftdom_0(c_l)$ be an arbitrary initial trace of the closest loop $c_l$, and $\trace \in \tdom(c_l)$ be an execution trace such that $\config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}$.
-\\
+Let $\trace_0 \in \ftdom_0(c_l)$ be an arbitrary initial trace of the closest loop $c_l$, and $\trace \in \tdom $ be an execution trace such that
+\[
+  \config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace} \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+\]
 To show $\outinB(\rprog_l, \tpath)$ is a sound upper bound of the execution times of $\tpath$ when executing the $\rprog_l$, it is sufficient to show:
 \[
   \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath))
-  \]
+\]
 By induction on the loop program $\rprog_l$,
 we have the following cases:
 \caseL{$\rprog_l = \tpath$}
-In this case, $\outinB(\tpath, \tpath) = 1$. 
-Since $\tpath$ doesn't contain any loop, we know it will be executed at most once and $\lcounter(\trace, \pathl(\tpath)) \leq 1$
+In this case, we have $\outinB(\tpath, \tpath) = 1$ by Definition~\ref{def:pathlocalrb}. 
+\subcaseL{$\config{c_l, \trace_0} \uparrow^{\infty}  \trace_0 \tracecat \trace$}
+Since $\tpath$ doesn't contain any loop, we know it will be executed at most once and terminates.
 \\
-We have $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0) = 1 \geq \lcounter(\trace, \pathl(\tpath)) $ and this case is proved.
-\caseL{$\rprog_l = \tpath'$}
+Then this case is vacuously true.
+\subcaseL{$\config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}$} 
+In this subcase, since $\tpath$ doesn't contain any loop, we know it will be executed at most once,  i.e., $\lcounter(\trace, \pathl(\tpath)) \leq 1$.
+\\
+Then we have the following
+\[\econfig{\outinB(\rprog_l, \tpath)}(\trace_0) = 1 = \lcounter(\trace, \pathl(\tpath)) \]
+This case is proved.
+\caseL{$\rprog_l = \tpath' \land \tpath' \neq \tpath$}
 In this case, we have $\outinB(\tpath', \tpath) = \highlight{0} $ by Definition~\ref{def:pathlocalrb}.
-Since $\tpath' \neq \tpath$, we know $\tpath$ isn't executed when executing $c_l$ and $\lcounter(\trace, \pathl(\tpath)) = 0$.
 \\
-So we have $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0) = 0 = \lcounter(\trace, \pathl(\tpath)) $ and this case is proved.
+Since $\tpath' \neq \tpath$, we know $\tpath$ isn't executed when executing $c_l$, i.e., $\lcounter(\trace, \pathl(\tpath)) = 0$.
+\\
+Then we have
+\[
+  \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) = 0 = \lcounter(\trace, \pathl(\tpath)),
+  \]
+and this case is proved.
 \caseL{$\rprog_l = \rprog_1;\rprog_2$}
 In this case, we have $\outinB(\rprog_1;\rprog_2, \tpath) = \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) $ by Definition~\ref{alg:alg-refine_rewrite}, and
 it is sufficient to show

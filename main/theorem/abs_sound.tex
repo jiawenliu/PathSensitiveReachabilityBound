@@ -1,21 +1,26 @@
-\begin{lem}[Soundness of the Abstract execution trace]
+\begin{lemma}[Soundness of The Abstract Execution Trace]
     % \label{lem:abscfg_sound}
-  Given a program ${c}$, we have:
-  %
-  \[
+    For every program $c$ and
+    a finite execution trace $\trace \in \ftdom$ which is generated w.r.t.
+    an initial trace  $\trace_0 \in \ftdom_0(c)$,
+    there is an abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
+    for every event $\event \in \trace$ having the same label $l$, i.e., $\event = (\_, l, \_)$.
+    %
+    \[
     \begin{array}{l}
-      \forall c, c'\in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
-      \big(\config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
-      \lor 
-      \config{{c}, \trace_0} \to^{\infty} \config{c', \trace_0 \tracecat \trace} 
+      \forall c \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \ftdom ,  \event = (\_, l, \_) \in \eventset \st
+      \big(
+        \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
+      % \lor 
+      % \config{{c}, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
       \big)
       \land \event \in \trace 
       \\
-      \qquad \implies \exists! \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
+      \qquad \implies \exists \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
       \absevent \in \absflow(c)
     \end{array}
-  \]
-  \end{lem}
+    \]
+  \end{lemma}
   \begin{proof}
     Taking an arbitrary initial trace $\trace_0 \in \ftdom_0(c)$, an arbitrary event $\event = (\_, l, \_) \in \eventset$ and an execution trace $\trace \in \tdom$
     such that
@@ -346,21 +351,30 @@
   \end{proof}
   
   For every labeled variable in program $c$, $x^l \in \lvar_c$, there is a unique abstract event in program's abstract execution trace $\absevent \in \absflow(c)$ of form $(l, \_, \_)$. 
-  \begin{lem}[Uniqueness of the Abstract execution trace]
+  \begin{lemma}[Uniqueness of the Abstract execution trace]
   % \label{lem:absevent_unique}
-  Given a program ${c}$, we have:
+  For every program $c$ and
+  a finite execution trace $\trace \in \ftdom$ which is generated w.r.t.
+  an initial trace $\trace_0 \in \ftdom_0(c)$,
+  there is a unique abstract event $\absevent = (l, \_, \_) \in \absflow(c)$ 
+  for every assignment event $\event \in \eventset^{\asn}$ in the
+  execution trace having the label $l$, i.e., $\event = (\_, l, \_)$ and $\event \in \trace$.
   %
   \[
-  \begin{array}{l}
-   \forall \vtrace_0, \trace \in \tdom ,  \event = (\_, l, \_, \_) \in \eventset^{\asn} \st
-  \config{{c}, \trace_0} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace} 
-  \land \event \in \trace 
-  \\
-  \qquad \implies \exists! \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
-  \absevent \in \absflow(c)
-  \end{array}
+    \begin{array}{l}
+    \forall c \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \ftdom ,  \event = (\_, l, \_) \in \eventset^{\asn} \st
+    \big(
+      \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
+    % \lor 
+    % \config{{c}, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+    \big)
+    \land \event \in \trace 
+    \\
+    \qquad \implies \exists ! \absevent = (l, \_, \_) \in (\ldom\times \dcdom^{\top} \times \ldom) \st 
+    \absevent \in \absflow(c)
+    \end{array}
   \]
-  \end{lem}
+  \end{lemma}
   \begin{proof}
     This is proved trivially by induction on the program $c$.
   \end{proof}

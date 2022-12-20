@@ -425,83 +425,84 @@ then the program's execution terminates and produces a finite execution trace $\
 \\
 \begin{defn}[Non-terminating and Infinite Trace]
   \label{def:non-terminating}
-  Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$,
-  when $c$ executes with $\trace_0$,  we define $c$ is non-terminating under $\trace_0$ as 
-  $\config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace'} \in \lim(\rightarrow)$ for some $c' \in \cdom, \trace' \in \inftdom$
-  where the limit is 
+  Given a program $c$ and an initial trace $\trace \in \ftdom_0(c)$,
+  when $c$ executes with $\trace$,  we define the execution of $c$ under $\trace$ is non-terminating and produces an infinite trace $\trace' \in \inftdom$, as 
+  $\config{c, \trace_0} \uparrow^{\infty} \trace' \in \lim(\uparrow)$
+  where the limit is defined as follows.
   \[
     \begin{array}{l}
-      \lim(\rightarrow) 
+      \lim(\uparrow) 
       % \in \left( (\cdom \times \ftdom) \times (\cdom \times \inftdom) \right) 
       \triangleq 
     \\ \quad
     \Big\{
-      (\config{c, \trace}, \config{c', \trace'}) ~\vert~ 
-      c, c' \in \cdom, \trace \in \ftdom_0(c),
+      (\config{c, \trace}, \trace') ~\vert~ 
+      c\in \cdom, \trace \in \ftdom_0(c),
       \trace' \in \inftdom 
-      \land \exists \trace_0 \in \tdom, c_0 \in \cdom \st 
+      \land \exists \trace_0 \in \ftdom, c_0 \in \cdom \st 
       \config{c, \trace} \to \config{c_0, \trace_0}
-      \\ \qquad \qquad \qquad  \qquad 
-      \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \tdom, c_i, c_{i + 1} \in \cdom \st 
-      \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}  
+      \\ \qquad \qquad \qquad 
+      \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \ftdom, \trace'' \in \inftdom, c_i, c_{i + 1} \in \cdom \st 
+      \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}} 
+      \land  \trace' = \trace_{i + 1} \tracecat \trace''
     \Big\}
     \end{array}
   \]
 \end{defn}
 %
-\begin{defn}[Non-terminating and Infinite Trace (alternative way)]
-  \label{def:non-terminating-2}
-  Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$,
-  when $c$ executes with $\trace_0$,  we define $c$ is non-terminating under $\trace_0$, $\config{c, \trace_0} \uparrow^{\infty}$ if and only if there exists a function
-  $f : \mathbb{N} \to \cdom \times \tdom$ such that $f(0) = \config{c, \trace_0}$ and
-  for every $i \in \mathbb{N}$ there exist  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ such that  $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$ and
-  $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$. 
-  \[
-    \begin{array}{l}
-    \forall \trace_0 \in \ftdom_0(c), c \in \cdom \st
-    \config{c, \trace_0} \uparrow^{\infty}
-    \\
-    \iff \exists f : \mathbb{N} \to \cdom \times \tdom \st 
-    f(0) = \config{c, \trace_0}
-    \\ \qquad \land
-    \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \tdom, c_i, c_{i + 1} \in \cdom\st 
-    \\ \qquad \quad
-    f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}} \land \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}
-    \end{array}
-  \]
-  Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$, if $\config{c, \trace_0} \uparrow^{\infty}$, 
-  let $f$ be the function such that for every $i \in \mathbb{N}$,  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ where $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$, we have $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$. 
-  Let $\pi_2 : (\cdom \times \tdom) \to \tdom$ be the projector which projects the trace from a configuration,
-  then we define $\config{c, \trace_0} \uparrow^{\infty} \trace'$ produces an infinite trace $\trace' = \pi_2(\lim\limits_{i \to \infty}(f(i))) \in \inftdom$.
-  \[ \trace' = \lim( \pi_2 \circ (f(i))). \]
-\end{defn}
-%
+% \begin{defn}[Non-terminating and Infinite Trace (alternative way)]
+%   \label{def:non-terminating-2}
+%   Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$,
+%   when $c$ executes with $\trace_0$,  we define $c$ is non-terminating under $\trace_0$, $\config{c, \trace_0} \uparrow^{\infty}$ if and only if there exists a function
+%   $f : \mathbb{N} \to \cdom \times \tdom$ such that $f(0) = \config{c, \trace_0}$ and
+%   for every $i \in \mathbb{N}$ there exist  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ such that  $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$ and
+%   $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$. 
+%   \[
+%     \begin{array}{l}
+%     \forall \trace_0 \in \ftdom_0(c), c \in \cdom \st
+%     \config{c, \trace_0} \uparrow^{\infty}
+%     \\
+%     \iff \exists f : \mathbb{N} \to \cdom \times \tdom \st 
+%     f(0) = \config{c, \trace_0}
+%     \\ \qquad \land
+%     \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \tdom, c_i, c_{i + 1} \in \cdom\st 
+%     \\ \qquad \quad
+%     f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}} \land \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}
+%     \end{array}
+%   \]
+%   Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$, if $\config{c, \trace_0} \uparrow^{\infty}$, 
+%   let $f$ be the function such that for every $i \in \mathbb{N}$,  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ where $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$, we have $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$. 
+%   Let $\pi_2 : (\cdom \times \tdom) \to \tdom$ be the projector which projects the trace from a configuration,
+%   then we define $\config{c, \trace_0} \uparrow^{\infty} \trace'$ produces an infinite trace $\trace' = \pi_2(\lim\limits_{i \to \infty}(f(i))) \in \inftdom$.
+%   \[ \trace' = \lim( \pi_2 \circ (f(i))). \]
+% \end{defn}
+% %
 
-\begin{defn}[Non-terminating and Infinite Trace (third way)]
-  \label{def:infinite-trace}
-  Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$,
-  when $c$ executes with $\trace_0$,  we define $c$ is non-terminating under $\trace_0$, denoted as $\config{c, \trace_0} \uparrow^{\infty} \trace'$ and produce an infinite trace $\trace' \in \inftdom$ 
-  if and only if there exists a function
-  $f : \mathbb{N} \to \cdom \times \tdom$ such that $f(0) = \config{c, \trace_0}$ and
-  for every $i \in \mathbb{N}$ there exist  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ such that  $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$ and
-  $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$. 
-  \[
-    \begin{array}{l}
-    \forall \trace_0 \in \ftdom_0(c), \trace' \in \inftdom, c \in \cdom \st
-    \config{c, \trace_0} \uparrow^{\infty} \trace'
-    \\
-    \iff \exists f : \mathbb{N} \to \cdom \times \tdom \st 
-    f(0) = \config{c, \trace_0}
-    \\ \qquad \land
-    \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \tdom, c_i, c_{i + 1} \in \cdom\st 
-    \\ \qquad \quad
-    f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}} \land \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}.
-    \end{array}
-  \]
-  Let $\pi_2 : (\cdom \times \tdom) \to \tdom$ be the projector which projects the trace from a configuration,
-  then the infinite trace $\trace'$ produced by $\config{c, \trace_0} \uparrow^{\infty} \trace'$ is
-  \[ \trace' = \pi_2(\lim\limits_{i \to \infty}(f(i))) \in \inftdom. \]
-\end{defn}
+% \begin{defn}[Non-terminating and Infinite Trace (third way)]
+%   \label{def:infinite-trace}
+%   Given a program $c$ and an initial trace $\trace_0 \in \ftdom_0(c)$,
+%   when $c$ executes with $\trace_0$,  we define $c$ is non-terminating under $\trace_0$, denoted as $\config{c, \trace_0} \uparrow^{\infty} \trace'$ and produce an infinite trace $\trace' \in \inftdom$ 
+%   if and only if there exists a function
+%   $f : \mathbb{N} \to \cdom \times \tdom$ such that $f(0) = \config{c, \trace_0}$ and
+%   for every $i \in \mathbb{N}$ there exist  $\trace_i, \trace_{i + 1}\in \tdom$, $c_i, c_{i + 1} \in \cdom$ such that  $f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}}$ and
+%   $\config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}$. 
+%   \[
+%     \begin{array}{l}
+%     \forall \trace_0 \in \ftdom_0(c), \trace' \in \inftdom, c \in \cdom \st
+%     \config{c, \trace_0} \uparrow^{\infty} \trace'
+%     \\
+%     \iff \exists f : \mathbb{N} \to \cdom \times \tdom \st 
+%     f(0) = \config{c, \trace_0}
+%     \\ \qquad \land
+%     \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \tdom, c_i, c_{i + 1} \in \cdom\st 
+%     \\ \qquad \quad
+%     f(i) = \config{c_i, \trace_i}$, $f(i + 1) =  \config{c_{i + 1}, \trace_{i + 1}} \land \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}}.
+%     \end{array}
+%   \]
+%   Let $\pi_2 : (\cdom \times \tdom) \to \tdom$ be the projector which projects the trace from a configuration,
+%   then the infinite trace $\trace'$ produced by $\config{c, \trace_0} \uparrow^{\infty} \trace'$ is
+%   \[ \trace' = \pi_2(\lim\limits_{i \to \infty}(f(i))) \in \inftdom. \]
+% \end{defn}
 %
 This follows the maximal trace semantics in \cite{cousot2019abstract} Section 2.5 Equation (12).
 \\
@@ -513,37 +514,37 @@ specifically the trace has the property that its length never decreases during t
   \label{lem:tracenondec}
   For any program $c \in \cdom$ and initial trace $\trace_0 \in \ftdom_0(c)$,
   if there exists $\trace \in \tdom$ and $c' \in \cdom $ such that $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $ or 
-  $\config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace}$  
+  $\config{c, \trace_0} \uparrow^{\infty} \trace$  
   then there exists a trace $\trace' \in \tdom$ such that $\trace_0 \tracecat \trace' = \trace$ formally as follows.
   %
   \[
     \begin{array}{l}
     \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom \st
     \Big( \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} 
-    \lor  \config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace} \Big)
+    \lor  \config{c, \trace_0} \uparrow^{\infty} \trace \Big)
     \\ \quad
     \implies \exists \trace' \in \tdom \st \trace_0 \tracecat \trace' = \trace 
     \end{array}
     \]
   \end{lem}
-  \begin{lem}
-    [Trace Non-Decreasing (based on the alternative non-termination definition)]
-    \label{lem:tracenondec2}
-    For any program $c \in \cdom$ and initial trace $\trace_0 \in \ftdom_0(c)$,
-    \begin{itemize}
-      \item if there exists $\trace \in \tdom$ and $c' \in \cdom $ such that $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $
-      then there exists a trace $\trace' \in \ftdom$ such that $\trace_0 \tracecat \trace' = \trace$;
-      \item if $\config{c, \trace_0} \uparrow^{\infty} $ and produces an infinite trace $\trace \in \inftdom$ as defined in Definition~\ref{def:non-terminating}
-      then there exists an infinite trace $\trace' \in \inftdom$ such that $\trace_0 \tracecat \trace' = \trace$ formally as follows.  
-    \end{itemize}
-    %
-    \[
-      \begin{array}{l}
-      \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom \st
-      \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} 
-      \implies \exists \trace' \in \ftdom \st \trace_0 \tracecat \trace' = \trace 
-      \\
-      \todomath{\land \config{c, \trace_0} \uparrow^{\infty} \implies \exists \trace' \in \inftdom \st \trace_0 \tracecat \trace' \in \inftdom}
-      \end{array}
-      \]
-    \end{lem}
+  % \begin{lem}
+  %   [Trace Non-Decreasing (based on the alternative non-termination definition)]
+  %   \label{lem:tracenondec2}
+  %   For any program $c \in \cdom$ and initial trace $\trace_0 \in \ftdom_0(c)$,
+  %   \begin{itemize}
+  %     \item if there exists $\trace \in \tdom$ and $c' \in \cdom $ such that $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $
+  %     then there exists a trace $\trace' \in \ftdom$ such that $\trace_0 \tracecat \trace' = \trace$;
+  %     \item if $\config{c, \trace_0} \uparrow^{\infty} $ and produces an infinite trace $\trace \in \inftdom$ as defined in Definition~\ref{def:non-terminating}
+  %     then there exists an infinite trace $\trace' \in \inftdom$ such that $\trace_0 \tracecat \trace' = \trace$ formally as follows.  
+  %   \end{itemize}
+  %   %
+  %   \[
+  %     \begin{array}{l}
+  %     \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom \st
+  %     \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} 
+  %     \implies \exists \trace' \in \ftdom \st \trace_0 \tracecat \trace' = \trace 
+  %     \\
+  %     \todomath{\land \config{c, \trace_0} \uparrow^{\infty} \implies \exists \trace' \in \inftdom \st \trace_0 \tracecat \trace' \in \inftdom}
+  %     \end{array}
+  %     \]
+  %   \end{lem}

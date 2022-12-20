@@ -37,19 +37,18 @@ $\tracecat$ is defined as:
 \]
 \end{defn}
 }
-\todo{how about infinite trace}
 \begin{defn}(An Event Belongs to A Trace)
-  An event $\event \in \eventset$ belongs to a trace $\trace \in \ftdom$, i.e., $\event \in \trace$ are defined as follows:
+  An event $\event \in \eventset$ belongs to a trace $\trace \in \tdom$, i.e., $\event \in \trace$ are defined as follows:
 %
 \begin{equation*}
   \event \in \trace  
   \triangleq \left\{
   \begin{array}{ll} 
-    \etrue                  & \trace =  \trace' :: \event'
+    \etrue                  & \trace =  [\event] \tracecat \trace'
      \land \event = \event' \\
-    \event \in \trace' & \trace =  \trace' :: \event'
-    \land \event \neq \event' \\ 
-    \efalse                 & \trace = []
+    \event \in \trace' & \trace =  [\event'] \tracecat \trace'
+      \land \event \neq \event' \\ 
+    \efalse                 & \trace = [] \lor \trace \in \inftdom
   \end{array}
   \right.
 \end{equation*}

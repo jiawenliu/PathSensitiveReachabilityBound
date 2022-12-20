@@ -34,23 +34,25 @@
     In the two cases above, the soundness is discussed in~\cite{sinn2017complexity} Section 4 of Paragraph \emph{Discussion on Soundness} in Page 25.
   \end{proof}
   %
-  \begin{thm}[Soundness of the Path-insensitive Transition Bound]
+  \begin{theorem}[Soundness of the Path-insensitive Transition Bound]
     % \label{thm:pathinsensitive_rb_soundness}
-    For each program ${c}$ and an edge $\absevent = (l, \_, \_) \in \absG(c)$, if $l$ is the label of an assignment command,
-    then its \emph{path-insensitive transition bound} $\absclr(\absevent, c)$ 
-     is a sound upper bound on 
-    the execution times of this assignment command in $c$.
-      \[
-        \begin{array}{l}
-          \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom, l \in \lvar(c) \st
-          \Big( \config{c, \trace_0} \rightarrow^{*} \config{\eskip, \trace_0 \tracecat \trace} 
-            \lor  \config{c, \trace_0} \rightarrow^{\infty} \config{c', \trace_0 \tracecat \trace} \Big)
-           \\ \qquad \qquad
-           \implies \exists \absevent = (\_, l, \_) \in \absflow(c) \land
-          \counter(\trace, l) \leq \econfig{\absclr(\absevent, c)}(\trace_0)
-        \end{array}
-      \]
-  \end{thm}
+  For each program ${c}$ and an edge $\absevent = (l, \_, \_) \in \absG(c)$, if $l$ is the label of an assignment command,
+  %  label $l \in \lvar(c)$,
+  then its \emph{path-insensitive transition bound} $\absclr(\absevent, c)$ 
+   is a sound upper bound on 
+  the execution times of this assignment command in $c$.
+    \[
+      \begin{array}{l}
+        \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c \in \cdom, l, l' \in \lvar(c) \st
+        \Big( \config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace} 
+          \lor  \config{c, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace \Big)
+         \\ \qquad \qquad
+         \implies
+         \exists \absevent = (\_, l, \_) \in \absflow(c) \land
+        \counter(\trace, l) \leq \econfig{\absclr(\absevent, c)}(\trace_0)
+      \end{array}
+    \]
+  \end{theorem}
   % \begin{thm}[Soundness of the Path-insensitive Transition Bound]
   %   % \label{thm:pathinsensitive_rb_soundness}
   % Given a program ${c}$, for every label $l \in \lvar(c)$,

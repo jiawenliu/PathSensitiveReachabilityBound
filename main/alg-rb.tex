@@ -39,13 +39,13 @@ We show the \emph{path reachability-bound} of the simple transition path $\tpath
   the execution times of $\tpath$ when executing the $\rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$ is bounded by $\econfig{\inoutB(\rprog, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
-    \rprog = REFINE(c)
+    \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l \in \ldom, \rprog \st 
     \\ \qquad
+    \rprog = REFINE(c)
     \land
     \Big(
-    \config{c, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
-    \lor \config{c, \trace_0} \to^\infty \config{c', \trace_0 \tracecat \trace} 
+    \config{c, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l}, \trace_0 \tracecat \trace}
+    \lor \config{c, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
     \Big)
     \\ \qquad
     \implies
@@ -82,13 +82,13 @@ We show that $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for every pro
   %
   \[
     \begin{array}{l}
-      \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
-      \rprog = REFINE(c)
+      \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
       \\ \qquad
+      \rprog = REFINE(c) 
       \land
       \Big(
-      \config{c, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
-      \lor \config{c, \trace_0} \to^\infty \config{c', \trace_0 \tracecat \trace} 
+      \config{c, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+      \lor \config{c, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
       \Big)
       \\ \qquad
       \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)

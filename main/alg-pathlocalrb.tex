@@ -156,7 +156,7 @@ We show the \emph{path local reachability-bound} of the simple transition path $
   then the execution times of $\tpath$ when executing the $\rprog_l$ under initial trace $\trace_0 \in \ftdom_0(c_l)$ is bounded by $\econfig{\outinB(\rprog_l, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, \rprog \st 
+    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
     \rprog = REFINE(c)
     \land
     l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
@@ -165,8 +165,8 @@ We show the \emph{path local reachability-bound} of the simple transition path $
     \rprog_l = \algrewrite(c_l)
     \land
     \Big(
-    \config{c_l, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
-    \lor \config{c_l, \trace_0} \to^\infty \config{c_l', \trace_0 \tracecat \trace} 
+    \config{c_l, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+    \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
     \Big)
     \\ \qquad
     \implies

@@ -22,13 +22,13 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
     $BD(\rprog)$ is a sound upper bound on the iterating times of this program.
     \[
       \begin{array}{l}
-      \forall c, c' \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom, \rprog \st 
-      \rprog = REFINE(c)
+      \forall c, c' \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom, l \in \lvar(c), \rprog \st 
       \\ \qquad
+      \rprog = REFINE(c)
       \land 
       \Big(
-        \config{c, \trace_0} \to^* \config{\eskip, \trace_0 \tracecat \trace}
-        \lor \config{c, \trace_0} \to^\infty \config{c', \trace_0 \tracecat \trace} 
+        \config{c, \trace_0} \to^* \config{\clabel{\eskip}^{l}, \trace_0 \tracecat \trace}
+        \lor \config{c, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
         \Big)
       \\ \qquad
       \implies
