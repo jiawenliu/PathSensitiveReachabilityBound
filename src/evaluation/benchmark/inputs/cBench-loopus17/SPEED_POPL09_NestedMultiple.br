@@ -1,15 +1,3 @@
-int nondet();
-
-void NestedMultiple(int x0, int y0, int n, int m) {
-  int x = x0; int y = y0;
-  while (x < n) {
-    while (y < m && nondet())
-      y = y + 1;
-    x = x + 1;
-  }
-}
-//Bound: 
-
 [ x <- - ( n , x0 ) ] 0 ;
 [ y <- - ( m , y0 ) ] 1 ;
 while [ > ( x , 0 ) ] 2 do {

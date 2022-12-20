@@ -1,18 +1,8 @@
-void start(int y, int z)
-{
-  while (z>y) {
-    y=y+1;
-  }
-  while (y>2) {
-    y=y-3;
-  }
-}
-
 [ i <- - (z, y) ] 0 ;
 while [  > (i, 0) ] 1 do {
   [ i <- - (i, 1) ] 2
 };
-[ i <- - (z, 2) ] 3 ;
+[ j <- - (i, 2) ] 3 ;
 while [  > (j, 0) ] 4 do {
   [ j <- - (j, 3) ] 5
-};
+}

@@ -11,3 +11,13 @@ int while2(int N){
   }
   return 0;
 }
+
+[ i <- N ] 0 ;
+while [  > (i, 0) ] 1 do {
+	[ j <- N  ] 2;
+	while [ > (j, 0)] 3 do
+	{
+		[ j <- - ( j, 1 )  ] 4
+	};
+	[ i <- - ( i, 1 )  ] 5
+}

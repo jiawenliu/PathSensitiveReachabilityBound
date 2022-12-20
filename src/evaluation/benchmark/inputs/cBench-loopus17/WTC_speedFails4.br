@@ -1,21 +1,9 @@
-
-int speedFails4(int x, int n, int b){
-  int t;
-  if(b>=1) t=1; else  t=-1;
-
-  while(x<=n)
-    {
-      if(b>=1)
-	{
-	  x=x+t;
-	}
-      else 
-	{
-	  x=x-t;
-	}
-    }
-  
-  return 0;
+if [ >= ( b , 1 ) ] 0     
+then {  [ t <- 1 ] 1 }
+else {  [ t <- -1 ] 2 };
+[ x <- n ] 3; 
+while [  > ( x , 0 ) ] 4 do {
+  if [ >= ( b , 1 ) ] 5     
+  then {  [ x <- - ( x , t ) ] 6 }
+  else {  [ x <- + ( x , t ) ] 7 }
 }
-
-//YESSSSSSSSSSSSSSSSSSSSSSSSsss

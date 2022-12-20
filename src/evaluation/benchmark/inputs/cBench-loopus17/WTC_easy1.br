@@ -1,9 +1,7 @@
-void easy1(int z) {
-  int x, y;
-  x=0;
-  y=100;
-  while (x<40) {
-    if (z==0) { x=x+1; } else { x=x+2; }
-  }
+[ x <- 40 ] 0 ;
+[ y <- 100 ] 1 ;
+while [  > (x , 0) ] 2 do {
+	if [ == ( z , 0 ) ] 3     
+	then {  [ x <- - ( x , 1 ) ] 4 }
+	else {  [ x <- - ( x , 2 ) ] 5 }
 }
-

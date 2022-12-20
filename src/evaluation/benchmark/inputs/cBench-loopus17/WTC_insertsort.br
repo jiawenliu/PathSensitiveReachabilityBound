@@ -1,12 +1,12 @@
-void insertsort(int a[], int length)
-{
-  int i, j, value;
-
-        for(i = 1; i < length; i++) {
-                value = a[i];
-                for (j = i - 1; j >= 0 && a[j] > value; j--) {
-                        a[j + 1] = a[j];
-                }
-                a[j+1] = value;
-        }
+[ i <- length ] 0 ;
+while [  > (i, 0) ] 1 do {
+	[ j <- i  ] 2;
+	[ value <- ai  ] 3;
+	while [ > (j, 0)] 4 do
+	{
+		[ j <- - ( j, 1 ) ] 5;
+		[ aj <- ajj ] 6
+	};
+	[ i <- - ( i, 1 )  ] 7;
+	[ ajj <- value  ] 8
 }

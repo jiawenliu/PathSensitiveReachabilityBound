@@ -1,6 +1,7 @@
-void wise(int x, int y){
-  if(x<0 || y<0) return;
-  while(x-y>2 || y-x>2)
-    if(x < y) ++x;
-    else ++y;
+[ i <- x ] 0 ;
+[ j <- y ] 1 ;
+while [ || ( > ( - ( i , j) , 2), > ( - ( j , i) , 2)) ] 2 do {
+	if [ < ( i , j ) ] 3     
+	then {  [ i <- + (i, 1) ] 4 }
+	else {  [ j <- + (j, 1) ] 5 }
 }

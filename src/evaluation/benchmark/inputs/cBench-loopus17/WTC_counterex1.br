@@ -1,10 +1,15 @@
-int nondet();
-
-void counterex1b(int n, int x, int y)
-{
-  while(x>=0){
-    while(y>=0 && nondet()) y--;
-    x--;
-    while(y<=n && nondet()) y++;
-  }
+[ xx <- x ] 0 ;
+while [  > (xx , 0) ] 1 do {
+	[ yy <- y  ] 2;
+	while [ > (yy, 0)] 3 do
+	{
+		[ yy <- - ( yy , 1 )  ] 4
+	};
+	[ xx <- - ( xx , 1 )  ] 5;
+	[ i <- n  ] 6;
+	while [ > (i , 0)] 7 do
+	{
+		[ i <- - ( i , 1 )  ] 8;
+		[ yy <- + ( yy , 1 )  ] 9
+	}
 }

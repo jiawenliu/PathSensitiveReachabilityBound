@@ -1,13 +1,3 @@
-void start(int x, int y)
-{
-  int t;
-
-  while (x>0) {
-    x--;
-    t=x, x=y, y=t;
-  }
-}
-
 [ t <- 0 ] 0 ;
 [ xx <- x ] 1 ;
 [ yy <- y ] 2 ;
@@ -16,4 +6,4 @@ while [  > (xx, 0) ] 3 do {
 	[ t <- xx ] 5;
 	[ xx <- yy ] 6;
 	[ yy <- t ] 7
-};
+}

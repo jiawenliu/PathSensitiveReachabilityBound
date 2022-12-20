@@ -1,17 +1,7 @@
-void Ex3(int n, int A[]) {
-  while (n > 0) {
-    int t = A[n];
-    while (n > 0 && t == A[n])
-      n--;
-  }
-}
-
-//Bound: n
-
 [ x <- n ] 0 ;
 [ y <- 0 ] 1 ;
 while [  > ( x, 0 ) ] 2 do {
-   	[ y <- x ] 3
+   	[ y <- x ] 3;
 	while [  > ( x , 0) ] 4 do 
 	{ [ x <- - ( x , 1) ] 5  }
 }

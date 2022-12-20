@@ -1,20 +1,16 @@
-// attention, faire passer avec aspic -noaccel, sinon bug !
-
-void realselect(int numbers[], int array_size)
-{
-  int i, j;
-  int min, temp;
-
-  for (i = 0; i < array_size-1; i++)
-  {
-    min = i;
-    for (j = i+1; j < array_size; j++)
-    {
-      if (numbers[j] < numbers[min])
-        min = j;
-    }
-    temp = numbers[i];
-    numbers[i] = numbers[min];
-    numbers[min] = temp;
-  }
+[ i <- array_size ] 0 ;
+[ j <- 0 ] 1 ;
+while [  > (i , 0) ] 2 do {
+  [ min <- i  ] 3;
+  [ j <- - ( array_size , i)  ] 4;
+  while [ > ( j , 0 ) ] 5 do {
+    if [ < ( numbersj , numbersmin ) ] 6     
+      then {  [ min <- j ] 7 }
+      else {  [ skip ] 8 };
+      [ j <- - ( j , 1 ) ] 9
+            }    
+    [ temp <- numbersi ] 10;
+    [ numbersi <- numbersmin ] 11;
+    [ numbersmin <- temp  ] 12;
+    [ i <- - ( i , 1 )  ] 13
 }

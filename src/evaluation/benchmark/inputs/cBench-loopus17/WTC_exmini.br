@@ -1,17 +1,8 @@
-/*exmini*/
-
-int exmini(int i, int j, int k)
-{
-  int tmp;
-
-  while(i<=100 && j<=k){
-    tmp = i;
-    i=j;
-    j=tmp+1;
-    k=k-1;
-  }
-
-
-  return 0;
-
+[ j <- 0 ] 0 ;
+[ i <- 0 ] 1 ;
+while [  && (<= (j , k), <= (i , 100)) ] 2 do {
+	[ tmp <- i ] 3;     
+	[ i <- j ] 4;
+	[ j <- + ( tmp , 1 ) ] 5;
+	[ k <- - ( k , 1 ) ] 6
 }

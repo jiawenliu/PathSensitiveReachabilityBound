@@ -1,13 +1,7 @@
-void speedpldi4(int m, int n){
-  int i;
-
-  if(m <= 0) return;
-  if(n <= m) return;
-  i=n;
-  while(i>0)
-    if(i<m)
-      --i;
-    else
-      i -= m;
+[ i <- n ] 0 ;
+[ j <- 0 ] 1 ;
+while [  > (i , 0) ] 2 do {
+	if [ < ( i , m ) ] 3     
+	then {  [ i <- - (i, 1) ] 4 }
+	else {  [ i <- - (i, m) ] 5 }
 }
-  

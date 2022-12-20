@@ -1,20 +1,14 @@
-int complex(int a, int b)
-{
-  while(a < 30)
-    {
-      while(b < a)
-	{ 
-	  if(b > 5) 
-	    b = b + 7; 
-	  else
-	    b = b + 2;
-	  if(b >= 10 && b <= 12) 
-	    a = a + 10;
-	  else 
-	    a = a + 1;
-	}
-      a = a + 2; 
-      b = b - 10; 
-    }
-  return 1;
+[ aa <- a ] 0 ;
+[ bb <- b ] 1 ;
+while [  > ( 30 , aa ) ] 2 do {
+	while [  > ( aa , bb ) ] 3 do {
+	  if [ > ( bb , 5 ) ] 4     
+	  then {  [ bb <- + ( bb , 7 ) ] 5 }
+	  else {  [ bb <- + ( bb , 2 ) ] 6 };
+	  if [ && ( >= ( bb , 10 ) , <= ( bb , 12 ) ) ] 7     
+	  then {  [ aa <- + ( aa , 10 ) ] 8 }
+	  else {  [ aa <- + ( aa , 1 ) ] 9 }
+	};
+  [ aa <- + ( aa , 2 ) ] 10 ;
+  [ bb <- - ( bb , 10 ) ] 11   
 }

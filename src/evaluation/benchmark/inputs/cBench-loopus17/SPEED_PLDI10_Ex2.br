@@ -1,15 +1,3 @@
-int nondet();
-
-void Ex2(int n, int m) {
-  while (n > 0 && m > 0) {
-    n--; m--;
-    while (nondet()) {
-      n--; m++;
-    }
-  }
-}
-
-//Bound: n
 [ x <- n ] 0 ;
 [ y <- m ] 1 ;
 while [  > ( x, 0 ) ] 2 do {

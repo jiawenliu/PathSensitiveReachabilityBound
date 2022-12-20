@@ -1,15 +1,8 @@
-
-int nondet();
-
-void random1d(int max) {
-  int a,x;
-  if (max>0) {
-  a=0;
-  x=1;
-  while (x<=max) {
-    if (nondet()) a=a+1; else a=a-1;
-    x=x+1;
-  }
-  }
+[ a <- 0 ] 0 ;
+[ x <- max ] 1 ;
+while [  > ( x, 0 ) ] 2 do {
+	if [ < ( a , b ) ] 3     
+	then {  [ a <- + (a, 1) ] 4 }
+	else {  [ a <- - (a, 1) ] 5 };
+	[ x <- - (x, 1) ] 6
 }
-

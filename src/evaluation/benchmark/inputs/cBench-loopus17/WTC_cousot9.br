@@ -1,16 +1,8 @@
-int cousot9(int j, int N){
-  int i;
-
-  i=N;
-  while(i>0) {
-
-    if(j>0) {j--;}
-    else
-      {
-	j=N;i--;
-      }
-
-  }
-
-  return 0;
+[ i <- N ] 0 ;
+[ jj <- j ] 1 ;
+while [  > (i , 0) ] 2 do {
+if [ > ( jj , 0 ) ] 3     
+then {  [ jj <- - ( jj , 1 ) ] 4 }
+else {  [ jj <- N ] 5 ;
+        [ i <- - (i, 1) ] 6  }
 }

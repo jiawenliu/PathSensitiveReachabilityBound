@@ -1,22 +1,8 @@
-int nondet();
-
-void cyclic(int id, int maxId) {
-  if(0 <= id <= maxId) {
-    int tmp = id + 1;
-    while(tmp != id && nondet()) {
-      if (tmp <= maxId)
-        tmp = tmp + 1;
-      else
-        tmp = 0;
-    }
-  }
-}
-
 [ tmp <- maxId ] 0 ;
 [ tmp <- - ( tmp, 1 ) ] 1 ;
 while [  > (i , 0) ] 2 do {
 if [ < ( tmp , maxId) ] 3     
 then {  [ tmp <- - (tmp, 1) ] 4;
         [ i <- - (i, 1) ] 5 }
-else {  [ tmp <- - (tmp, 1) ]  }
+else {  [ tmp <- - (tmp, 1) ] 6 }
 }

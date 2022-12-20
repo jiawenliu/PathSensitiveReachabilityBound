@@ -10,3 +10,8 @@ int ndecr (int n)
   return 0;
 
 }
+
+
+  [ i <- n ]0;
+  while [> (i, 0)] 1 do 
+  { [ i <- - (i , 1) ] 2 }
