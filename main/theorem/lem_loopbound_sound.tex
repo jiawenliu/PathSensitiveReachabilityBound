@@ -46,28 +46,27 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
       \end{array}
     \]
     \end{lemma}
-  Informal Discussion: \\
-  Lemma~\ref{lem:loopbound_sound} guarantees that
-  the bound for every transition path $\rprog$, the $BD(\rprog)$
-  is a sound upper bound on its execution times, by assuming
-  that all the loops and transition paths where $\rprog$ is nested execute only once.
+%   Informal Discussion: \\
+%   Lemma~\ref{lem:loopbound_sound} guarantees that
+%   the bound for every transition path $\rprog$, the $BD(\rprog)$
+%   is a sound upper bound on its execution times, by assuming
+%   that all the loops and transition paths where $\rprog$ is nested execute only once.
 
-For every base case, i.e., a simple transition path, 
-$\varGD(\rprog) =  \rfinit(\tpath) - \rfnext(\rprog)$
-counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
-In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
-$v$ is a local bound if it has the same decreasing time as the transition's execution time.
-By assuming that certain program parts (those were e increases) are not executed,
-then value of $v$ can limit the execution time of that transition.
-\\
-In our soundness, we assume all the code pieces not inside this transition path are executed at most once (once if they show up in front of the program
-zero time if not).
-In this case, this bound limits the execution time of this transition path.
-\\
-The soundness also relies on the operation $\frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$,
-which can be solved by external SMT solver,
-or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
-
+% For every base case, i.e., a simple transition path, 
+% $\varGD(\rprog) =  \rfinit(\tpath) - \rfnext(\rprog)$
+% counts the variables' changes only once. In this way, it assumes all the outside patterns and loops execution only once.
+% In paper \cite{sinn2017complexity} Definition~9, they informally discussed the local bound soundness.
+% $v$ is a local bound if it has the same decreasing time as the transition's execution time.
+% By assuming that certain program parts (those were e increases) are not executed,
+% then value of $v$ can limit the execution time of that transition.
+% \\
+% In our soundness, we assume all the code pieces not inside this transition path are executed at most once (once if they show up in front of the program
+% zero time if not).
+% In this case, this bound limits the execution time of this transition path.
+% \\
+% The soundness also relies on the operation $\frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$,
+% which can be solved by external SMT solver,
+% or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
 \begin{proof}
 \emph{Soundness} of the \emph{Loop Bound}.
   \\
@@ -113,15 +112,15 @@ We also know $\tpath$ will be executed at most once and $\trace_{0 \to l_f} = \t
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(\rprog)
     \land \counter(\trace', 0) = \counter(\trace', l_f) = 0 
-    \Big\}.
-     = \# \Big\{\trace \Big\} = 1
+    \Big\}
+     = \# \Big\{\trace \Big\} = 1.
   \end{array}
 \]
 Then we have this case proved.
 \caseL{$\rprog = \rpchoose{\rprog_1, \ldots}$}
 In this case, we have
 \[
-  BD(\rpchoose{\rprog_1, \ldots, \rprog_m }, c) = \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\}
+  BD(\rpchoose{\rprog_1, \ldots, \rprog_m }, c) = \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\}.
 \]
 Let $c_1, \ldots, c_m \in \cdom$ be the while program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refinement algorithm REFINE, we know each $\rprog_i$ is a loop program refined from multiple paths in $c$.
@@ -197,7 +196,7 @@ Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\
 \\
 According to the operational semantics, let $\trace_1, \trace_2 \in \tdom$ be two execution traces such that 
 \[
-  \config{c_1; c_2, \trace_0} \to^* \config{c_2, \trace_0 \tracecat \trace_1} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace_1 \tracecat \trace_2}
+  \config{c_1; c_2, \trace_0} \to^* \config{c_2, \trace_0 \tracecat \trace_1} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace_1 \tracecat \trace_2}.
 \]
 By the trace non-decreasing property in Lemma~\ref{lem:tracenondec}, we have $\trace = \trace_1 \tracecat \trace_2$.
 \\
@@ -270,7 +269,7 @@ By the label consistency, we know
    \Big\} 
    \st 
    \\
-   \trace = \trace_1 \tracecat \trace_2
+   \trace = \trace_1 \tracecat \trace_2.
     \end{array}
   \]
   Then we have
@@ -283,7 +282,7 @@ By the label consistency, we know
       \land (l_{f}, \_) \in \absfinal(c_1)
       \land l_s = \absinit(c_1)
       \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
-      \Big\},
+      \Big\}
       \\ \leq 
       \min \Bigg\{ \#
       \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
@@ -304,7 +303,7 @@ By the label consistency, we know
      \land l_s = \absinit(\rprog_2)
      \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
      \Big\} 
-     \Bigg\}
+     \Bigg\}.
       \end{array}
     \]
     Then we have
@@ -346,7 +345,7 @@ In this case, we have
   \left\{ \highlight{\frac{a - b}{\varGD(\rprog', c)}} ~\vert~
   x = a \in \rfinit(\rprog', c)
   \land x = b \in \rffinal(\rprog', c)
-  \right\} 
+  \right\}.
 \]
 Then we have the soundness guaranteed by the three states,
 $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ computed in Definition~\ref{def:alg-loopabsstate}.
@@ -364,7 +363,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
     \begin{array}{l} 
       (l_1, x' \leq y + v, l_2) \in \reset(x, c) 
       \\
-    \land l_1 \leq \absinit(\rprog, c)
+    \land l_1 \leq \absinit(\rprog, c).
   \end{array}
   \right\}
   \right\}
@@ -400,7 +399,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
       \land l_1 \leq \absinit(\rprog)
   \end{array}
   \right\}}(\trace_0) 
-   \geq \env(\trace') x
+   \geq \env(\trace') x.
    \]
  %
  \item  
@@ -425,7 +424,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
        v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
        \right\}
      \end{array}
-   \right\} 
+   \right\}.
    \end{array}
  \]
  Taking an arbitrary ranking function $x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}$,
@@ -438,7 +437,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
    $\varinvar(y, c)$ is the sound upper bound on its maximum value during the execution. 
    Then we have
    \[
-     \econfig{\varinvar(y, c)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y 
+     \econfig{\varinvar(y, c)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y. 
    \]
    Same for each abstract event such that $((l', x' \leq x + v, \_) \in \inc(x, c) $ and $(l', x' \leq x + v, \_) \in \dec(x, c)$,
    we know 
@@ -475,7 +474,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
              \right\}
            \end{array}
      }(\trace_0) \\
-     \leq \env(\trace') x
+     \leq \env(\trace') x.
    \end{array}
    \]
  %
@@ -486,7 +485,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
  Taking an arbitrary ranking function $x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}$,
  let $\trace' \in \tdom$ be the execution trace after the execution of $\rprog$,  then we have
  \[
-   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}.
  \]
 So we know for each $\tpath$ in $\rprog$ with $x = \locbound(\tpath)$,
 $\rffinal(\rprog, c)$ computes the lower bound on the value of $x$ after the execution of $\rprog$ finished.
@@ -505,13 +504,13 @@ $\varGD(\rprog, c)$ contains the equations $x = e$, where $e \in \scexpr(c)$ is 
  \subcaseL{$\rprog = \tpath$}
  By Definition~\ref{def:alg-absstate}, we have
 \[
-   \varGD(\tpath, c) =  \min\left\{v  ~|~ x = v \in \rfnext(\tpath, c) \right\}
+   \varGD(\tpath, c) =  \min\left\{v  ~|~ x = v \in \rfnext(\tpath, c) \right\}.
 \]
 In this case, we have the soundness guaranteed by the soundness of $\rfnext(\tpath, c)$ for each transition path $\tpath$.
  \subcaseL{$\rprog = \rprog_1;\rprog_2$}
  By Definition~\ref{def:alg-absstate}, we have
 \[
-\varGD(\rprog_1;\rprog_2, c) =  \varGD(\rprog_1, c) + \varGD(\rprog_2, c)
+\varGD(\rprog_1;\rprog_2, c) =  \varGD(\rprog_1, c) + \varGD(\rprog_2, c).
 \]
 By induction hypothesis on $\rprog_1$ and $\rprog_2$, we know
 \\
@@ -530,7 +529,7 @@ Then we have this case proved by taking the union of them, i.e., $\varGD(\rprog_
  By Definition~\ref{def:alg-absstate}, we have
 \[
   \varGD(\rprepeat(\rprog'), c) =  BD(\rprog', c)  \times
-  {\varGD(\rprog', c)}
+  {\varGD(\rprog', c)}.
 \]
 By induction hypothesis on $\rprog'$, we know
 \\
@@ -644,7 +643,7 @@ In this case, we know $l_f \in \loopl(c)$ and
   \land (l_{f}, \_) \in \absfinal(\rprog)
   \land l_s = \absinit(\rprog)
   \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
-  \Big\} = \infty,
+  \Big\} = \infty.
   \end{array}
 \]
 By the soundness of ranking function computation in Lemma~\ref{lem:local_bound_sound}, we know $\varinvar(x, c)$ will be $\infty$ for ranking functions of the loop $l_f$.
