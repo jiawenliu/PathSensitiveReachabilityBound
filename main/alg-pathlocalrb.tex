@@ -16,7 +16,7 @@ There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'), c)
   \item We first compute the initial execution point and continuation execution points of $\rprog$ as
   $\absinit(\rprog) = \absinit(c)$
   and 
-  $\absfinal(\rprog) = \absfinal(c)$ if $\rprog = REFINE(c)$.
+  $\absfinal(\rprog) = \absfinal(c)$ where $\rprog = \kw{Rewrite}(c)$.
   \item The \emph{Initial State}, 
   $\rfinit(\rprog, c)$ is a set of equations $x = e$, where $e \in \scexpr(c)$ is a
   symbolic expression describing the initial value of $x$ before executing $\rprog$.

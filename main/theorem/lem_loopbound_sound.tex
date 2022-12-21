@@ -34,10 +34,10 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
       \implies
       \econfig{BD(\rprog, c)}(\trace_0) 
       \\ \qquad \geq 
-      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace'' \in \tdom
-      \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace'\in \ftdom, \trace'' \in \tdom
+      \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
       \\ \qquad \qquad
-      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
       \\ \qquad \qquad
       \land (l_{f}, \_) \in \absfinal(\rprog)
       \land l_s = \absinit(\rprog)
@@ -83,10 +83,10 @@ Taking an arbitrary initial trace $\trace_0 \in \ftdom_0(c)$  and an execution t
   \begin{array}{l}
   \econfig{BD(\rprog, c)}(\trace_0) 
   \\ \geq
-  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-  \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+  \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
   \\ \qquad \qquad
-  \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
   \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(\rprog)
   \land l_s = \absinit(\rprog)
@@ -105,10 +105,10 @@ So we know $\absinit(\tpath) = 0$ and $\absfinal(\tpath) = \{ (l_f, \_) \}$ for 
 We also know $\tpath$ will be executed at most once and $\trace_{0 \to l_f} = \trace$. So we have
 \[
   \begin{array}{l}
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
     \\ \qquad \qquad
-    \land \trace_{l_s \to l_t} = [(\_, 0, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \land \trace_{l_s \to l_f} = [(\_, 0, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(\rprog)
     \land \counter(\trace', 0) = \counter(\trace', l_f) = 0 
@@ -140,10 +140,10 @@ By induction hypothesis, for each $c_i$, $\rprog_i$ and the execution trace $\tr
   \begin{array}{l}
   \econfig{BD(\rprog_i, c)}(\trace_0) 
   \\ \geq
-  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-  \land \trace_i = \trace_{l_s \to l_t} \tracecat \trace''
+  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+  \land \trace_i = \trace_{l_s \to l_f} \tracecat \trace''
   \\ \qquad \qquad
-  \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
   \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(\rprog_i)
   \land l_s = \absinit(\rprog_i)
@@ -157,10 +157,10 @@ So we have for each $\trace_i$ if $\trace = \trace_i$,
 \[
   \begin{array}{l}
     \econfig{BD(\rprog_i, c)}(\trace_0) \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
     \\ \qquad \qquad
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(\rprog_i)
     \land l_s = \absinit(\rprog_i)
@@ -175,10 +175,10 @@ Then we have for all $\rprog_i$ the following and this case is proved.
     \econfig{ \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\}}(\trace_0)
     \\ \qquad 
     \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
     \\ \qquad \qquad
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(\rprog)
     \land l_s = \absinit(\rprog)
@@ -207,9 +207,9 @@ By induction hypothesis on $\trace_0$, $c_1$, $\trace_1$ and $c_2$, we also have
   \begin{array}{l}
     \econfig{BD(\rprog_1, c)}(\trace_0)
     \\ \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace_1 = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace_1 = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_1)
     \land l_s = \absinit(c_1)
@@ -222,9 +222,9 @@ By induction hypothesis on $\trace_0$, $c_1$, $\trace_1$ and $c_2$, we also have
   \begin{array}{l}
     \econfig{BD(\rprog_2, c)}(\trace_0)
     \\ \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace_2 = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace_2 = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(\rprog_2)
     \land l_s = \absinit(\rprog_2)
@@ -239,9 +239,9 @@ By the label consistency, we know
 \[
   \begin{array}{l}
     \forall \trace \in
-    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_1)
     \land l_s = \absinit(c_1)
@@ -249,9 +249,9 @@ By the label consistency, we know
     \Big\},
     \\
     \exists \trace_1 \in
-    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace_1 = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace_1 = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_1)
     \land l_s = \absinit(c_1)
@@ -259,9 +259,9 @@ By the label consistency, we know
     \Big\},
     \\
     \trace_2 \in
-    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace_2 = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace_2 = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
    \\ \qquad \qquad
    \land (l_{f}, \_) \in \absfinal(\rprog_2)
    \land l_s = \absinit(\rprog_2)
@@ -275,9 +275,9 @@ By the label consistency, we know
   Then we have
   \[
     \begin{array}{l}
-      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-      \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+      \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+      \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
       \\ \qquad \qquad
       \land (l_{f}, \_) \in \absfinal(c_1)
       \land l_s = \absinit(c_1)
@@ -285,9 +285,9 @@ By the label consistency, we know
       \Big\}
       \\ \leq 
       \min \Bigg\{ \#
-      \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-      \land \trace_1 = \trace_{l_s \to l_t} \tracecat \trace''
-      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+      \land \trace_1 = \trace_{l_s \to l_f} \tracecat \trace''
+      \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
         \\ \qquad \qquad
       \land (l_{f}, \_) \in \absfinal(c_1)
       \land l_s = \absinit(c_1)
@@ -295,9 +295,9 @@ By the label consistency, we know
       \Big\},
       \\ \qquad \quad
       \#
-      \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-      \land \trace_2 = \trace_{l_s \to l_t} \tracecat \trace''
-      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+      \land \trace_2 = \trace_{l_s \to l_f} \tracecat \trace''
+      \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
        \\ \qquad \qquad
      \land (l_{f}, \_) \in \absfinal(\rprog_2)
      \land l_s = \absinit(\rprog_2)
@@ -315,9 +315,9 @@ By the label consistency, we know
       = \min \Big\{ \econfig{BD(\rprog_2)}(\trace_0), \econfig{BD(\rprog_2)}(\trace_0) \Big\}
       \\
       \geq
-      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-      \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+      \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+      \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
       \\ \qquad \qquad
       \land (l_{f}, \_) \in \absfinal(c_1)
       \land l_s = \absinit(c_1)
@@ -369,7 +369,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
   \right\}
  \]
  Taking an arbitrary ranking function $x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}$,
- let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \rprog_t$, we have
+ let $\trace' \in \tdom$ be the execution trace before first execution of $l_f: \rprog_t$, we have
 \[
  \config{c_l, \trace_0} \to^* \config{c_t;c', \trace_0 \tracecat \trace'} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
 \]
@@ -480,7 +480,7 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
  %
  \item $\rffinal(\rprog, c)$ computes the value of 
  each ranking function 
- $x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}$ after the iteration of $l_t:\rprog_t$ finished.
+ $x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}$ after the iteration of $l_f:\rprog_t$ finished.
  \\
  Taking an arbitrary ranking function $x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}$,
  let $\trace' \in \tdom$ be the execution trace after the execution of $\rprog$,  then we have
@@ -556,9 +556,9 @@ the following holds.
   \begin{array}{l}
   \econfig{\frac{a - b}{\varGD(\rprog', c)}}(\trace_0) 
   \\ \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(\rprog_2)
     \land l_s = \absinit(\rprog_2)
@@ -577,9 +577,9 @@ Then we have this case proved by
       \right\} 
     }(\trace_0) \\
     \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(\rprog_2)
     \land l_s = \absinit(\rprog_2)
@@ -605,9 +605,9 @@ Then we have this case proved trivially by induction hypothesis on $\rprog_l$ an
  \[
   \begin{array}{l}
   \econfig{BD(\rprog, c)}(\trace_0) \geq
-  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace''\in \inftdom
-  \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-  \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace'\in \ftdom, \trace''\in \inftdom
+  \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+  \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
 \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(\rprog)
   \land l_s = \absinit(\rprog)
@@ -621,9 +621,9 @@ then we have two cases as follows.
 In this case, we have 
 \[
   \begin{array}{l}
-  \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace''\in \inftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace'\in \ftdom, \trace''\in \inftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(\rprog)
   \land l_s = \absinit(\rprog)
@@ -636,9 +636,9 @@ and this case is proved.
 In this case, we know $l_f \in \loopl(c)$ and 
 \[
   \begin{array}{l}
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace''\in \inftdom
-    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
-    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace'\in \ftdom, \trace''\in \inftdom
+    \land \trace = \trace_{l_s \to l_f} \tracecat \trace''
+    \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(\rprog)
   \land l_s = \absinit(\rprog)

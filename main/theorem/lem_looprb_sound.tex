@@ -12,7 +12,7 @@
 
 \begin{lemma}[Soundness of the Loop Reachability-Bound]
   \label{lemma:looprb-sound}
-  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$ under initial trace $\trace_0 \in \ftdom_0(c_l)$, is bounded by $\econfig{\lpchB(l: \rprog, \tpath)}(\trace_0)$.
+  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$, is bounded by $\econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0)$.
   \[
     \begin{array}{l}
     \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
@@ -28,11 +28,14 @@
     \Big)
     \\ \qquad
     \implies
-    \econfig{\lpchB(l: \rprog, \tpath)}(\trace_0) 
+    \econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0) 
     \\ \qquad \geq 
-    \# \left\{\trace_{l \to l_t} ~\vert~ \trace_{l \to l_t}, \trace' \in \trace \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' :: (\_, l_t, \etrue)
+    \# \Big\{\trace_{l \to l_t} ~\vert~ \trace_{l \to l_t}, \trace' \in \ftdom, \trace'' \in \tdom
+    \land \trace = \trace_{l \to l_t} \tracecat \trace''
+    \\ \qquad \qquad
+    \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' :: (\_, l_t, \etrue)
     \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
-    \right\}.
+    \Big\}.
     \end{array}
   \]
   \end{lemma}
