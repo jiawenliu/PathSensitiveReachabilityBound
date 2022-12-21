@@ -50,8 +50,10 @@ or abstract evaluation of the boolean expression in the guard with label $l$.
 \item The difference constraints $DC(\vardom  \cup \constdom)$ is the set of all the inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x \in \vardom $, 
 $y \in \vardom$ and $v \in \constdom$.
-The \emph{Symbolic Constant} set $\constdom = \mathbb{N} \cup \inpvar \cup \{\infty \}$
-is the set of natural numbers with $\infty$ and the input variables, $\inpvar$.
+\\
+The \emph{Symbolic Constant} universe, $\constdom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$
+is the set of natural numbers with $\infty$ and the input variables of a certain program.
+\\
 An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus the symbolic constant $v$.
 An inequality $x' \leq v$ describes that the value of $x$ in the current state is
@@ -80,33 +82,45 @@ or commands that don't interfere any guard variable.
 \end{itemize}
 
 \highlight{Computation Steps:}
+
+\begin{defn}[Symbolic Expression ($\scexpr(c)$)]
+  $\scexpr(c)$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$.
+\end{defn}
+
 \begin{defn}[Constraint Computation]
   \label{def:constraint_compute}
   For a program $c$, a boolean expression $\bexpr$ in the guard of a $\eif$ or $\ewhile$ command
   or an expression $\expr$ and a variable $x$
   in an assignment command $\assign{x}{\expr}$,
-  the constraint $\absexpr(\bexpr, \_)$ or $\absexpr(x - v, x)$ is computed as follows,
+  the constraint $\absexpr(\bexpr, \_, c )$ or $\absexpr(x - v, x, c)$ is computed as follows.
+  \begin{enumerate}
+  \item Compute the symbolic constant set of program $c$, $\scvar(c)$ of program $c$ as follows.
+  \[
+    \scvar(c) = \mathbb{N} \cup \inpvar(c) \cup \{\infty \} \subseteq \constdom
+  \]
+  \item Initialize 
+  $\grdvar(c) = \{\}$ as the set of the variable used in the expression of every while or if guard in the program $c$.
+  \item Then we compute  $\absexpr(\bexpr, \_, c )$ or $\absexpr(x - v, x, c)$.
   \[
     \begin{array}{ll} 
-      \absexpr(x - v, x)  = x' \leq x - v  & x \in \grdvar \land v \in \constdom \\
-      \absexpr(y + v, x)  = x' \leq y + v  & x, y \in \grdvar \land v \in \constdom \\
-      \absexpr(v, x)  = x' \leq v  & x \in \grdvar \land v \in (\grdvar \cup \constdom) \\
-      \absexpr(y + v, x)  = x' \leq y + v, \grdvar = \grdvar \cup \{y\} 
-      & x \in \grdvar \land y \notin \grdvar \land v \in \constdom  \\
-      \absexpr(\bexpr, \_) = \bexpr, \grdvar = \grdvar \cup FV(\bexpr) & \bexpr \in \booldom \\
-      \absexpr(\expr, x) = \top &  {o.w.} \\
+      \absexpr(x - v, x, c)  = x' \leq x - v  & x \in \grdvar(c)\land v \in \scvar(c) \\
+      \absexpr(y + v, x, c)  = x' \leq y + v  & x, y \in \grdvar(c)\land v \in \scvar(c)\\
+      \absexpr(v, x, c)  = x' \leq v  & x \in \grdvar(c)\land v \in \scvar(c) \\
+      \absexpr(y + v, x, c)  = x' \leq y + v, \grdvar(c) = \grdvar(c) \cup \{y\} 
+      & x \in \grdvar(c)\land y \notin \grdvar(c) \land v \in \constdom  \\
+      \absexpr(\bexpr, \_, c) = \bexpr, \grdvar(c) = \grdvar(c) \cup FV(\bexpr) & \bexpr \in \scvar(c) \\
+      \absexpr(\expr, x, c) = \top &  {o.w.} \\
     \end{array}
     \]
-   $\absexpr(\expr, x)$ is iteratively updating until stabilized over every guard and assignment command in $c$, and $\absexpr(\expr, x)$
+  \end{enumerate}
+   $\absexpr(\expr, x, c)$ is iteratively updating until stabilized over every guard and assignment command in $c$, and $\absexpr(\expr, x, c)$
    denotes the stabilized result in the following paper.
   \end{defn}
 %
-$\grdvar$ is the set of the variable used in the expression of every while or if guard in the program $c$ and
-$FV: \expr \to \mathcal{P}(\vardom)$, computes the set of free variables in an expression. 
-  In the case 4, if a variable $x$, belonging to the set 
-  $\grdvar$ is updated by a variable $y$, which isn't in this set, 
-  we add $y$ into the set $\grdvar$ and repeat 
-  above procedure  until $\grdvar$ and $\absexpr(\expr, x)$ is stabilized. 
+In the case 4, if a variable $x$, belonging to the set 
+  $\grdvar(c)$ is updated by a variable $y$, which isn't in this set, 
+  we add $y$ into the set $\grdvar(c)$ and repeat 
+  above procedure  until $\grdvar(c)$ and $\absexpr(\expr, x, c)$ is stabilized. 
   \\
 Specifically 
 we handle a 
@@ -116,15 +130,10 @@ the guard variable $x$ only increase, decrease or reset by
 simple arithmetic expression (mainly multiplication, division, minus and plus (able to extend to max and min)). 
 The guard variable $x$ is generalized into the \emph{norm} when the guard 
 in if or while has the form $\expr > 0$ with an expression $\expr$, and $\grdvar$ is the set of norms.
-Then in the last clause in Definition~\ref{def:constraint_compute}, i.e., $\absexpr(\expr, x)$,
-we will check if $\expr$ is a norm or contains norms, and extend the $\grdvar = \grdvar \cup \{\expr\}$ if neither.
+Then in the last clause in Definition~\ref{def:constraint_compute}, i.e., $\absexpr(\expr, x, c)$,
+we will check if $\expr$ is a norm or contains norms, and extend the $\grdvar(c)= \grdvar(c)\cup \{\expr\}$ if neither.
 The constraint computation over the \emph{norm} follows the computation steps 1, 2 and 3 in Section 6.1 in paper~\cite{sinn2017complexity}. 
-\begin{defn}[Symbolic Expression ($\scexpr$)]
-  $\scexpr$ is the set of all the symbolic expressions 
-over $\constdom$.
-\end{defn}
-The symbolic expression set is a subset of arithmetic expressions over $\mathbb{N}$ with input variables, 
-i.e., $\scexpr \subseteq \inpexpr$.
+%
 \paragraph{Abstract Initial and Continuation State Computation}
 This step computes two sets for each command. 
 The initial state is a set that contains the
@@ -165,11 +174,11 @@ and the constraint $dc$ in this pair is computed by $\absexpr$ for the expressio
 Given a program $c$, its final state, $\absfinal(c)$ is computed as follows,
  \[
   \begin{array}{ll}
-    \absfinal(\clabel{\assign{x}{\expr}}{}^l)  & = \{(l, \absexpr\eapp (\expr, x))\}  \\
+    \absfinal(\clabel{\assign{x}{\expr}}{}^l)  & = \{(l, \absexpr(\expr, x, c))\}  \\
      \absfinal(\clabel{\eskip}^{l})  
      & = \{(l, \top)\} \\
      \absfinal(\eif [b]^l \ethen c_1 \eelse c_2)  & = \absfinal(c_1) \cup \absfinal(c_2) \\
-     \absfinal(\ewhile [b]^l \edo c)  & = \{(l, \absexpr(\bexpr, \top))\} \\
+     \absfinal(\ewhile [b]^l \edo c)  & = \{(l, \absexpr(\bexpr, \top, c))\} \\
      \absfinal(c_1 ; c_2)  & =  \absfinal(c_2) \\
  \end{array}
  \]
@@ -220,8 +229,8 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
       \absflow'([\eskip]^{l})  & = \emptyset \\
       \absflow'(\eif [b]^l \ethen c_t \eelse c_f)  & =  \absflow'(c_t) \cup \absflow'(c_f)
         \\ & \quad 
-        \cup \{(l, \absexpr(\bexpr, \top),  \absinit(c_t) ) ,  (l, \absexpr(\neg\bexpr, \top), \absinit(c_f)) \} \\
-       \absflow'(\ewhile [b]^l \edo c_w)  & =  \absflow'(c_w) \cup \{(l, \absexpr(\bexpr, \top), \absinit(c_w)) \} 
+        \cup \{(l, \absexpr(\bexpr, \top, c),  \absinit(c_t) ) ,  (l, \absexpr(\neg\bexpr, \top, c), \absinit(c_f)) \} \\
+       \absflow'(\ewhile [b]^l \edo c_w)  & =  \absflow'(c_w) \cup \{(l, \absexpr(\bexpr, \top, c), \absinit(c_w)) \} 
        \\ & \quad 
        \cup \{(l', dc, l)| (l', dc) \in \absfinal(c_w) \} \\
        \absflow'(c_1 ; c_2)  & = \absflow'(c_1) \cup  \absflow'(c_2) 

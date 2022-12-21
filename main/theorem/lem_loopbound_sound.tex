@@ -1,14 +1,14 @@
 
-The three loop bound computation methods all computes the sound upper bounds, $BD(\rprepeat(\rprog'))$ for every loop $\rprepeat(\rprog')$ in a refined program $\rprog$:
+There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'), c)$ for every loop $\rprepeat(\rprog')$ in a program $c$'s refined program $\rprog$:
 \begin{enumerate}
     \item The Equation~\ref{eq:absBD} in Section~\ref{sec:rank} is path-insensitively and sound.
     Its soundness relies on the soundness of the $\absclr(\absevent, c)$ in Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
     For a program $c$ and an edge $\absevent \in \absE(c)$, $\absclr(\absevent, c)$ is a sound upper bound on the execution times of this transition, formally in Theorem~\ref{thm:pathinsensitive_rb_soundness} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}    
-    \item The second computation fully relies on the soundness of $BOUND(\rprepeat(\rprog'))$ from paper\cite{GulwaniJK09}, we do not repeat their soundness in this paper.
+    \item The second computation fully relies on the soundness of $BOUND(\rprepeat(\rprog'), c)$ from paper\cite{GulwaniJK09}, we do not repeat their soundness in this paper.
     \item   The soundness of the alternative computation method we provided in Definition~\ref{def:loopbound} is presented below.
   \end{enumerate}
 
-For every transition path $\rprog$, the $BD(\rprog)$
+For every transition path $\rprog$, the $BD(\rprog, c)$
 is a sound upper bound on its execution times.
 \\
 This bound is sound locally by assuming
@@ -19,7 +19,7 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
 \begin{lemma}[Soundness of Loop Bound]
     % \label{lem:loopbound_sound}
     For every program $c$ with its refined program $\rprog$,
-    $BD(\rprog)$ is a sound upper bound on the iterating times of this program.
+    $BD(\rprog, c)$ is a sound upper bound on the iterating times of this program.
     \[
       \begin{array}{l}
       \forall c, c' \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \tdom, l \in \lvar(c), \rprog \st 
@@ -32,12 +32,15 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
         \Big)
       \\ \qquad
       \implies
-      \econfig{BD(\rprog)}(\trace_0) 
+      \econfig{BD(\rprog, c)}(\trace_0) 
       \\ \qquad \geq 
-      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace'' \in \tdom
+      \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
       \\ \qquad \qquad
-      \land (l_{f}, \_) \in \absfinal(c)
-      \land l_s = \absinit(c)
+      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \\ \qquad \qquad
+      \land (l_{f}, \_) \in \absfinal(\rprog)
+      \land l_s = \absinit(\rprog)
       \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
       \Big\}.
       \end{array}
@@ -71,44 +74,54 @@ or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
   Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in this program.
   \\
 Taking an arbitrary initial trace $\trace_0 \in \ftdom_0(c)$  and an execution trace $\trace \in \tdom$
- such that $\config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}$,
- it is sufficient to show,
+ such that $\config{{c}, \trace} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \vtrace} \lor \config{c, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace$,
+ we have two subcases.
+\\
+\textbf{$\bullet$ The execution terminates and {$\config{{c}, \trace} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \vtrace}$}.} 
+\\
+ In this case we know $\trace \in \ftdom$ and is sufficient to show,
  \[
   \begin{array}{l}
-  \econfig{BD(\rprog)}(\trace_0) \geq
-  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \econfig{BD(\rprog, c)}(\trace_0) 
+  \\ \geq
+  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+  \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
   \\ \qquad \qquad
-  \land (l_{f}, \_) \in \absfinal(c)
-  \land l_s = \absinit(c)
+  \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \\ \qquad \qquad
+  \land (l_{f}, \_) \in \absfinal(\rprog)
+  \land l_s = \absinit(\rprog)
   \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
   \Big\}.
-  \end{array}
+\end{array}
 \]
 By induction on the refined program, we have the following cases.
 \caseL{$\rprog = \tpath$}
-In this case, we have $BD(\tpath) = 1$.
+In this case, we have $BD(\tpath, c) = 1$.
 \\
 By Algorithm~\ref{alg:alg-refine_rewrite} and Definition~\ref{def:tpath}, we know program $c$ contains the only one transition path $\tpath$.
 \\
-So we know $\absinit(c) = 0$ and $\absfinal(c) = \{ (l_f, \_) \}$ for some $l_f \in \mathbb{N}$.
+So we know $\absinit(\tpath) = 0$ and $\absfinal(\tpath) = \{ (l_f, \_) \}$ for some $l_f \in \mathbb{N}$.
 \\
 We also know $\tpath$ will be executed at most once and $\trace_{0 \to l_f} = \trace$. So we have
 \[
   \begin{array}{l}
-  \# \Big\{\trace_{0 \to l_f} ~\vert~ \trace_{0 \to l_f}, \trace' \in \trace \land \trace_{l \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
-  \\ \qquad \qquad
-  \land (l_{f}, \_) \in \absfinal(c)
-  \land l_s = \absinit(c)
-  \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
-  \Big\}
-   = \# \Big\{\trace \Big\} = 1
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \\ \qquad \qquad
+    \land \trace_{l_s \to l_t} = [(\_, 0, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \\ \qquad \qquad
+    \land (l_{f}, \_) \in \absfinal(\rprog)
+    \land \counter(\trace', 0) = \counter(\trace', l_f) = 0 
+    \Big\}.
+     = \# \Big\{\trace \Big\} = 1
   \end{array}
 \]
 Then we have this case proved.
 \caseL{$\rprog = \rpchoose{\rprog_1, \ldots}$}
 In this case, we have
 \[
-  BD(\rpchoose{\rprog_1, \ldots, \rprog_m }) = \max\left\{ BD(\rprog_1), \ldots, BD(\rprog_m) \right\}
+  BD(\rpchoose{\rprog_1, \ldots, \rprog_m }, c) = \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\}
 \]
 Let $c_1, \ldots, c_m \in \cdom$ be the while program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refinement algorithm REFINE, we know each $\rprog_i$ is a loop program refined from multiple paths in $c$.
@@ -121,16 +134,20 @@ In this sense, each $c_i$ is a loop program and execution of each $c_i$ correspo
 According to the operational semantics, let $\trace_1, \ldots, \trace_m \in \tdom$ be the execution traces such that 
 \[
   \config{c_i, \trace_0} \to^* 
-  \config{\eskip, \trace_0 \tracecat \trace_i}
+  \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace_i}
 \]
 By induction hypothesis, for each $c_i$, $\rprog_i$ and the execution trace $\trace_i$, we have 
 \[
   \begin{array}{l}
-  \econfig{BD(\rprog_i)}(\trace_0) \geq
-  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_i \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \econfig{BD(\rprog_i, c)}(\trace_0) 
+  \\ \geq
+  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+  \land \trace_i = \trace_{l_s \to l_t} \tracecat \trace''
   \\ \qquad \qquad
-  \land (l_{f}, \_) \in \absfinal(c_i)
-  \land l_s = \absinit(c_i)
+  \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \\ \qquad \qquad
+  \land (l_{f}, \_) \in \absfinal(\rprog_i)
+  \land l_s = \absinit(\rprog_i)
   \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
   \Big\}.
   \end{array}
@@ -140,41 +157,47 @@ $\trace = \trace_i$ where $i$ could be either $1, \ldots, m$.
 So we have for each $\trace_i$ if $\trace = \trace_i$, 
 \[
   \begin{array}{l}
-    \econfig{BD(\rprog_i)}(\trace_0) \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \econfig{BD(\rprog_i, c)}(\trace_0) \geq
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
     \\ \qquad \qquad
-    \land (l_{f}, \_) \in \absfinal(c_i)
-    \land l_s = \absinit(c_i)
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \\ \qquad \qquad
+    \land (l_{f}, \_) \in \absfinal(\rprog_i)
+    \land l_s = \absinit(\rprog_i)
     \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
     \Big\}.
-    \end{array}
+      \end{array}
 \]
 Then we have for all $\rprog_i$ the following and this case is proved.
 \[
   \begin{array}{l}
-    \econfig{BD(\rprog)}(\trace_0) = 
-    \max\left\{ \econfig{BD(\rprog_1)}(\trace_0), \ldots, \econfig{BD(\rprog_m)(\trace_0)} \right\}
+    \econfig{BD(\rprog, c)}(\trace_0) = 
+    \econfig{ \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\}}(\trace_0)
     \\ \qquad 
     \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
     \\ \qquad \qquad
-    \land (l_{f}, \_) \in \absfinal(c_i)
-    \land l_s = \absinit(c_i)
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \\ \qquad \qquad
+    \land (l_{f}, \_) \in \absfinal(\rprog)
+    \land l_s = \absinit(\rprog)
     \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
     \Big\}.
-    \end{array}
+      \end{array}
 \]
 
 \caseL{$\rprog = \rprog_1; \rprog_2$}
 In this case, we have
 \[
-  BD(\rprog_1; \rprog_2) = \min \left\{BD(\rprog_1), BD(\rprog_2) \right\}
+  BD(\rprog_1; \rprog_2, c) = \min \left\{BD(\rprog_1, c), BD(\rprog_2, c) \right\}
 \]
 Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 \\
 According to the operational semantics, let $\trace_1, \trace_2 \in \tdom$ be two execution traces such that 
 \[
-  \config{c_1; c_2, \trace_0} \to^* \config{c_2, \trace_0 \tracecat \trace_1} \to^* \config{\eskip, \trace_0 \tracecat \trace_1 \tracecat \trace_2}
+  \config{c_1; c_2, \trace_0} \to^* \config{c_2, \trace_0 \tracecat \trace_1} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace_1 \tracecat \trace_2}
 \]
 By the trace non-decreasing property in Lemma~\ref{lem:tracenondec}, we have $\trace = \trace_1 \tracecat \trace_2$.
 \\
@@ -183,9 +206,11 @@ According to the Algorithm~\ref{alg:alg-refine_rewrite} and REFINE algorithm, we
 By induction hypothesis on $\trace_0$, $c_1$, $\trace_1$ and $c_2$, we also have
 \[
   \begin{array}{l}
-    \econfig{BD(\rprog_1)}(\trace_0)
-    \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \econfig{BD(\rprog_1, c)}(\trace_0)
+    \\ \geq
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace_1 = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_1)
     \land l_s = \absinit(c_1)
@@ -196,24 +221,28 @@ By induction hypothesis on $\trace_0$, $c_1$, $\trace_1$ and $c_2$, we also have
 %
 \[
   \begin{array}{l}
-    \econfig{BD(\rprog_2)}(\trace_0)
-    \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_2 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \econfig{BD(\rprog_2, c)}(\trace_0)
+    \\ \geq
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace_2 = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
-    \land (l_{f}, \_) \in \absfinal(c_2)
-    \land l_s = \absinit(c_2)
+    \land (l_{f}, \_) \in \absfinal(\rprog_2)
+    \land l_s = \absinit(\rprog_2)
     \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
     \Big\}.
     \end{array}
 \]
 By Definition~\ref{def:abs_event}, we know
-$\absinit(c) = \absinit(c_1)$, $\absfinal(c) = \absfinal(c_2)$ and $(\absinit(c_2), \_) \in \absfinal(c_1)$. 
+$\absinit(\rprog) = \absinit(c_1)$, $\absfinal(\rprog) = \absfinal(\rprog_2)$ and $(\absinit(\rprog_2), \_) \in \absfinal(c_1)$. 
 \\
 By the label consistency, we know 
 \[
   \begin{array}{l}
     \forall \trace \in
-    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_1)
     \land l_s = \absinit(c_1)
@@ -221,7 +250,9 @@ By the label consistency, we know
     \Big\},
     \\
     \exists \trace_1 \in
-     \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace_1 = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
     \land (l_{f}, \_) \in \absfinal(c_1)
     \land l_s = \absinit(c_1)
@@ -229,10 +260,12 @@ By the label consistency, we know
     \Big\},
     \\
     \trace_2 \in
-    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_2 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace_2 = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
    \\ \qquad \qquad
-   \land (l_{f}, \_) \in \absfinal(c_2)
-   \land l_s = \absinit(c_2)
+   \land (l_{f}, \_) \in \absfinal(\rprog_2)
+   \land l_s = \absinit(\rprog_2)
    \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
    \Big\} 
    \st 
@@ -243,40 +276,49 @@ By the label consistency, we know
   Then we have
   \[
     \begin{array}{l}
-      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+      \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
       \\ \qquad \qquad
       \land (l_{f}, \_) \in \absfinal(c_1)
       \land l_s = \absinit(c_1)
       \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
       \Big\},
-      \\
-      \leq 
+      \\ \leq 
       \min \Bigg\{ \#
-       \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
-      \\ \qquad \qquad
+      \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+      \land \trace_1 = \trace_{l_s \to l_t} \tracecat \trace''
+      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+        \\ \qquad \qquad
       \land (l_{f}, \_) \in \absfinal(c_1)
       \land l_s = \absinit(c_1)
       \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
       \Big\},
       \\ \qquad \quad
       \#
-      \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_2 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
-     \\ \qquad \qquad
-     \land (l_{f}, \_) \in \absfinal(c_2)
-     \land l_s = \absinit(c_2)
+      \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+      \land \trace_2 = \trace_{l_s \to l_t} \tracecat \trace''
+      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+       \\ \qquad \qquad
+     \land (l_{f}, \_) \in \absfinal(\rprog_2)
+     \land l_s = \absinit(\rprog_2)
      \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
      \Big\} 
      \Bigg\}
       \end{array}
     \]
-    Then we have this case proved by
+    Then we have
     \[
       \begin{array}{l}
-        \econfig{BD(\rprog)}(\trace_0) =
-        \min \Big\{ \econfig{BD(\rprog_2)}(\trace_0), \econfig{BD(\rprog_2)}(\trace_0) \Big\}
-        \\
-        \geq
-        \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_1 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+      \econfig{BD(\rprog)}(\trace_0) =
+      \econfig{\min \{ BD(\rprog_2), BD(\rprog_2) \}}(\trace_0)
+      \\
+      = \min \Big\{ \econfig{BD(\rprog_2)}(\trace_0), \econfig{BD(\rprog_2)}(\trace_0) \Big\}
+      \\
+      \geq
+      \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+      \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+      \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
       \\ \qquad \qquad
       \land (l_{f}, \_) \in \absfinal(c_1)
       \land l_s = \absinit(c_1)
@@ -284,6 +326,8 @@ By the label consistency, we know
       \Big\}.
         \end{array}
     \]
+    %
+This case is proved.
 % \subcaseL{$c = \ewhile \clabel{ \ldots }^{\ldots} \edo \ldots $}
 % In this case, we know $\rprog_1$ and $\rprog_2$ corresponds to two loops,
 % each of them is a sub-loop program of
@@ -291,18 +335,18 @@ By the label consistency, we know
 % \\
 % Then we know $c_1$ and $c_2$ are two while loop programs ($\ewhile$) with the same initial and final states.
 % Then by Definition~\ref{def:abs_event} we know
-% $\absinit(c) = \absinit(c_1) = \absinit(c_1)$, $\absfinal(c) = \absfinal(c_2)$ and $(\absinit(c_2), \_) \in \absfinal(c_1)$. 
+% $\absinit(\rprog) = \absinit(c_1) = \absinit(c_1)$, $\absfinal(\rprog) = \absfinal(\rprog_2)$ and $(\absinit(\rprog_2), \_) \in \absfinal(c_1)$. 
 % \\
 % Because $c_1$ and $c_2$ are sub-loop program of $c$,
 \caseL{$\rprog = \rprepeat(\rprog')$}
 In this case, we have
 \[
-  BD(\rprepeat(\rprog')) =
-  \max\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
-  \Big\{ \highlight{\frac{a - b}{a'}} ~\vert~ x = a \in \rfinit(\rprog')
-  \land x = b \in \rffinal(\rprog') 
-  \land x = a' \in \varGD(\rprog')
-  \Big\} 
+  BD(\rprepeat(\rprog'), c) =
+  \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}}
+  \left\{ \highlight{\frac{a - b}{\varGD(\rprog', c)}} ~\vert~
+  x = a \in \rfinit(\rprog', c)
+  \land x = b \in \rffinal(\rprog', c)
+  \right\} 
 \]
 Then we have the soundness guaranteed by the three states,
 $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ computed in Definition~\ref{def:alg-loopabsstate}.
@@ -312,35 +356,37 @@ For each $\tpath \in \rprog$ and $x = \locbound(\tpath)$ the ranking function of
  \item \emph{Initial State} Soundness.
  By Definition~\ref{def:alg-absstate}, we have $\rfinit(\rprog)$ 
  \[
-  \rfinit(\rprog) \triangleq 
-  \bigcup_{\tpath \in \rprog, x = \locbound(\tpath)}
+  \rfinit(\rprog, c) \triangleq 
+  \bigcup_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\} }
   \left \{ 
   x = \arg\max_{l_1}\left\{
-    \varinvar(y) + v ~\middle\vert~ 
+    \varinvar(y, c) + v ~\middle\vert~ 
     \begin{array}{l} 
-      (l_1, x' \leq y + v, l_2) \in \reset(x) \\
-      \land l_1 \leq \absinit(\rprog)
+      (l_1, x' \leq y + v, l_2) \in \reset(x, c) 
+      \\
+    \land l_1 \leq \absinit(\rprog, c)
   \end{array}
   \right\}
   \right\}
-  \]
-Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \rprog_t$, then we have
+ \]
+ Taking an arbitrary ranking function $x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}$,
+ let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \rprog_t$, we have
 \[
- \config{c_l, \trace_0} \to^* \config{c_t;c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+ \config{c_l, \trace_0} \to^* \config{c_t;c', \trace_0 \tracecat \trace'} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
 \]
  By the soundness of the rank estimation in Lemma~\ref{lem:local_bound_sound} and Theorem~\ref{thm:pathinsensitive_rb_soundness}, we know 
- for each variable $y$ such that $(l_1, x' \leq y + v, l_2) \in \reset(x) $,
- $\varinvar(y)$ is the sound upper bound on its maximum value during the execution. Then we have
+ for each variable $y$ such that $(l_1, x' \leq y + v, l_2) \in \reset(x, c) $,
+ $\varinvar(y, c)$ is the sound upper bound on its maximum value during the execution. Then we have
  \[
-   \econfig{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \env(\trace) y = v \right\}  \geq \env(\trace') y 
+   \econfig{\varinvar(y, c)}(\trace_0) \geq \max \left\{ v ~|~  \env(\trace) y = v \right\}  \geq \env(\trace') y 
  \]
 %
  In this sense, we have 
  $
  \arg\max_{l_1}\left\{
-  \varinvar(y) + v ~\middle\vert~ 
+  \varinvar(y, c) + v ~\middle\vert~ 
   \begin{array}{l} 
-    (l_1, x' \leq y + v, l_2) \in \reset(x) \\
+    (l_1, x' \leq y + v, l_2) \in \reset(x, c) \\
     \land l_1 \leq \absinit(\rprog)
 \end{array}
 \right\}
@@ -348,9 +394,9 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
  is a sound initial value estimation of the value of $x$ before first execution of $\rprog$, i.e.,
  \[
    \econfig{\arg\max_{l_1}\left\{
-    \varinvar(y) + v ~\middle\vert~ 
+    \varinvar(y, c) + v ~\middle\vert~ 
     \begin{array}{l} 
-      (l_1, x' \leq y + v, l_2) \in \reset(x) \\
+      (l_1, x' \leq y + v, l_2) \in \reset(x, c) \\
       \land l_1 \leq \absinit(\rprog)
   \end{array}
   \right\}}(\trace_0) 
@@ -358,49 +404,53 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
    \]
  %
  \item  
- The \emph{Next State}, $\rfnext(\tpath) \in \scexpr$ 
+ The \emph{Next State}, $\rfnext(\tpath, c) \in \scexpr(c)$ 
  is a
  symbolic expression describing how much $\tpath$'s ranking function ($\locbound(\tpath)$) is changed after the first execution of $\rprog$ and before the second execution.
 \\
- By Definition~\ref{def:alg-loopabsstate}, we have $\rfnext(l:\rprog_)$ as
+ By Definition~\ref{def:alg-loopabsstate}, we have
  \[
-  \begin{array}{l}
-  \rfnext(\tpath) \triangleq 
-    \begin{array}{l}
- \sum\limits_{\absevent \in \inc(x) }
-  \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
-  \\ \qquad 
-  + \arg\max\limits_{l' }
-     \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
-     \\ \qquad 
-    - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
-      v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
-      \right\}
-    \end{array}
-  \end{array}
-\]
- Let $\trace' \in \tdom$ be the execution trace before the second execution of $\tpath$, then we have
+   \begin{array}{l}
+   \rfnext(\tpath, c) \triangleq 
+   \\
+   \bigcup\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+   \left\{ x = \begin{array}{l}
+  \sum\limits_{\absevent \in \inc(x, c) }
+   \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
+   \\ \qquad 
+   + \arg\max\limits_{l' }
+      \left\{ \varinvar(y, c) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x, c) \land l \in \tpath\right\}
+      \\ \qquad 
+     - \sum\limits_{ \absevent \in \dec(x, c) }\left\{ 
+       v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
+       \right\}
+     \end{array}
+   \right\} 
+   \end{array}
+ \]
+ Taking an arbitrary ranking function $x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}$,
+ let $\trace' \in \tdom$ be the execution trace before the second execution of $\tpath$, we have
  \[
-   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
  \]
    By the soundness of the rank estimation in Lemma~\ref{lem:local_bound_sound} and Theorem~\ref{thm:pathinsensitive_rb_soundness}, we know 
-   for each variable $y$ such that $(l_1, x' \leq y + v, l_2) \in \reset(x) $,
-   $\varinvar(y)$ is the sound upper bound on its maximum value during the execution. 
+   for each variable $y$ such that $(l_1, x' \leq y + v, l_2) \in \reset(x, c) $,
+   $\varinvar(y, c)$ is the sound upper bound on its maximum value during the execution. 
    Then we have
    \[
-     \econfig{\varinvar(y)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y 
+     \econfig{\varinvar(y, c)}(\trace_0) \geq \max \left\{ v ~|~  \pi_3(\event) y = v \land \event \in \trace' \land \pi_1(\event) = y\right\}  \geq \env(\trace') y 
    \]
-   Same for each abstract event such that $((l', x' \leq x + v, \_) \in \inc(x) $ and $(l', x' \leq x + v, \_) \in \dec(x)$,
+   Same for each abstract event such that $((l', x' \leq x + v, \_) \in \inc(x, c) $ and $(l', x' \leq x + v, \_) \in \dec(x, c)$,
    we know 
    $      
    \begin{array}{l}
-    \sum\limits_{\absevent \in \inc(x) }
+    \sum\limits_{\absevent \in \inc(x, c) }
      \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
      \\ \qquad 
      + \arg\max\limits_{l' }
-        \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
+        \left\{ \varinvar(y, c) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x, c) \land l \in \tpath\right\}
         \\ \qquad 
-       - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
+       - \sum\limits_{ \absevent \in \dec(x, c) }\left\{ 
          v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
          \right\}
        \end{array}
@@ -414,13 +464,13 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
        -
      \econfig{
       \begin{array}{l}
-        \sum\limits_{\absevent \in \inc(x) }
+        \sum\limits_{\absevent \in \inc(x, c) }
          \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
          \\ \qquad 
          + \arg\max\limits_{l' }
-            \left\{ \varinvar(y) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x) \land l \in \tpath\right\}
+            \left\{ \varinvar(y, c) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x, c) \land l \in \tpath\right\}
             \\ \qquad 
-           - \sum\limits_{ \absevent \in \dec(x) }\left\{ 
+           - \sum\limits_{ \absevent \in \dec(x, c) } \left\{ 
              v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
              \right\}
            \end{array}
@@ -429,22 +479,25 @@ Let $\trace' \in \tdom$ be the execution trace before first execution of $l_t: \
    \end{array}
    \]
  %
- \item $\rffinal(\rprog)$ computes the value of $\locbound(\rprog)$ after the iteration of $l_t:\rprog_t$ finished.
+ \item $\rffinal(\rprog, c)$ computes the value of 
+ each ranking function 
+ $x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}$ after the iteration of $l_t:\rprog_t$ finished.
  \\
- Let $\trace' \in \tdom$ be the execution trace after the execution of $\rprog$,  then we have
+ Taking an arbitrary ranking function $x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}$,
+ let $\trace' \in \tdom$ be the execution trace after the execution of $\rprog$,  then we have
  \[
-   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\eskip, \trace_0 \tracecat \trace}
+   \config{c, \trace_0} \to^* \config{c', \trace_0 \tracecat \trace'} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
  \]
 So we know for each $\tpath$ in $\rprog$ with $x = \locbound(\tpath)$,
-$\rffinal(\rprog)$ computes the lower bound on the value of $x$ after the execution of $\rprog$ finished.
+$\rffinal(\rprog, c)$ computes the lower bound on the value of $x$ after the execution of $\rprog$ finished.
 \\
-Then we know for each $ x = a \in \rfinit(\rprog) $ and $ x = b \in \rffinal(\rprog) $
+Then we know for each $ x = a \in \rfinit(\rprog, c) $ and $ x = b \in \rffinal(\rprog, c) $
 the following holds and this case is proved.
 \[
   \econfig{a - b}(\trace_0) \geq \env(\trace') x.
 \]
 \item   \emph{Variable Gradient Decent} Soundness.
-$\varGD(\rprog)$ contains the equations $x = e$, where $e \in \scexpr$ is a
+$\varGD(\rprog, c)$ contains the equations $x = e$, where $e \in \scexpr(c)$ is a
   symbolic expression describing the value of $x$ before the second execution of $\rprog$,
   for each transition path $\tpath$ in this program with $x$ as the ranking function.
 \\
@@ -452,61 +505,64 @@ $\varGD(\rprog)$ contains the equations $x = e$, where $e \in \scexpr$ is a
  \subcaseL{$\rprog = \tpath$}
  By Definition~\ref{def:alg-absstate}, we have
 \[
-   \varGD(\tpath) =  \left\{x = \rfnext(\tpath) ~|~ x = \locbound(\tpath) \right\}
+   \varGD(\tpath, c) =  \min\left\{v  ~|~ x = v \in \rfnext(\tpath, c) \right\}
 \]
-In this case, we have the soundness guaranteed by the soundness of $\rfnext(\tpath)$ for each transition path $\tpath$.
+In this case, we have the soundness guaranteed by the soundness of $\rfnext(\tpath, c)$ for each transition path $\tpath$.
  \subcaseL{$\rprog = \rprog_1;\rprog_2$}
  By Definition~\ref{def:alg-absstate}, we have
 \[
-\varGD(\rprog_1;\rprog_2) =  \varGD(\rprog_1) \cup \varGD(\rprog_2)
+\varGD(\rprog_1;\rprog_2, c) =  \varGD(\rprog_1, c) + \varGD(\rprog_2, c)
 \]
 By induction hypothesis on $\rprog_1$ and $\rprog_2$, we know
 \\
 for each $\tpath_1 \in \rprog_1$ with $x_1$ as its ranking function,
-$\varGD(\rprog_1)$ contains the equations $x_1 = \expr_1$, where $\expr_1 \in \scexpr$ is a
+$\varGD(\rprog_1, c)$ contains the equations $x_1 = \expr_1$, where $\expr_1 \in \scexpr(c)$ is a
 symbolic expression describing the value of $x_1$ before the second execution of $\rprog_1$;
 \\
 for each $\tpath_2 \in \rprog_2$ with $x_2$ as its ranking function,
-$\varGD(\rprog_2)$ contains the equations $x_2 = \expr_2$, where $\expr_2 \in \scexpr$ is a
+$\varGD(\rprog_2, c)$ contains the equations $x_2 = \expr_2$, where $\expr_2 \in \scexpr(c)$ is a
 symbolic expression describing the value of $x_2$ before the second execution of $\rprog_2$.
 \\
 By the operational semantics, we know the second execution before $\rprog$ is also the second execution of both $\rprog_1$ and $\rprog_2$.
 \\
-Then we have this case proved by taking the union of them, i.e., $\varGD(\rprog_1) \cup \varGD(\rprog_2)$.
+Then we have this case proved by taking the union of them, i.e., $\varGD(\rprog_1, c) + \varGD(\rprog_2, c)$.
 \subcaseL{$\rprog = \rprepeat(\rprog')$}
  By Definition~\ref{def:alg-absstate}, we have
 \[
-  \varGD(\rprepeat(\rprog')) =  BD(\rprog')  \times
-  {\varGD(\rprog')}
+  \varGD(\rprepeat(\rprog'), c) =  BD(\rprog', c)  \times
+  {\varGD(\rprog', c)}
 \]
 By induction hypothesis on $\rprog'$, we know
 \\
 for each $\tpath' \in \rprog'$ with $x'$ as its ranking function,
-$\varGD(\rprog')$ contains the equations $x' = \expr'$, where $\expr' \in \scexpr$ is a
+$\varGD(\rprog', c)$ contains the equations $x' = \expr'$, where $\expr' \in \scexpr(c)$ is a
 symbolic expression describing the value of $x'$ before the second execution of $\rprog'$.
 \\
-We also know $BD(\rprog')$ computes the maximum iteration times of $\rprog'$ from $\absinit(c')$ until the $l_f$ where $(l_f, \_) \in \absfinal(c')$ where $\rprog' = REFINE(c')$.
+We also know $BD(\rprog', c)$ computes the maximum iteration times of $\rprog'$ from $\absinit(c')$ until the $l_f$ where $(l_f, \_) \in \absfinal(c')$ where $\rprog' = REFINE(c')$.
 \\
-Then we know $BD(\rprog')  \times
-{\varGD(\rprog')}$
-computes the value of $x'$ before the second execution of $\rprepeat(\rprog')$ for each each $\tpath' \in \rprog'$ with $x'$ as its ranking function.
+Then we know $BD(\rprog', c)  \times
+{\varGD(\rprog', c)}$
+computes the value of $x'$ before the second execution of $\rprepeat(\rprog')$ for each $\tpath' \in \rprog'$ with $x'$ as its ranking function.
 \\
 Then we have this case proved.
 \end{itemize}
 Based on the soundness of the three states above, we know that the initial value of the ranking function
-subtracts its final value divided by the modified value soundly computes the maximum iteration times of this program from $\absinit(c)$ until the $l_f$ where $(l_f, \_) \in \absfinal(c)$.
+subtracts its final value divided by the modified value soundly computes the maximum iteration times of this program from $\absinit(\rprog)$ until the $l_f$ where $(l_f, \_) \in \absfinal(\rprog)$.
 \\
 So we have for each $\tpath \in \rprog$ where $x = \locbound(\tpath)$,
-and $a, b, a ' \in \scexpr$
-such that $x = a \in \rfinit(\rprog')$, $x = b \in \rffinal(\rprog')$ and $x = a' \in \varGD(\rprog')$,
+and $a, b, a ' \in \scexpr(c)$
+such that $x = a \in \rfinit(\rprog', c)$ and $x = b \in \rffinal(\rprog', c)$,
 the following holds.
 \[
   \begin{array}{l}
-  \econfig{\frac{a - b}{a'}}(\trace_0) \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_2 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+  \econfig{\frac{a - b}{\varGD(\rprog', c)}}(\trace_0) 
+  \\ \geq
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
-    \land (l_{f}, \_) \in \absfinal(c_2)
-    \land l_s = \absinit(c_2)
+    \land (l_{f}, \_) \in \absfinal(\rprog_2)
+    \land l_s = \absinit(\rprog_2)
     \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
     \Big\}.
     \end{array}
@@ -515,17 +571,19 @@ Then we have this case proved by
 \[
   \begin{array}{l}
     \econfig{
-      \max\limits_{\tpath \in \rprog, x = \locbound(\tpath)}
-    \Big\{ \highlight{\frac{a - b}{a'}} ~\vert~ x = a \in \rfinit(\rprog')
-    \land x = b \in \rffinal(\rprog') 
-    \land x = a' \in \varGD(\rprog')
-    \Big\}
+      \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}}
+      \left\{ \highlight{\frac{a - b}{\varGD(\rprog', c)}} ~\vert~
+      x = a \in \rfinit(\rprog', c)
+      \land x = b \in \rffinal(\rprog', c)
+      \right\} 
     }(\trace_0) \\
     \geq
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace' \in \trace_2 \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace', \trace''\in \ftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
-    \land (l_{f}, \_) \in \absfinal(c_2)
-    \land l_s = \absinit(c_2)
+    \land (l_{f}, \_) \in \absfinal(\rprog_2)
+    \land l_s = \absinit(\rprog_2)
     \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
     \Big\}.
     \end{array}
@@ -533,7 +591,7 @@ Then we have this case proved by
 \caseL{$\rprog = l : \rprog_l$}
 In this case, we have
 \[
-  BD(l: \rprog_l) = BD(\rprog_l)
+  BD(l: \rprog_l, c) = BD(\rprog_l, c)
 \]
 Let $c_l \in \cdom$ be the while program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
 \\
@@ -541,4 +599,59 @@ According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refineme
 $c = c_l$.
 \\
 Then we have this case proved trivially by induction hypothesis on $\rprog_l$ and $c_l$ with the same initial and execution trace.
+
+\textbf{$\bullet$ The execution is non-terminating and {$\config{{c}, \trace} \uparrow^{\infty} \trace_0 \tracecat \vtrace$}.} 
+\\
+ In this case we know $\trace \in \inftdom$ and is sufficient to show,
+ \[
+  \begin{array}{l}
+  \econfig{BD(\rprog, c)}(\trace_0) \geq
+  \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace''\in \inftdom
+  \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+  \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+\\ \qquad \qquad
+  \land (l_{f}, \_) \in \absfinal(\rprog)
+  \land l_s = \absinit(\rprog)
+  \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
+  \Big\}.
+  \end{array}
+\]
+Let $l_f$ be an arbitrary final continuation point of program $\rprog$ such that $(l_{f}, \_) \in \absfinal(\rprog)$,
+then we have two cases as follows.
+\caseL{The execution doesn't reach $l_f$}
+In this case, we have 
+\[
+  \begin{array}{l}
+  \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace''\in \inftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \\ \qquad \qquad
+  \land (l_{f}, \_) \in \absfinal(\rprog)
+  \land l_s = \absinit(\rprog)
+  \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
+  \Big\} = \emptyset,
+  \end{array}
+\]
+and this case is proved.
+\caseL{The execution reaches $l_f$}
+In this case, we know $l_f \in \loopl(c)$ and 
+\[
+  \begin{array}{l}
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_t}, \trace'\in \ftdom, \trace''\in \inftdom
+    \land \trace = \trace_{l_s \to l_t} \tracecat \trace''
+    \land \trace_{l_s \to l_t} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \\ \qquad \qquad
+  \land (l_{f}, \_) \in \absfinal(\rprog)
+  \land l_s = \absinit(\rprog)
+  \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
+  \Big\} = \infty,
+  \end{array}
+\]
+By the soundness of ranking function computation in Lemma~\ref{lem:local_bound_sound}, we know $\varinvar(x, c)$ will be $\infty$ for ranking functions of the loop $l_f$.
+\\
+Then we have 
+\[
+  \econfig{BD(\rprog, c)}(\trace_0) = \econfig{\infty}(\trace_0) = \infty,
+\]
+and this case is proved.
 \end{proof}

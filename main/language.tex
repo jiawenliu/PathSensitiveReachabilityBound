@@ -58,9 +58,6 @@ We use following notations to represent the sets of corresponding terms:
 \vardom & : & \mbox{Set of Variables}  
 \\ 
 %
-\inpvar & : & \mbox{Set of Input Variables}  
-\\ 
-%
 \booldom & : & \mbox{Set of Boolean Expressions}  
 \\ 
 %
@@ -84,7 +81,11 @@ We use following notations to represent the sets of corresponding terms:
 \highlight{\inftdom} & : & \mbox{\highlight{Set of Infinite  Execution Traces}}
 \\
 \highlight{\tdom} & : & \mbox{\highlight{Set of All Finite Or Infinite  Execution Traces}}
+\\ 
+%
+\inpvar(c) & : & \mbox{Set of Program $c$'s Input Variables}  
 \\
+%
 \ftdom_0(c) & : & \mbox{Set of Program $c$'s Initial Traces.}
 \\ & & \mbox{Each initial trace $\trace_0 \in \ftdom_0(c)$ is finite and every input variable of the program $c$ has an initial value in $\trace_0$.}
 \end{array}
@@ -135,6 +136,14 @@ $\pi_i :
 \env({[]} ) x \triangleq \bot
 \end{array}
 \]
+%
+\begin{lem}[Initial Traces]
+  \label{lem:initial_trace}
+  \[
+    \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
+    \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot
+    \]
+\end{lem}
 %
 \paragraph{Configuration.}
 %
