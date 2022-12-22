@@ -639,24 +639,29 @@ In this case, we have
 \]
 and this case is proved.
 \caseL{The execution reaches $l_f$}
-In this case, we know $l_f \in \loopl(c)$ and 
+In this case, we know $l_f \in \loopl(c)$, and  it is sufficient to show
 \[
   \begin{array}{l}
-    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace'\in \ftdom, \trace''\in \inftdom
+    \sum\Bigg\{
+      \lcounter(\trace, \tracel(\trace_{l_s \to l_f})) ~\vert~ \trace_{l_s \to l_f} \in 
+    \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace'\in \ftdom, \trace''\in \inftdom
     \land \trace = \trace_a \tracecat \trace_{l_s \to l_f} \tracecat \trace_b
     \land \trace_{l_s \to l_f} = [(\_, l_s, \_)] \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
   \land (l_{f}, \_) \in \absfinal(\rprog)
   \land l_s = \absinit(\rprog)
   \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
-  \Big\} = \infty.
+  \Big\}
+  \Bigg\}.
   \end{array}
 \]
 By the soundness of ranking function computation in Lemma~\ref{lem:local_bound_sound}, we know $\varinvar(x, c)$ will be $\infty$ for ranking functions of the loop $l_f$.
 \\
 Then we have 
 \[
-  \econfig{BD(\rprog, c)}(\trace_0) = \econfig{\infty}(\trace_0) = \infty,
+  \econfig{BD(\rprog, c)}(\trace_0) = \econfig{\infty}(\trace_0) = \infty.
 \]
-and this case is proved.
+We also know $\lcounter(\trace, \tracel(\trace_{l_s \to l_f})) = \bot$ for every $\trace_{l_s \to l_f}$.
+\\
+Then this case is proved.
 \end{proof}

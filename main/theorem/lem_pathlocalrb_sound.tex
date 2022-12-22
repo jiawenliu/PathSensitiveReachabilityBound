@@ -8,7 +8,7 @@
     \forall c, c_l \in \cdom, \tpath \in \absG(c), 
     \trace_l \in \ftdom_0(c_l), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
     \\ \qquad
-    \rprog = REFINE(c)
+    \rprog = REFINE(\algrewrite(c))
     \land
     l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
     \land 
@@ -30,7 +30,7 @@
 \\
 Taking an arbitrary program $c$, let $\rprog$ be its refined program and $\tpath$ be an arbitrary transition path in $\rprog$.
 \\
-Let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested and $c_l$ be the While program of $\rprog_l$ such that $\kw{Rewrite(c_l)} = \rprog_l$. 
+Let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the closest loop program where $\tpath$ is nested and $c_l$ be the while language program of $\rprog_l$ such that $\kw{Rewrite(c_l)} = \rprog_l$. 
 \\
 Let $\trace_l \in \ftdom_0(c_l)$ be an arbitrary initial trace of the closest loop $c_l$, and $\trace \in \tdom $ be an execution trace such that
 \[
