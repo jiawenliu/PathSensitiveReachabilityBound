@@ -18,51 +18,95 @@ $\econfig{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
       \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
       \Big)
       \\ \qquad
-      \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)
-    \end{array}.
+      \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l).
+    \end{array}
   \]
 \end{theorem}
 %
 \begin{proof} \emph{Path-sensitive Reachability Bound} Soundness.
 
-    Taking arbitrary program $c$, a program point $l \in \lvar(c)$, an initial trace $\trace_0 \in \mathcal{T}_0(c)$ and an execution trace $\trace \in \tdom$
-    such that $\config{{c}, \trace} \to^{*} \config{\eskip, \trace_0 \tracecat \vtrace}$,
-    it is sufficient to show,
-    %
+    Taking arbitrary program $c$, a program point $l \in \lvar(c)$,
+    Let $c_r$ be the while language program where $\rprog = \algrewrite(c_r)$.
+    \\
+    Taking an arbitrary initial trace of $c$, $\trace_0 \in \ftdom_0(c)$, an arbitrary initial trace of $c_r$, $\trace_r \in \ftdom_0(c_r)$, and an execution trace $\trace \in \tdom$ and label $l' \in \lvar(c_r)$
+   such that 
+   \[
+    \config{{c_r}, \trace_r} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_r \tracecat \trace} \lor \config{c_r, \trace_r} \uparrow^{\infty} \trace_r \tracecat \trace,
+    \]
+   we have two cases.
+  \\
+  \textbf{$\bullet$ The execution terminates and {$\config{{c_r}, \trace_r} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_r \tracecat \trace}$}.} 
+  \\
+  In this case we know $\trace \in \ftdom$ and is sufficient to show,
+  %
     \[
-    \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\vtrace, l) .
+    \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l) .
     \]
     By Definition~\ref{def:point_psrb}, it is sufficient to show 
     \[
-    \econfig{\sum\limits_{\tpath \in \rprog \land  l \in \tpath} \inoutB(\tpath), \trace_0}(\trace_0)  \geq  \counter(\vtrace, l)
+    \econfig{
+        \sum \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land l \in \tpath \right\}
+        }(\trace_0)  \geq  \counter(\trace, l)
     \]
     According to whether the program point $l$ is in any loop, there are two cases as follows.
-    \caseL{$\tpath \not\in SCC(\absG(c))$}
-    In this case, there is only one $\tpath$ contains $l$ and $\inoutB(\tpath) = 1$.
+    \caseL{$l \not\in SCC(\absG(c))$}
+    In this case, we know $l$ isn't in any loop, and it will be executed at most once. So we have
+    \[ 
+        \counter(\trace, l) \leq 1
+    \]
+    Since $l \not\in SCC(\absG(c))$, we also know there is only one $\tpath$ contains $l$ by Definition~\ref{def:abs_cfg}.
     \\
-    Then by the operational semantics, we have $\econfig{\sum\limits_{\tpath} 1, \trace_0}(\trace_0) =  1$ and $ \counter(\vtrace, l) \leq 1$.
+    By Definition~\ref{def:pathrb}, we know $\inoutB(\rprog, \tpath) = 1$.
     \\
+    Then we have 
+    \[
+        \begin{array}{l}
+        \econfig{
+        \sum \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land l \in \tpath \right\}
+        }(\trace_0)
+        \\ =  \econfig{ \sum \left\{ 1 \right\}(\trace_0)}(\trace_0)
+        \\ =  1 \geq \counter(\trace, l).
+        \end{array}
+        \]
     This case is proved.
-    \caseL{$\tpath \in SCC(\absG(c))$}
+    \caseL{$l \in SCC(\absG(c))$}
     In this case, let $TP$ be the set of all transition paths containing 
     label $l$ in program $\rprog$, then it is sufficient to show 
     \[
-        \econfig{\sum\limits_{\tpath \in TP} \inoutB(\tpath), \trace_0}(\trace_0)  \geq  \counter(\vtrace, l)
+        \econfig{\sum \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in TP \right\}}(\trace_0)  
+        \geq   \counter(\trace, l)
     \]
-    For each transition path $\tpath \in TP$, let $L(\tpath)$ be the program point sequence of this path, we know $l \in L(\tpath)$
-    and 
+    By Definition~\ref{def:tpath}, we know for each $\tpath \in TP$, $l \in \pathl(\tpath)$ and $l$ shows up at most once on $\pathl(\tpath)$. 
+    \\
+    Then we have
     \[
-        \counter(\vtrace, l) = \sum\limits_{\tpath \in TP} \counter(\vtrace, L(\tpath))
+    \counter(\trace, l) \leq \sum\left\{ \lcounter(\trace, \pathl(\tpath)) ~\vert~ \tpath \in TP \right\}.
     \]
-    By the soundness of path global reachability-bound in Lemma~\ref{lem:pathrb-sound}, we know
+    By the soundness of path global reachability-bound in Lemma~\ref{lem:pathrb-sound}, we know for each $\tpath \in TP$,
     \[
-        \econfig{\inoutB(\tpath), \trace_0}(\trace_0)  \geq  \counter(\vtrace, L(\tpath))
+        \econfig{\inoutB(\rprog, \tpath)}(\trace_0)  \geq  \lcounter(\trace, \pathl(\tpath)).
     \]
     Then we have the soundness proved by
     \[
-        \sum\limits_{\tpath \in TP} \econfig{\inoutB(\tpath), \trace_0}(\trace_0)  \geq \sum\limits_{\tpath \in TP}  \counter(\vtrace, L(\tpath))
+        \begin{array}{l}
+        \econfig{\psRB(c, l)}(\trace_0) 
+        \\ =
+        \econfig{\sum \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in TP \right\}}(\trace_0) 
+        \\ \geq 
+        \sum\left\{ \econfig{\inoutB(\rprog, \tpath)}(\trace_0) ~\vert~ \tpath \in TP \right\}
+        \\ \geq 
+        \sum\left\{ \lcounter(\trace, \pathl(\tpath)) ~\vert~ \tpath \in TP \right\}
+        \\ \geq \counter(\trace, l)
+        \end{array}
     \]
-\end{proof}
+    \textbf{$\bullet$ The execution is non-terminating and {$\config{{c_r}, \trace} \uparrow^{\infty} \trace_r \tracecat \trace$}.} 
+    \\
+     In this case we know $\trace \in \inftdom$ and is sufficient to show,
+    \[
+      \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l).
+    \]
+    By Definition~\ref{def:counter}, we know $\counter(\trace, l) = \bot$ and this case is proved.
+    \end{proof}
   
 % \begin{lem}[Uniqueness of the Enclosed Loop]
 % \label{lem:nestloop_unique}

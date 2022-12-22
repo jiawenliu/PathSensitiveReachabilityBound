@@ -4,19 +4,19 @@
   the execution times of $\tpath$ when executing the $\rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$ is bounded by $\econfig{\inoutB(\rprog, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l \in \ldom, \rprog, \rprog_r \st 
+      \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l \in \ldom, \rprog \st 
+      \\ \qquad
+      REFINE(\algrewrite(c)) = \rprog
+      \land 
+      \algrewrite(c_r) = \rprog
+      \land
+      \\ \qquad
+      \land 
+      \Big(
+        \config{c_r, \trace_r} \rightarrow^* \config{\clabel{\eskip}^{l}, \trace_r \tracecat \trace}
+        \lor \config{c_r, \trace_r} \uparrow^{\infty} \trace_r \tracecat \trace 
+        \Big)
     \\ \qquad
-    \rprog = REFINE(\algrewrite(c))
-    \land 
-    \rprog = \algrewrite(c_r)
-    \land
-    \\ \qquad
-    \land 
-    \Big(
-      \config{c_r, \trace_r} \rightarrow^* \config{\clabel{\eskip}^{l}, \trace_r \tracecat \trace}
-      \lor \config{c_r, \trace_r} \uparrow^{\infty} \trace_r \tracecat \trace 
-      \Big)
-  \\ \qquad
     \implies
     \econfig{\inoutB(\rprog, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
     \end{array}

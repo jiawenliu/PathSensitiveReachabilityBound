@@ -39,11 +39,11 @@ We show the \emph{path reachability-bound} of the simple transition path $\tpath
   the execution times of $\tpath$ when executing the $\rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$ is bounded by $\econfig{\inoutB(\rprog, \tpath)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l \in \ldom, \rprog, \rprog_r \st 
+    \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l \in \ldom, \rprog \st 
     \\ \qquad
-    \rprog = REFINE(\algrewrite(c))
+    REFINE(\algrewrite(c)) = \rprog
     \land 
-    \rprog = \algrewrite(c_r)
+    \algrewrite(c_r) = \rprog
     \land
     \\ \qquad
     \land 

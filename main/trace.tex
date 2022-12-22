@@ -55,9 +55,10 @@ $\tracecat$ is defined as:
 As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
 \end{defn}
 %
+In the following, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 \begin{defn}[Counter Notation]
   \label{def:counter}
-The counting operator $\counter : \tdom \to \ldom \to (\mathbb{N} \cup \{\infty\})$
+The counting operator $\counter : \tdom \to \ldom \to (\mathbb{N} \cup \{\bot\})$
 counts the appearance of a label in a trace.
 \[
 \begin{array}{llll}
@@ -69,12 +70,12 @@ counts the appearance of a label in a trace.
 &
 \counter([(b, l', v)] \tracecat \trace', l) \triangleq \counter(\trace', l)   & \text{if}~ l' \neq l
 \\
-% \counter(\trace, l) \triangleq \infty & \text{if}~ \trace \in \inftdom
-% &
-\counter({[]}, l) \triangleq 0
+\counter({[]}, l) \triangleq 0 & 
+&
+\counter(\trace, l) \triangleq \bot & \text{if }~ \trace \in \inftdom
 \end{array}
 \]
-% {When the input trace is infinite, $\counter(\trace, l)$ returns $\infty$ for any program label $l$.}
+{When the input trace is infinite, $\counter(\trace, l)$ returns $\bot$ for any program label $l$.}
 \end{defn}
 \begin{defn}[Counter Notation of Label List]
   \label{def:lcounter}
@@ -87,9 +88,12 @@ counts the appearance of a label in a trace.
   \\ 
   \lcounter([(\_, l, \_)] \tracecat \trace', [l_1, \ldots, l_n] ) 
   \triangleq \lcounter(\trace', [l_1, \ldots, l_n]) & \text{if}~ l \neq l_1
+  \\ 
+  \lcounter(\trace, [l_1, \ldots, l_n] ) 
+  \triangleq \bot & \text{if }~ \trace \in \inftdom
 \end{array}
 \]
-% {When the input trace is infinite, $\lcounter(\trace, L)$ returns $\infty$ for any list $L$ as well.}
+{When the input trace is infinite, $\lcounter(\trace, L)$ returns $\bot$ for any list of labels as well.}
 \end{defn}
 %
 We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the list of program points from every event in a trace,
