@@ -24,7 +24,7 @@ any visit of $\tpath$ and during the first execution of $l: \rprog$.
   \arg\max_{l_1}\left\{
        \varinvar(y, c) + v ~\middle\vert~ 
        \begin{array}{l} 
-         (l_1, x' \leq y + v, l_2) \in \reset(x) 
+         (l_1, x' \leq y + v, l_2) \in \reset(x, c) 
          \\
          \land \absinit(\rprog) \leq l_1 \leq \absinit(\tpath)
          \land
@@ -61,7 +61,7 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
       v 
       ~\middle\vert~ \absevent = (l', x' \leq x + v, \_) \land l' \in \rprog \land l' \notin \tpath \right\}
       \\ \qquad 
-      + BD(\kw{enclosed}(\tpath)) \times \rfnext(\tpath)
+      + BD(\kw{enclosed}(\tpath), c) \times \rfnext(\tpath, c)
     \end{array}
     \right\}
   \end{array}
@@ -91,7 +91,7 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
   \[
     \begin{array}{l}
     \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-    \rprog = REFINE(c)
+    \rprog = REFINE(\algrewrite(c))
     \\ \qquad
     \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
     \land 
@@ -121,7 +121,7 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
 % \[
   %   \begin{array}{l}
   %   \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-  %   \rprog = REFINE(c)
+  %   \rprog = REFINE(\algrewrite(c))
   %   \\ \qquad
   %   \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
   %   \land \rprog = \algrewrite(c_l)
