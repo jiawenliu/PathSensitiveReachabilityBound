@@ -4,19 +4,23 @@ For every program ${c}$ and every label $l$ in this program,
 $\econfig{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
 %
 \[
-  \begin{array}{l}
-    \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-    \\ \qquad
-    \rprog = REFINE(c) 
-    \land
-    \Big(
-    \config{c, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-    \lor \config{c, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-    \Big)
-    \\ \qquad
-    \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)
-  \end{array}.
-\]
+    \begin{array}{l}
+      \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+      \\ \qquad
+      \rprog = REFINE(\algrewrite(c))
+      \land 
+      \rprog = \algrewrite(c_r)
+      \land
+      \\ \qquad
+      \land
+      \Big(
+      \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+      \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+      \Big)
+      \\ \qquad
+      \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)
+    \end{array}.
+  \]
 \end{theorem}
 %
 \begin{proof} \emph{Path-sensitive Reachability Bound} Soundness.

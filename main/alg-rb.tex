@@ -68,17 +68,19 @@ its \emph{path-sensitive reachability-bound}, $\psRB(c, l)$ is a sound upper bou
   \label{def:point_psrb}
   Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and refined program $\rprog$,
   the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(c, l)$ 
-  sums up all the path reachability bounds, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$.
+  sums up all the path reachability bounds, $\inoutB(\rprog, \tpath)$ over all simple transition paths $\tpath$ that contains the program point $l$.
   \[ 
     \psRB(c, l) = 
-    \sum\limits_{\tpath \in \rprog \land 
-  l \in \tpath} 
-  \inoutB(\rprog, \tpath)
+    \sum
+    % \limits_{\tpath \in \left\{ \tpath | \tpath \in \rprog \land 
+    % l \in p \right\}} 
+    \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
+    l \in \tpath \right\}
   \]
   $l \in \tpath$ denotes that the program point $l$ is a vertex on $\tpath$ 
   and $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path of program $c$.
  \end{defn}
-We show that $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for every program point $l$ in a program $c$ with proof in \highlight{Appendix~\ref{apdx:psrb-sound}}.
+We show that $\econfig{\psRB(c, l)}$ is a \emph{Reachability-Bound} for every program point $l$ in a program $c$ with proof in \highlight{Appendix~\ref{apdx:psrb-sound}}.
 \begin{thm}[Soundness of the Path-sensitive Reachability Bound Estimation]
     \label{thm:pathsensitive_rb_soundness}
   For every program ${c}$ and every label $l$ in this program,
@@ -86,13 +88,17 @@ We show that $\config{\psRB(c, l)}$ is a \emph{Reachability-Bound} for every pro
   %
   \[
     \begin{array}{l}
-      \forall c, c' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+      \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
       \\ \qquad
-      \rprog = REFINE(c) 
+      \rprog = REFINE(\algrewrite(c))
+      \land 
+      \rprog = \algrewrite(c_r)
+      \land
+      \\ \qquad
       \land
       \Big(
-      \config{c, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-      \lor \config{c, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+      \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+      \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
       \Big)
       \\ \qquad
       \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)

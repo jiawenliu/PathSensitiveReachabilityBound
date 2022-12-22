@@ -72,7 +72,7 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
 \begin{proof}
 \emph{Soundness} of the \emph{Loop Bound}.
   \\
-  Taking an arbitrary global program $c$, let $\rprog \subseteq REFINE(\algrewrite(c))$ be a sub program of its refined program and program $c_r$ be the while program where $\rprog = \algrewrite(c_r)$
+  Taking an arbitrary global program $c$, let $\rprog \subseteq REFINE(\algrewrite(c))$ be a sub program of its refined program and program $c_r$ be the while language program where $\rprog = \algrewrite(c_r)$
   \\
 Taking an arbitrary initial trace of $c$, $\trace_0 \in \ftdom_0(c)$ and an arbitrary initial trace of $c_r$, $\trace_r \in \ftdom_0(c_r)$, 
  an execution trace $\trace \in \tdom$ and label $l \in \lvar(c_r)$
@@ -123,12 +123,12 @@ We also know $\tpath$ will be executed at most once and $\trace_{0 \to l_f} = \t
   \end{array}
 \]
 Then we have this case proved.
-\caseL{$\rprog = \rpchoose{\rprog_1, \ldots}$}
+\caseL{$\rprog = \rpchoose{\rprog_1, \ldots, \rprog_m}$}
 In this case, we have
 \[
-  BD(\rpchoose{\rprog_1, \ldots, \rprog_m }, c) = \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\}.
+  BD(\rpchoose{\rprog_1, \ldots, \rprog_m}, c) = \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\}.
 \]
-Let $c_1, \ldots, c_m \in \cdom$ be the while program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
+Let $c_1, \ldots, c_m \in \cdom$ be the while language program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refinement algorithm REFINE, we know each $\rprog_i$ is a loop program refined from multiple paths in $c_r$.
 \\
 % By the REFINE algorithm, we also in each refined $\rprog_i$, the know the multiple paths in $c_r$ is explicitly permutation.
@@ -198,7 +198,7 @@ In this case, we have
 \[
   BD(\rprog_1; \rprog_2, c) = \min \left\{BD(\rprog_1, c), BD(\rprog_2, c) \right\}
 \]
-Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
+Let $c_1, c_2 \in \cdom$ be the while language program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 \\
 According to the operational semantics, let $\trace_1, \trace_2 \in \tdom$ be two execution traces such that 
 \[
@@ -598,7 +598,7 @@ In this case, we have
 \[
   BD(l: \rprog_l, c) = BD(\rprog_l, c)
 \]
-Let $c_l \in \cdom$ be the while program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
+Let $c_l \in \cdom$ be the while language program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
 \\
 According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refinement algorithm REFINE, we know
 $c_r = c_l$.

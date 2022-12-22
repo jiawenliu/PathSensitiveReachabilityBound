@@ -8,7 +8,9 @@ To solve the \emph{loop-reachability bound}, $\lpchB(l: \rprog, \tpath)$
   2. Solve the equation using abstract states above and SMT solver.
 \begin{defn}[Loop Abstract States Computation]
 \label{def:alg-loopabsstate}
-   The computations of 
+Given a program $c$, with $l:\rprog$ as a sub-program (a loop) in $c$'s refined program, 
+where $l: \rprog \subseteq REFINE(\kw{Rewrite(c)})$, 
+we compute four two abstract states for the ranking functions of this loop, 
    $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c) \in \scexpr(c)$
    are formally presented as follows.
    \begin{itemize}%
@@ -41,7 +43,7 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
 %
 \[
   \begin{array}{l}
-  \lpnext(l: \rprog, \tpath) \triangleq 
+  \lpnext(l: \rprog, \tpath, c) \triangleq 
   \\
   \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
   \left\{

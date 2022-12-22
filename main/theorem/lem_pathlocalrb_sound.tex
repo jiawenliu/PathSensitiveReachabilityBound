@@ -68,7 +68,7 @@ it is sufficient to show
 \[
   \econfig{\outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
-Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
+Let $c_1, c_2 \in \cdom$ be the while language program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = c_1; c_2$.
 \\
 According to the operational semantics, let $\trace_1, \trace_2 \in \ftdom$ be two execution traces such that 
@@ -105,9 +105,37 @@ it is sufficient to show
 \[
   \econfig{\max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
-Let $c_1, \ldots, c_m \in \cdom$ be the while program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
+Let $c_1, \ldots, c_m \in \cdom$ be the while language program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
 \\
-Then we have this case proved in the same procedure as the previous case by induction hypothesis and taking the maximum value overall bounds.
+Let $\trace_1, \ldots, \trace_m \in \ftdom$ be the execution traces such that 
+\[
+  \config{c_i, \trace_r} \to^* 
+  \config{\clabel{\eskip}^{l}, \trace_r \tracecat \trace_i}
+\]
+Then by induction hypothesis on each program $\rprog_i$, we know for each $\rprog_i$,
+\[
+  \econfig{\outinB(\rprog_i, \tpath)}(\trace_0)  \geq \lcounter(\trace_i, \pathl(\tpath)) 
+\]
+Since execution of each $\rprog_i$ corresponds to one possible execution of $c_r$ as shown in proof of Lemma~\ref{lem:loopbound_sound} in Appendix~\ref{apdx:loopbound-sound}, we know
+\[
+  \max\left\{\lcounter(\trace_0, \pathl(\tpath)), \ldots, \lcounter(\trace_m, \pathl(\tpath)) \right\} 
+  \geq \lcounter(\trace, \pathl(\tpath)).
+\]
+Then we have
+\[
+  \begin{array}{l}
+  \econfig{\outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath)}(\trace_0)
+  \\
+  = \econfig{\max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}}(\trace_0)
+  \\
+  = \max\left\{\econfig{\outinB(\rprog_1, \tpath)}(\trace_0), \ldots, \econfig{ \outinB(\rprog_m, \tpath)}(\trace_0) \right\}
+  \\
+  \geq \max\left\{\lcounter(\trace_0, \pathl(\tpath)), \ldots, \lcounter(\trace_m, \pathl(\tpath)) \right\} 
+  \\
+  \geq \lcounter(\trace, \pathl(\tpath)),
+  \end{array}
+\] 
+and this case is proved.
 \caseL{$\rprog_l = \rprepeat(\rprog')$ }
 We have $\outinB(\rprepeat(\rprog'), \tpath) = BD(\rprepeat(\rprog'), c) \times \outinB(\rprog', \tpath)$
 by Definition~\ref{alg:alg-refine_rewrite}, and
@@ -115,7 +143,7 @@ it is sufficient to show
 \[
   \econfig{ BD(\rprepeat(\rprog'), c) \times \outinB(\rprog', \tpath)} (\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
-Let $c' \in \cdom$ be the while program corresponding to $\rprog'$ such that $\algrewrite(c') = \rprog'$.
+Let $c' \in \cdom$ be the while language program corresponding to $\rprog'$ such that $\algrewrite(c') = \rprog'$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = \ewhile \clabel{\bexpr}^{l} \edo c'$.
 \\
 According to the operational semantics, let $\trace' \in \ftdom$ be the execution trace of executing $c'$ one time with a program $c'' \in \cdom$ such that 
@@ -152,7 +180,7 @@ Then we have this case proved by
   \[
     \outinB(l: \rprog_l, c) = \outinB(\rprog_l, c)
   \]
-  Let $c_l \in \cdom$ be the while program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
+  Let $c_l \in \cdom$ be the while language program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
   \\
   According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refinement algorithm REFINE, we know
   $c_l = c_l$.
@@ -192,7 +220,7 @@ it is sufficient to show
 \[
   \econfig{\outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
-Let $c_1, c_2 \in \cdom$ be the while program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
+Let $c_1, c_2 \in \cdom$ be the while language program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = c_1; c_2$.
 \\
 According to the operational semantics, let $\trace_1 \in \ftdom, \trace_2 \in \inftdom$ be two execution traces, we have
@@ -229,14 +257,22 @@ Then we have this case proved as
   \end{array}
   \] 
 \caseL{$\rprog_l = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
-We have $\outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) = \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}$ by Definition~\ref{alg:alg-refine_rewrite}, and
-it is sufficient to show
+We have $\outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) = \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}$ by Definition~\ref{alg:alg-refine_rewrite}.
+Then it is sufficient to show
 \[
-  \econfig{\max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
+  \econfig{\max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
 \]
-Let $c_1, \ldots, c_m \in \cdom$ be the while program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
+Let $c_1, \ldots, c_m \in \cdom$ be the while language program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
 \\
-Then we have this case proved in the same procedure as the previous case by induction hypothesis and taking the maximum value overall bounds.
+Since there exists at least a program $c_j$ whose execution under the initial trace $c_r$ doesn't terminate, by induction hypothesis on $c_j$, we know 
+\[
+  \econfig{\inoutB(\rprog_j, \tpath)}(\trace_0) = \infty.
+\]
+Then by induction hypothesis on all the other programs and taking the maximum value overall $\outinB(\rprog_i, \tpath)$, we get
+\[
+  \econfig{\max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}}(\trace_0) = \infty,
+\]
+and this case is proved.
 \caseL{$\rprog_l = \rprepeat(\rprog')$ }
 We have $\outinB(\rprepeat(\rprog'), \tpath) = BD(\rprepeat(\rprog'), c) \times \outinB(\rprog', \tpath)$
 by Definition~\ref{alg:alg-refine_rewrite}, and
@@ -265,7 +301,7 @@ Then we have this case proved by
   \[
     \outinB(l: \rprog_l, c) = \outinB(\rprog_l, c)
   \]
-  Let $c_l \in \cdom$ be the while program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
+  Let $c_l \in \cdom$ be the while language program corresponding to $\rprog_l$ such that $\algrewrite(c_l) = \rprog_l$.
   \\
   According to the Algorithm~\ref{alg:alg-refine_rewrite} and the program refinement algorithm REFINE, we know
   $c_l = c_l$.
