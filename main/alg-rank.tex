@@ -138,7 +138,7 @@ Three steps:
   & \quad \text{if} ~ \locbound(\absevent, c) \in \scvar(c) & \\
   \absclr(\absevent, c) 
   & \triangleq
-    \sum \left\{ \incrs(y, c) | ch \in \resetchain(x) \land y \in ch \right\} & \\
+    \sum \left\{ \incrs(y, c) | ch \in \resetchain(x, c) \land y \in ch \right\} & \\
     & \quad + 
   \sum\limits_{ch \in \resetchain(x, c)}
   \min \left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
