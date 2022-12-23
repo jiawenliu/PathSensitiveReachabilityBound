@@ -68,15 +68,13 @@ Tianhan~\cite{LuCT21}
     \label{tb:accuracy-eval}
     \centering
     {\footnotesize
-    \begin{tabular}{ >{\small}c | >{\footnotesize}c | >{\footnotesize}c | >{\footnotesize}c | c | c | c | c  c }
+    \begin{tabular}{ >{\footnotesize}c | >{\footnotesize}c | >{\footnotesize}c | >{\footnotesize}c | c | c | c | c | c | c }
     {Benchmark} &  {Overall} & \multirow{2}{*}{$\psRB$ on Path Points} & \multirow{2}{*}{$\psRB$ on Loop Headers} & \multicolumn{5}{c}{Computed}  \\
-    \cline{5-9}
-     Suit &  Complexity & & & {\tiny \THESYSTEM} & {\tiny LoopusJAR} & {\tiny CoFloCo} & Icra & Tianhan\\
+    \cline{5-10}
+     Suit &  Complexity & & & {\tiny \THESYSTEM} & {\tiny LoopusJAR} & {\tiny CoFloCo} & {\tiny pathRefine} & {\tiny Icra} & {\tiny Tianhan}\\
     \hline
     \multirow{5}{*}{LoopusJAR} 
     & $O(1)$            & $O(1)$ & $O(1)$  & 3  & 2 & 3 & -\\
-    % \cline{2-9}
-    % & $O(\log(n))$  & - &  - & 0 & - & - & - \\
     \cline{2-9}
     & $O(n)$            & $O(1), O(n), \frac{O(n)}{c}, \frac{O(n)}{O(m)} $ & $O(n)$  & 49 & 51 & 45 & - \\
     % \cline{2-9}
