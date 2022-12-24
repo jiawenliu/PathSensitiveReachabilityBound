@@ -80,90 +80,48 @@
   \[
     \tpath_0 ; \rpchoose{1: \rprepeat(\tpath_1; \tpath_2) , 
     1: \rprepeat(\tpath_2; \tpath_1)}; \tpath_3
-    \]
-  \item \textbf{Outside-In Algorithm} : Compute Local Bound for Every program and sub programs.
-  \[
-    \begin{array}{lll}
-      \outinB(\tpath_0) = 1
-      &
-      \outinB(\tpath_3) = 1
-      &
-      \outinB(\rprepeat(\tpath_1; \tpath_2)) = \lfloor \frac{n}{4} \rfloor
-      \\
-      \outinB(\tpath_1) = 1 
-      &
-      \outinB(\tpath_2) = 1 
-      &
-      \outinB(\rprepeat(\tpath_2; \tpath_1)) = \lfloor \frac{n}{4} \rfloor
-    \end{array}
-    \]
-  %       $\outinB(\tpath_0) = 1$
-  % \\
-  % $\outinB(\tpath_3) = 1$
-  % \\
-  % $\outinB(\tpath_1) = 1 $
-  % \\
-  % $\outinB(\rprepeat(\tpath_1; \tpath_2)) = \frac{n}{4} $
-  % \\
-  % $\outinB(\tpath_2) = 1 $
-  % \\
-  % $\outinB(\rprepeat(\tpath_2; \tpath_1)) = \frac{n}{4} $
-  % \\
-  % $\outinB(1: \rpchoose(\rprepeat_2(\cdots), \tpath_1)) 
-  % = \max\{m, \frac{n}{m}\} $
-  % \\
-  \item \textbf{Inside-Out Algorithm}
-  \begin{itemize}
-    \item \textbf{Repeat Chain Set}
-    \\
-    $\rpchset(1, \tpath_1) = \{ \rprepeat(\tpath_1; \tpath_2) \to \tpath_1\}$ \\
-    $\rpchset(1, \tpath_2) = \{ \rprepeat(\tpath_2; \tpath_1) \to \tpath_2\}$ \\
-    $\rpchset(\_, \_) = \emptyset$ 
-    % \\
-    \item \textbf{Repeat Chain Bound} for every simple transition path $\tpath$ through its \emph{Repeat Chain}s
-    $\rpchB(1, \tpath_1) = \lfloor \frac{n}{4} \rfloor$ \quad
-    $\rpchB(1, \tpath_2) = \lfloor \frac{n}{4} \rfloor$ 
-    %
-    \item \textbf{Loop Chain}
+  \]
+    \item \textbf{Path Local Reachability-bound} for every simple transition path $\tpath$.
     \[
-      % \begin{array}{ll}
-        \lpch(\tpath_1) = 1 \to \tpath_1
-        \quad
-        \lpch(\tpath_2) = 1 \to \tpath_2
-        \quad
-        \lpch(\tpath_0) = \tpath_0
-        \quad
-        \lpch(\tpath_3) = \tpath_3
-      % \end{array}
-      \]
-    % $\lpch(\tpath_1) = \{1\to \tpath_1\}$ \\
-    % $\lpch(\tpath_2) = \{1\to \tpath_2\}$ \\
-    % $\lpch(\tpath_0) = \{\tpath_0\}$ \\
-    % $\lpch(\tpath_3) = \{\tpath_3\}$ 
-    \item \textbf{{Relative Loop Bound}} for every simple transition path $\tpath$ through its \emph{Loop Chain}
+      \outinB(1, \tpath_1) = \lfloor \frac{n}{4} \rfloor \quad
+      \outinB(1, \tpath_2) = \lfloor \frac{n}{4} \rfloor
+    \]
+  Loop Bounds:
     \[
-    %   \begin{array}{ll}
-        \rpchB(1, \tpath_1) = \lfloor \frac{n}{4} \rfloor
-        \qquad
-        \rpchB(1, \tpath_2) = \lfloor \frac{n}{4} \rfloor
-        \qquad
-        \rpchB(\bot, \tpath_0) = 1
-        \qquad
-        \rpchB(\bot, \tpath_3) = 1
-      % \end{array}
+      \begin{array}{lll}
+        BD(\tpath_0) = 1
+        &
+        BD(\tpath_3) = 1
+        &
+        BD(\rprepeat(\tpath_1; \tpath_2)) = \lfloor \frac{n}{4} \rfloor
+        \\
+        BD(\tpath_1) = 1 
+        &
+        BD(\tpath_2) = 1 
+        &
+        BD(\rprepeat(\tpath_2; \tpath_1)) = \lfloor \frac{n}{4} \rfloor
+      \end{array}
       \]
-    % $\rpchB(1, \tpath_1) = \frac{n}{4}$ \\
-    % $\rpchB(1, \tpath_2) = \frac{n}{4}$  \\
-    % $\rpchB(\bot, \tpath_0) = 1$ \\
-    % $\rpchB(\bot, \tpath_3) = 1$ 
-    \item \textbf{Path-Sensitive Reachability-Bound} for every simple transition path $\tpath$
+
+      %
+    \item \textbf{{Loop Reachability-bound}} for every simple transition path $\tpath$.
+    \[
+        \lpchB(1, \tpath_1) = \lfloor \frac{n}{4} \rfloor
+        \qquad
+        \lpchB(1, \tpath_2) = \lfloor \frac{n}{4} \rfloor
+        \qquad
+        \lpchB(\bot, \tpath_0) = 1
+        \qquad
+        \lpchB(\bot, \tpath_3) = 1
+      \]
+    \item \textbf{Path Global Reachability-bound} for every simple transition path $\tpath$
     \\
     $\inoutB(\tpath_1) = \lfloor \frac{n}{4} \rfloor $ \quad
     $\inoutB(\tpath_2) = \lfloor \frac{n}{4} \rfloor $ \quad
     $\inoutB(\tpath_0) = 1$ \quad
     $\inoutB(\tpath_3) = 1$ 
-  \end{itemize}
-  \item \textbf{Path Sensitive Reachability-Bound} on every program control location
+
+    \item \textbf{Program Point Path-sensitive Reachability-Bound} on every program control location
   \\
   $\psRB(0) = \psRB(\lex) = 1$ \quad
   $\psRB(3) = \psRB(4) = \lfloor \frac{n}{4} \rfloor$ \quad
