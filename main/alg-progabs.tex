@@ -42,16 +42,16 @@ or abstract evaluation of the boolean expression in the guard with label $l$.
 
 \highlight{Notations / Formal Definitions:}
 \begin{itemize}
-\item Operator: $\absexpr : \mathcal{A} \cup \booldom \to DC(\vardom  \cup \constdom)\cup \booldom \cup \{\top\}$
+\item Operator: $\absexpr : \mathcal{A} \cup \booldom \to DC(\vardom  \cup \scvardom)\cup \booldom \cup \{\top\}$
 %
-\item Constraints $\dcdom^{\top}: DC(\vardom  \cup \constdom) \cup \booldom\cup \{\top\}$  contains:
+\item Constraints $\dcdom^{\top}: DC(\vardom  \cup \scvardom) \cup \booldom\cup \{\top\}$  contains:
 %
 \begin{itemize}
-\item The difference constraints $DC(\vardom  \cup \constdom)$ is the set of all the inequality of
+\item The difference constraints $DC(\vardom  \cup \scvardom)$ is the set of all the inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x \in \vardom $, 
-$y \in \vardom$ and $v \in \constdom$.
+$y \in \vardom$ and $v \in \scvardom$.
 \\
-The \emph{Symbolic Constant} universe, $\constdom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$
+The \emph{Symbolic Constant} universe, $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$
 is the set of natural numbers with $\infty$ and the input variables of a certain program.
 \\
 An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
@@ -83,7 +83,8 @@ or commands that don't interfere any guard variable.
 
 \highlight{Computation Steps:}
 
-\begin{defn}[Symbolic Expression ($\scexpr(c)$)]
+\begin{defn}[Symbolic Expression of a Program($\scexpr(c)$)]
+  \label{def:symbolic_expr}
   $\scexpr(c)$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$.
 \end{defn}
 
@@ -96,7 +97,7 @@ or commands that don't interfere any guard variable.
   \begin{enumerate}
   \item Compute the symbolic constant set of program $c$, $\scvar(c)$ of program $c$ as follows.
   \[
-    \scvar(c) = \mathbb{N} \cup \inpvar(c) \cup \{\infty \} \subseteq \constdom
+    \scvar(c) = \mathbb{N} \cup \inpvar(c) \cup \{\infty \} \subseteq \scvardom
   \]
   \item Initialize 
   $\grdvar(c) = \{\}$ as the set of the variable used in the expression of every while or if guard in the program $c$.
@@ -107,7 +108,7 @@ or commands that don't interfere any guard variable.
       \absexpr(y + v, x, c)  = x' \leq y + v  & x, y \in \grdvar(c)\land v \in \scvar(c)\\
       \absexpr(v, x, c)  = x' \leq v  & x \in \grdvar(c)\land v \in \scvar(c) \\
       \absexpr(y + v, x, c)  = x' \leq y + v, \grdvar(c) = \grdvar(c) \cup \{y\} 
-      & x \in \grdvar(c)\land y \notin \grdvar(c) \land v \in \constdom  \\
+      & x \in \grdvar(c)\land y \notin \grdvar(c) \land v \in \scvar(c)  \\
       \absexpr(\bexpr, \_, c) = \bexpr, \grdvar(c) = \grdvar(c) \cup FV(\bexpr) & \bexpr \in \scvar(c) \\
       \absexpr(\expr, x, c) = \top &  {o.w.} \\
     \end{array}

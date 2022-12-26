@@ -62,7 +62,7 @@ We use following notations to represent the sets of corresponding terms:
 \booldom & : & \mbox{Set of Boolean Expressions}  
 \\ 
 %
-\cdom & : & \mbox{Set of Commands} 
+\cdom & : & \mbox{Set of All Labeled Commands} 
 \\ 
 %
 \eventset  & : & \mbox{Set of Events}  
@@ -92,6 +92,27 @@ We use following notations to represent the sets of corresponding terms:
 \end{array}
 \]
 %
+\paragraph{Expression}
+The expression is standard, it can be
+% can be 
+either a standard arithmetic expression or a boolean expression, or a list of expressions.
+An arithmetic expression can be a constant $n$ denoting integer, a variable $x$ from some countable set $\mathcal{VAR}$, binary operation $\oplus_a$ such as addition, product, subtraction, etc., over arithmetic expressions, with also $\elog$ and $\esign$. 
+%
+A boolean expression can be either {\tt true} or {\tt false}, basic boolean connectives such as logical negation, logical and or denoted by $\oplus_b$, and basic comparison $sym$ between arithmetic expressions, e.g., $\leq, =, <$, etc.
+Additionally, I also introduce list in expression.
+
+\paragraph{Labeled Command}
+Commands are the typical ones from while languages. Each command is annotated with a label $l$, we will use natural numbers as labels and we will use them to record
+the location of each command, so that we can uniquely identify them.
+
+\paragraph{Free Variables and Input Variables}
+  We denote by $\kw{FV}$ the operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$, which computes the set of free variables in an expression. For example,
+  $\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
+  expression $\aexpr$ and boolean expression $\bexpr$ respectively.
+  All the free variables
+  showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
+  We denote by $\mathcal{V}_{\lin}$ the domain of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
+
 \subsection{{Trace-based Operational Semantics}}
 \label{sec:operational_semantics}
 \paragraph{Event}
@@ -125,7 +146,8 @@ $\pi_i :
 \paragraph{Trace.}
 \input{trace}
 %
-\paragraph{Environment.} $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$
+\paragraph{Environment.} $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$.  
+We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
 \[
 \begin{array}{llll}
 \env(\trace  \traceadd (x, l, v)) x \triangleq v
@@ -138,15 +160,15 @@ $\pi_i :
 \end{array}
 \]
 %
-\begin{lem}[Initial Traces]
-  \label{lem:initial_trace}
+\begin{defn}[Well Formed Initial Traces]
+  \label{def:initial_trace}
+  Given a program $c$, we consider only well-formed initial trace if and only if all the input variables of $c$ has an initial value in this trace.
   \[
     \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
     \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot
     \]
-\end{lem}
+\end{defn}
 %
-\paragraph{Configuration.}
 %
 \paragraph{Expression Semantics}
 The evaluation notation for arithmetic expression is $\econfig{} : \mathcal{A} \to \tdom \to \mathcal{V}$.
@@ -296,7 +318,9 @@ The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under
 
 \paragraph{Operational Semantics Rules}
 %
-The trace based operational semantics rules are defined as in Figure~\ref{fig:command-os}.
+The trace based operational semantics is described in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another configuration
+program-state.
+The rules are presented in Figure~\ref{fig:command-os}.
 \begin{figure}
   \begin{mathpar}
 \boxed{
@@ -536,24 +560,3 @@ specifically the trace has the property that its length never decreases during t
     \end{array}
     \]
   \end{lem}
-  % \begin{lem}
-  %   [Trace Non-Decreasing (based on the alternative non-termination definition)]
-  %   \label{lem:tracenondec2}
-  %   For any program $c \in \cdom$ and initial trace $\trace_0 \in \ftdom_0(c)$,
-  %   \begin{itemize}
-  %     \item if there exists $\trace \in \tdom$ and $c' \in \cdom $ such that $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $
-  %     then there exists a trace $\trace' \in \ftdom$ such that $\trace_0 \tracecat \trace' = \trace$;
-  %     \item if $\config{c, \trace_0} \uparrow^{\infty} $ and produces an infinite trace $\trace \in \inftdom$ as defined in Definition~\ref{def:non-terminating}
-  %     then there exists an infinite trace $\trace' \in \inftdom$ such that $\trace_0 \tracecat \trace' = \trace$ formally as follows.  
-  %   \end{itemize}
-  %   %
-  %   \[
-  %     \begin{array}{l}
-  %     \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom \st
-  %     \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} 
-  %     \implies \exists \trace' \in \ftdom \st \trace_0 \tracecat \trace' = \trace 
-  %     \\
-  %     \todomath{\land \config{c, \trace_0} \uparrow^{\infty} \implies \exists \trace' \in \inftdom \st \trace_0 \tracecat \trace' \in \inftdom}
-  %     \end{array}
-  %     \]
-  %   \end{lem}

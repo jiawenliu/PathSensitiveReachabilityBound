@@ -83,8 +83,8 @@ counts the appearance of a label in a trace.
   counts the appearance of a list of labels $[l_1, \ldots, l_n]$ as follows.
 \[
   \begin{array}{ll}
-  \lcounter(\trace' \tracecat \trace, [l_1, \ldots, l_n] ) 
-  \triangleq \lcounter(\trace, [l_1, \ldots, l_n]) + 1  & \text{if}~ \pi_2(\trace[i]) = l_i, \forall i = 1, \ldots, n
+  \lcounter(\trace'' \tracecat \trace', [l_1, \ldots, l_n] ) 
+  \triangleq \lcounter(\trace', [l_1, \ldots, l_n]) + 1  & \text{if}~ \pi_2(\trace''[i]) = l_i, \forall i = 1, \ldots, n
   \\ 
   \lcounter([(\_, l, \_)] \tracecat \trace', [l_1, \ldots, l_n] ) 
   \triangleq \lcounter(\trace', [l_1, \ldots, l_n]) & \text{if}~ l \neq l_1
@@ -96,10 +96,10 @@ counts the appearance of a label in a trace.
 {When the input trace is infinite, $\lcounter(\trace, L)$ returns $\bot$ for any list of labels as well.}
 \end{defn}
 %
-We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the list of program points from every event in a trace,
+We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points,
 defined as follows,
 \[
 \tracel([(\_, l, \_)] \tracecat \trace') \triangleq [l] \tracecat \tracel(\trace')
-~~~
+\qquad
 \tracel([ ]) \triangleq []
 \]
