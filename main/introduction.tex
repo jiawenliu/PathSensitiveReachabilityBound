@@ -1,0 +1,69 @@
+\highlight{
+The execution properties of the program running on mobile devices affect our daily life from many perspectives.
+For example,
+from the privacy and security perspective,
+% protection area,
+how much secret information is leaked by a program depends on the number of times a certain operation that leaks the data,
+% either by direct or indirect information flow, 
+is executed~\cite{Malacaria07};
+the amount of perturbation in the output data values resulting
+from a small perturbation or uncertainty in the input,
+values depend on the number of times additive error propagation operators are applied; etc.
+Estimating such quantitative properties requires us to know
+how many times is a given control location inside the program that performs certain operations executed?
+% \\
+From the performance perspective, it is important to give a precise estimation
+on the program's resource cost bound w.r.t. the program's inputs.
+For example, in memory-constrained environments such as embedded systems,
+it is important to bound the amount of memory required to run certain applications.
+In real-time systems, it is important to bound the worst-case execution time of the program.
+Applications running on low-power devices or low-bandwidth environments must use up little power or bandwidth respectively. 
+With the advent of cloud computing, where users would be charged per program execution,
+predicting resource usage characteristics would be a crucial component of accurate bid placement by cloud providers. 
+One of the challenges in bounding this cost precisely is that resource consumption is location-sensitive.
+In other words, different location has different resource cost as well as different execution times.
+To give accurate estimation results on these execution properties,
+% This brings me to one of 
+the fundamental questions that need to be addressed 
+% for computing such resource bounds:
+is estimating the bound on the execution times
+% How many times is 
+a given control location inside the program that consumes these resources.
+For these reasons, I'm interested in analyzing the bound on the execution times of a program's given control location.
+This bound is referred to as the reachability-bound in the program analysis area,
+which is firstly proposed by the paper~\cite{GulwaniZ10}.
+In this paper, finding a symbolic worst-case bound on this quantitative reachability property
+in terms of the inputs to that procedure
+is referred to as the \emph{reachability-bound problem}.
+}
+
+\highlight{
+Providing a good solution to this problem is challenging.
+The paper~\cite{GulwaniZ10} that introduces this concept
+gives a two-step solution by combining the abstract interpretation-based iterative technique
+ and the non-iterative proof-rules-based technique.
+ However, their solution
+does not solve this problem in a path-sensitive manner.
+It over-approximates the reachability-bounds on different paths inside a while loop.
+% \\
+ There are also many works in analyzing the program complexity~\cite{GustafssonEL05, HumenbergerJK18},
+ or estimating the upper bound on a program's worst-case resource cost
+~\cite{BrockschmidtEFFG16, AlbertAGP08, AliasDFG10, Flores-MontoyaH14}.
+But their analysis
+focus only on estimating 
+the overall complexity 
+by inferring the bounds on the loop iteration numbers,
+ or the worst-case running time and resource cost of the program's entire execution.
+ None of them computes the reachability-bound on a given program control location directly or path-sensitively.
+To leverage these limitations,
+I plan to design a path-sensitive reachability-bound analysis in this section.
+ This analysis aims to solve 
+ the reachability-bounds problem efficiently and path-sensitively.
+ }
+ The contributions of this work can be summarized as follows,
+ \begin{itemize}
+    \item A path-sensitive reachability-bound computation algorithm.
+    This algorithm can compute the evaluation times of each program point accurately and path-sensitively.
+    \item A prototype implementation of this algorithm as a and evaluated it over 5 different benchmarks.
+    The evaluation results show that we can compute tight bound on the evaluation times of each program point in a program. For program with multi-path loop, we computed different bounds for the points on different paths.
+ \end{itemize}

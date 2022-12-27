@@ -1,0 +1,33 @@
+% \subsection{Cost Analysis}
+
+\paragraph*{Program Model.}
+The semantics model mainly inspired from~\cite{Cousot19a} and~\cite{Cousot19}.
+The program abstraction and the abstraction transition graph are inspired from~\cite{SinnZV17}.
+
+There are many other program abstraction techniques, but not efficient and accurate enough.
+
+\paragraph{Type-Based Static Cost Analysis.}
+\paragraph{Program Cost Analysis.}
+The works in analyzing the program complexity~\cite{GustafssonEL05, HumenbergerJK18} only focus on estimating 
+the overall complexity 
+by inferring the bounds on the loop iteration numbers.
+Similarly, the algorithm of computing a program's worst-case resource cost
+such as~\cite{BrockschmidtEFFG16, AlbertAGP08, AliasDFG10, Flores-MontoyaH14} reason the worst-case running time and resource cost of the program's entire execution as well.
+
+The CofloCo~\cite{Montoya17, Flores-MontoyaH14, Flores-Montoya16},
+
+The loop bound analysis algorithm in~\cite{LuCT21} works well in but not in multi-paths loops.
+\paragraph{Loop Summarization and Termination.}
+Termination~\cite{FalkeKS12, FalkeKS11},
+Loop summarization and invariant generate~\cite{HumenbergerJK18}.
+Invariant Generation Through Ranking functions~\cite{AliasDFG10} for multipath loops.
+Closed-form loop summarization techniques~\cite{KincaidBCR19} which can help to improve the accuracy of the path refinement.
+Non-linear loop summarization techniques~\cite{KincaidCBR18} we plan to extend in the future.
+Advanced loop summarization considering recurrence in~\cite{BreckCKR20}.
+\paragraph{Path Refinement.}
+\cite{GulwaniJK09}
+Path refinement algorithm we are using.
+\cite{SinnZV14}
+The contextualization path refinement algorithm, based on the loop termination techniques in~\todo{}.
+\cite{CyphertBKR19}
+Advanced path refinement techniques we plan to extend in the future.

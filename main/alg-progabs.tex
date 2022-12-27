@@ -30,7 +30,7 @@ The second step, generates two sets for each command, which are \textbf{Initial 
 \paragraph{Constraint Computation}
 In this step, we first show how to compute the constraints for expressions in a program $c$,
 by a program abstraction method adopted from the
-algorithm in Section 6 in~\cite{sinn2017complexity}.
+algorithm in Section 6 in~\cite{SinnZV17}.
 \\
 Given a program $c$,
 every arithmetic expression in an assignment command with label $l$,
@@ -69,7 +69,7 @@ and $l \xrightarrow{x' \leq v} l'$ respectively denotes value of variable $x$
 after executing the command at $l$ is at most
 % and the right-hand side describes 
 the value of the symbolic constant $v$ before the execution.
-For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in~\cite{sinn2017complexity}. 
+For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in~\cite{SinnZV17}. 
 %
 \item The Boolean Expressions $b$ from the set $\booldom$.
 $b$ on an edge $l \xrightarrow{b} l'$ describes
@@ -133,7 +133,7 @@ The guard variable $x$ is generalized into the \emph{norm} when the guard
 in if or while has the form $\expr > 0$ with an expression $\expr$, and $\grdvar$ is the set of norms.
 Then in the last clause in Definition~\ref{def:constraint_compute}, i.e., $\absexpr(\expr, x, c)$,
 we will check if $\expr$ is a norm or contains norms, and extend the $\grdvar(c)= \grdvar(c)\cup \{\expr\}$ if neither.
-The constraint computation over the \emph{norm} follows the computation steps 1, 2 and 3 in Section 6.1 in paper~\cite{sinn2017complexity}. 
+The constraint computation over the \emph{norm} follows the computation steps 1, 2 and 3 in Section 6.1 in paper~\cite{SinnZV17}. 
 %
 \paragraph{Abstract Initial and Continuation State Computation}
 This step computes two sets for each command. 

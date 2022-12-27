@@ -21,7 +21,7 @@ We also give the technique overview of our algorithm.
 \input{examples/whileTwoCounters-overview}
 Figure~\ref{fig:whileTwoCounters-overview}(a) shows an example of a two paths loops
 with different \emph{reachability-bounds} on the control locations in different paths.
-This example is adopted from the example in~\cite{Sumit2010rechability}, which
+This example is adopted from the example in~\cite{GulwaniZ10}, which
 is a skeleton code from the .Net base-class library.
 \\
 In this example, given $n \geq m$,
@@ -36,7 +36,7 @@ and $1$ for locations $0, 1$ and $\lex$.
 % we need to know that the two if branches are interleaved and executed alternatively after each other
 % during the iterations of the enclosed loop.
 \\
-However, the state-of-art \emph{reachability-bound} analysis~\cite{Sumit2010rechability}
+However, the state-of-art \emph{reachability-bound} analysis~\cite{GulwaniZ10}
 gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$, which is tight w.r.t. $L_2$'s iteration times but not for different locations inside $L_2$ without considering multiple paths.
 Among works on program complexity, cost and loop bound analysis, \cite{GulwaniJK09} can also compute the tight bound on the loop iteration but not reachability-bound on each location path-sensitively.
 Though we can use it as the \emph{reachability-bound} for location $1$ and $2$,
@@ -45,7 +45,7 @@ the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still un
 To compute the bounds for locations on different paths of a loop, we compute the \emph{path reachability-bound},
 which is the first key idea of this path-sensitive \emph{reachability-bound} analysis algorithm. This bound approximate the evaluation times of each loop free path instead of the entire multipath loop.
 \\
-% Our algorithm combines the idea of \emph{difference constraint} based program complexity analysis method from \cite{sinn2017complexity}
+% Our algorithm combines the idea of \emph{difference constraint} based program complexity analysis method from \cite{SinnZV17}
 % and the control-flow refinement technique from~\cite{GulwaniJK09}.
 For this example, we first
 generate the abstract transition graph for the program using the difference constraints, such as Figure~\ref{fig:whileTwoCounters-overview}(b).
@@ -110,7 +110,7 @@ However, for the locations between $L_3$ and $L_6$,
 the \emph{reachability-bounds} are the multiplication of the inner and outer loop iteration bounds.}
 \\
 To the best of our knowledge, the loop bound analysis method in \cite{GulwaniJK09} can only give a loose bound $n + (m \times n) + N$ for the entire loop complexity, and 
-the DC-based algorithm in \cite{sinn2017complexity} is able to
+the DC-based algorithm in \cite{SinnZV17} is able to
 compute a better but still loose bound, $n + m^2 - m \times N$ on total iteration times.
 None of them can give the precise \emph{reachability-bound} for every location in these nested loops,
 which is non-trivial to compute even though knowing the loop bound,
@@ -134,7 +134,7 @@ of the inner loop $L_6$ in each iteration of $L_3$ and $L_1$, which are both $N$
 So they have to over-approximate the reachability-bound for locations inside $L_6$ with the
 overall program complexity by multiplication, i.e., $n + m^2 - m \times N$.
 % \\
-For the same reason, the DC-based algorithm in \cite{sinn2017complexity}
+For the same reason, the DC-based algorithm in \cite{SinnZV17}
 is only able to
 compute the combined loop bound and the local bound of each loop
 separately as well.
