@@ -8,7 +8,7 @@
           \kw{twoPathsWhile}(n, m) \triangleq \\
         \clabel{ \assign{i}{n} }^{0} ; \\
         \clabel{ \assign{j}{0} }^{1} ; \\
-            \ewhile ~ \clabel{i > 0}^{2} ~ \edo ~ \\
+        L_2:    \ewhile ~ \clabel{i > 0}^{2} ~ \edo ~ \\
             \qquad \Big(
               \eif(\clabel{j < m}^{3}, \\
               \qquad \ethen  \clabel{\assign{j}{j + 1}}^{4}; \\
@@ -46,7 +46,7 @@
         \caption{}
     \end{centering}
 \end{subfigure}
-{\footnotesize
+{\small
 \begin{subfigure}{.25\textwidth}
 \begin{centering}
         $\tpath_0 = (0 \to 1 \to 2)$ \\

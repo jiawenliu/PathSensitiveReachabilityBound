@@ -5,7 +5,7 @@ Every the program point is unique.
 \begin{defn}[Program Points ($\lvar : \cdom \to \mathcal{P}(\ldom)$]
 \label{def:lvar}
 {\small
-$$
+\[
   \lvar(c) \triangleq
   \left\{
   \begin{array}{ll}
@@ -18,11 +18,11 @@ $$
       \lvar(c_1) \cup \lvar({{c_2}}) \cup \{l\} 
       & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
       \\
-      \lvar({{c}'}) \cup \{l\} 
-      & {c}   = \ewhile ([\bexpr]^{l}, {c}')
+      \lvar(c') \cup \{l\} 
+      & {c}   = \ewhile [\bexpr]^{l} \edo (c')
 \end{array}
 \right.
-$$
+\]
 }
 \end{defn}
 %
