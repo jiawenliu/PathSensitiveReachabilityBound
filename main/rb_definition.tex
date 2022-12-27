@@ -16,10 +16,10 @@ Every the program point is unique.
       & {c} = {c_1};{c_2}
       \\
       \lvar(c_1) \cup \lvar({{c_2}}) \cup \{l\} 
-      & {c} =\eif([\bexpr]^{l}, c_1, c_2) 
+      & {c} =\eif(\clabel{\bexpr}^{l}, c_1, c_2) 
       \\
       \lvar(c') \cup \{l\} 
-      & {c}   = \ewhile [\bexpr]^{l} \edo (c')
+      & {c}   = \ewhile \clabel{\bexpr}^{l} \edo (c')
 \end{array}
 \right.
 \]

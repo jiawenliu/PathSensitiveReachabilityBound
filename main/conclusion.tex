@@ -1,0 +1,14 @@
+We presented a path-sensitive reachability-bound computation algorithm.
+This algorithm can compute the evaluation times of each program point accurately and path-sensitively.
+We also implemented this algorithm as a prototype and evaluated it over 5 different benchmarks.
+The evaluation results show that we can compute tight bound on the evaluation times of each program point in a program. For program with multi-path loop, we computed different bounds for the points on different paths.
+
+There are many limitations in this algorithm.
+\begin{itemize}
+    \item The efficiency of the algorithm.
+    There are multiple steps in this algorithm in order to precisely estimate the reaching times of each location.
+    The major efficiency bottleneck comes from the path-refinement algorithm and the ranking function estimation. So in the next step, we will explore new path refinement and loop summarization techniques~\cite{} and design more efficient path refinement algorithm. We also aim to design more efficient ranking estimate in place of the existing one.
+    \item The accuracy of the path refinement algorithm and program abstraction implementation.
+    We sacrificed the accuracy in order improve the efficiency of the implementation. For the path refinement algorithm,
+    we limited its maximal iteration times to $100$ and same for computing program constraints. In the future, we plan to improve the accuracy of the implementation by extending the implementation with the new efficient algorithm.
+\end{itemize}
