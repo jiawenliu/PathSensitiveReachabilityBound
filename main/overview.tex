@@ -104,7 +104,8 @@ for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - 
 and $n - N$ for locations $2$ and $9$.
 % \\
 \highlight{Notice here the \emph{reachability-bounds} for the locations inside the loop $L_6$ is 
-the same as its loop iteration bound, as well as our \emph{path reachability-bound}.
+the same as its innermost loop iteration bound.
+% , as well as our \emph{path reachability-bound}.
 However, for the locations between $L_3$ and $L_6$,
 the \emph{reachability-bounds} are the multiplication of the inner and outer loop iteration bounds.}
 \\
@@ -131,11 +132,11 @@ the
 bound on iteration numbers
 of the inner loop $L_6$ in each iteration of $L_3$ and $L_1$, which are both $N$.
 So they have to over-approximate the reachability-bound for locations inside $L_6$ with the
-overall program complexity, i.e., $n + m^2 - m \times N$.
+overall program complexity by multiplication, i.e., $n + m^2 - m \times N$.
 % \\
 For the same reason, the DC-based algorithm in \cite{sinn2017complexity}
 is only able to
-compute the precise combined loop bound and the local bound of each loop
+compute the combined loop bound and the local bound of each loop
 separately as well.
 % We are still unable to know the precise \emph{reachability-bound} for the locations in the innermost loop.
 }
@@ -160,7 +161,7 @@ We use $\rprog_1$ and $\rprog_3$ denote the body of the loop $L_1$ and $L_3$ res
 % and $\rprog_3 = {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}$
 In the first step, we still compute the \emph{path reachability-bound} for each $\tpath_i$ but only w.r.t. the closest loop it is nested.
 Then differently from $\kw{twoPathsWhile}$,
-we compute \emph{loop reachability-bound} for each $\tpath_i$ w.r.t. each of its nested loops.
+we compute \emph{loop reachability-bound} for each $\tpath_i$ w.r.t. each of its outer nested loops.
 For example, for $\tpath_3$ we compute
 $\lpchB(1: \rprog_1, \tpath_3) = 1$ and
 $\lpchB(3: \rprog_3, \tpath_3) = 1$.

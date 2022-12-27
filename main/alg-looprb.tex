@@ -1,11 +1,8 @@
-\textbf{Computation Overview}
-To solve the \emph{loop-reachability bound}, $\lpchB(l: \rprog, \tpath)$
-  \\
-  1. Compute the loop abstract states,
+We first compute two abstract states for each loop w.r.t. a simple transition path inside it,
   $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c)$ using ranking function,
   as in Definition~\ref{def:alg-absstate}.
-  \\
-  2. Solve the equation using abstract states above and SMT solver.
+  Then we use the two states and the $\rffinal$ state to compute the
+  \emph{loop reachability-bound} as in Definition~\ref{def:looprb}.
 \begin{defn}[Loop Abstract States Computation]
 \label{def:alg-loopabsstate}
 Given a program $c$, with $l:\rprog$ as a sub-program (a loop) in $c$'s refined program, 
@@ -143,6 +140,7 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
 \end{lem}
 %
 The $\lpchB(l:\rprog, \tpath)$ 
-can also be computed by
+can also be over-approximated by
 $I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in paper\cite{GulwaniJK09}.
-However, $I(l, l')$ over-approximates this value, because it computes the bound on iteration numbers of $l'$ in one iteration of $l$.
+$I(l, l')$ over-approximates this value to a large extend 
+by estimating the bound on iteration numbers of $l'$ in one iteration of $l$.

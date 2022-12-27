@@ -51,8 +51,8 @@ or abstract evaluation of the boolean expression in the guard with label $l$.
 form $x' \leq y + v$ or $x' \leq v$ where $x \in \vardom $, 
 $y \in \vardom$ and $v \in \scvardom$.
 \\
-The \emph{Symbolic Constant} universe, $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$
-is the set of natural numbers with $\infty$ and the input variables of a certain program.
+The \emph{Symbolic Constant} can be a natural number, $\infty$, or a program's input variable, We use $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$ to denote the universe of all \emph{Symbolic Constant},
+which is the set of all natural numbers with $\infty$ and programs' input variables.
 \\
 An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus the symbolic constant $v$.
@@ -85,7 +85,7 @@ or commands that don't interfere any guard variable.
 
 \begin{defn}[Symbolic Expression of a Program($\scexpr(c)$)]
   \label{def:symbolic_expr}
-  $\scexpr(c)$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$.
+  $\scexpr(c)$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ for a given program $c$.
 \end{defn}
 
 \begin{defn}[Constraint Computation]
@@ -114,8 +114,8 @@ or commands that don't interfere any guard variable.
     \end{array}
     \]
   \end{enumerate}
-   $\absexpr(\expr, x, c)$ is iteratively updating until stabilized over every guard and assignment command in $c$, and $\absexpr(\expr, x, c)$
-   denotes the stabilized result in the following paper.
+   $\absexpr(\expr, x, c)$ and $\grdvar(c)$ are iteratively updating until stabilized over every guard and assignment command in $c$. In the following part of the paper, we use $\absexpr(\expr, x, c)$
+   to denote the stabilized computation result.
   \end{defn}
 %
 In the case 4, if a variable $x$, belonging to the set 
@@ -156,8 +156,8 @@ Given a program $c$, its abstract initial state, $\absinit(c)$ is computed as fo
   \begin{array}{ll}
     \absinit(\clabel{\assign{x}{\expr}}{}^l)  & = l  \\
     \absinit(\clabel{\eskip}^{l})  & = l \\
-    \absinit(\eif [b]^l \ethen c_1 \eelse c_2)  & = l \\
-    \absinit(\ewhile [b]^l \edo c)  & = l \\
+    \absinit(\eif (\clabel{\bexpr}^l, c_t, c_f))  & = l \\
+    \absinit(\ewhile \clabel{\bexpr}^l \edo (c_w))  & = l \\
     \absinit(c_1 ; c_2)  & = \absinit(c_1) \\
  \end{array}
  \]
@@ -178,8 +178,8 @@ Given a program $c$, its final state, $\absfinal(c)$ is computed as follows,
     \absfinal(\clabel{\assign{x}{\expr}}{}^l)  & = \{(l, \absexpr(\expr, x, c))\}  \\
      \absfinal(\clabel{\eskip}^{l})  
      & = \{(l, \top)\} \\
-     \absfinal(\eif [b]^l \ethen c_1 \eelse c_2)  & = \absfinal(c_1) \cup \absfinal(c_2) \\
-     \absfinal(\ewhile [b]^l \edo c)  & = \{(l, \absexpr(\bexpr, \top, c))\} \\
+     \absfinal(\eif (\clabel{\bexpr}^l, c_t, c_f))  & = \absfinal(c_t) \cup \absfinal(c_f) \\
+     \absfinal(\ewhile \clabel{\bexpr}^l \edo (c_w))  & = \{(l, \absexpr(\bexpr, \top, c_w))\} \\
      \absfinal(c_1 ; c_2)  & =  \absfinal(c_2) \\
  \end{array}
  \]
@@ -228,10 +228,10 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
    \begin{array}{ll}
       \absflow'(\clabel{\assign{x}{\expr}}{}^l)  & = \emptyset  \\
       \absflow'([\eskip]^{l})  & = \emptyset \\
-      \absflow'(\eif [b]^l \ethen c_t \eelse c_f)  & =  \absflow'(c_t) \cup \absflow'(c_f)
+      \absflow'(\eif (\clabel{\bexpr}^l, c_t, c_f))  & =  \absflow'(c_t) \cup \absflow'(c_f)
         \\ & \quad 
         \cup \{(l, \absexpr(\bexpr, \top, c),  \absinit(c_t) ) ,  (l, \absexpr(\neg\bexpr, \top, c), \absinit(c_f)) \} \\
-       \absflow'(\ewhile [b]^l \edo c_w)  & =  \absflow'(c_w) \cup \{(l, \absexpr(\bexpr, \top, c), \absinit(c_w)) \} 
+       \absflow'(\ewhile \clabel{\bexpr}^l \edo (c_w))  & =  \absflow'(c_w) \cup \{(l, \absexpr(\bexpr, \top, c), \absinit(c_w)) \} 
        \\ & \quad 
        \cup \{(l', dc, l)| (l', dc) \in \absfinal(c_w) \} \\
        \absflow'(c_1 ; c_2)  & = \absflow'(c_1) \cup  \absflow'(c_2) 
