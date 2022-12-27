@@ -1,33 +1,35 @@
 % \subsection{Cost Analysis}
 
 \paragraph*{Program Model.}
-The semantics model mainly inspired from~\cite{Cousot19a} and~\cite{Cousot19}.
+The semantics model mainly inspired from~\cite{Cousot19a} and~\cite{Cousot19}, this semantics model has similar intuition with the program model in~\cite{SinnZV17}.
 The program abstraction and the abstraction transition graph are inspired from~\cite{SinnZV17}.
+Other program abstraction techniques such as the unified lattice model~\cite{CousotH78}, polyhedra~\cite{CousotC77} or octagons~\cite{Mine06} used in~\cite{GulwaniZ10} for summarize the loop transition,
+the wedge abstract developed in~\cite{KincaidCBR18} for generating the non-linear loop invariant
+computing the reachability-bound can also be used. But they only work well for the specific targeting problems. 
+Each of them suffer from the disadvantage of either low-efficiency or inaccuracy in solving the path-sensitive reachability-bound problem. This is the reason we choose to use the difference constrain based program abstraction model to generate our abstract transition graph.
 
-There are many other program abstraction techniques, but not efficient and accurate enough.
-
-\paragraph{Type-Based Static Cost Analysis.}
+% \paragraph{Type-Based Static Cost Analysis.}
 \paragraph{Program Cost Analysis.}
+As already introduced in the introduction section, many works in cost analysis area focus on analyzing the loop iteration bound.
+Tough our motivation is inspired a lot from the SPEED tool in paper~\cite{GulwaniZ10}, but they only infer overall loop bounds path-insensitively.
+We also implement part of the algorithm in the LoopusJAR loop bound computation tool based on~\cite{SinnZV17} in terms of program abstraction and ranking function estimation
+and the path refinement algorithm from paper~\cite{GulwaniJK09}, but both of them suffer from the same weakness as~\cite{GulwaniZ10}.
 The works in analyzing the program complexity~\cite{GustafssonEL05, HumenbergerJK18} only focus on estimating 
 the overall complexity 
 by inferring the bounds on the loop iteration numbers.
 Similarly, the algorithm of computing a program's worst-case resource cost
-such as~\cite{BrockschmidtEFFG16, AlbertAGP08, AliasDFG10, Flores-MontoyaH14} reason the worst-case running time and resource cost of the program's entire execution as well.
+such as~\cite{AlbertAGP08, AliasDFG10} reason the worst-case running time and resource cost of the program's entire execution as well.
+For the same reason, CofloCo~\cite{Montoya17, Flores-MontoyaH14, Flores-Montoya16}, KoAT~\cite{BrockschmidtEFFG16, BrockschmidtEFFG14, FalkeKS12, FalkeKS11}, and the amortized algorithm in~\cite{LuCT21} which we evaluated over our benchmarks all give only the entire loop bound path-insensitively.
 
-The CofloCo~\cite{Montoya17, Flores-MontoyaH14, Flores-Montoya16},
+\cite{CraryW00} presents a type system for the certification of resource bounds (once they are provided by the programmer). In contrast, we infer bounds. 
+\cite{JostHLH10} uses linear programming to infer bounds for functional programs, but they are restricted to computing only linear bounds.
 
-The loop bound analysis algorithm in~\cite{LuCT21} works well in but not in multi-paths loops.
-\paragraph{Loop Summarization and Termination.}
+\paragraph{Loop Summarization and Termination Analysis.}
+There are numerous works studying the loop termination, invariant generation. Algorithms and techniques in both of the two area can be adopted and help for the ranking function estimation and multipath refinement.
 Termination~\cite{FalkeKS12, FalkeKS11},
 Loop summarization and invariant generate~\cite{HumenbergerJK18}.
 Invariant Generation Through Ranking functions~\cite{AliasDFG10} for multipath loops.
-Closed-form loop summarization techniques~\cite{KincaidBCR19} which can help to improve the accuracy of the path refinement.
-Non-linear loop summarization techniques~\cite{KincaidCBR18} we plan to extend in the future.
-Advanced loop summarization considering recurrence in~\cite{BreckCKR20}.
-\paragraph{Path Refinement.}
-\cite{GulwaniJK09}
-Path refinement algorithm we are using.
-\cite{SinnZV14}
-The contextualization path refinement algorithm, based on the loop termination techniques in~\todo{}.
+Closed-form loop summarization techniques~\cite{KincaidBCR19} which can help to improve the accuracy of the path refinement, the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. They are all heavy compare to our light-weight path refinement implementation adapted from~\cite{GulwaniJK09}.
+The contextualization path refinement algorithm, based on the loop termination techniques in~\cite{ManoliosV06} are used in both~\cite{ZulegerGSV11, SinnZV14}. While this refinement only computes the multiple paths interleaving for one iteration, which is loose comparing to our path refinement implementation limited to at most $100$ iterations.
 \cite{CyphertBKR19}
 Advanced path refinement techniques we plan to extend in the future.
