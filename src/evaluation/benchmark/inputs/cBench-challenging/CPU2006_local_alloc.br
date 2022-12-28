@@ -1,0 +1,13 @@
+[ next_qty <- max_qty ] 0;
+[ b <- n_basic_blocks ] 1;
+while [ > (b, 0) ] 2 do {
+	if [ < (next_qty, limit) ] 3 
+	then { 
+			[ i <- next_qty ] 4;
+			while [ > (i, 0) ] 5 do 
+			{ 	[ i <- - (i, 1) ] 6 }
+		 }
+	else { [skip] 7 };
+	[ next_qty <- 0 ] 8;
+	[ b <- - (b, 1) ] 9
+}
