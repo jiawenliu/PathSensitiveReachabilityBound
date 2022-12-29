@@ -17,7 +17,7 @@
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-%%%%%%%%%%%%% Program Semantic Model
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Semantics and Program Model %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 @inproceedings{Cousot19a,
 author    = {Patrick Cousot},
 editor    = {Bor{-}Yuh Evan Chang},
@@ -54,7 +54,7 @@ bibsource = {dblp computer science bibliography, https://dblp.org}
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-%% Only For Related Works and Backgrounds:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Static  and Program Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%% Program Abstraction
 
@@ -603,5 +603,127 @@ bibsource = {dblp computer science bibliography, https://dblp.org}
   doi       = {10.1145/3158142},
   timestamp = {Wed, 17 Feb 2021 08:54:12 +0100},
   biburl    = {https://dblp.org/rec/journals/pacmpl/KincaidCBR18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type System Based %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@inproceedings{CicekBG0H17,
+  author    = {Ezgi {\c{C}}i{\c{c}}ek and
+               Gilles Barthe and
+               Marco Gaboardi and
+               Deepak Garg and
+               Jan Hoffmann},
+  editor    = {Giuseppe Castagna and
+               Andrew D. Gordon},
+  title     = {Relational cost analysis},
+  booktitle = {Proceedings of the 44th {ACM} {SIGPLAN} Symposium on Principles of
+               Programming Languages, {POPL} 2017, Paris, France, January 18-20,
+               2017},
+  pages     = {316--329},
+  publisher = {{ACM}},
+  year      = {2017},
+  url       = {https://doi.org/10.1145/3009837.3009858},
+  doi       = {10.1145/3009837.3009858},
+  timestamp = {Mon, 14 Feb 2022 09:20:26 +0100},
+  biburl    = {https://dblp.org/rec/conf/popl/CicekBG0H17.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{RadicekBG0Z18,
+  author    = {Ivan Radicek and
+               Gilles Barthe and
+               Marco Gaboardi and
+               Deepak Garg and
+               Florian Zuleger},
+  title     = {Monadic refinements for relational cost analysis},
+  journal   = {Proc. {ACM} Program. Lang.},
+  volume    = {2},
+  number    = {{POPL}},
+  pages     = {36:1--36:32},
+  year      = {2018},
+  url       = {https://doi.org/10.1145/3158124},
+  doi       = {10.1145/3158124},
+  timestamp = {Sun, 02 Oct 2022 15:26:02 +0200},
+  biburl    = {https://dblp.org/rec/journals/pacmpl/RadicekBG0Z18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{QuG019,
+  author    = {Weihao Qu and
+               Marco Gaboardi and
+               Deepak Garg},
+  title     = {Relational cost analysis for functional-imperative programs},
+  journal   = {Proc. {ACM} Program. Lang.},
+  volume    = {3},
+  number    = {{ICFP}},
+  pages     = {92:1--92:29},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3341696},
+  doi       = {10.1145/3341696},
+  timestamp = {Wed, 17 Feb 2021 08:54:09 +0100},
+  biburl    = {https://dblp.org/rec/journals/pacmpl/QuG019.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@article{CytronFRWZ91,
+  author    = {Ron Cytron and
+               Jeanne Ferrante and
+               Barry K. Rosen and
+               Mark N. Wegman and
+               F. Kenneth Zadeck},
+  title     = {Efficiently Computing Static Single Assignment Form and the Control
+               Dependence Graph},
+  journal   = {{ACM} Trans. Program. Lang. Syst.},
+  volume    = {13},
+  number    = {4},
+  pages     = {451--490},
+  year      = {1991},
+  url       = {https://doi.org/10.1145/115372.115320},
+  doi       = {10.1145/115372.115320},
+  timestamp = {Wed, 14 Nov 2018 10:30:40 +0100},
+  biburl    = {https://dblp.org/rec/journals/toplas/CytronFRWZ91.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+% Reachability Bound Analysis:
+%% Hoare Logic and type system
+@inproceedings{CarbonneauxHS15,
+  author    = {Quentin Carbonneaux and
+               Jan Hoffmann and
+               Zhong Shao},
+  editor    = {David Grove and
+               Stephen M. Blackburn},
+  title     = {Compositional certified resource bounds},
+  booktitle = {Proceedings of the 36th {ACM} {SIGPLAN} Conference on Programming
+               Language Design and Implementation, Portland, OR, USA, June 15-17,
+               2015},
+  pages     = {467--478},
+  publisher = {{ACM}},
+  year      = {2015},
+  url       = {https://doi.org/10.1145/2737924.2737955},
+  doi       = {10.1145/2737924.2737955},
+  timestamp = {Thu, 14 Oct 2021 09:58:34 +0200},
+  biburl    = {https://dblp.org/rec/conf/pldi/Carbonneaux0S15.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@article{RajaniG0021,
+  author    = {Vineet Rajani and
+               Marco Gaboardi and
+               Deepak Garg and
+               Jan Hoffmann},
+  title     = {A unifying type-theory for higher-order (amortized) cost analysis},
+  journal   = {Proc. {ACM} Program. Lang.},
+  volume    = {5},
+  number    = {{POPL}},
+  pages     = {1--28},
+  year      = {2021},
+  url       = {https://doi.org/10.1145/3434308},
+  doi       = {10.1145/3434308},
+  timestamp = {Sat, 08 Jan 2022 02:21:39 +0100},
+  biburl    = {https://dblp.org/rec/journals/pacmpl/RajaniG0021.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }

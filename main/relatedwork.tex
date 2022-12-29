@@ -23,8 +23,11 @@ Similarly, the algorithm of computing a program's worst-case resource cost
 such as~\cite{AlbertAGP08, AliasDFG10} reason the worst-case running time and resource cost of the program's entire execution as well.
 For the same reason, the tools CofloCo~\cite{Montoya17, Flores-MontoyaH14, Flores-Montoya16}, KoAT~\cite{BrockschmidtEFFG16, BrockschmidtEFFG14, FalkeKS12, FalkeKS11}, and the amortized algorithm in~\cite{LuCT21} which we evaluated over our benchmarks all give only the entire loop bound path-insensitively.
 
-\cite{CraryW00} presents a type system for the certification of resource bounds (once they are provided by the programmer). In contrast, we infer bounds. 
+\cite{CraryW00} presents a type system for the certification of resource bounds (once they are provided by the programmer). In contrast, we infer bounds for different program location. 
 \cite{JostHLH10} uses linear programming to infer bounds for functional programs, but they are restricted to computing only linear bounds.
+Other techniques that are based on
+type system~\cite{CicekBG0H17, RajaniG0021}, the cost analysis via effect systems~\cite{CicekBG0H17, RadicekBG0Z18, QuG019}, and Hoare logic~\cite{CarbonneauxHS15}
+give the approximated upper bound of the program's total resource cost as well but still failed to consider the path sensitivity and the resource cost on different program points.
 
 \paragraph{Loop Summarization and Termination Analysis.}
 There are numerous works studying the loop termination, invariant generation. Algorithms and techniques in both of the two area can be adopted and help for the ranking function estimation and multipath refinement.
