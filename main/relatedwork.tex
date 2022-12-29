@@ -7,7 +7,7 @@ But none of the three abstraction models can represent the if guard in multipath
 The wedge abstract developed in~\cite{KincaidCBR18} for generating the non-linear loop invariant
 computing the reachability-bound can also be used. While it only works well for the specific targeting problem, and still low-efficient or inaccuracy in summarizing the multipath loops and solving the path-sensitive reachability-bound problem. 
 Compare to them, we choose to use the difference constrain based program abstraction model combined with boolean expression abstraction to generate our abstract transition graph. It can represent the program loops path-sensitively more is more accurate than the state-of-art program abstraction models mentioned above.
-The difference constrain based abstraction model is inspired from the program model in~\cite{SinnZV17}, which is efficient enough comparing to the models above. The efficiency also benefit from our
+While our program abstraction model is based on the difference constrain model in~\cite{SinnZV17} and the size change abstraction in~\cite{SinnZV14}, which is more efficient comparing to the models above. The efficiency also benefit from our
 semantics model, which is inspired from~\cite{Cousot19a} and~\cite{Cousot19} and has similar intuition with the program model in~\cite{SinnZV17}.
 
 % \paragraph{Type-Based Static Cost Analysis.}

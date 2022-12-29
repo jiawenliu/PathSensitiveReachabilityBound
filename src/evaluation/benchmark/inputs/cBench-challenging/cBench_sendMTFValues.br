@@ -1,35 +1,18 @@
-//taken from cBench	bzip2d/src/compress.c	sendMTFValues
-
-int random();
-
-//Complexity: O(n)
-void sendMTFValues(int nGroups, int alphaSize)	{	
-	int nPart;//, remF, tFreq, aFreq;
-	nPart = nGroups;
-	//remF = s->nMTF;
-	int gs = 0;
-	while (nPart > 0) {
-		//tFreq = remF / nPart;
-		int ge = gs - 1;
-		//aFreq = 0;
-		while (random() && ge < alphaSize - 1) { //Freq < tFreq
-			ge++;
-			//aFreq += s->mtfFreq[ge];
-		}
-		if (ge > gs && nPart != nGroups && nPart != 1
-				&& ((nGroups - nPart) % 2 == 1)) {
-			//aFreq -= s->mtfFreq[ge];
-			ge--;
-		}
-
-		/*for (v = 0; v < alphaSize; v++)
-			if (v >= gs && v <= ge)
-				s->len[nPart - 1][v] = 0;
-			else
-				s->len[nPart - 1][v] = 15;*/
-		nPart--;
-		gs = ge + 1;
-		//remF -= aFreq;
+[ nPart <- nGroups ] 0;
+[ gs <- 0 ] 1 ;
+while [ > (nPart, 0) ] 2
+do {
+	[ ge <- - (gs, 1) ] 3
+	while [ < ( ge, alphaSize - 1) ] 4
+	do { 
+		[ ge <- + (ge, 1) ] 5
+	};
+	if [ && ( > (ge, gs),  && (nPart != nGroups, && (nPart != 1, ( (nGroups - nPart) % 2 == 1)))) ] 6
+	then 
+	{
+		[ gs <- - (ge, 1) ] 7
 	}
+	else { [ skip ] 8 } ;
+	[ nPart <- - ( nPart, 1 ) ] 9 ;
+	[ gs <- + (ge, 1) ] 10
 }
-

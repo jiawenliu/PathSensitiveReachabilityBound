@@ -1,6 +1,21 @@
-//taken from SPEC CPU2006	gromacs/src/index.c 	analyse_other
-
-int random();
+[ nPart <- nGroups ] 0;
+[ gs <- 0 ] 1 ;
+while [ > (nPart, 0) ] 2
+do {
+	[ ge <- - (gs, 1) ] 3
+	while [ < ( ge, alphaSize - 1) ] 4
+	do { 
+		[ ge <- + (ge, 1) ] 5
+	};
+	if [ && ( > (ge, gs),  && (nPart != nGroups, && (nPart != 1, ( (nGroups - nPart) % 2 == 1)))) ] 6
+	then 
+	{
+		[ gs <- - (ge, 1) ] 7
+	}
+	else { [ skip ] 8 } ;
+	[ nPart <- - ( nPart, 1 ) ] 9 ;
+	[ gs <- + (ge, 1) ] 10
+}
 
 //O(n^3)
 void analyse_other(int atoms_nres, int atoms_nr, int bASK)
@@ -8,12 +23,10 @@ void analyse_other(int atoms_nres, int atoms_nr, int bASK)
   int restp=0;
   int  i,j,k,l,resnr,naid,naaid,natp,nrestp=0;
 
-  //O(n)  
   for(i=0; (i<atoms_nres); i++)
     if (random())
       break;
   if (i < atoms_nres) {
-    //O(n^2)
     for(k=0; (k<atoms_nr); k++) {
       if (random()) {
 	for(l=0; (l<nrestp); l++)
@@ -24,7 +37,6 @@ void analyse_other(int atoms_nres, int atoms_nr, int bASK)
 	}
       }
     }
-    //O(n^3)
     for(i=0; (i<nrestp); i++) {
       naid=0;
       for(j=0; (j<atoms_nr); j++) {
