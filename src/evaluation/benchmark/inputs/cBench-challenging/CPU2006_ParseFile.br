@@ -1,29 +1,23 @@
-//taken from cactusADM/src/Cactus/ParseFile.c 	ParseFile
 
-random();
-
-//O(n)
-void ParseFile(FileSize, BUF_SZ)
-{
-  [num_errors <- 0];
-  [intoken <- 0]; 
-  [inval <- 0];
-  [lineno <- 0];
-  while [ < (c, FileSize) ]
+  [num_errors <- 0] 1;
+  [intoken <- 0] 2; 
+  [inval <- 0] 3;
+  [lineno <- 0] 4;
+  while [ < (c, FileSize) ] 5 do
   {
-      [ c <- + ( c, 1 ) ]
-    while [ < (c, FileSize) ] do
+      [ c <- + ( c, 1 ) ] 6
+    while [ < (c, FileSize) ] 7 do
     {
-        [ c <- + ( c, 1 ) ]
-      while [ && (< (c, FileSize), rand) ] do
+      [ c <- + ( c, 1 ) ] 8
+      while [ && (< (c, FileSize), rand) ] 9
+      do
       {
-      [ c <- + ( c, 1 ) ]
+        [ c <- + ( c, 1 ) ] 10
       }
-      [ lineno <- + ( lineno, 1 ) ]
-      [ c <- + ( c, 1 ) ]
+      [ lineno <- + ( lineno, 1 ) ] 11
+      [ c <- + ( c, 1 ) ] 12
     }
-
-    if [ rand ] 
+    if [ rand ] 13
     then 
     {
       if(intoken)
@@ -122,7 +116,7 @@ void ParseFile(FileSize, BUF_SZ)
             {
               [ p <- + ( p, 1 ) ]
               if[ > (p, BUF_SZ) ] 
-              then {return;}
+              then { return; }
               else { [ skip ] }
               [ c <- + ( c, 1 ) ]
 
@@ -159,7 +153,7 @@ void ParseFile(FileSize, BUF_SZ)
 
             [ c <- + ( c, 1 ) ]
 
-            while (c < FileSize && random())
+            while [ < (c, FileSize) ] do
             {
               [ pp <- + ( pp, 1 ) ]
               if[ > ( pp, BUF_SZ ) ] 
@@ -189,18 +183,18 @@ void ParseFile(FileSize, BUF_SZ)
               {
             	  [ pp <- + ( pp, 1 ) ]
             	  [ pv <- + ( pv, 1 ) ]
-            	  if[ > ( pp, BUF_SZ ) ] 
+            	  if [ > ( pp, BUF_SZ ) ] 
                 then { return }
                 else { [ skip ] }
               }
               [ pv <- + ( pv, 1 ) ]; 
-              [ pt <- + (pt, 1) ]
+              [ pt <- + ( pt, 1 ) ]
             }
             [pp <- 0];
             while [ rand ] do
             {
                 [ pp <- + ( pp, 1 ) ]
-                [ pt <- + (pt, 1) ]
+                [ pt <- + ( pt, 1 ) ]
                 if[ > ( pp, BUF_SZ ) ]
                 then { return }
                 else { [ skip ] }
@@ -220,4 +214,3 @@ void ParseFile(FileSize, BUF_SZ)
     }
   }
 
-}

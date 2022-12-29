@@ -1,71 +1,65 @@
-[ nPart <- nGroups ] 0;
-[ gs <- 0 ] 1 ;
-while [ > (nPart, 0) ] 2
-do {
-	[ ge <- - (gs, 1) ] 3
-	while [ < ( ge, alphaSize - 1) ] 4
-	do { 
-		[ ge <- + (ge, 1) ] 5
+[ restp <- 0 ] 0; 
+[ nrestp <- 0 ] 1;
+[ i <- atoms_nres ] 2 ;
+while [ > ( i , 0) ] 3
+do
+{
+[ i <- - ( i, 1 ) ] 4
+};
+
+[ k <- atoms_nr ] 5 ;
+while [ > ( k , 0) ] 6
+do
+{
+	[ l <- nrestp ] 7 ;
+	while [ > ( l , 0) ] 8
+	do { [ l <- - ( l, 1 ) ] 9 };
+	[ nrestp <- + ( nrestp, 1 ) ] 10;
+    [ k <- - ( k, 1 ) ] 11
+};
+
+[ i <- nrestp ] 12 ;
+while [ > ( i , 0) ] 13
+do
+{
+	[naid <- 0] 14;
+	[ j <- atoms_nr ] 15 ;
+	while [ > ( j , 0) ] 16
+	do
+	{
+		[ naid <- + ( naid, 1 ) ] 17;
+	    [ j <- - ( j, 1 ) ] 18
+	}
+
+  	[ natp <- 0 ] 19;
+  	[ k <- naid ] 20 ;
+	while [ > ( k , 0) ] 21
+	do
+	{
+		[ l <- natp ] 22 ;
+		while [ > ( l , 0) ] 23;
+		do { [ l <- - ( l, 1 ) ] 24 };
+		[ natp <- + ( natp, 1 ) ] 25;
+	    [ k <- - ( k, 1 ) ] 26
 	};
-	if [ && ( > (ge, gs),  && (nPart != nGroups, && (nPart != 1, ( (nGroups - nPart) % 2 == 1)))) ] 6
+	if [ > (natp, 1)] 27 
 	then 
 	{
-		[ gs <- - (ge, 1) ] 7
+		[ l <- natp ] 28 ;
+		while [ > ( l , 0) ] 29
+		do { 
+			[ naaid <- 0 ] 30;
+		  	[ k <- naid ] 31 ;
+			while [ > ( k , 0) ] 32
+			do 
+			{	[ naaid <- + ( naaid, 1 ) ] 33
+				[ k <- - ( k, 1 ) ] 34
+			};
+				[ l <- - ( l, 1 ) ] 35 
+		}
 	}
-	else { [ skip ] 8 } ;
-	[ nPart <- - ( nPart, 1 ) ] 9 ;
-	[ gs <- + (ge, 1) ] 10
+	else { [ skip ] 36 };
+	[ i <- - ( i, 1 ) ] 37
 }
 
-//O(n^3)
-void analyse_other(int atoms_nres, int atoms_nr, int bASK)
-{
-  int restp=0;
-  int  i,j,k,l,resnr,naid,naaid,natp,nrestp=0;
-
-  for(i=0; (i<atoms_nres); i++)
-    if (random())
-      break;
-  if (i < atoms_nres) {
-    for(k=0; (k<atoms_nr); k++) {
-      if (random()) {
-	for(l=0; (l<nrestp); l++)
-	  if (random())
-	    break;
-	if (l==nrestp) {
-	  ++nrestp;
-	}
-      }
-    }
-    for(i=0; (i<nrestp); i++) {
-      naid=0;
-      for(j=0; (j<atoms_nr); j++) {
-	if (random()) 
-	  naid++;
-      }
-      if (bASK) {
-	if (random()) {
-	  natp=0;
-	  for(k=0; (k<naid); k++) {
-	    for(l=0; (l<natp); l++)
-	      if (random())
-		break;
-	    if (l == natp) {
-	      ++natp;
-	    }
-	  }
-	  if (natp > 1) {
-	    for(l=0; (l<natp); l++) {
-	      naaid=0;
-	      for(k=0; (k<naid); k++) {
-		if (random()) 
-		  naaid++;
-	      }
-	    }
-	  }
-	}
-      }
-    }
-  }
-}
 
