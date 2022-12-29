@@ -1,21 +1,17 @@
-Three steps:
+There are three steps as follows.
 \begin{enumerate}
-  \item It first collects all \emph{simple transition paths}.
+  \item \textbf{Collecting} all \emph{simple transition paths}.
   Every \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ 
   contains only the edges of atomic assignment or guard transitions without interleaving other paths.
   Each of them corresponds to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
-%
-    \item \textbf{Rewrite the Program}
-    Then it rewrites the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics.
-\item \textbf{Refined Program}
-Then it computes the 
-refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
-\\
-This step invokes the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
-refined program $\rprog$ for a program $c$ given the rewritten program as input.
+  \item \textbf{Rewriting} the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics.
+  \item \textbf{Refining} the program and computing the 
+  refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
+  This step invokes the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+  refined program $\rprog$ for a program $c$ given the rewritten program as input.
 \end{enumerate}
 
-\subsection{Collecting The Simple Transition Path}
+\subsection{The Simple Transition Path}
 We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
 \begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
   \label{def:loopl}
@@ -79,7 +75,7 @@ $2 \to 3 \to 6 \to 2$ is a \emph{simple transition path} on $\absG(\kw{twoPathsW
 However, $2 \to 3 \to 6 \to 2 \to 3 \to 4 \to 5 \to 2$ is not a \emph{simple transition path} because it is not simple (the program points $2$ and $3$ are visited twice).
 In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
 
-\subsection{Rewrite and Refine the Program}
+\subsection{Program Refinement}
 \paragraph{Rewrite the Program.}
 \begin{algorithm}
   \caption{Program Rewriting $\kw{Rewrite}$}
