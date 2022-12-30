@@ -14,8 +14,9 @@ its abstraction transition graph by the refine algorithm in \cite{GulwaniJK09}.
 This algorithm transforms the multiple-paths loops
 into multiple loops where
 the interleaving of paths is explicit.
-\item The \emph{path-sensitive reachability-bound} for every program point relies on computing the \emph{Ranking Function}, the \emph{Path Local Reachability-Bound} and the \emph{Loop Reachability-Bound}.
-Section~\ref{sec:psrb} introduce it and the following sections describe the computations. 
+\item The \emph{path-sensitive reachability-bound} algorithm computes the \emph{reachability-bound} for every program point.
+It relies on computing the \emph{Ranking Function}, the \emph{Path Local Reachability-Bound} and the \emph{Loop Reachability-Bound}.
+Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
 % \begin{enumerate}
     \item In Section~\ref{sec:rank}, we first compute the \emph{Ranking Function}\footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
     and \textbf{local bound} is the name used in \cite{ZulegerGSV11, SinnZV17}.
@@ -28,8 +29,8 @@ Section~\ref{sec:psrb} introduce it and the following sections describe the comp
     This is the bound on iteration numbers of the outside loop $l$,
     such that during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
     The local reachability-bound  considers only the execution of $\tpath$'s closest enclosing loop, i.e., $\kw{enclosed}(\tpath)$.
-    \item The \emph{Path Reachability-Bound} is an upper bound on the execution times of a \emph{simple transition path} $\tpath$ computed in Section~\ref{sec:psrb}.
-    \item In the last step in Section~\ref{sec:psrb}, by summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-Bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
+    \item The \emph{Path Reachability-Bound} is an upper bound on the execution times of a \emph{simple transition path} $\tpath$ computed in Section~\ref{sec:pathrb}.
+    % \item In the last step in Section~\ref{sec:psrb}, by summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-Bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
    % 
 % \end{enumerate}
 \end{enumerate}
