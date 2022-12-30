@@ -1,216 +1,204 @@
-
-  [num_errors <- 0] 1;
-  [intoken <- 0] 2; 
-  [inval <- 0] 3;
-  [lineno <- 0] 4;
+[num_errors <- 0] 0;
+[num_errors <- 0] 1;
+[intoken <- 0] 2; 
+[inval <- 0] 3;
+[lineno <- 0] 4;
   while [ < (c, FileSize) ] 5 do
   {
-      [ c <- + ( c, 1 ) ] 6
-    while [ < (c, FileSize) ] 7 do
+    [ c <- + ( c, 1 ) ] 6;
+    while [ && (< (c, FileSize), rand) ] 7
+    do
     {
       [ c <- + ( c, 1 ) ] 8
-      while [ && (< (c, FileSize), rand) ] 9
-      do
-      {
-        [ c <- + ( c, 1 ) ] 10
-      }
-      [ lineno <- + ( lineno, 1 ) ] 11
-      [ c <- + ( c, 1 ) ] 12
     }
-    if [ rand ] 13
+    [ lineno <- + ( lineno, 1 ) ] 9
+    [ c <- + ( c, 1 ) ] 10
+  }
+  if [ rand ] 11
+  then 
+  {
+    if [(intoken)] 12
     then 
     {
-      if(intoken)
+  	  [ num_errors <- + (num_errors, 1)] 13;
+      [intoken <- 0] 14;
+    }
+    [ lineno <- + ( lineno, 1 ) ] 15
+  }
+  else { [ skip ] 16 }
+  if [== (intoken , true )] 17
+  then
+  {
+    [ intoken <- + (intoken, 1) ] 18;
+    if [ > (intoken, BUF_SZ) ] 19
+    then { return 20  }
+    else { [ skip ] 21 }
+  }
+  else { [ skip ] 22 }
+  if [ rand ]
+  then 
+  {
+    [ intoken <- 0 ] 23 ;
+    [ intoken <- + (intoken, 1) ] 24
+  }
+  else { [ skip ] 25 };
+  if [ == (intoken , true )] 26
+    then 
+    {
+      [intoken <- 0] 27;
+      [inval <- 0] 28 ;
+      [i <- intoken] 29 ;
+      while [ > (i, 0) ] 30  do
+      {
+        [ i <- - ( i, 1 ) ] 31
+      };
+      [ ntokens <- 1 ] 32 ;
+      [ll <- intoken ] 33 ;
+      while [ > (ll, 0) ] 34 do
+      {
+        [ ll <- - ( ll, 1 ) ] 35;
+        if [ rand ] 36
+        then 
+        { [ntokens <- + (ntokens, 1)] 37 }
+        else { [ skip ] 38}
+      };
+      while [ < (c, FileSize) ] 39 do
+      {
+        [ c <- + ( c, 1 ) ] 40;
+        [ lineno <- + ( lineno, 1 ) ] 41
+      }
+
+      if [ rand ] 42
       then 
       {
-    	  [ num_errors <- + (num_errors, 1)];
-        [intoken <- 0];
-      }
-      [ lineno <- + ( lineno, 1 ) ]
-    }
-    else { [ skip ] }
-    if [== (intoken , true )]
-    then
-    {
-     [ intoken <- + (intoken, 1) ]
-      if [ > (intoken, BUF_SZ) ]
-      then {return;}
-      else { [ skip ] }
-    }
-    else { [ skip ] }
-    if [ rand ]
-    then 
-    {
-      [ intoken <- 0 ];
-      [ intoken <- + (intoken, 1) ]
-    }
-    else { [ skip ] }
-    if [ rand ]
-    then 
-    {
-      if [== (intoken , true )]
-      then 
-      {
-        [intoken <- 0];
-        [inval <- 0];
-        [i <- intoken];
-        while [ > (i, 0) ] do
+        [p <- 0] 43;
+        if [ > (ntokens, 1) ] 44
         {
-          [ i <- - ( i, 1 ) ]
+          [ return ] 45
         }
-        [ ntokens <- 1 ];
-        [ll <- intoken ];
-        while [ > (ll, 0) ] do
-        {
-          [ ll <- - ( ll, 1 ) ]
-          if [ rand ] 
+        else { [ skip ] 46 };
+
+        while [ < (c, FileSize) ] 47 do
+        { [ c <- + ( c, 1 ) ] 48 ;
+          [ p <- + ( p, 1 ) ] 49 ;
+          [ lineno <- + ( lineno, 1 ) ] 50;
+          if [ > (p, BUF_SZ) ] 51 
           then 
-          { [ntokens <- + (ntokens, 1)] }
-          else { [ skip ] }
-        }
-        while [ < (c, FileSize) ] do
-        {
-          [ c <- + ( c, 1 ) ]
-          [ lineno <- + ( lineno, 1 ) ]
-        }
-
-        if [ rand ]
-        then {
-          [p <- 0];
-          if (ntokens > 1)
           {
-            return;
+          [ return ] 52
           }
-          else { [ skip ] }
-          while [ < (c, FileSize) ] do
-          { [ c <- + ( c, 1 ) ]
-            [ p <- + ( p, 1 ) ]
-            [ lineno <- + ( lineno, 1 ) ]
-            if [ > (p, BUF_SZ) ] then 
+          else { [ skip ] 53 }
+        }
+      }
+      else 
+      {   
+      if [ rand ] 54
+      then {
+            while [ < (c,  FileSize)] 55 do
             {
-            return;
+              [ c <- + ( c, 1 ) ] 56
             }
-            else { [ skip ] }
           }
-        }
-        else 
-        {   if [ rand ]
-            then {
-                  while [ < (c,  FileSize)] do
-                  {
-                    [ c <- + ( c, 1 ) ]
-                  }
-        
-                }
-            else { [ skip ] }
-        }
-        else
-        {
-          [p <- 0];
-          [ p <- + ( p, 1 ) ]
-          if (ntokens == 1)
+      else
+      {
+        [p <- 0] 57 ;
+        [ p <- + ( p, 1 ) ] 58;
+        if [ == (ntokens, 1)] 59
           {
-            [ c <- + ( c, 1 ) ]
-
-            while (c < FileSize)
-            {
-              [ p <- + ( p, 1 ) ]
-              if[ > (p, BUF_SZ) ] 
-              then { return; }
-              else { [ skip ] }
-              [ c <- + ( c, 1 ) ]
-
-            }
-
-            [ lineno <- + ( lineno, 1 ) ]
-          }
-          else
-          {
-            [ ncommas <- 0 ];
-            [ pp <- 0 ]
-            [ pp <- + ( pp, 1 ) ]
-            [ c <- + ( c, 1 ) ]
-            while [ && ( < (ncommas, ntokens-1),  <  (c, FileSize))]
+            [ c <- + ( c, 1 ) ] 60;
+            while [ < (c, FileSize)] 61
             do 
             {
-              [ pp <- + ( pp, 1 ) ]
-              if [ > (pp, BUF_SZ) ]
-              then { return }
-              else { [ skip ] }
-              [ ncommas <- + (ncommas, 1) ];
-              [ c <- + ( c, 1 ) ]
-            }
-              while [ < (c, FileSize) ] do
-              {
-                [ c <- + ( c, 1 ) ]
-                [ lineno <- + ( lineno, 1 ) ]
-              }
-            [ pp <- + ( pp, 1 ) ]
-            
-            if[ > (p, BUF_SZ) ] then 
-              then { return }
-              else { [ skip ] }
-
-            [ c <- + ( c, 1 ) ]
-
-            while [ < (c, FileSize) ] do
-            {
-              [ pp <- + ( pp, 1 ) ]
-              if[ > ( pp, BUF_SZ ) ] 
-              then { return }
-              else { [ skip ] }
-
-              [ c <- + ( c, 1 ) ]
-            }
-
-            [pt <- 0];
-            [pv <- 0];
-            [i <- ncommas];
-          while [ > (i, 0) ] do
+              [ p <- + ( p, 1 ) ] 62 ;
+              if [ > (p, BUF_SZ) ] 63
+              then { [ return ] 64 }
+              else { [ skip ] 65 } ;
+              [ c <- + ( c, 1 ) ] 66
+            };
+            [ lineno <- + ( lineno, 1 ) ] 67
+          }
+        else
         {
-            [ i <- - ( i, 1 ) ]            
-            [ pp <- 0];
-              while [ rand ] do
-              {
-                [ pp <- + ( pp, 1 ) ]
-                [ pt <- + (pt, 1) ]
-                if[ > ( pp, BUF_SZ ) ] 
-                then { return }
-              else { [ skip ] }
-              }
-              [pp <- 0];
-              while [ rand ] do
-              {
-            	  [ pp <- + ( pp, 1 ) ]
-            	  [ pv <- + ( pv, 1 ) ]
-            	  if [ > ( pp, BUF_SZ ) ] 
-                then { return }
-                else { [ skip ] }
-              }
-              [ pv <- + ( pv, 1 ) ]; 
-              [ pt <- + ( pt, 1 ) ]
-            }
-            [pp <- 0];
-            while [ rand ] do
+          [ ncommas <- 0 ] 68;
+          [ pp <- 0 ] 69 ;
+          [ pp <- + ( pp, 1 ) ] 70;
+          [ c <- + ( c, 1 ) ] 71 ;
+          while [ && ( < (ncommas, ntokens-1),  <  (c, FileSize))] 72
+          do 
+          {
+            [ pp <- + ( pp, 1 ) ] 73;
+            if [ > (pp, BUF_SZ) ] 74
+            then { [ return ] 75 }
+            else { [ skip ] 76 };
+            [ ncommas <- + (ncommas, 1) ] 77;
+            [ c <- + ( c, 1 ) ] 78
+          }
+            while [ < (c, FileSize) ] 79 do
             {
-                [ pp <- + ( pp, 1 ) ]
-                [ pt <- + ( pt, 1 ) ]
-                if[ > ( pp, BUF_SZ ) ]
-                then { return }
-                else { [ skip ] }
+              [ c <- + ( c, 1 ) ] 80 ;
+              [ lineno <- + ( lineno, 1 ) ] 81
             }
-            [pp <- 0];
-            while [ rand ] do
+          [ pp <- + ( pp, 1 ) ] 82
+          
+          if[ > (p, BUF_SZ) ] 83 then 
+            then { [ return ] 84 }
+            else { [ skip ] 85 };
+          [ c <- + ( c, 1 ) ] 86;
+          while [ < (c, FileSize) ] 87 do
+          {
+            [ pp <- + ( pp, 1 ) ] 88 ;
+            if [ > ( pp, BUF_SZ ) ] 89
+            then { [ return ] 90 }
+            else { [ skip ] 91 };
+            [ c <- + ( c, 1 ) ] 92
+          }
+          [pt <- 0] 93;
+          [pv <- 0] 94;
+          [i <- ncommas] 95;
+        while [ > (i, 0) ] 96 do
+      {
+          [ i <- - ( i, 1 ) ] 97;          
+          [ pp <- 0 ] 98;
+          while [ rand ] 99 do
+          {
+              [ pp <- + ( pp, 1 ) ] 100; 
+              [ pt <- + (pt, 1) ] 102;
+              if [ > ( pp, BUF_SZ ) ] 103
+              then { [ return ] 104 }
+            else { [ skip ] 105 }
+          };
+            [pp <- 0] 106 ;
+            while [ rand ] 107 do
             {
-              [ pp <- + ( pp, 1 ) ]
-              if [ > ( pp, BUF_SZ ) ] 
-              then { return }
-              else { [ skip ] }
-              [ pv <- + ( pv, 1 ) ]
-            }
+          	  [ pp <- + ( pp, 1 ) ] 108;
+          	  [ pv <- + ( pv, 1 ) ] 109;
+          	  if [ > ( pp, BUF_SZ ) ] 110
+              then { [ return ] 111 }
+              else { [ skip ] 112 }
+            };
+            [ pv <- + ( pv, 1 ) ] 113 ; 
+            [ pt <- + ( pt, 1 ) ] 114 
+        };
+        [pp <- 0] 115 ;
+        while [ rand ] 116 do
+        {
+            [ pp <- + ( pp, 1 ) ] 117;
+            [ pt <- + ( pt, 1 ) ] 118;
+          if [ > ( pp, BUF_SZ ) ] 119
+            then { [ return ] 120 }
+            else { [ skip ] 121 }
+        };
+        [pp <- 0] 122 ;
+          while [ rand ] 123 do
+          {
+            [ pp <- + ( pp, 1 ) ] 124 ;
+            if [ > ( pp, BUF_SZ ) ] 125 ;
+            then { [ return ] 126 }
+            else { [ skip ] 127 };
+            [ pv <- + ( pv, 1 ) ] 128
           }
         }
       }
     }
   }
-
+  else { [ skip ] }
