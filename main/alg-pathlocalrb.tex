@@ -137,8 +137,9 @@ the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlo
     \label{def:pathlocalrb}
     Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
     let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be a sub loop program in $\rprog$,
-    then $\tpath$'s local reachability-bound w.r.t. $l: \rprog_l$
-    is computed inductively as follows. 
+    then $\tpath$'s \emph{local reachability-bound} $\outinB(\rprog_l, \tpath, c)$ w.r.t. $l: \rprog_l$
+    is computed inductively as follows.
+    The input $c$ is omitted in the following equations for concise given the context is clear.
   \[
     \begin{array}{rcl}
       \outinB(\tpath, \tpath) & \triangleq & 1 \\

@@ -70,8 +70,8 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
   \label{def:looprb}
   Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
   let $l: \rprog_l$ be a loop program in $\rprog$,
-  then $l: \rprog_l$'s \emph{loop reachability-bound} w.r.t. $\tpath$
-  is computed recursively as follows. 
+  then $l: \rprog_l$'s \emph{loop reachability-bound} w.r.t. $\tpath$, $\lpchB(l: \rprog, \tpath, c)$
+  is computed interactively with the abstract loop states as follows. 
   \[
     \lpchB(l: \rprog, \tpath, c) \triangleq
     \frac{\lpinit(\rprog, \tpath, c) - \rffinal(\tpath, c)}{\lpnext(\rprog, \tpath, c)}

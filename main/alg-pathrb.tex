@@ -7,8 +7,9 @@ for each of its \emph{simple transition path}s, $\tpath$ the \emph{path reachabi
 \begin{defn}[Path Reachability-bound Computation]
   \label{def:pathrb}
   Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
-  $\tpath$'s reachability-bound
+  $\tpath$'s reachability-bound, $\inoutB(\rprog, \tpath, c)$
   is computed recursively as follows. 
+  The input $c$ is omitted in the following equations for concise given the context is clear.
 \[
   \begin{array}{rcl}
     \inoutB(\tpath, \tpath) & \triangleq & 1  \\
