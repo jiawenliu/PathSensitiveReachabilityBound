@@ -1,0 +1,7 @@
+    int iterator = n;
+    iterator--;
+    if (iterator <= 0) {
+      return;
+    }
+    while (iterator > 0) {
+    }

@@ -1,0 +1,8 @@
+int endTagLocation = 0;
+    int stringBuilder = 0;
+    while (endTagLocation < text) {
+      startTagLocation = ndInt2(endTagLocation + 1, text);
+      endTagLocation = ndInt2(startTagLocation + 1, text);
+      stringBuilder += startTagLocation - linePointer;
+      linePointer = endTagLocation;
+    }

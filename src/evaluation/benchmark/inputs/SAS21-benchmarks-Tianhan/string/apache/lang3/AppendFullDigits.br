@@ -1,0 +1,18 @@
+for (int i = minFieldWidth - nDigits; i > 0; --i) {
+        buffer++;
+        R = R + 1;
+}
+int digit = 0;
+      while (value != 0) {
+        digit++;
+        value = value / 10;
+      }
+      while (digit < minFieldWidth) {
+        buffer++;
+        --minFieldWidth;
+      }
+
+digit--;
+while (digit >= 0) {
+        digit--;
+}

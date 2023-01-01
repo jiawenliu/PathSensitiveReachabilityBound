@@ -1,0 +1,12 @@
+int i = 0;
+    while (i < ts) {
+      int p = 0;
+      int l = 0;
+      int r = 0;
+      while (r <= text) {
+        l = ndInt2(p, text);
+        r = ndInt2(l, text);
+        p = r;
+      }
+      i++;
+    }

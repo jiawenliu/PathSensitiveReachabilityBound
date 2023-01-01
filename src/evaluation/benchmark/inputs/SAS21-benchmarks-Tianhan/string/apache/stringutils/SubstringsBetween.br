@@ -1,0 +1,14 @@
+while (pos < str - close) {
+      int start = ndBool() ? -1 : ndInt2(pos, str - 1);
+      if (start < 0) {
+        break;
+      }
+      start += open;
+      int end = ndBool() ? -1 : ndInt2(start, str - 1);
+      if (end < 0) {
+        break;
+      }
+      list += end - start;
+      R = R + (end - start);
+      pos = end + close;
+}

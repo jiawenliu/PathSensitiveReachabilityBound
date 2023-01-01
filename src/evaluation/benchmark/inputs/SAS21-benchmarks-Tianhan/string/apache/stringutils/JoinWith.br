@@ -1,0 +1,4 @@
+    int iterator = n;
+    while (iterator > 0) {
+      iterator--;
+    }

@@ -1,0 +1,4 @@
+
+    while (iterator > 0) {
+      iterator -= entry;
+    }

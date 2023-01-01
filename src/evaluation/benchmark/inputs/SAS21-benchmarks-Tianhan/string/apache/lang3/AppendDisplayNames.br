@@ -1,0 +1,8 @@
+    while (iterator > 0) {
+      int entry = ndInt2(1, iterator);
+      iterator -= entry;
+
+      for (int i = 0; i < entry; i++) {
+      }
+    }
+      

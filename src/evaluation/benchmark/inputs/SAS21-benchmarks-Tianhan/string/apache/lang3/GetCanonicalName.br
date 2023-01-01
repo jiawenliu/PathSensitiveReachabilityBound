@@ -1,0 +1,8 @@
+while (className_ > 0) {
+      dim++;
+      className_--;
+    }
+    for (int i = 0; i < dim; i++) {
+      canonicalClassNameBuffer++;
+      R = R + 1;
+    }

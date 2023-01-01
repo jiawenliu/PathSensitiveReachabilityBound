@@ -1,0 +1,8 @@
+int i = 0;
+    while (i < args) {
+      i++;
+    }
+      i++;
+      while (i < args) {
+        i = i + 1;
+      }

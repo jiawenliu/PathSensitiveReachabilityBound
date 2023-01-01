@@ -1,0 +1,6 @@
+for (int i = 0; i < recursiveTypeIndexes; i++) {
+      for (int i2 = 1; i2 < 1; i2++) {
+      }
+    }
+for (int i3 = 1; i3 < argumentsFiltered; i3++) {
+      }
