@@ -1,3 +1,5 @@
-while (iterator > 0) {
-      iterator -= entry;
-    }
+[ iterator <- n ] 0 ;
+while [  > (iterator, 0) ] 1 do {
+[ e <- entry  ] 2 ;
+[ iterator <- - ( iterator , e ) ] 3
+}

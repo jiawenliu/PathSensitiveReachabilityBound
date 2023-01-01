@@ -1,6 +1,5 @@
-    for (int i = startIndex + 1; i < endIndex; i++) {
-      buf++;
-      R = R + 1;
-      buf++;
-      R = R + 1;
-    }
+[ i <-  endIndexstartIndex1 ] 0 ;
+while  [> (i, 0)] 1 do 
+{
+      [i <-  - ( i, 1 )] 2
+}

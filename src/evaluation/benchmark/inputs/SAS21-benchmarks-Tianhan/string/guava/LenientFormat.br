@@ -1,8 +1,9 @@
-int i = 0;
-    while (i < args) {
-      i++;
-    }
-      i++;
-      while (i < args) {
-        i = i + 1;
-      }
+[ j <- args  ] 0 ;
+[ i <- args ] 1 ;
+while [  > (i, 0) ] 2 do {
+[ i <- - ( i , 1 )  ] 3
+};
+[ i <- - ( i , 1 )  ] 4;
+while [  > (i, 0) ] 5 do {
+[ i <- - ( i , 1 )  ] 6
+}

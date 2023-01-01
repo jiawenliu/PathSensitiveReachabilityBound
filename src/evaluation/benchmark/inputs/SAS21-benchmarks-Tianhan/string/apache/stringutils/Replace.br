@@ -1,12 +1,7 @@
-    int end = ndBool() ? -1 : ndInt2(start, text - 1);
-    while (end != -1) {
-      buf += end - start;
-      R = R + (end - start);
-      buf += replacement;
-      start = end + replLength;
-      max--;
-      if (max == 0) {
-        break;
-      }
-      end = ndBool() ? -1 : ndInt2(start, text - 1);
-    }
+[ end <- text ] 0;
+while [(> (end, 0)] 1
+do 
+{
+  [start <- end + replLength] 2;
+  [end <- max(start, text - 1)] 3
+}

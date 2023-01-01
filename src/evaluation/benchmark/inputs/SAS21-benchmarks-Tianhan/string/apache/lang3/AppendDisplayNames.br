@@ -1,8 +1,9 @@
-    while (iterator > 0) {
-      int entry = ndInt2(1, iterator);
-      iterator -= entry;
-
-      for (int i = 0; i < entry; i++) {
-      }
-    }
-      
+[ iterator <- n ] 0 ;
+while [  > (iterator, 0) ] 1 do {
+	[ e <- entry  ] 2 ;
+	[ iterator <- - ( iterator , e ) ] 3;
+	[ i <- entry ] 4 ;
+	while [  > (i, 0) ] 5 do {
+	[ i <- - ( i , 1 )  ] 6
+	}
+}

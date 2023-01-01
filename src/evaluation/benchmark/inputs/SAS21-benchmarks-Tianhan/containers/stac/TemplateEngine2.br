@@ -1,12 +1,10 @@
-while (i < templateds) {
-      int linePointer = 0;
-      int startTagLocation = 0;
-      int endTagLocation = 0;
-      while (endTagLocation <= text) {
-        startTagLocation = ndInt2(endTagLocation + 1, text);
-        endTagLocation = ndInt2(startTagLocation + 1, text);
-        R = R + (startTagLocation - linePointer);
-        linePointer = endTagLocation;
-      }
-      i++;
-    }
+[ j <- templateds ] 0 ;
+[ i <- templateds ] 1 ;
+while [  > (i, 0) ] 2 do {
+  [endTagLocation <- text] 3 ;
+  while [> ( endTagLocation, 0 ) ] 4 do 
+  {
+    [endTagLocation <- - ( endTagLocation, 1 )] 5
+  };
+  [ i <- - ( i , 1 )  ] 6
+}

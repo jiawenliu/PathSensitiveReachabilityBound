@@ -1,2 +1,5 @@
-for (int i = string; i < minLength; i++) {
-    }
+[ j <- minLength  ] 0 ;
+[ i <- - (j, string) ] 1 ;
+while [  > (i, 0) ] 2 do {
+[ i <- - ( i , 1 )  ] 3
+}

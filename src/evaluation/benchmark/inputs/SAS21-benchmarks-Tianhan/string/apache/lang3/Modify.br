@@ -1,4 +1,4 @@
-int i = 0;
-    while (i < str) {
-      i++;
-    }
+[ i <- str ] 0 ;
+while [  > (i, 0) ] 1 do {
+[ i <- - ( i , 1 )  ] 2
+}

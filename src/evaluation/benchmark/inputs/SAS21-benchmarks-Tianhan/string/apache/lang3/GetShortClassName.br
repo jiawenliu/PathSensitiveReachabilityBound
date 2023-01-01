@@ -1,3 +1,4 @@
-while (className_ > 0) {
-      className_--;
-    }
+[ i <- className_ ] 0 ;
+while [  > (i, 0) ] 1 do {
+[ i <- - ( i , 1 )  ] 2
+}
