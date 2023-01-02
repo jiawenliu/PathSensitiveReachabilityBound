@@ -12,12 +12,12 @@
 
 % Define block styles
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
-    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
 \tikzstyle{block} = [rectangle, draw, fill=blue!20, 
-    text width=5em, text centered, rounded corners, minimum height=4em]
+text width=5em, text centered, rounded corners, minimum height=4em]
 \tikzstyle{line} = [draw, -latex']
 \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
-    minimum height=2em]
+minimum height=2em]
 
 \begin{document}
 \title{Path Sensitive Reachability Bound}
@@ -28,6 +28,34 @@
 
 \maketitle
 %
+\begin{abstract}
+    The number of times a given control location 
+    inside a procedure is visited during the program execution.
+    The upper bound on this execution number for 
+    a given control location is referred to as the reachability-bound by~\cite{GulwaniZ10} in the first place.
+    A tight reachability-bound
+    can help to improve the analysis result on other program features.
+    For example, in the resource cost analysis, this quantitative reachability property
+    can help to provide a tighter
+    bound on the resources consumed by a program such as time, memory,
+    network traffic, power, etc.
+    In the data analysis area,
+    the reachability-bound on each program control location
+    can help to improve the precision of the data training result. 
+    In security, this reachability-bound helps to improve the accuracy
+    in estimating the program's information leakage or uncertainty propagation, etc.
+    % , it can also help to improve accuracy.
+    However, computing a tight reachability-bound for a given program control location is challenging.
+    Many works in the program analysis area develop algorithms estimating the program's loop bound or overall complexity.
+    However, there isn't a general analysis algorithm that
+    computes the reachability-bound
+    % solves this problem 
+    directly or path-sensitively.
+    To leverage these limitations,
+    we present a path-sensitive reachability-bound algorithm
+    aiming to find a precise symbolic worst-case reachability-bound on the program's every control location in this paper.
+\end{abstract}
+
 \tableofcontents
 
 
