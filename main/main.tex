@@ -44,16 +44,21 @@ minimum height=2em]
     can help to improve the precision of the data training result. 
     In security, this reachability-bound helps to improve the accuracy
     in estimating the program's information leakage or uncertainty propagation, etc.
-    % , it can also help to improve accuracy.
     However, computing a tight reachability-bound for a given program control location is challenging.
     Many works in the program analysis area develop algorithms estimating the program's loop bound or overall complexity.
-    However, there isn't a general analysis algorithm that
+    But there isn't a general analysis algorithm that
     computes the reachability-bound
-    % solves this problem 
     directly or path-sensitively.
     To leverage these limitations,
     we present a path-sensitive reachability-bound algorithm
     aiming to find a precise symbolic worst-case reachability-bound on the program's every control location in this paper.
+    Our algorithm brings together two techniques:
+    1. ranking function based amortized bound analysis through program abstraction, and
+    2. loop summarization based multiple loop paths refinement
+    and combines them effectively. 
+    The effective combination improves the bound accuracy comparing to adopt either one of them.
+    It allows us to compute precise reachability-bound on each program point path-sensitively.
+    We implement a prototype and report on an experimental comparison with state-of-art tools over four different benchmarks.
 \end{abstract}
 
 \tableofcontents
