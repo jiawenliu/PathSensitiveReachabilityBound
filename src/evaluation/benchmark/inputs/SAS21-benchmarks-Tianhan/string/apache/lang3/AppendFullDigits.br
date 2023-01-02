@@ -1,34 +1,14 @@
-for (int i = minFieldWidth - nDigits; i > 0; --i) {
-        buffer++;
-        R = R + 1;
-}
-int digit = 0;
-      while (value != 0) {
-        digit++;
-        value = value / 10;
-      }
-      while (digit < minFieldWidth) {
-        buffer++;
-        --minFieldWidth;
-      }
-
-digit--;
-while (digit >= 0) {
-        digit--;
-}
-
-[ i <- patternpos ] 0 ;
+[ i <- minFieldWidthnDigits ] 0 ;
 while [  > (i, 0) ] 1 do {
 [ i <- - ( i , 1 )  ] 2
-}
-
-[ i <- className_ ] 0 ;
-[ dim <- 0 ] 1 ;
-while [  > (i, 0) ] 2 do {
-[ i <- - ( i , 1 )  ] 3;
-[ dim <- + ( dim , 1 )  ] 4
 };
-[ i <- dim ] 5 ;
-while [  > (i, 0) ] 6 do {
-[ i <- - ( i , 1 )  ] 7
+[ v <- value ] 3 ;
+[ digit <- 0 ] 4 ;
+while [  > (v, 0) ] 5 do {
+[ v <- / ( v , 10 )  ] 6;
+[ digit <- + ( digit , 1 )  ] 7
+};
+[ i3 <- - (minFieldWidth, digit) ] 8 ;
+while [  > (i3, 0) ] 9 do {
+[ i3 <- - ( i3 , 1 )  ] 10
 }
