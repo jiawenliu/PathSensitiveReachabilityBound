@@ -30,10 +30,11 @@ type system~\cite{CicekBG0H17, RajaniG0021}, the cost analysis via effect system
 give the approximated upper bound of the program's total resource cost as well but still failed to consider the path sensitivity and the resource cost on different program points.
 
 \paragraph{Loop Summarization and Termination Analysis.}
-There are numerous works studying the loop termination, invariant generation. Algorithms and techniques in both of the two area can be adopted and help for the ranking function estimation and multipath refinement.
-Termination~\cite{FalkeKS12, FalkeKS11},
-Loop summarization and invariant generate~\cite{HumenbergerJK18}.
-Invariant Generation Through Ranking functions~\cite{AliasDFG10} for multipath loops.
-Closed-form loop summarization techniques~\cite{KincaidBCR19} which can help to improve the accuracy of the path refinement, the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. They are all heavy compare to our light-weight path refinement implementation adapted from~\cite{GulwaniJK09}.
+There are numerous works studying the loop termination, 
+invariant generation. Algorithms and techniques in this area are closely related to the bound analysis and loop path refinement.
+For example, the termination analysis through ranking functions originated from paper~\cite{BradleyMS05} and followed up papers~\cite{FalkeKS11, FalkeKS12, CookSZ13, Zuleger18} are widely developed into bound analysis~\cite{AliasDFG10, SinnZV14, BrockschmidtEFFG16, BrockschmidtEFFG14}.
+Loop summarization and invariant generate~\cite{ManoliosV06, HumenbergerJK18} techniques are also extended into multiple loop path refinement and resource cost analysis~\cite{GulwaniJK09, ZulegerGSV11}. 
+% Invariant Generation Through Ranking functions~\cite{AliasDFG10} for multipath loops.
+Paper \cite{KincaidBCR19} introduce a precise closed-form loop summarization techniques which can help to improve the accuracy of the path refinement, as well as the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. They are all heavy compare to our light-weight path refinement implementation adapted from~\cite{GulwaniJK09}.
 \cite{CyphertBKR19} introduced a very precise path refinement techniques. While it is accurate only for loop summarizing and invariant generating under the specific recurrence loop program, and doesn't work well in multipath loop refinement.
 The contextualization path refinement algorithm, based on the loop termination techniques in~\cite{ManoliosV06} are used in both~\cite{ZulegerGSV11, SinnZV14}. While this refinement only computes the multiple paths interleaving for one iteration, which is loose comparing to our path refinement implementation limited to at most $100$ iterations.
