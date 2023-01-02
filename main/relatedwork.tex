@@ -13,8 +13,8 @@ semantics model, which is inspired from~\cite{Cousot19a} and~\cite{Cousot19} and
 % \paragraph{Type-Based Static Cost Analysis.}
 \paragraph{Program Cost Analysis.}
 As already introduced in the introduction section, many works in cost analysis area focus on analyzing the loop iteration bound.
-Though our motivation is inspired a lot from the SPEED tool in paper~\cite{GulwaniZ10}, they only infer overall loop bounds path-insensitively.
-We also implement part of the algorithm in the LoopusJAR loop bound computation tool based on~\cite{SinnZV17} in terms of program abstraction and ranking function estimation
+Though our motivation is mainly inspired from the SPEED tool in paper~\cite{GulwaniZ10}, they only infer overall loop bounds path-insensitively.
+We also implement part of the algorithm in Loopus based on~\cite{SinnZV17} in terms of program abstraction and variable invariant generation,
 and the path refinement algorithm from paper~\cite{GulwaniJK09}, but both of them suffer from the same weakness as~\cite{GulwaniZ10}.
 The works in analyzing the program complexity~\cite{GustafssonEL05, HumenbergerJK18} only focus on estimating 
 the overall complexity 
