@@ -69,7 +69,7 @@ Tianhan~\cite{LuCT21}
     \centering
     {\footnotesize
     \begin{tabular}{ >{\footnotesize}c | >{\footnotesize}c | >{\footnotesize}c | >{\footnotesize}c | c | c | c | c | c | c }
-    {Benchmark} &  {Overall} & \multirow{2}{*}{$\psRB$ on Path Points} & \multirow{2}{*}{$\psRB$ on Loop Headers} & \multicolumn{5}{c}{Computed}  \\
+    {Benchmark} &  {Overall} & \multirow{2}{*}{$\psRB$ on Path Points} & \multirow{2}{*}{$\psRB$ on Points} & \multicolumn{5}{c}{Computed}  \\
     \cline{5-10}
      Suit &  Complexity & & & {\tiny \THESYSTEM} & {\tiny LoopusJAR} & {\tiny CoFloCo} & {\tiny pathRefine} & {\tiny Icra} & {\tiny Tianhan}\\
     \hline
@@ -103,7 +103,7 @@ Tianhan~\cite{LuCT21}
     \cline{2-9}
     & $O(n)$            &  $ \frac{O(n)}{c}, O(1)$ & $O(n)$  & 14 &  &  & - \\
     \cline{2-9}
-    & $O(n^2)$          & \todo{$O(1), O(n), \frac{O(n)}{c}, \frac{O(n^2)}{c}$} & $O(n), O(n^2)$ & 10 &  &  & - \\
+    & $O(n^2)$          &  $O(1), \frac{O(n^2)}{c}$ & $O(n), O(n^2)$ & 10 &  &  & - \\
     \hline
     \end{tabular}
     }
