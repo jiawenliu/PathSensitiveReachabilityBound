@@ -1,0 +1,250 @@
+while (threadIndex < numWorker) {
+#line 122
+    *(threadId_arr + threadIndex) = threadIndex;
+#line 124
+    returnVal = pthread_create((pthread_t * __restrict  )(workerArr + threadIndex),
+                               (pthread_attr_t const   * __restrict  )((void *)0),
+                               & handle_client_request, (void * __restrict  )(threadId_arr + threadIndex));
+#line 125
+    printf((char const   * __restrict  )"Hi %d\n", threadIndex);
+#line 126
+    if (returnVal) {
+#line 128
+      sprintf((char * __restrict  )(message), (char const   * __restrict  )"pthread_create() fails with error code %d",
+              returnVal);
+#line 129
+      print_system_error(message);
+    }
+#line 120
+    threadIndex ++;
+  }
+
+#line 146
+  while (1) {
+#line 148
+    clientSocket = -1;
+#line 149
+    printf((char const   * __restrict  )"Go to loop in %d\n", id);
+#line 150
+    pthread_mutex_lock(& queue_mutex);
+#line 152
+    tmp = is_empty_queue(clientQueue);
+#line 152
+    if (tmp) {
+#line 154
+      pthread_cond_wait((pthread_cond_t * __restrict  )(& queue_has_client), (pthread_mutex_t * __restrict  )(& queue_mutex));
+    } else {
+#line 158
+      dequeue(clientQueue, & clientSocket);
+    }
+#line 160
+    pthread_mutex_unlock(& queue_mutex);
+#line 161
+    printf((char const   * __restrict  )"Worker with id = %d handles socketId = %d\n",
+           id, clientSocket);
+#line 162
+    if (clientSocket >= 0) {
+#line 165
+      request_obj = create_request_struct();
+#line 166
+      response_obj = create_response_struct();
+#line 167
+      response = (char *)((void *)0);
+#line 170
+      request = read_request(clientSocket);
+#line 173
+      printf((char const   * __restrict  )"OK reading request\n");
+#line 175
+      parseSuccess = parse_http_request(request_obj, request, response_obj);
+#line 177
+      response_obj->version = copy_str_dynamic(SUPPORT_HTTP);
+#line 179
+      if (parseSuccess) {
+#line 182
+        tmp___1 = strcasecmp((char const   *)request_obj->version, (char const   *)(SUPPORT_HTTP));
+#line 182
+        if (tmp___1 != 0) {
+#line 184
+          set_status_code_error(response_obj, 505, (char *)"505 HTTP Version Not Supported",
+                                (char *)"This server supports only HTTP/1.1");
+        } else {
+#line 189
+          tmp___0 = count_occurence(request_obj->path, (char )'/');
+#line 189
+          if (tmp___0 > (int )MAX_NUM_SLASH) {
+#line 190
+            set_status_code_error(response_obj, 401, (char *)"401 Unauthorized", (char *)"You are not authorized to access the requested file on this server");
+          } else {
+#line 193
+            exec_http_request(request_obj, response_obj);
+          }
+        }
+      }
+#line 200
+      response = get_response_text(response_obj);
+#line 201
+      tmp___2 = strlen((char const   *)response);
+#line 201
+      send(clientSocket, (void const   *)response, tmp___2, 0);
+#line 205
+      close(clientSocket);
+#line 206
+      free((void *)request);
+#line 207
+      free((void *)response);
+#line 208
+      delete_request(& request_obj);
+#line 209
+      delete_response(& response_obj);
+    }
+  }
+
+
+
+
+#line 224
+  while (1) {
+#line 226
+    numByteRecv = recv(clientSocket, (void *)curBuffer, (size_t )(curBufferLen - 1L),
+                       0);
+#line 227
+    printf((char const   * __restrict  )"numByte = %d\n", numByteRecv);
+#line 228
+    if (numByteRecv < 0L) {
+#line 229
+      print_system_error((char *)"recv() fails");
+    } else {
+#line 233
+      totalByte += (int )numByteRecv;
+#line 234
+      if (totalByte >= 2) {
+#line 234
+        if ((int )*(buffer + (totalByte - 1)) == 10) {
+#line 234
+          if ((int )*(buffer + (totalByte - 2)) == 13) {
+#line 236
+            *(buffer + totalByte) = (char )'\000';
+#line 237
+            break;
+          } else {
+#line 241
+            curBuffer += numByteRecv;
+#line 242
+            curBufferLen -= (ssize_t )((int )numByteRecv);
+          }
+        } else {
+#line 241
+          curBuffer += numByteRecv;
+#line 242
+          curBufferLen -= (ssize_t )((int )numByteRecv);
+        }
+      } else {
+#line 241
+        curBuffer += numByteRecv;
+#line 242
+        curBufferLen -= (ssize_t )((int )numByteRecv);
+      }
+    }
+#line 224
+    if (! numByteRecv) {
+#line 224
+      break;
+    }
+  }
+
+
+#line 21
+  while (! (tmp >= 510U)) {
+#line 21
+    relative_path[tmp] = (char)0;
+#line 21
+    tmp ++;
+  }
+
+
+  #line 81
+  while ((unsigned long )requestLine != (unsigned long )((void *)0)) {
+#line 83
+    requestLine = strtok((char * __restrict  )((void *)0), (char const   * __restrict  )(delims));
+  }
+
+
+
+#line 102
+  while (index___0 < 19) {
+#line 103
+    new_obj->request_header[index___0] = (char *)((void *)0);
+#line 102
+    index___0 ++;
+  }
+
+
+#line 114
+  while (index___0 < 19) {
+#line 115
+    free((void *)(*request_obj)->request_header[index___0]);
+#line 114
+    index___0 ++;
+  }
+
+  while (index___0 < 9) {
+#line 176
+    new_obj->response_header[index___0] = (char *)((void *)0);
+#line 175
+    index___0 ++;
+  }
+
+  while (index___0 < 9) {
+#line 190
+    free((void *)(*response_obj)->response_header[index___0]);
+#line 189
+    index___0 ++;
+  }
+
+#line 21
+  while (index___0 < numStr) {
+#line 23
+    tmp = strcasecmp((char const   *)*(strArr + index___0), (char const   *)str);
+#line 23
+    if (tmp == 0) {
+#line 24
+      return (index___0);
+    }
+#line 21
+    index___0 ++;
+  }
+
+  while ((int )*(str + index___0) != 0) {
+#line 36
+    if ((int )*(str + index___0) == (int )character) {
+#line 38
+      curr_occur ++;
+#line 39
+      if (curr_occur == occurence) {
+#line 40
+        return (index___0);
+      }
+    }
+#line 35
+    index___0 ++;
+  }
+
+
+    while ((int )*(str + index___0) != 0) {
+#line 85
+      if ((int )*(str + index___0) == (int )character) {
+#line 86
+        num ++;
+      }
+#line 84
+      index___0 ++;
+    }
+
+  while ((unsigned long )curNode != (unsigned long )((void *)0)) {
+#line 97
+    temp = curNode->next_node;
+#line 98
+    free((void *)curNode);
+#line 99
+    curNode = temp;
+  }

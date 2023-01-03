@@ -1,0 +1,265 @@
+#line 41
+  i = 0;
+#line 41
+  while (i < threads_number) {
+#line 42
+    pthread_create((pthread_t * __restrict  )(threads + i), (pthread_attr_t const   * __restrict  )((void *)0),
+                   start_routine, (void * __restrict  )((void *)i));
+#line 41
+    i ++;
+  }
+#line 43
+  i = 0;
+#line 43
+  while (i < threads_number) {
+#line 44
+    pthread_join(*(threads + i), (void **)((void *)0));
+#line 43
+    i ++;
+  }
+
+
+#line 87
+  now = time((time_t *)((void *)0));
+#line 88
+  while (1) {
+#line 88
+    tmp___0 = time((time_t *)((void *)0));
+#line 88
+    if (! (tmp___0 == now)) {
+#line 88
+      break;
+    }
+  }
+#line 89
+  i = 0;
+#line 89
+  while (i < 3) {
+#line 91
+    queue_recv(& queue, (void *)(message), (size_t *)(& buflen), & prio, 0, (int *)((void *)0));
+#line 92
+    printf((char const   * __restrict  )"Odebrano wiadomosc o dlugosci %d i priorytecie %d: \"%s\"\n",
+           buflen, prio, message);
+#line 89
+    i ++;
+  }
+
+
+#line 118
+  i = 0;
+#line 118
+  while (i < 3) {
+#line 120
+    now = time((time_t *)((void *)0));
+#line 121
+    while (1) {
+#line 121
+      tmp___0 = time((time_t *)((void *)0));
+#line 121
+      if (! (tmp___0 == now)) {
+#line 121
+        break;
+      }
+    }
+#line 122
+    queue_send(& queue, (void *)(message), (size_t )buflen, i, 0, (int *)((void *)0));
+#line 118
+    i ++;
+  }
+
+
+#line 165
+  now = time((time_t *)((void *)0));
+#line 166
+  while (1) {
+#line 166
+    tmp___1 = time((time_t *)((void *)0));
+#line 166
+    if (! (tmp___1 == now)) {
+#line 166
+      break;
+    }
+  }
+
+
+  cur_node = _queue;
+#line 20
+  while ((unsigned long )cur_node != (unsigned long )((void *)0)) {
+#line 22
+    if (cur_node->priority > priority) {
+#line 24
+      node->next = cur_node;
+#line 25
+      if (prev_node) {
+#line 26
+        prev_node->next = node;
+      } else {
+#line 28
+        _queue = node;
+      }
+#line 29
+      return (_queue);
+    }
+#line 31
+    prev_node = cur_node;
+#line 20
+    cur_node = cur_node->next;
+  }
+
+
+
+#line 56
+  cur_node = _queue;
+#line 56
+  while ((unsigned long )cur_node != (unsigned long )((void *)0)) {
+#line 57
+    if (! cur_node->read) {
+#line 58
+      return (cur_node);
+    }
+#line 56
+    cur_node = cur_node->next;
+  }
+
+
+#line 66
+  prev_node = (node_t *)((void *)0);
+#line 67
+  cur_node = _queue;
+#line 67
+  while ((unsigned long )cur_node != (unsigned long )((void *)0)) {
+#line 68
+    if ((unsigned long )cur_node == (unsigned long )target_node) {
+#line 70
+      if (prev_node) {
+#line 71
+        prev_node->next = cur_node->next;
+      } else {
+#line 73
+        _queue = cur_node->next;
+      }
+#line 74
+      free(cur_node->buf);
+#line 75
+      free((void *)cur_node);
+#line 76
+      return (_queue);
+    }
+#line 67
+    cur_node = cur_node->next;
+  }
+
+
+#line 111
+  (msg_queue->length) ++;
+#line 112
+  msg_queue->_queue = _add(msg_queue->_queue, buf, (int )buflen, priority, & new_node);
+#line 113
+  pthread_mutex_unlock(& msg_queue->mutex);
+#line 115
+  while (1) {
+#line 117
+    pthread_mutex_lock(& msg_queue->mutex);
+#line 118
+    if (new_node->read) {
+#line 119
+      result = 0;
+    } else
+#line 120
+    if (timeout != 0) {
+#line 120
+      tmp___0 = clock();
+#line 120
+      if (tmp___0 >= stop___0) {
+#line 121
+        result = 1;
+      } else {
+#line 120
+        goto _L;
+      }
+    } else
+    _L: /* CIL Label */ 
+#line 122
+    if ((unsigned long )stop_signal != (unsigned long )((void *)0)) {
+#line 122
+      if (*stop_signal) {
+#line 123
+        result = 2;
+      }
+    }
+#line 124
+    pthread_mutex_unlock(& msg_queue->mutex);
+#line 115
+    if (! (result == -1)) {
+#line 115
+      break;
+    }
+  }
+
+
+#line 151
+  (msg_queue->readers) ++;
+#line 152
+  pthread_mutex_unlock(& msg_queue->mutex);
+#line 153
+  while (1) {
+#line 155
+    pthread_mutex_lock(& msg_queue->mutex);
+#line 156
+    if (msg_queue->length > 0) {
+#line 158
+      node = _get_first(msg_queue->_queue);
+#line 159
+      node->read = 1;
+#line 160
+      (msg_queue->length) --;
+#line 161
+      result = _copy_to_buf(node, buf, buflen);
+#line 162
+      *priority = node->priority;
+    } else
+#line 164
+    if (timeout != 0) {
+#line 164
+      tmp___0 = clock();
+#line 164
+      if (tmp___0 >= stop___0) {
+#line 165
+        result = 1;
+      } else {
+#line 164
+        goto _L;
+      }
+    } else
+    _L: /* CIL Label */ 
+#line 166
+    if ((unsigned long )stop_signal != (unsigned long )((void *)0)) {
+#line 166
+      if (*stop_signal) {
+#line 167
+        result = 2;
+      }
+    }
+#line 168
+    pthread_mutex_unlock(& msg_queue->mutex);
+#line 153
+    if (! (result == -1)) {
+#line 153
+      break;
+    }
+  }
+
+
+#line 188
+  pthread_mutex_destroy(& msg_queue->mutex);
+#line 190
+  while (cur_node) {
+#line 192
+    next_node = cur_node->next;
+#line 193
+    free(cur_node->buf);
+#line 194
+    free((void *)cur_node);
+#line 195
+    cur_node = next_node;
+  }

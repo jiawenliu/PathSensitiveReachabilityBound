@@ -1,0 +1,206 @@
+#line 75
+  while (1) {
+#line 77
+    aio_thread->t_status = (aio_thread_status )1;
+#line 79
+    pthread_mutex_lock(& aio_req_q->mutex);
+#line 80
+    pthread_cond_wait((pthread_cond_t * __restrict  )(& aio_req_q->cond), (pthread_mutex_t * __restrict  )(& aio_req_q->mutex));
+#line 81
+    pthread_mutex_unlock(& aio_req_q->mutex);
+#line 83
+    aio_thread->t_status = (aio_thread_status )2;
+#line 85
+    tmp = queue_dequeue_ts(aio_req_q->queue, & status);
+#line 85
+    aio_msg = (aio_msg_t *)tmp;
+#line 88
+    while (aio_msg) {
+#line 90
+      write(aio_fd, (void const   *)aio_msg->msg, aio_msg->size);
+#line 91
+      free((void *)aio_msg->msg);
+#line 92
+      free((void *)aio_msg);
+#line 94
+      tmp___0 = queue_dequeue_ts(aio_req_q->queue, & status);
+#line 94
+      aio_msg = (aio_msg_t *)tmp___0;
+    }
+#line 97
+    aio_thread->t_status = (aio_thread_status )4;
+  }
+
+#line 130
+  i = 0;
+#line 130
+  while (i < 1) {
+#line 132
+    tmp = malloc(sizeof(aio_thread_t ));
+#line 132
+    aio_thread = (aio_thread_t *)tmp;
+#line 133
+    if ((unsigned long )aio_thread == (unsigned long )((void *)0)) {
+#line 135
+      __assert_fail("0", "aio_simple.c", 135U, "aio_init");
+    }
+#line 138
+    tmp___0 = malloc(sizeof(aio_req_queue_t ));
+#line 138
+    req_q = (aio_req_queue_t *)tmp___0;
+#line 139
+    if ((unsigned long )req_q == (unsigned long )((void *)0)) {
+#line 141
+      __assert_fail("0", "aio_simple.c", 141U, "aio_init");
+    }
+#line 143
+    aio_thread->req_queue = req_q;
+#line 148
+    tstatus = pthread_mutex_init(& (aio_thread->req_queue)->mutex, (pthread_mutexattr_t const   *)((void *)0));
+#line 149
+    if (tstatus != 0) {
+#line 151
+      __assert_fail("0", "aio_simple.c", 151U, "aio_init");
+    }
+#line 157
+    tstatus = pthread_cond_init((pthread_cond_t * __restrict  )(& (aio_thread->req_queue)->cond),
+                                (pthread_condattr_t const   * __restrict  )((void *)0));
+#line 158
+    if (tstatus != 0) {
+#line 160
+      __assert_fail("0", "aio_simple.c", 160U, "aio_init");
+    }
+#line 166
+    queue = queue_create(& status, "aio", (size_t )0);
+#line 167
+    if ((unsigned long )queue == (unsigned long )((void *)0)) {
+#line 169
+      __assert_fail("0", "aio_simple.c", 169U, "aio_init");
+    }
+#line 171
+    (aio_thread->req_queue)->queue = queue;
+#line 177
+    status = queue_enqueue(aio_thread_q, & aio_thread->link);
+#line 178
+    if (status != 0U) {
+#line 180
+      __assert_fail("0", "aio_simple.c", 180U, "aio_init");
+    }
+#line 130
+    i ++;
+  }
+
+
+
+#line 187
+  qcount = queue_get_count(aio_thread_q);
+#line 188
+  while (1) {
+#line 188
+    tmp___2 = qcount;
+#line 188
+    qcount --;
+#line 188
+    if (! tmp___2) {
+#line 188
+      break;
+    }
+#line 190
+    tmp___1 = queue_dequeue(aio_thread_q, & status);
+#line 190
+    aio_thread = (aio_thread_t *)tmp___1;
+#line 191
+    if ((unsigned long )aio_thread == (unsigned long )((void *)0)) {
+#line 193
+      __assert_fail("0", "aio_simple.c", 193U, "aio_init");
+    }
+#line 195
+    tstatus = pthread_create((pthread_t * __restrict  )(& aio_thread->thread), (pthread_attr_t const   * __restrict  )(& globattr),
+                             & aio_thread_loop, (void * __restrict  )aio_thread);
+#line 197
+    if (tstatus != 0) {
+#line 199
+      __assert_fail("0", "aio_simple.c", 199U, "aio_init");
+    }
+#line 205
+    status = queue_enqueue(aio_thread_q, & aio_thread->link);
+#line 206
+    if (status != 0U) {
+#line 208
+      __assert_fail("0", "aio_simple.c", 208U, "aio_init");
+    }
+  }
+
+
+
+#line 239
+  i = 0;
+#line 239
+  while (i < 10) {
+#line 245
+    tmp = malloc((size_t )128);
+#line 245
+    msg = (u_int8_t *)tmp;
+#line 246
+    if ((unsigned long )msg == (unsigned long )((void *)0)) {
+#line 248
+      perror("Malloc");
+#line 249
+      exit(1);
+    }
+#line 252
+    bzero((void *)msg, (size_t )128);
+#line 254
+    sprintf((char * __restrict  )msg, (char const   * __restrict  )"%s: AIO test iteration %d\n",
+            "main", i);
+#line 256
+    tmp___0 = malloc(sizeof(aio_msg_t ));
+#line 256
+    aio_msg = (aio_msg_t *)tmp___0;
+#line 257
+    if ((unsigned long )aio_msg == (unsigned long )((void *)0)) {
+#line 259
+      perror("Malloc2");
+#line 260
+      exit(1);
+    }
+#line 263
+    slen = strlen((char const   *)msg);
+#line 265
+    aio_msg->size = slen;
+#line 266
+    aio_msg->msg = msg;
+#line 268
+    tmp___1 = queue_peek(aio_thread_q, & status);
+#line 268
+    aio_thread = (aio_thread_t *)tmp___1;
+#line 269
+    if ((unsigned long )aio_thread == (unsigned long )((void *)0)) {
+#line 271
+      perror("queue_peek");
+#line 272
+      exit(1);
+    }
+#line 275
+    aio_req_q = aio_thread->req_queue;
+#line 277
+    status = queue_enqueue_ts(aio_req_q->queue, & aio_msg->link);
+#line 278
+    if (status != 0U) {
+#line 280
+      perror("enqueue");
+#line 281
+      exit(1);
+    }
+#line 284
+    signal_stat = pthread_cond_signal(& aio_req_q->cond);
+#line 285
+    if (signal_stat < 0) {
+#line 287
+      perror("cond_sig");
+#line 288
+      exit(1);
+    }
+#line 239
+    i ++;
+  }

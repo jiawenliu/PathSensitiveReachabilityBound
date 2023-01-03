@@ -1,0 +1,155 @@
+int 	c;
+char *	s;
+
+if (str == NULL)
+	s = "";
+else
+	s = str;
+
+/*
+ * Changed to a more modern CRC hash.
+ */
+hash = 5381;
+highorder = hash & 0xf8000000;
+do
+{
+	c = (int)(*s);
+	if (c == 0)
+		break;
+	hash = hash << 5;
+	hash = hash ^ (highorder >> 27);
+	hash = hash ^ c;
+	highorder = hash & 0xf8000000;
+	++s;
+} while (c != 0);
+
+	for (i = 0; i < hctx->tablesize; i++) 
+	{
+		(void) pthread_mutex_destroy(&(hctx->table[i].mutex));
+		if ((hctx->table[i].bucket) == NULL)
+			continue;
+		
+		b = hctx->table[i].bucket;
+		do
+		{
+			t = b->next;
+			b = hash_freebucket(hctx, b);
+			b = t;
+
+		} while (b != NULL);
+	}
+
+
+
+b = hctx->table[hashval].bucket;
+	 if (b != NULL)
+	 {
+		do
+		{
+			if (b->key != NULL && strcasecmp(string, b->key) == 0)
+			{
+				if (data != NULL)
+				{
+					if (hctx->freefunct != NULL)
+						(hctx->freefunct)(b->data);
+					else
+						(void) free(b->data);
+
+					b->data = calloc(1, datalen);
+					if (b->data == NULL)
+					{
+						(void) pthread_mutex_unlock(&(hctx->table[hashval].mutex));
+						errno = ENOMEM;
+						return NULL;
+					}
+					memcpy(b->data, data, datalen);
+					(void) time(&(b->timestamp));
+				}
+				(void) pthread_mutex_unlock(&(hctx->table[hashval].mutex));
+				errno = 0;
+				return b->data;
+			}
+			b = b->next;
+		} while (b != NULL);
+	 }
+
+
+
+	 b = hctx->table[hashval].bucket;
+	 if (b == NULL)
+	 {
+	 	hctx->table[hashval].bucket = n;
+		(void) pthread_mutex_unlock(&(hctx->table[hashval].mutex));
+		errno = 0;
+	 	return n->data;
+	 }
+	 while (b->next != NULL)
+
+
+	 b = hctx->table[hashval].bucket;
+	 if (b != NULL)
+	 {
+		do
+		{
+			if (b->key != NULL && strcasecmp(string, b->key) == 0)
+			{
+				if (b->previous != NULL)
+					b->previous->next = b->next;
+				if (b->next != NULL)
+					b->next->previous = b->previous;
+				b = hash_freebucket(hctx, b);
+				(void) pthread_mutex_unlock(&(hctx->table[hashval].mutex));
+				return errno = 0;
+			}
+			b = b->next;
+		} while (b != NULL);
+	 }
+
+		 b = hctx->table[i].bucket;
+		 if (b != NULL)
+		 {
+			do
+			{
+				t = b->next;
+				if ((now - b->timestamp) > age)
+				{
+					if (b->previous != NULL)
+						b->previous->next = b->next;
+					if (b->next != NULL)
+						b->next->previous = b->previous;
+					if (b == hctx->table[i].bucket)
+						hctx->table[i].bucket = t;
+					b = hash_freebucket(hctx, b);
+				}
+				b = t;
+			} while (b != NULL);
+		 }
+  
+
+  int i = rand() % 5;
+  int n;
+  char str[80];
+  char * data;
+  time_t tm;
+
+  while(i) {
+    for(int j = 0; j < 80; j++) str[j] = rand();
+    if (i == 1) {
+      hash_lookup(hctx, str, NULL, 0);
+    } else if (i == 2) {
+      n = rand();
+      data = malloc(n * sizeof(char));
+      hash_lookup(hctx, str, data, n);
+    } else if (i == 3) {
+      hash_drop(hctx, str);
+    } else {
+      time(&tm);
+      hash_expire(hctx, tm);
+    }
+    i = rand() % 5;
+  }   
+
+  for(int i = 0; i < 8; i++) {
+    pthread_create(&(t[i]), NULL, &foo, (void *)ht);
+  }
+

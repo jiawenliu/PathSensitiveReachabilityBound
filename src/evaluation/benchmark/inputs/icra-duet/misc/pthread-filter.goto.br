@@ -1,0 +1,278 @@
+  part = thread->partition;
+  ystart = part->ystart;
+  ystop = part->ystop;
+  clock_gettime(0, &stime___0);
+  y = ystart;
+  while(!(y >= ystop))
+  {
+    x = 0;
+    while(!(x >= xsize))
+    {
+      r = (double)(w[(signed long int)0] * (const double)tmp->r);
+      g = (double)(w[(signed long int)0] * (const double)tmp___0->g);
+      b = (double)(w[(signed long int)0] * (const double)tmp___1->b);
+      n = (double)w[(signed long int)0];
+      wi = 1;
+      while(radius >= wi)
+      {
+        wc = (double)w[(signed long int)wi];
+        x2 = x - wi;
+        if(x2 >= 0)
+        {
+          tmp___2=pix(src, (const signed int)x2, (const signed int)y, xsize);
+          r = r + wc * (double)tmp___2->r;
+          tmp___3=pix(src, (const signed int)x2, (const signed int)y, xsize);
+          g = g + wc * (double)tmp___3->g;
+          tmp___4=pix(src, (const signed int)x2, (const signed int)y, xsize);
+          b = b + wc * (double)tmp___4->b;
+          n = n + wc;
+        }
+
+        x2 = x + wi;
+        if(!(x2 >= xsize))
+        {
+          tmp___5=pix(src, (const signed int)x2, (const signed int)y, xsize);
+          r = r + wc * (double)tmp___5->r;
+          tmp___6=pix(src, (const signed int)x2, (const signed int)y, xsize);
+          g = g + wc * (double)tmp___6->g;
+          tmp___7=pix(src, (const signed int)x2, (const signed int)y, xsize);
+          b = b + wc * (double)tmp___7->b;
+          n = n + wc;
+        }
+
+        wi = wi + 1;
+      }
+
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+  SynchronizationPoint();
+  y = 0;
+  while(!(y >= xsize))
+  {
+    x = ystart;
+    while(!(x >= ystop))
+    {
+      tmp___11=pix(dst, (const signed int)x, (const signed int)y, ysize);
+      r = (double)(w[(signed long int)0] * (const double)tmp___11->r);
+      tmp___12=pix(dst, (const signed int)x, (const signed int)y, ysize);
+      g = (double)(w[(signed long int)0] * (const double)tmp___12->g);
+      tmp___13=pix(dst, (const signed int)x, (const signed int)y, ysize);
+      b = (double)(w[(signed long int)0] * (const double)tmp___13->b);
+      n = (double)w[(signed long int)0];
+      wi = 1;
+      while(radius >= wi)
+      {
+        wc = (double)w[(signed long int)wi];
+        x2 = x - wi;
+        if(x2 >= 0)
+        {
+          r = r + wc * (double)tmp___14->r;
+          g = g + wc * (double)tmp___15->g;
+          b = b + wc * (double)tmp___16->b;
+          n = n + wc;
+        }
+
+        x2 = x + wi;
+        if(!(x2 >= ysize))
+        {
+          tmp___17=pix(dst, (const signed int)x2, (const signed int)y, ysize);
+          r = r + wc * (double)tmp___17->r;
+          tmp___18=pix(dst, (const signed int)x2, (const signed int)y, ysize);
+          g = g + wc * (double)tmp___18->g;
+          tmp___19=pix(dst, (const signed int)x2, (const signed int)y, ysize);
+          b = b + wc * (double)tmp___19->b;
+          n = n + wc;
+        }
+
+        wi = wi + 1;
+      }
+
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+
+  blurdata = (struct _blurfilterdata *)tmp___1;
+  i = 0;
+  while(!(i >= thread_count))
+  {
+
+    i = i + 1;
+  }
+  printf((const char *)"Starting threads\n");
+  i = 0;
+  while(!(i >= thread_count))
+  {
+    (imageThreads + (signed long int)i)->argument = (void *)(blurdata + (signed long int)i);
+    (imageThreads + (signed long int)i)->thread=createThread((void *)blurfilterwrapper, (imageThreads + (signed long int)i)->argument);
+    i = i + 1;
+  }
+
+  threads = (struct _imagethread *)tmp;
+  i = 0;
+  while(!(i >= count))
+  {
+    (threads + (signed long int)i)->rank = i;
+    (threads + (signed long int)i)->thread_count = count;
+    i = i + 1;
+  }
+
+  i = 0;
+  while(!(i >= count))
+  {
+    tmp=malloc(40ul /*[[struct _imagepart]]*/);
+    (threadData + (signed long int)i)->partition = (struct _imagepart *)tmp;
+    i = i + 1;
+  }
+  i = 0;
+  while(!(i >= count))
+  {
+    i = i + 1;
+  }
+  i = 0;
+  while(!(i >= partHeightLeft))
+  {
+    i = i + 1;
+  }
+  i = 0;
+  while(!(i >= count))
+  {
+
+    i = i + 1;
+  }
+
+  i = 1;
+  while(!(i >= count))
+  {
+    i = i + 1;
+  }
+
+i = 0;
+  while(!(i >= 1 + n))
+  {
+    x = ((double)i * 1.330000e+0) / (double)n;
+    weights_out[(signed long int)i]=exp(-x * x * 3.141590e+0);
+    i = i + 1;
+  }
+
+  if((signed int)ch == 35)
+    while(TRUE)
+    {
+      tmp___0=_IO_getc(file);
+      ch = (char)tmp___0;
+      if((signed int)ch == -1)
+        ppm_error((char *)"read error");
+
+      if((signed int)ch == 10)
+        goto __CPROVER_DUMP_L4;
+
+    }
+
+i;
+  while(TRUE)
+  {
+    ch=ppm_readchar(file);
+    if(!((signed int)ch == 32))
+    {
+      if(!((signed int)ch == 9))
+      {
+        if(!((signed int)ch == 10))
+          goto __CPROVER_DUMP_L3;
+
+      }
+
+    }
+
+  }
+  i = 0;
+  while(TRUE)
+  {
+    i = i * 10 + ((signed int)ch - 48);
+    ch=ppm_readchar(file);
+    if((signed int)ch >= 48)
+    {
+      if(!((signed int)ch <= 57))
+        goto __CPROVER_DUMP_L9;
+
+    }
+
+    else
+      goto __CPROVER_DUMP_L9;
+  }
+
+
+  tmp = 3u;
+  while(!(tmp >= 40u))
+  {
+    ctype[(signed long int)tmp] = (char)0;
+    tmp = tmp + 1u;
+  }
+
+  while(TRUE)
+  {
+    tmp___1=fgets((char *)line, 80, (struct _IO_FILE *)fp);
+    if(!(tmp___1 == ((char *)NULL)))
+    {
+      if(!((signed int)line[0l] == 35))
+        goto __CPROVER_DUMP_L8;
+
+    }
+
+    else
+      goto __CPROVER_DUMP_L8;
+  }
+
+
+
+  start = (unsigned int)(part->width * part->ystart);
+  stop = (unsigned int)(part->width * part->ystart) + nump;
+  i = start;
+  sum = 0u;
+  while(!(i >= stop))
+  {
+    sum = sum + (unsigned int)(src + (signed long int)i)->r + (unsigned int)(src + (signed long int)i)->g + (unsigned int)(src + (signed long int)i)->b;
+    i = i + 1u;
+  }
+
+  sum = *thresholdsum / numptot;
+  i = start;
+  while(!(i >= stop))
+  {
+    psum = (unsigned int)(src + (signed long int)i)->r + (unsigned int)(src + (signed long int)i)->g + (unsigned int)(src + (signed long int)i)->b;
+    if(!(psum >= sum))
+    {
+      tmp___0 = (unsigned char)0;
+
+      tmp = tmp___0;
+
+    }
+    else
+    {
+      tmp___2 = (unsigned char)255;
+      (src + (signed long int)i)->b = tmp___2;
+      tmp___1 = tmp___2;
+      (src + (signed long int)i)->g = tmp___1;
+      (src + (signed long int)i)->r = tmp___1;
+    }
+    i = i + 1u;
+  }
+
+
+
+  tmp___0=malloc(56ul /*[[struct _thresfilterdata]]*/ * (unsigned long int)thread_count);
+  thresdata = (struct _thresfilterdata *)tmp___0;
+  i = 0;
+  while(!(i >= thread_count))
+  {
+
+    i = i + 1;
+  }
+
+  i = 0;
+  while(!(i >= thread_count))
+  {
+    i = i + 1;
+  }
+
