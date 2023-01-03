@@ -29,27 +29,27 @@ the precise \emph{reachability-bound}s for control locations $4$ and $5$ are bot
 for location $2$ and $3$ are $(m + 1) \times \lfloor\frac{n}{m}\rfloor + 1$, 
 and $1$ for locations $0, 1$ and $\lex$. 
 \highlight{Notice here, though within the same loop $L_2$, the bounds for locations $4$ and $5$ on the first branch, and $6$ on the second branch are different.}
-% \\
-% In order to know that the locations in first branch ($4$ and $5$) are reached at most $m \times \lfloor\frac{n}{m}\rfloor$ times
-% while $6$ in second branch $\lfloor\frac{n}{m}\rfloor$ times
-%  during program execution,
-% we need to know that the two if branches are interleaved and executed alternatively after each other
-% during the iterations of the enclosed loop.
 \\
 However, the state-of-art \emph{reachability-bound} analysis~\cite{GulwaniZ10}
 gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$, which is tight w.r.t. $L_2$'s iteration times but not for different locations inside $L_2$ without considering multiple paths.
 Among works on program complexity, cost and loop bound analysis, \cite{GulwaniJK09} can also compute the tight bound on the loop iteration but not reachability-bound on each location path-sensitively.
 Though we can use it as the \emph{reachability-bound} for location $1$ and $2$,
 the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still unclear.
+
+
 \paragraph{Path Reachability-bound}
 To compute the bounds for locations on different paths of a loop, we compute the \emph{path reachability-bound},
 which is the first key idea of this path-sensitive \emph{reachability-bound} analysis algorithm. This bound approximate the evaluation times of each loop free path instead of the entire multipath loop.
+\\
+This bound is computed based on the refined loop and using the estimated ranking function for every path, combines two lines of work introduced in Section~\ref{sec:intro}. It is benefited from the high accuracy of the path refinement and the ranking function estimation, but reduces the efficiency comparing to simply computing the ranking function.
 \\
 % Our algorithm combines the idea of \emph{difference constraint} based program complexity analysis method from \cite{SinnZV17}
 % and the control-flow refinement technique from~\cite{GulwaniJK09}.
 For this example, we first
 generate the abstract transition graph for the program using the difference constraints, such as Figure~\ref{fig:whileTwoCounters-overview}(b).
-Then it transforms every the loop in $\kw{twoPathsWhile}$ using the control-flow refinement technique from~\cite{GulwaniJK09} and generates a refined program $\rprog$ as
+Then it transforms every loop in $\kw{twoPathsWhile}$ by explicitly computing the interleaving between paths and
+%  using the control-flow refinement technique from~\cite{GulwaniJK09} and 
+generates a refined program $\rprog$ as
 \\
 % 
 % The refined program for program $\kw{twoPathsWhile}$ is
@@ -142,6 +142,7 @@ separately as well.
 }
 \paragraph*{Loop reachability-bound.}
 In this sense, this \emph{loop reachability-bound}, $\lpchB(L:\rprog, \tpath)$ is our second key idea.
+This bound is computed using the estimated ranking function for every loop and path, which benefits from the high efficiency and accuracy of \emph{amortized complexity analysis} methodology.
 For each transition path $\tpath$ w.r.t each of the loops $L:\rprog$ in which $\tpath$ is nested,
 $\lpchB(L:\rprog, \tpath)$ 
 \highlight{is a bound on the iterations for
