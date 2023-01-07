@@ -127,22 +127,22 @@ Then by multiplying the loop iteration bound of the $L_6$ with its \emph{loop re
 \\
 \highlight{
 This quantity isn't considered or computed in any of the previous works.
-The \emph{Progress Invariant} method in \cite{GulwaniJK09} is only able to compute
+In the line of methods based on path refinement and loop summarization, the \emph{Progress Invariant} method in \cite{GulwaniJK09} is only able to compute
 the
 bound on iteration numbers
 of the inner loop $L_6$ in each iteration of $L_3$ and $L_1$, which are both $N$.
 So they have to over-approximate the reachability-bound for locations inside $L_6$ with the
 overall program complexity by multiplication, i.e., $n + m^2 - m \times N$.
 % \\
-For the same reason, the DC-based algorithm in \cite{SinnZV17}
+In the line of the \emph{amortized complexity analysis} through ranking function, the DC-based algorithm in \cite{SinnZV17}
 is only able to
 compute the combined loop bound and the local bound of each loop
 separately as well.
 % We are still unable to know the precise \emph{reachability-bound} for the locations in the innermost loop.
 }
 \paragraph*{Loop reachability-bound.}
-In this sense, this \emph{loop reachability-bound}, $\lpchB(L:\rprog, \tpath)$ is our second key idea.
-This bound is computed using the estimated ranking function for every loop and path, which benefits from the high efficiency and accuracy of \emph{amortized complexity analysis} methodology.
+In this sense, this \emph{loop reachability-bound}, $\lpchB(L:\rprog, \tpath)$ is our second key idea combining two lines of works.
+It has high accuracy and efficiency by using the estimated ranking function based on the \emph{amortized complexity analysis} methodology over the refined loop paths.
 For each transition path $\tpath$ w.r.t each of the loops $L:\rprog$ in which $\tpath$ is nested,
 $\lpchB(L:\rprog, \tpath)$ 
 \highlight{is a bound on the iterations for
@@ -160,7 +160,7 @@ where the $\tpath_0, \ldots$ are shown in the middle part of Figure~\ref{fig:thr
 We use $\rprog_1$ and $\rprog_3$ denote the body of the loop $L_1$ and $L_3$ respectively as in the bottom part of Figure~\ref{fig:threeWhile-overview}(b).
 % to denote ${\rprepeat(\tpath_1; 3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5)}$
 % and $\rprog_3 = {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}$
-In the first step, we still compute the \emph{path reachability-bound} for each $\tpath_i$ but only w.r.t. the closest loop it is nested.
+In the first step, we still compute the \emph{path reachability-bound} for each $\tpath_i$ but only w.r.t. the innermost loop it is nested.
 Then differently from $\kw{twoPathsWhile}$,
 we compute \emph{loop reachability-bound} for each $\tpath_i$ w.r.t. each of its outer nested loops.
 For example, for $\tpath_3$ we compute
