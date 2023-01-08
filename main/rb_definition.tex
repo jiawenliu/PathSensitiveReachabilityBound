@@ -47,9 +47,9 @@ with proof in Appendix~\ref{apdx:lem_language}.
 a function $f(c, l) : \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Reachability-Bound} for $l$ if and only if
 \highlight{
 \[
-  \forall \trace_0 \in \ftdom_0(c), c' \in \cdom, \trace \in \tdom \st 
+  \forall \trace_0 \in \ftdom_0(c), c' \in \cdom, l, l' \in \lvar(c), \trace \in \tdom \st 
   \Big(
-    \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace} 
+    \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace} 
     \lor 
     \config{{c}, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
   \Big)
@@ -70,9 +70,9 @@ Ideally, we aim to compute a precise reachability-bound as below.
 $\exeRB({c}, l): \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{Precise Reachability-Bound}  if and only if,
 \highlight{
 \[
-  \forall \trace_0 \in \ftdom_0(c), c' \in \cdom, \trace \in \tdom \st 
+  \forall \trace_0 \in \ftdom_0(c), c' \in \cdom, l, l' \in \lvar(c), \trace \in \tdom \st 
   \Big(
-    \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace} 
+    \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace} 
     \lor 
     \config{{c}, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
   \Big)

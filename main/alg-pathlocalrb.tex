@@ -127,6 +127,8 @@ We show that Definition~\ref{def:loopbound} computes a sound loop bound for ever
   $BD(\rprog, c)$ is a sound upper bound on the iterating times of this program.
 \end{lem}
 
+\paragraph{Example.}
+\todo{Walk through example}
 
 \subsection{Path Local Reachability-bound}
 We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \textbf{the innermost loop} inside $\rprog$ where $\tpath$ is located.
@@ -183,3 +185,21 @@ We show the \emph{path local reachability-bound} of the simple transition path $
     \end{array}
   \]  
 \end{lem}
+
+
+\paragraph{Example.}
+\todo{Walk through example}
+
+\todo{Notice here we can already compute the path reachability-bound simply use the Loop Bound $BD$ recursively. By simply remove the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and use $\rprog$
+as the input. Then Definition~\ref{def:pathlocalrb} can compute $\outinB(\rprog, \tpath)$ over the entire program.
+Then we have already been able to compute the \emph{Reachability-bound} for every program point  $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
+\[ 
+  \psRB(c, l) = 
+  \sum
+  \left\{ \outinB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
+  l \in \tpath \right\}\footnotemark
+\]
+But this computation is loose, we compute the \emph{loop reachability-bound} in the next for a tighter program point \emph{Reachability-bound}.
+}
+\paragraph{Example.}
+\todo{Walk through example with a loose path and point reachability bound}

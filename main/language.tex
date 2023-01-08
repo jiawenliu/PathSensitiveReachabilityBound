@@ -87,8 +87,8 @@ We use following notations to represent the sets of corresponding terms:
 \inpvar(c) & : & \mbox{Set of Program $c$'s Input Variables}  
 \\
 %
-\ftdom_0(c) & : & \mbox{Set of Program $c$'s Initial Traces.}
-\\ & & \mbox{Each initial trace $\trace_0 \in \ftdom_0(c)$ is finite and every input variable of the program $c$ has an initial value in $\trace_0$.}
+\ftdom_0(c) & : & \mbox{Set of Program $c$'s Well-formed Initial Traces.}
+\\ & & \mbox{Each well formed initial trace $\trace_0 \in \ftdom_0(c)$ is finite and every input variable of the program $c$ has an initial value in $\trace_0$.}
 \end{array}
 \]
 %
@@ -158,15 +158,17 @@ We don't use separate data structure as the environment to record each variable'
 \end{array}
 \]
 %
-\begin{defn}[Well Formed Initial Traces]
+\begin{defn}[Well-formed Initial Traces]
   \label{def:initial_trace}
-  Given a program $c$, we consider only well-formed initial trace if and only if all the input variables of $c$ has an initial value in this trace.
+  Given a program $c$, $\trace$ is a well-formed initial trace of $c$ if and only if all the input variables of $c$ has an initial value in this trace.
   \[
     \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
     \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot
     \]
 \end{defn}
 %
+In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
+when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
 %
 \paragraph{Expression Semantics}
 The evaluation notation for arithmetic expression is $\econfig{} : \mathcal{A} \to \tdom \to \mathcal{V}$.
@@ -185,7 +187,7 @@ The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under
   \inferrule{ 
     \env(\trace) x = v
   }{
-   \econfig{x} 
+   \econfig{x} (\trace)
    = v
   }
   \and
@@ -196,7 +198,7 @@ The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under
     \and 
      v_1 \oplus_a v_2 = v
   }{
-   \econfig{\aexpr_1 \oplus_a \aexpr_2} 
+   \econfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
    = v
   }
   \and
@@ -214,7 +216,7 @@ The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under
     \and 
     \esign v' = v
   }{
-   \econfig{\esign \aexpr} 
+   \econfig{\esign \aexpr} (\trace)
    = v
   }
    \end{mathpar}
@@ -251,24 +253,24 @@ The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under
   }
   \and 
   \inferrule{ 
-    \config{\bexpr, \trace_1} \barrow v_1
+    \config{\bexpr_1, \trace} \barrow v_1
     \and 
-    \config{\bexpr, \trace_2} \barrow v_2
+    \config{\bexpr_2, \trace} \barrow v_2
     \and 
      v_1 \land v_2 = v
   }{
-   \config{\bexpr, \trace_1 \land \bexpr_2} 
+   \config{\bexpr \land \bexpr_2, \trace} 
    \barrow v
   }
   \and 
   \inferrule{ 
-    \config{\bexpr, \trace_1} \barrow v_1
+    \config{\bexpr_1, \trace} \barrow v_1
     \and 
-    \config{\bexpr, \trace_2} \barrow v_2
+    \config{\bexpr_2, \trace} \barrow v_2
     \and 
      v_1 \lor v_2 = v
   }{
-   \config{\bexpr, \trace_1 \lor \bexpr_2} 
+   \config{\bexpr_1 \lor \bexpr_2, \trace} 
    \barrow v
   }
   \end{mathpar}
@@ -296,11 +298,13 @@ The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under
   \and
   \inferrule{ 
     \config{\expr_1, \trace} \earrow v_1
-    \cdots
+    \and 
+    \ldots
+    \and 
     \config{\expr_n, \trace} \earrow v_n
   }{
-   \config{ [\expr_1, \cdots, \expr_n], \trace} 
-   \earrow [v_1, \cdots, v_n]
+   \config{ [\expr_1, \ldots, \expr_n], \trace} 
+   \earrow [v_1, \ldots, v_n]
   }
   \and
   \inferrule{ 

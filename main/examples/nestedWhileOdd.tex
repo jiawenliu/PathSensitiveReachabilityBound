@@ -23,6 +23,24 @@
       \end{array}
     $
     }
+    {\small
+    $
+    \begin{array}{l}
+      \kw{nestedWhileOdd}(n, m) \triangleq \\
+      \clabel{ \assign{i}{n} }^{0} ; \\
+          \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
+          \qquad \Big(
+            \eif(\clabel{i \% 2 = 0 }^{2},\\
+            \qquad \clabel{\assign{k}{i - m}}^{3};\\
+            \qquad \ewhile ~ \clabel{k > 0}^{4} ~ \edo ~
+            \Big( \clabel{\assign{j}{j - 1}}^{5} \Big);\\
+            \qquad \clabel{\assign{i}{k + m}}^{6};
+            \clabel{\assign{i}{i - 1}}^{7}, \\
+            \qquad \clabel{\assign{i}{i - 3}}^{8});
+            \Big)
+      \end{array}
+    $
+    }
     \caption{}
     \end{centering}
     \end{subfigure}

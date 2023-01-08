@@ -70,7 +70,9 @@ is a \emph{simple transition path} if and only if it satisfies,
 \end{itemize}
 \end{defn}
 
+
 \paragraph{Example.}
+\todo{The walk through example}
 $2 \to 3 \to 6 \to 2$ is a \emph{simple transition path} on $\absG(\kw{twoPathsWhile}(n, m))$ in Figure~\ref{fig:twoPathsWhile_abscfg}(b).
 However, $2 \to 3 \to 6 \to 2 \to 3 \to 4 \to 5 \to 2$ is not a \emph{simple transition path} because it is not simple (the program points $2$ and $3$ are visited twice).
 In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
@@ -113,7 +115,10 @@ while and sequence statement in paper~\cite{GulwaniJK09} respectively.
   \item
   Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
 \end{itemize}
-\todo{soundness of the program write}
+% \todo{soundness of the program write}
 \paragraph{Refined Program}
 We implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
 refined program $\rprog$ for a rewritten program $c$.
+
+\paragraph[example]{Example.}
+\todo{The walk through example}
