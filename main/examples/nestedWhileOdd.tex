@@ -23,24 +23,6 @@
       \end{array}
     $
     }
-    {\small
-    $
-    \begin{array}{l}
-      \kw{nestedWhileOdd}(n, m) \triangleq \\
-      \clabel{ \assign{i}{n} }^{0} ; \\
-          \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
-          \qquad \Big(
-            \eif(\clabel{i \% 2 = 0 }^{2},\\
-            \qquad \clabel{\assign{k}{i - m}}^{3};\\
-            \qquad \ewhile ~ \clabel{k > 0}^{4} ~ \edo ~
-            \Big( \clabel{\assign{j}{j - 1}}^{5} \Big);\\
-            \qquad \clabel{\assign{i}{k + m}}^{6};
-            \clabel{\assign{i}{i - 1}}^{7}, \\
-            \qquad \clabel{\assign{i}{i - 3}}^{8});
-            \Big)
-      \end{array}
-    $
-    }
     \caption{}
     \end{centering}
     \end{subfigure}
@@ -117,8 +99,10 @@
     $\outinB(\rprog, \tpath_4) = 1$ \\
     $\outinB(1: \rprog_1^1, \tpath_1) = \frac{n}{4}$ \\
     $\outinB(1: \rprog_1^1, \tpath_3) = \frac{n}{4}$ \\
+    $\outinB(1: \rprog_1^1, \tpath_5) = \frac{n}{4}$ \\
     $\outinB(1: \rprog_1^2, \tpath_1) = \frac{n}{4}$ \\
     $\outinB(1: \rprog_1^2, \tpath_3) = \frac{n}{4}$ \\
+    $\outinB(1: \rprog_1^2, \tpath_5) = \frac{n}{4}$ \\
     $\outinB(5: \rprepeat(\tpath_2), \tpath_2) = n$ 
     \\
     Loop Bounds:
@@ -139,9 +123,11 @@
     \highlight{
     $\lpchB(1: \rprog_1^1, \tpath_1) = \frac{n}{4}$ \quad
     $\lpchB(1: \rprog_1^1, \tpath_3) = \frac{n}{4}$ \quad 
+    $\lpchB(1: \rprog_1^1, \tpath_5) = \frac{n}{4}$ \quad 
     \highlight{$\lpchB(1: \rprog_1^1, \tpath_2) = \frac{n}{4}$} \\ 
     $\lpchB(1: \rprog_1^2, \tpath_1) = \frac{n}{4}$ \quad
     $\lpchB(1: \rprog_1^2, \tpath_3) = \frac{n}{4}$ \quad 
+    $\lpchB(1: \rprog_1^2, \tpath_5) = \frac{n}{4}$ \quad 
     \highlight{$\lpchB(1: \rprog_1^2, \tpath_2) = \frac{n}{4}$} \\
     $\lpchB(5: \rprepeat(\tpath_2), \tpath_2) = n$ \quad
     }
@@ -153,6 +139,7 @@
     $\inoutB(\rprog, \tpath_1) = \frac{n}{4}$ \quad
     $\inoutB(\rprog, \tpath_2) = \frac{n}{4} \times n$ \\
     $\inoutB(\rprog, \tpath_3) = \frac{n}{4}$ \quad
+    $\inoutB(\rprog, \tpath_5) = \frac{n}{4}$ \quad
     $\inoutB(\rprog, \tpath_4) = 1$
     %
     \item The Reachability-bound:
