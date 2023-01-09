@@ -35,16 +35,17 @@ minimum height=2em]
     a given control location is referred to as the reachability-bound by~\cite{GulwaniZ10} in the first place.
     A tight reachability-bound
     can help to improve the analysis result on other program features.
-    For example, in the resource cost analysis, this quantitative reachability property
-    can help to provide a tighter
-    bound on the resources consumed by a program such as time, memory,
-    network traffic, power, etc.
-    In the data analysis area,
-    the reachability-bound on each program control location
-    can help to improve the precision of the data training result. 
-    In security, this reachability-bound helps to improve the accuracy
-    in estimating the program's information leakage or uncertainty propagation, etc.
-    However, computing a tight reachability-bound for a given program control location is challenging.
+    % For example, in the resource cost analysis, this quantitative reachability property
+    % can help to provide a tighter
+    % bound on the resources consumed by a program such as time, memory,
+    % network traffic, power, etc.
+    % In the data analysis area,
+    % the reachability-bound on each program control location
+    % can help to improve the precision of the data training result. 
+    % In security, this reachability-bound helps to improve the accuracy
+    % in estimating the program's information leakage or uncertainty propagation, etc.
+    % However,
+    While computing a tight reachability-bound for a given program control location is challenging.
     Many works in the program analysis area develop algorithms estimating the program's loop bound or overall complexity.
     But there isn't a general analysis algorithm that
     computes the reachability-bound
@@ -52,7 +53,7 @@ minimum height=2em]
     To leverage these limitations,
     we present a path-sensitive reachability-bound algorithm
     aiming to find a precise symbolic worst-case reachability-bound on the program's every control location in this paper.
-    Our algorithm brings together two techniques:
+    Our algorithm brings together two lines of program complexity analysis techniques:
     1. ranking function based amortized bound analysis through program abstraction, and
     2. loop summarization based multiple loop paths refinement
     and combines them effectively. 
