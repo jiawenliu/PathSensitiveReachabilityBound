@@ -188,18 +188,44 @@ We show the \emph{path local reachability-bound} of the simple transition path $
 
 
 \paragraph{Example.}
-\todo{Walk through example}
+% \todo{Walk through example}
+Now using our ranking function-based approach combined with the refined program, we compute another loop bound for every subprogram in the Example~\ref{ex:relatedNestedWhileOdd_abscfg} as $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m $, $BD(\rprog_1^1) = \frac{m}{4} $, and $BD(\rprog_1^2) = \frac{m}{4} $.
+They are more precise comparing to purely ranking function-based approach in Equation~\ref{eq:absBD}.
+Using this precise loop bound, we compute local reachability-bound for every transition path w.r.t. its innermost loop as
+$\outinB(\rprog, \tpath_0) = 1$,
+$\outinB(\rprog, \tpath_4) = 1$,
+$\outinB(1: \rprog_1^1, \tpath_1) = \frac{m}{4}$,
+$\outinB(1: \rprog_1^1, \tpath_2) = \frac{m}{4}$,
+$\outinB(1: \rprog_1^1, \tpath_4) = \frac{m}{4}$,
+$\outinB(1: \rprog_1^2, \tpath_1) = \frac{m}{4}$,
+$\outinB(1: \rprog_1^2, \tpath_2) = \frac{m}{4}$,
+$\outinB(1: \rprog_1^2, \tpath_4) = \frac{m}{4}$, and
+$\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ 
 
-\todo{Notice here we can already compute the path reachability-bound simply use the Loop Bound $BD$ recursively. By simply remove the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and use $\rprog$
-as the input. Then Definition~\ref{def:pathlocalrb} can compute $\outinB(\rprog, \tpath)$ over the entire program.
-Then we have already been able to compute the \emph{Reachability-bound} for every program point  $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
+\todo{necessary?}
+\todo{
+Notice here we can already compute the path reachability-bound simply use the Loop Bound $BD$ recursively. By simply remove the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and use $\rprog$
+as the input. Then the same Definition~\ref{def:pathlocalrb} computes $\outinB(\rprog, \tpath)$ over the global program, $\rprog$ and use $\outinB(\rprog, \tpath)$  as the path global reachability-bound.
+Given we have already computed the path global reachability-bound,
+we are able to compute the \emph{Reachability-bound} for every program point  $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
 \[ 
   \psRB(c, l) = 
   \sum
   \left\{ \outinB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
-  l \in \tpath \right\}\footnotemark
+  l \in \tpath \right\}
 \]
-But this computation is loose, we compute the \emph{loop reachability-bound} in the next for a tighter program point \emph{Reachability-bound}.
+But this substitution will compute loose reachability-bound for every path.
 }
+\todo{
 \paragraph{Example.}
-\todo{Walk through example with a loose path and point reachability bound}
+To show the imprecision of this simple substitution, we compute the global reachability-bound for every transition paths for our walk through example as
+$\outinB(\rprog, \tpath_0) = 1$,
+$\outinB(\rprog, \tpath_1) = \frac{m}{4}$,
+$\outinB(\rprog, \tpath_2) = \frac{m}{4}$,
+$\outinB(\rprog, \tpath_3) = \frac{m}{4} \times (n - m)$,
+$\outinB(\rprog, \tpath_4) = \frac{m}{4}$, and
+$\outinB(\rprog, \tpath_5) = 1$.
+It is loose for the $\tpath_3$ because the substituted computation assumes the loop $4$ is reached in every iteration of its outside loop $1$. Naturally, the program point reachability-bound computed using $\outinB(\rprog, \tpath)$ will be loose as well for location $4$ and $5$.
+In this sense, we compute the \emph{loop reachability-bound} in the next for a tighter program point \emph{Reachability-bound} in the next section.
+% \todo{Walk through example with a loose path and point reachability bound}
+}

@@ -115,9 +115,12 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
       \Big\}.
 \end{array}
   \]
-\paragraph{Example.}
-\todo{Walk through example}
-
+\paragraph{Walk through Example~\ref{ex:relatedNestedWhileOdd_abscfg}.}
+% \todo{Walk through example}
+Since there is only two level nested loop in Example~\ref{ex:relatedNestedWhileOdd_abscfg},
+the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^1, \tpath_3)$ 
+w.r.t. $\tpath_3$ and its outside loop $1$.
+We compute $1$ for both $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^2, \tpath_3)$. It is tight and indicating there is only $1$ iteration of $\rprog_1^1$, also $\rprog_1^2$ such that the inner loop $4$ will be entered.
 % \[
   %   \begin{array}{l}
   %   \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 

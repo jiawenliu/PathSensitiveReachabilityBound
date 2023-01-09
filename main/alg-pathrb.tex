@@ -59,8 +59,21 @@ We show the \emph{path reachability-bound} of the simple transition path $\tpath
     \end{array}
   \]  
 \end{lem}
-\paragraph{Example.}
-\todo{Walk through example with a tighter path reachability bound}
+\paragraph{Walk through Example.}
+% \todo{Walk through example with a tighter path reachability bound}
+In comparison with the substituted computation in Section~\ref{def:pathlocalrb}, now we use the \emph{loop reachability-bound}
+and compute a more precise path \emph{global} reachability-bound for the path $\tpath_3$ as $\frac{m}{4} \times 1$.
+The bounds for the other paths are the same.
+Then by summing up all the $\inoutB(\rprog, \tpath)$ where each program point $l$ shows up on the $\tpath$, we finally compute
+the \emph{reachability-bound} for every point path-sensitively as
+$\psRB(0) = \psRB(\lex) = 1$,
+$\psRB(1) = \frac{m}{2} + 1$,
+$\psRB(2) = \frac{m}{2} $, 
+$\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
+\highlight{$\psRB(5) = \frac{m}{4} \times 1$},
+and $\psRB(4) =  \frac{m}{4} + n - m + 1$.
+As expected, this bound is tight for every program point.
+%
 
 
 % \subsection{Program Points Path-sensitive Reachability-bound}
