@@ -174,9 +174,22 @@ the execution times of this assignment command in $c$.
   \]
 \end{thm}
 %
-\paragraph[example]{Example.}
-\todo{The walk through example}
-
+\paragraph[example]{Walk through Example.}
+% \todo{The w example}
+Using this ranking function based approach, we first find the ranks for every transition,
+$\locbound(0 \to 1) = 1$,
+$\locbound(1 \to \lex) = 1$,
+$\locbound(1 \to 2) = i$,
+$\locbound(2 \to 3) = i$,
+$\locbound(3 \to 4) = i$,
+$\locbound(4 \to 5) = k$,
+$\locbound(5 \to 4) = k$,
+$\locbound(4\to 6) = \locbound(6 \to 7) = \locbound(7 \to 1) = i$,
+and $\locbound(2 \to 8) = \locbound(8 \to 1) = i$,
+Then we estimate the upper bound invariant for the ranking function $i$ and $k$ by computing the transition bound in the same time.
+We get $\varinvar(i, c) = n$ and $\varinvar(k, c) = m$.
+While the transition bound for each transition is the same as the upper bound invariant of its ranking function.
+They are loose and path-insensitive. 
 \subsection{Estimating the Loop Bound} 
 The $BD(\rprog, c)$ for the refined program $\rprog$ can also be estimated by $\absclr(\absevent, c)$ by taking the
 minimum value over all $\absevent \in \rprog$.
@@ -188,7 +201,7 @@ We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
 %
 This bound is accurate on the iteration numbers of a single loop, but neither tight on the iterations of different paths inside the loop, nor the nested loop.
 %
-\paragraph[example]{Example.}
+\paragraph[example]{Walk through Example.}
 % \todo{The walk through example}
 In Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), by using this ranking function-based approach, we compute the loose loop bound for each subprogram,
 $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, $BD(\rprog_1^1) = n$, and $BD(\rprog_1^2) = n $.
