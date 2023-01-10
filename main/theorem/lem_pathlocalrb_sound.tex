@@ -223,26 +223,22 @@ it is sufficient to show
 Let $c_1, c_2 \in \cdom$ be the while language program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_l = c_1; c_2$.
 \\
-According to the operational semantics, let $\trace_1 \in \ftdom, \trace_2 \in \inftdom$ be two execution traces, we have
+According to the operational semantics, we have two possible executions as follows,
+\subcaseL{The execution of $c_1$ terminates}
+Then let $\trace_1 \in \ftdom, \trace_2 \in \inftdom$ be two execution traces, we have
 \[
-  \config{c_1; c_2, \trace_l} \uparrow^{\infty} \trace_l \tracecat \trace
-  \lor
   \config{c_1; c_2, \trace_l} \to^* \config{c_2, \trace_l \tracecat \trace_1} \uparrow^{\infty} \trace_l \tracecat \trace_1 \tracecat \trace_2
 \]
-By the trace non-decreasing property in Lemma~\ref{lem:tracenondec}, we have in the second case $\trace = \trace_1 \tracecat \trace_2$ and in both cases,
+By the trace non-decreasing property in Lemma~\ref{lem:tracenondec}, we have $\trace = \trace_1 \tracecat \trace_2$ and,
 \[
-  \lcounter(\trace, \pathl(\tpath))  = \lcounter(\trace_1,  \pathl(\tpath))  + \lcounter(\trace_2,  \pathl(\tpath)) = \infty
+  \lcounter(\trace, \pathl(\tpath))  = 
+  \lcounter(\trace_1,  \pathl(\tpath))  + \lcounter(\trace_2,  \pathl(\tpath)) = \lcounter(\trace_1,  \pathl(\tpath)) + \bot
 \]
-By induction hypothesis on $\trace_l$, $c_1$, $\trace_1$ and $c_2$, we have
-either 
-\[
-  \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) = \infty \geq \lcounter(\trace,  \pathl(\tpath)) 
-\]
-or
+By induction hypothesis on $\trace_l$, $c_1$, $\trace_1$ and $c_2$, we know
 \[
   \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) \geq \lcounter(\trace_1,  \pathl(\tpath)) 
   \land 
-  \econfig{\outinB(\rprog_2, \tpath)}(\trace_0)  = \infty \geq \lcounter(\trace_2,  \pathl(\tpath))  
+  \econfig{\outinB(\rprog_2, \tpath)}(\trace_0)  \geq \lcounter(\trace_2,  \pathl(\tpath))  
 \]
 Then we have this case proved as
 \[
@@ -251,11 +247,41 @@ Then we have this case proved as
   \\
   \geq \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) + \econfig{\outinB(\rprog_2, \tpath)}(\trace_0)
   \\
-  \geq \lcounter(\trace_1,  \pathl(\tpath))  + \lcounter(\trace_2,  \pathl(\tpath)) 
+  \geq \lcounter(\trace_1,  \pathl(\tpath))  + \bot 
   \\
   = \lcounter(\trace, \pathl(\tpath))
   \end{array}
   \] 
+  \subcaseL{The execution of $c_1$ is non-terminating}
+  In this case, let $\trace_1, \trace_2 \in \inftdom$ be two execution traces, we have
+  \[
+    \config{c_1; c_2, \trace_l} \uparrow^{\infty} \trace_l \tracecat \trace_1
+  \]
+  By the trace concatenation in Definition~\ref{def:trace_concate} and the non-decreasing property in Lemma~\ref{lem:tracenondec}, we know $\trace = \trace_1$ and
+  \[
+    \lcounter(\trace, \pathl(\tpath))  = \lcounter(\trace_1, \pathl(\tpath))  = \bot
+  \]
+  By induction hypothesis on $\trace_l$, $c_1$, $\trace_1$, we have
+  in the first case
+  \[
+    \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) \geq \lcounter(\trace,  \pathl(\tpath)) 
+  \]
+  Then we have this case proved as
+  \[
+    \begin{array}{l}
+    \econfig{\outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath)}(\trace_0)
+    \\
+    \geq \econfig{\outinB(\rprog_1, \tpath)}(\trace_0) + \econfig{\outinB(\rprog_2, \tpath)}(\trace_0)
+    \\
+    \geq \econfig{\outinB(\rprog_1, \tpath)}(\trace_0)
+    \\
+    \geq \lcounter(\trace_1,  \pathl(\tpath))
+    \\
+    = \lcounter(\trace, \pathl(\tpath))
+    = \bot
+    \end{array}
+    \] 
+   
 \caseL{$\rprog_l = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
 We have $\outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) = \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\}$ by Definition~\ref{alg:alg-refine_rewrite}.
 Then it is sufficient to show

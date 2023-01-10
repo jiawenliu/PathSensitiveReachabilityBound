@@ -10,7 +10,7 @@ Every the program point is unique.
   \left\{
   \begin{array}{ll}
       \{l\}                  
-      & {c} = \clabel{\assign x e}^{l} 
+      & {c} = \clabel{\assign x \expr}^{l} 
       \\
       \lvar({c_1}) \cup \lvar({{c_2}}) 
       & {c} = {c_1};{c_2}
@@ -38,8 +38,6 @@ with proof in Appendix~\ref{apdx:lem_language}.
   \]
 \end{lem}
 %
-% The free variables
-% showing up in $c$, which aren't defined before be used, are actually the input variables of this program.
 %
 \begin{defn}[Reachability-bound]
   \label{def:rb}

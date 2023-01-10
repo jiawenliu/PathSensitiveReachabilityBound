@@ -234,43 +234,43 @@ it is sufficient to show
 Let $c_1, c_2 \in \cdom$ be the while language program corresponding to $\rprog_1$ and $\rprog_2$ such that $\algrewrite(c_1) = \rprog_1$ and $\algrewrite(c_2) = \rprog_2$.
 According to the Algorithm~\ref{alg:alg-refine_rewrite}, we have $c_r = c_1; c_2$.
 \\
-According to the operational semantics, let $\trace_1 \in \ftdom, \trace_2 \in \inftdom$ be two execution traces, we have either
+According to the operational semantics, let $\trace_1 \in \tdom, \trace_2 \in \inftdom$ be two execution traces, we have the two following possible executions,
 \[
-  \config{c_1; c_2, \trace_r} \uparrow^{\infty} \trace_r \tracecat \trace
+  \config{c_1; c_2, \trace_r} \uparrow^{\infty} \trace_r \tracecat \trace_1
 \]
 or
 \[
   \config{c_1; c_2, \trace_r} \to^* \config{c_2, \trace_r \tracecat \trace_1} \uparrow^{\infty} \trace_r \tracecat \trace_1 \tracecat \trace_2
 \]
-By the trace non-decreasing property in Lemma~\ref{lem:tracenondec}, we have in the second case $\trace = \trace_1 \tracecat \trace_2$ and in both cases,
+By the trace non-decreasing property in Lemma~\ref{lem:tracenondec} and the trace concatenaton in Definition~\ref{def:trace_concate}, we have in the first subcase $\trace = \trace_1$ and
 \[
-  \lcounter(\trace, \pathl(\tpath))  = \lcounter(\trace_1,  \pathl(\tpath))  + \lcounter(\trace_2,  \pathl(\tpath)) = \infty 
+  \lcounter(\trace, \pathl(\tpath))  = \lcounter(\trace_1,  \pathl(\tpath))  = \bot;
 \]
-By induction hypothesis on $\trace_r$, $c_1$, $\trace_1$ and $c_2$, we have
+and in the second subcase $\trace = \trace_1 \tracecat \trace_2$ and
+\[
+  \lcounter(\trace, \pathl(\tpath))  = \lcounter(\trace_1,  \pathl(\tpath))  + \lcounter(\trace_2,  \pathl(\tpath)) = \lcounter(\trace_1,  \pathl(\tpath)) + \bot.
+\]
+By induction hypothesis on $\trace_r$, $c_1$ and $c_2$, $\trace_1$ and $c_2$, we have
 either 
 \[
-  \econfig{\inoutB(\rprog_1, \tpath)}(\trace_0) = \infty \geq \lcounter(\trace,  \pathl(\tpath)) 
+  \econfig{\inoutB(\rprog_1, \tpath)}(\trace_0)  \geq \lcounter(\trace_1,  \pathl(\tpath)) 
 \]
-or
+and
 \[
-  \econfig{\inoutB(\rprog_1, \tpath)}(\trace_0) \geq \lcounter(\trace_1,  \pathl(\tpath)) 
-  \land 
-  \econfig{\inoutB(\rprog_2, \tpath)}(\trace_0)  = \infty \geq \lcounter(\trace_2,  \pathl(\tpath))  
+  \econfig{\inoutB(\rprog_2, \tpath)}(\trace_0) \geq \lcounter(\trace_2,  \pathl(\tpath))  
 \]
 respectively.
 \\
-Then we have this case proved as
+Then we have this case proved as the follows in both subcases.
 \[
   \begin{array}{l}
   \econfig{\inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath)}(\trace_0)
   \\
   \geq \econfig{\inoutB(\rprog_1, \tpath)}(\trace_0) + \econfig{\inoutB(\rprog_2, \tpath)}(\trace_0)
   \\
-  =  \infty
-  \\
   \geq \lcounter(\trace_1,  \pathl(\tpath))  + \lcounter(\trace_2,  \pathl(\tpath)) 
   \\
-  = \lcounter(\trace, \pathl(\tpath))
+  \geq \lcounter(\trace, \pathl(\tpath))
   \end{array}
   \] 
 \caseL{$\rprog = \rpchoose{\rprog_1, \ldots, \rprog_m }$}
@@ -281,18 +281,20 @@ Then it is sufficient to show
 \]
 Let $c_1, \ldots, c_m \in \cdom$ be the while language program corresponding to $\rprog_1, \ldots, \rprog_m$ such that $\algrewrite(c_1) = \rprog_1$, $\ldots$ and  $\algrewrite(c_m) = \rprog_m$.
 \\
-Let $\trace_1, \ldots, \trace_m \in \tdom$ be the execution traces such that 
+Let $\trace_1, \ldots, \trace_m \in \tdom$ be the execution traces such that each $c_i$ and $\trace_i$ satisfies 
 \[
   \config{c_i, \trace_r} \to^* 
   \config{\clabel{\eskip}^{l}, \trace_r \tracecat \trace_i}
+  \lor 
+  \config{c_i, \trace_r} \uparrow^{\infty}  \trace_r \tracecat \trace_i.
 \]
-Since the execution of each $c_i$ corresponds to one possible execution of $c_r$ as analyzed in Appendix~\ref{apdx:loopbound-sound}, we know there exists at least a program $c_j$ where $\trace_j \in \inftdom$ such that
+Since the execution of each $c_i$ corresponds to one possible execution of $c_r$ as analyzed in Appendix~\ref{apdx:loopbound-sound}, we know there exists at least a sub-program $c_j$ where $\trace_j \in \inftdom$ such that
 \[
   \config{c_j, \trace_r} \uparrow^{\infty} \trace_r \tracecat \trace_j.
 \]
-Then by induction hypothesis on $c_j$, we know 
+Then we have $\lcounter(\trace_j, \pathl(\tpath))  = \bot$, and by induction hypothesis on $c_j$ we also know 
 \[
-  \econfig{\inoutB(\rprog_j, \tpath)}(\trace_0) = \infty
+  \econfig{\inoutB(\rprog_j, \tpath)}(\trace_0) 
   \geq \lcounter(\trace_j, \pathl(\tpath)) 
 \]
 Then we have this case proved by following
@@ -317,7 +319,7 @@ it is sufficient to show
   \econfig{ BD(\rprepeat(\rprog'), c) \times \inoutB(\rprog', \tpath)} (\trace_0) \geq \lcounter(\trace, \pathl(\tpath)) 
 \]
 Since execution of $\rprepeat(\rprog')$ non-terminates, and it is a loop program,
-by Lemma~\ref{lem:loopbound_sound} second sub0case in the non-terminating case, we know
+by the second subcase of the non-terminating case in the proof of Lemma~\ref{lem:loopbound_sound}, we know
 \[
   BD(\rprepeat(\rprog'), c) = \infty.
 \]

@@ -190,20 +190,3 @@ Then we estimate the upper bound invariant for the ranking function $i$ and $k$ 
 We get $\varinvar(i, c) = n$ and $\varinvar(k, c) = m$.
 While the transition bound for each transition is the same as the upper bound invariant of its ranking function.
 They are loose and path-insensitive. 
-\subsection{Estimating the Loop Bound} 
-The $BD(\rprog, c)$ for the refined program $\rprog$ can also be estimated by $\absclr(\absevent, c)$ by taking the
-minimum value over all $\absevent \in \rprog$.
-We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
-\begin{equation}
-  \label{eq:absBD}
-  BD(\rprog, c) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog \right\}.
-\end{equation}
-%
-This bound is accurate on the iteration numbers of a single loop, but neither tight on the iterations of different paths inside the loop, nor the nested loop.
-%
-\paragraph[example]{Walk through Example.}
-% \todo{The walk through example}
-In Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), by using this ranking function-based approach, we compute the loose loop bound for each subprogram,
-$BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, $BD(\rprog_1^1) = n$, and $BD(\rprog_1^2) = n $.
-The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while expected to be $\frac{m}{4}$.
-They are loose because of the nature of the path-insensitivity in the ranking function invariant computation in Definition~\ref{def:ranking_bound}. 

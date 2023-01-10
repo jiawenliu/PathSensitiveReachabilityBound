@@ -1,8 +1,9 @@
-We first compute two abstract states for each loop w.r.t. a simple transition path inside it,
-  $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c)$ using ranking function,
-  as in Definition~\ref{def:alg-absstate}.
-  Then we use the two states and the $\rffinal$ state to compute the
-  \emph{loop reachability-bound} as in Definition~\ref{def:looprb}.
+Similar to our new approach of computing loop bound,
+we also compute two refined abstract states for each loop w.r.t. a simple transition path inside it,
+$\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c)$ based on the refined program
+as in Definition~\ref{def:alg-absstate}.
+Then we use the two states and the $\rffinal$ state to compute the
+\emph{loop reachability-bound} as in Definition~\ref{def:looprb}.
 \begin{defn}[Loop Abstract States Computation]
 \label{def:alg-loopabsstate}
 Given a program $c$, with $l:\rprog$ as a sub-program (a loop) in $c$'s refined program, 

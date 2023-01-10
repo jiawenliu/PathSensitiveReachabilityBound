@@ -7,7 +7,7 @@ There are many limitations in this algorithm.
 \begin{itemize}
     \item The efficiency of the algorithm.
     There are six steps in this algorithm in order to precisely estimate the reaching times of each location. Each step involves at least one iteration over the program, which results in low efficiency.
-    The major bottleneck comes from the recursion and potential non-termination in path-refinement algorithm and the ranking function estimation. So in the next step, we will explore new path refinement~\cite{CyphertBKR19} and loop summarization techniques~\cite{BreckCKR20,KincaidBCR19,KincaidCBR18} and design more efficient path refinement algorithm. We also aim to design more efficient ranking estimate in replace of the existing one.
+    The major bottleneck comes from the recursion and potential non-termination in path-refinement algorithm and computing the invariants for the ranking functions. So in the next step, we will explore new path refinement~\cite{CyphertBKR19} and loop summarization techniques~\cite{BreckCKR20,KincaidBCR19,KincaidCBR18} and design more efficient path refinement algorithm. We also aim to design more efficient ranking estimate in replace of the existing one.
     \item The accuracy of the path refinement algorithm and program abstraction implementation.
     We sacrificed the accuracy in order improve the efficiency of the implementation. For the path refinement algorithm,
     we limited its maximal iteration times to $100$ and same for computing program constraints. 

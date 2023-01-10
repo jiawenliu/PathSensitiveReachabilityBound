@@ -37,7 +37,7 @@ $\econfig{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
   \\
   \textbf{$\bullet$ The execution terminates and {$\config{{c_r}, \trace_r} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_r \tracecat \trace}$}.} 
   \\
-  In this case we know $\trace \in \ftdom$ and is sufficient to show,
+  In this case we know $\trace \in \ftdom$ and it is sufficient to show,
   %
     \[
     \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l) .
@@ -82,7 +82,7 @@ $\econfig{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
     \[
     \counter(\trace, l) \leq \sum\left\{ \lcounter(\trace, \pathl(\tpath)) ~\vert~ \tpath \in TP \right\}.
     \]
-    By the soundness of path global reachability-bound in Lemma~\ref{lem:pathrb-sound}, we know for each $\tpath \in TP$,
+    By the soundness of path reachability-bound in Lemma~\ref{lem:pathrb-sound}, we know for each $\tpath \in TP$,
     \[
         \econfig{\inoutB(\rprog, \tpath)}(\trace_0)  \geq  \lcounter(\trace, \pathl(\tpath)).
     \]
@@ -105,7 +105,7 @@ $\econfig{\psRB(c, l)}$ is a \emph{Reachability-Bound} for $l$ in $c$.
     \[
       \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l).
     \]
-    By Definition~\ref{def:counter}, we know $\counter(\trace, l) = \bot$ and this case is proved.
+    By Definition~\ref{def:counter}, we know $\counter(\trace, l) = \bot$ and this case is proved as well by the soundness of path reachability-bound in Lemma~\ref{lem:pathrb-sound}.
     \end{proof}
   
 % \begin{lem}[Uniqueness of the Enclosed Loop]
