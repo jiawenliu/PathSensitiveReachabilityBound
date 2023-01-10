@@ -14,18 +14,18 @@ and the vertices set is all the $c$'s program execution points with an extra exi
 
 \subsection{Edges}
 \label{sec:abs_prog-edge}
-  In the first step, \textbf{Constraint Computation} generates the constraint
+  In the first step, we generate the \textbf{constraint}
   for the expression in each program command,
-  which is used as the annotation of an edge.
+  which is used as the annotation of each edge.
   \\
-The second step, generates two sets for each command, which are \textbf{Initial and Continuation Execution Program Points}. 
-  The initial set contains the
-  program point where this command {starts} to execute, 
-  and the continuation set contains both the constraint of this command
+The second step generates two sets for each command, which are \textbf{Initial and Continuation Execution State}. 
+  The initial execution state contains the
+  program points where this command {starts} to execute, 
+  and the continuation execution state contains both the constraint of this command
   and the continuation program points after the execution of this command.
   \\ 
-  In the third step, \textbf{Abstract Event Computation} generates a set of edges for the program.
-  Each edge is a pair of initial and finial state.
+  In the third step, we compute the \textbf{Abstract Event} and generate the set of edges for the program.
+  Each edge composed of an initial and a continuation execution state.
 %
 \paragraph{Constraint Computation}
 In this step, we first show how to compute the constraints for expressions in a program $c$,
@@ -135,22 +135,22 @@ Then in the last clause in Definition~\ref{def:constraint_compute}, i.e., $\abse
 we will check if $\expr$ is a norm or contains norms, and extend the $\grdvar(c)= \grdvar(c)\cup \{\expr\}$ if neither.
 The constraint computation over the \emph{norm} follows the computation steps 1, 2 and 3 in Section 6.1 in paper~\cite{SinnZV17}. 
 %
-\paragraph{Abstract Initial and Continuation State Computation}
+\paragraph{Abstract Initial and Continuation Execution State Computation}
 This step computes two sets for each command. 
-The initial state is a set that contains the
+The initial execution state is a set that contains the
 program points before executing this command, which is computed by the standard initial state generation method from control flow analysis.
-The final state is a set
+The continuation execution state is a set
 that contains the constraint of this command and the program points after the execution of this command.
 This set is enriched 
 from the standard control flow analysis.
 
 %
 \begin{itemize}
-  \item The \emph{initial execution point}, $\absinit(c) \in \ldom$
+  \item The \emph{initial execution state}, $\absinit(c) \in \ldom$
   for a command $c$.
   $\absinit(c)$ is a unique program label corresponds to the command before executing this command. 
 \\
-Given a program $c$, its abstract initial state, $\absinit(c)$ is computed as follows,
+Given a program $c$, its abstract initial execution state, $\absinit(c)$ is computed as follows,
 %
 \[
   \begin{array}{ll}
@@ -172,7 +172,7 @@ The program point $l$ corresponds to the labeled command after the execution of 
 and the constraint $dc$ in this pair is computed by $\absexpr$ for the expression in $c$.
 %  in the first step.
 \\
-Given a program $c$, its final state, $\absfinal(c)$ is computed as follows,
+Given a program $c$, its continuation execution state, $\absfinal(c)$ is computed as follows,
  \[
   \begin{array}{ll}
     \absfinal(\clabel{\assign{x}{\expr}}{}^l)  & = \{(l, \absexpr(\expr, x, c))\}  \\
@@ -255,7 +255,7 @@ for every event $\event \in \trace$ having the same label $l$, i.e., $\event = (
 %
 \[
 \begin{array}{l}
-  \forall c \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \ftdom ,  \event = (\_, l, \_) \in \eventset \st
+  \forall c, c' \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \ftdom ,  \event = (\_, l, \_) \in \eventset \st
   \big(
     \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
   % \lor 

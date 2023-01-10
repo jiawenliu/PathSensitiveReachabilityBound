@@ -74,7 +74,7 @@ is a \emph{simple transition path} if and only if it satisfies,
 \paragraph{Example.}
 % \todo{The walk through example}
 $1 \to 2 \to 8 \to 1$ is a \emph{simple transition path} on $\absG(\kw{relatedNestedWhileOdd}(n, m))$ in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
-However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple (the program points $2$ and $3$ are visited twice).
+However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple (the program points $4$ is visited twice).
 In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
 
 \subsection{Program Refinement}
@@ -123,24 +123,17 @@ refined program $\rprog$ for a rewritten program $c$.
 \paragraph[example]{Walk through Example.}
 % \todo{The walk through example}
 Look again the walk through example in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
-We first have all its simple transition paths collected as follows,
-$\tpath_0 = (0 \to 1)$
-\quad
-$\tpath_1 = (1 \to 2 \to 3 \to 4)$
-\quad
-$\tpath_2 = (4 \to 6 \to 7 \to 1)$
-\quad
-$\tpath_3 = (4 \to 5 \to 4)$
-\quad
-$\tpath_4 = (1 \to 2 \to 8 \to 1)$
-\quad
-$\tpath_5 = (1 \to \lex)$.
+We first collect all its simple transition paths from $\absG(\kw{relatedNestedWhileOdd}(n, m))$ as
+$\tpath_0 = (0 \to 1)$,
+$\tpath_1 = (1 \to 2 \to 3 \to 4)$,
+$\tpath_2 = (4 \to 6 \to 7 \to 1)$,
+$\tpath_3 = (4 \to 5 \to 4)$, $\tpath_4 = (1 \to 2 \to 8 \to 1)$, and $\tpath_5 = (1 \to \lex)$.
 \\ 
-Using these simple transition paths, we rewrite this program by Algorithm~\ref{alg:alg-refine_rewrite} and get the rewritten program corresponding to the syntax in~\cite{GulwaniJK09}
+Using these simple transition paths, we rewrite this program by Algorithm~\ref{alg:alg-refine_rewrite} and get the rewritten program corresponding to the syntax in~\cite{GulwaniJK09} as
 $ \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2), 
 1: \rprepeat(\tpath_4) }; \tpath_5$.
-Then we compute the refined program by REFINE algorithm in~\cite{GulwaniJK09} as follows.
+Then we compute the refined program by REFINE algorithm in~\cite{GulwaniJK09} as follows,
 \[
     \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), 
-    1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) }; \tpath_5
+    1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) }; \tpath_5.
 \]

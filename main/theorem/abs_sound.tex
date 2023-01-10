@@ -8,7 +8,7 @@
     %
     \[
     \begin{array}{l}
-      \forall c \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \ftdom ,  \event = (\_, l, \_) \in \eventset \st
+      \forall c, c' \in \cdom, \trace_0 \in \ftdom_0(c), \trace \in \ftdom ,  \event = (\_, l, \_) \in \eventset \st
       \big(
         \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
       % \lor 
@@ -22,12 +22,12 @@
     \]
   \end{lemma}
   \begin{proof}
-    Taking an arbitrary initial trace $\trace_0 \in \ftdom_0(c)$, an arbitrary event $\event = (\_, l, \_) \in \eventset$ and an execution trace $\trace \in \tdom$
+    Taking an arbitrary program $c$, an intermediate program $c' \in \cdom$, an initial trace $\trace_0 \in \ftdom_0(c)$, an arbitrary event $\event = (\_, l, \_) \in \eventset$ and a finite execution trace $\trace \in \ftdom$
     such that
     \[
-      \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace} 
-      \lor 
-      \config{{c}, \trace_0} \to^{\infty} \config{c', \trace_0 \tracecat \trace}.
+      \config{{c}, \trace_0} \to^{*} \config{c', \trace_0 \tracecat \trace}.
+      % \lor 
+      % \config{{c}, \trace_0} \to^{\infty} \config{c', \trace_0 \tracecat \trace}.
     \]
     Then it is sufficient to show,
     \[

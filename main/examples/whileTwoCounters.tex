@@ -69,20 +69,9 @@
   \item \textbf{Program Refinement}:
   \\
   {Simple Transition Paths:\footnote{For concise, the edges sequence and the constraint on each edge in
-  each transition path are omitted.
-  An example with edge sequences and annotations that is fully spelled out is in the full paper.}}
-  %  are computed as follows,
+  each transition path are omitted.}}
   \\
 $
-%     \begin{array}{ll}
-% \tpath_0 = (0 \to 1), (1 \to 2)
-% &
-% \tpath_2 = (2 \to 3), (3 \to 6), (6 \to 2)
-% \\
-% \tpath_1 = (2 \to 3), (3 \to 4), (4 \to 5), (5 \to 2)
-% &
-% \tpath_3 = (2 \to \lex)
-% \end{array}
 \begin{array}{llll}
   \tpath_0 = (0 \to 1 \to 2)
   &
@@ -92,7 +81,7 @@ $
   &
   \tpath_3 = (2 \to \lex)
   \end{array}
-$\footnote{We use the notation $(l_0 \to \cdots \to l_n)$ to denote a vertices sequence $(l_0, \cdots, l_n)$.}
+$\footnote{We use the notation $(l_0 \to \ldots \to l_n)$ to denote a vertices sequence $(l_0, \ldots, l_n)$.}
 \\
 {Refined Program:\footnote{The program $c$ and its refined program $\rprog$ is used as the inputs (/ arguments) of the computations in the following steps.
 For concise, it is omitted since all the arguments in the following computations are referring to the same program.}}
