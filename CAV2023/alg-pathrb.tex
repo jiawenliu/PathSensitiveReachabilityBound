@@ -1,15 +1,15 @@
 Using the \emph{loop reachability-bound} and \emph{path local reachability-bound}, we compute the \emph{path reachability-bound} first in Section~\ref{sec:pathrb}, 
 then the final path-sensitive reachability-bound for each program point in Section~\ref{sec:psrb}.
-\subsection{Path Reachability-bound}
-\label{sec:pathrb}
+
 For the program $c$ with its refined program $\rprog$, we compute
 for each of its \emph{simple transition path}s, $\tpath$ the \emph{path reachability-bound} , $\inoutB(\rprog, \tpath)$ during the execution of the program $c$ as in Definition~\ref{def:pathrb}.
 %
 \begin{defn}[Path Reachability-bound Computation]
   \label{def:pathrb}
   Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
-  $\tpath$'s reachability-bound
+  $\tpath$'s reachability-bound, $\inoutB(\rprog, \tpath, c)$
   is computed recursively as follows. 
+  The input $c$ is omitted in the following equations for concise given the context is clear.
 \[
   \begin{array}{rcl}
     \inoutB(\tpath, \tpath) & \triangleq & 1  \\
@@ -59,51 +59,67 @@ We show the \emph{path reachability-bound} of the simple transition path $\tpath
     \end{array}
   \]  
 \end{lem}
-
-\subsection{Program Points Path-sensitive Reachability-bound}
-\label{sec:point-psrb}
-For each program point in a program $c$, $l \in \lvar(c)$,
-%  in a program $c$,
-its \emph{path-sensitive reachability-bound}, $\psRB(c, l)$ during the execution of $c$ is computed as follows.
+\paragraph{Walk through Example.}
+% \todo{Walk through example with a tighter path reachability bound}
+In comparison with the substituted computation in Section~\ref{def:pathlocalrb}, now we use the \emph{loop reachability-bound}
+and compute a more precise path \emph{global} reachability-bound for the path $\tpath_3$ as $\frac{m}{4} \times 1$.
+The bounds for the other paths are the same.
+Then by summing up all the $\inoutB(\rprog, \tpath)$ where each program point $l$ shows up on the $\tpath$, we finally compute
+the \emph{reachability-bound} for every point path-sensitively as
+$\psRB(0) = \psRB(\lex) = 1$,
+$\psRB(1) = \frac{m}{2} + 1$,
+$\psRB(2) = \frac{m}{2} $, 
+$\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
+\highlight{$\psRB(5) = \frac{m}{4} \times 1$},
+and $\psRB(4) =  \frac{m}{4} + n - m + 1$.
+As expected, this bound is tight for every program point.
 %
- \begin{defn}[Path-Sensitive Reachability-bound Computation]
-  \label{def:point_psrb}
-  Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and refined program $\rprog$,
-  the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(c, l)$ 
-  sums up all the path reachability bounds, $\inoutB(\rprog, \tpath)$ over all simple transition paths $\tpath$ that contains the program point $l$.
-  \[ 
-    \psRB(c, l) = 
-    \sum
-    % \limits_{\tpath \in \left\{ \tpath | \tpath \in \rprog \land 
-    % l \in p \right\}} 
-    \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
-    l \in \tpath \right\}
-  \]
-  $l \in \tpath$ denotes that the program point $l$ is a vertex on $\tpath$ 
-  and $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path of program $c$.
- \end{defn}
-We prove that $\econfig{\psRB(c, l)}$ is a \emph{Reachability-bound} for every program point $l$ in a program $c$ with proof in \highlight{Appendix~\ref{apdx:psrb-sound}}.
-\begin{thm}[Soundness of the Path-sensitive Reachability-bound Estimation]
-  \label{thm:pathsensitive_rb_soundness}
-  For every program ${c}$ and every label $l$ in this program,
-  $\econfig{\psRB(c, l)}$ is a \emph{Reachability-bound} for $l$ in $c$.
-  %
-  \[
-    \begin{array}{l}
-      \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-      \\ \qquad
-      \rprog = REFINE(\algrewrite(c))
-      \land 
-      \rprog = \algrewrite(c_r)
-      \land
-      \\ \qquad
-      \land
-      \Big(
-      \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-      \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-      \Big)
-      \\ \qquad
-      \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)
-    \end{array}.
-  \]
-  \end{thm}
+
+
+% \subsection{Program Points Path-sensitive Reachability-bound}
+% \label{sec:point-psrb}
+% For each program point in a program $c$, $l \in \lvar(c)$,
+% %  in a program $c$,
+% its \emph{reachability-bound}, $\psRB(c, l)$ during the execution of $c$ is computed as follows.
+% %
+%  \begin{defn}[Path-Sensitive Reachability-bound Computation]
+%   \label{def:point_psrb}
+%   Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and refined program $\rprog$,
+%   the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(c, l)$ 
+%   sums up all the path reachability bounds, $\inoutB(\rprog, \tpath)$ over all simple transition paths $\tpath$ that contains the program point $l$.
+%   \[ 
+%     \psRB(c, l) = 
+%     \sum
+%     % \limits_{\tpath \in \left\{ \tpath | \tpath \in \rprog \land 
+%     % l \in p \right\}} 
+%     \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
+%     l \in \tpath \right\}
+%   \]
+%   $l \in \tpath$ denotes that the program point $l$ is a vertex on $\tpath$ 
+%   and $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path of program $c$.
+%  \end{defn}
+% We prove that $\econfig{\psRB(c, l)}$ is a \emph{Reachability-bound} for every program point $l$ in a program $c$ with proof in \highlight{Appendix~\ref{apdx:psrb-sound}}.
+% \begin{thm}[Soundness of the Path-sensitive Reachability-bound Estimation]
+%   \label{thm:pathsensitive_rb_soundness}
+%   For every program ${c}$ and every label $l$ in this program,
+%   $\econfig{\psRB(c, l)}$ is a \emph{Reachability-bound} for $l$ in $c$.
+%   %
+%   \[
+%     \begin{array}{l}
+%       \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+%       \\ \qquad
+%       \rprog = REFINE(\algrewrite(c))
+%       \land 
+%       \rprog = \algrewrite(c_r)
+%       \land
+%       \\ \qquad
+%       \land
+%       \Big(
+%       \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+%       \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+%       \Big)
+%       \\ \qquad
+%       \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)
+%     \end{array}.
+%   \]
+%   \end{thm}

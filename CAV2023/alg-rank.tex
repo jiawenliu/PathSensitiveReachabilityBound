@@ -1,28 +1,65 @@
 The algorithm in this step is inspired from the Algorithm.2 in paper~\cite{SinnZV14},
   % which assigns a variable to each edge on which this variable decrease as its ranking function.
   the Algorithm.3 in paper~\cite{ZulegerGSV11},
-  and the Definition.25 in Section 4 of paper~\cite{sinn2017complexity}.
+  and the Definition.25 in Section 4 of paper~\cite{SinnZV17}.
   Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
   and estimates the maximum value each variable in this set.
   Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decrease as its ranking function
   and then estimates the maximum value for the ranking function.
-  The Definition.25 in paper~\cite{sinn2017complexity}
+  The Definition.25 in paper~\cite{SinnZV17}
   assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
-\begin{enumerate}
-\item 
-For each variable $x$ in a program $c$, this algorithm first computes three edge sets, $\inc(c, x)$, $\dec(c, x)$,
-and $\reset(c, x)$ for $x$.
-Every edge in a set corresponds to a transition in which $x$ is increased, decreased or reset respectively.
-  \item
-  Then, 
+
+The three sub-steps are standard and based on the Definition.25 in paper~\cite{SinnZV17}.
+
+\subsection{Collecting Variable Modifications}
+  For each variable $x$ in a program $c$, this step computes three edge sets, $\inc(c, x)$, $\dec(c, x)$,
+  and $\reset(c, x)$ for $x$.
+  Every edge in a set corresponds to a transition in which $x$ is increased,
+  %  $\inc(c, x)$,
+  decreased
+  % $\dec(c, x)$ and 
+  or reset
+  % $\reset(c, x)$, 
+  respectively.
+  \\
+  $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
+  is the set of the edges where the variable increase, 
+  %\\
+  \[ \inc(c, x) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absE(c) \right\} \]
+  %\\
+  $\dec: \vardom \to \mathcal{P}(\absevent) $
+  is the set of abstract events where the variable decrease,
+  %\\
+  \[\dec(c, x) = \left\{\absevent| \absevent = (l,  x' \leq x - v, l') \land \absevent \in \absE(c) \right\}\]
+  %\\
+  $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset,
+%
+  \[\reset(c, x) = \left\{ \absevent| \absevent = (l,  x' \leq y - v, l') \land x \neq y \land \absevent \in \absE(c) \right\}\]
+  Additionally,
+  we also compute the reset graph $\resetG(c)$ and the reset chain for higher precision. We omite the computation, which is mainly following the Definition~20 in~\cite{SinnZV17}.
+  % \[\resetG(c) = (\resetV(c), \resetE(c))\]
+  % \[\resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(c, x) \land \absevent = (l, x' \leq y + c, l') \right\} \]
+  % \[\resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in \resetE(c) \lor (\_, \_, x) \in \resetE(c) \right\} \]
+  % In a variable $x$'s reset chain set, $\resetchain(c, x)$, in each chain $(e_0, \ldots, e_m) \in \resetchain(c, x)$
+  % a variable $x_i$ is reset by another variable $x_{i + 1}$ on edge $e_{i}$
+  % and $x_{i + 1}$ is reset on edge $e_{i + 1}$ recursively
+  % for every $i = 0, \ldots, m - 1$.
+  % $x$ is reset on the first edge $e_0$ of every sequence in $\resetchain(c, x)$.
+  % {Each edge $e_i$ in a sequence $(e_0, \ldots, e_m) \in \resetchain(c, x)$
+  % resets a variable $x_i$ by another variable $x_{i + 1}$ such that $x_{i + 1}$
+  % is reset on edge $e_{i + 1}$ recursively. The first edge $e_0$ of each sequence resets the variable $x$.}
+  % % 
+  % \\
+  % In the following steps, $c$ is omitted in $\inc(c, x)$,
+  % $\dec(c, x)$ and $\reset(c, x)$ for concise when the reference of a program $c$ is clear in the context.
+
+  \subsection{Assigning The Ranking Function to An Edge}
   For each edge in the transition graph $\absG(c)$ of a program $c$,
-  the second step assigns the variable that decreases on this edge as the ranking function   of this edge.
-  This step adopts the local bound computation method in Section 4 of \cite{sinn2017complexity} to assign the local bound to each edge,
+  this step assigns the variable that decreases on this edge as the ranking function of this edge.
+  This step adopts the local bound computation method in Section 4 of~\cite{SinnZV17} to assign the local bound to each edge,
   formally as follows.
-  \begin{defn}[Ranking Function   Generatation]
-    \label{def:ranking_gen}
-  % Given a program $c$ with its abstract transition graph 
-  % $\absG(c) = (\absV, \absE)$,
+  \begin{defn}[Ranking Function Generatation]
+  \label{def:ranking_gen}
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
   its \emph{ranking function/local bound}, $\locbound(\absevent, c)$
   is the variable that decreases on this edge, computed as follows,
@@ -33,66 +70,17 @@ Every edge in a set corresponds to a transition in which $x$ is increased, decre
     & \absevent \notin SCC(\absG(c))
     \\
     \locbound(\absevent, c) \triangleq x
-    & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x) \land  \absevent = (\_, \_ , x' \leq x - v) \\
+    & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(c, x) \land  \absevent = (\_, \_ , x' \leq x - v) \\
     \locbound(\absevent, c) \triangleq x
     & \absevent \in SCC(\absG(c)) \land 
-    \absevent  \notin \bigcup_{x \in \mathcal{VAR}} \dec(x)
-    \land \absevent \notin SCC(\absG(c) \setminus \dec(x)).
+    \absevent  \notin \bigcup_{x \in \vardom} \dec(c, x)
+    \land \absevent \notin SCC(\absG(c) \setminus \dec(c, x))\\
+    \locbound(\absevent, c) \triangleq \infty
+    & o.w..
   \end{array}
   \]
   $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
   \end{defn}
-  \item
-  In the last step, it estimates the upper bound,
-  $\varinvar(x, c) \in \mathcal{A}_{\lin}$ on the maximum value of each ranking function recursively as follows.
-  \\
-  For a program $c$, the \emph{ranking function bound},
-  $\varinvar(\locbound(\absevent, c)) \in \mathcal{A}_{\lin}$ is 
-  the bound on the maximum value of the ranking function  
-  assigned to the edge $\absevent \in \absE(c)$, formally in Definition~\ref{def:ranking_bound}.
-  \\
-  In order to estimate the maximum value of $\locbound(\absevent, c)$ assigned to edge $\absevent \in \absE(c)$,
-  % for each (ranking function's) maximum value,
-  the bound on the iteration times of each corresponding edge, $\absclr(\absevent, c)$ 
-  is computed interactively in a path-insensitive manner.
-  % , the 
-  \\ 
-  $ \varinvar: (\mathcal{VAR} \cup \constdom  \times \cdom) \to \mathcal{A}_{\lin}$
-  \\
-  $\absclr: (\absevent \times \cdom) \to \mathcal{A}_{\lin}$
-  \begin{defn}[Ranking Function Estimation]
-    \label{def:ranking_bound}
-  For a program $c$ and an edge $\absevent \in \absE(c)$,
-  the \emph{ranking function bound}, $\varinvar(\locbound(\absevent, c))$ for the ranking function $\locbound(\absevent, c)$
-  of this edge
-  is computed as follows,
-    \[ 
-  \begin{array}{lll}
-    \varinvar(x, c) & \triangleq x & x \in \constdom \\
-    \varinvar(x, c) & \triangleq \incrs(x, c) + \max(\{\varinvar(y, c) + c ~\mid~ (l, x' \leq y + c, l') \in \reset(x)\}) & c \notin \constdom
-  \end{array}
-  \]
   %
-  $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(v)}\{\absclr(\absevent, c) \times c ~\mid~ \absevent = (l, x' \leq x + c, l')\}$ where 
-  $\absclr(\absevent, c) \in \mathcal{A}_{\lin}$  is computed as below,
-\[ 
-\begin{array}{lll}
-  \absclr(\absevent, c) 
-  & \triangleq \varinvar(\locbound(\absevent, c))  & \\
-  & \quad \locbound(\absevent, c) \in \constdom & \\
-  \absclr(\absevent, c) 
-  & \triangleq \Big(
-    \sum\limits_{y \in \{ y ~|~ 
-    ch \in \resetchain(x), (l_1, x, y, v, l_2) \in ch \} } \incrs(y, c) & \\
-    & \quad + 
-  \sum\limits_{ch \in \resetchain(x, c)}
-  \big( \min\left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
-  \max\left\{\varinvar(in(ch), c) + \sum\limits_{(l_1, x, y, v, l_2) \in ch } v, 0 \right\}\big) \Big)  & \\
-  &  \quad \locbound(\absevent, c) = x \land x \notin \constdom & ,
-\end{array}
-  \]
- where $in(ch)$ is the variable on the last edge on the reset chain $ch$.
-\end{defn}
-  \end{enumerate}
-
-  
+ \subsection{Ranking Function Estimation}
+Then we estimates the upper bound invariant,  $\varinvar(\locbound(\absevent, c), c)$ for the ranking function of each abstract transition, $\locbound(\absevent, c)$. Meanwhile, we interactively compute an iteration upper bound,  $\absclr(\absevent, c)$  for each $\absevent$ path-insensitively when estimating the ranking function invariant.

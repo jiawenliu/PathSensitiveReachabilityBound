@@ -9,12 +9,20 @@
   urlcolor=green!70!black
 }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Theorem, Definition and Proof
 \newtheorem{lem}{Lemma}[section]
 \newtheorem{thm}{Theorem}[section]
 \newtheorem{defn}{Definition}
 \newtheorem{coro}{Corollary}[thm]
+% \newtheorem{lemma}[theorem]{Lemma}
+
+
+
+
+\renewcommand\thelemma{\unskip}
+\renewcommand\thecorollary{\unskip}
+
+
 
 \newcommand{\todo}[1]{{\color{red}\textbf{[[ #1 ]]}}}
 \newcommand{\todomath}[1]{{\scriptstyle \color{red}\mathbf{[[ #1 ]]}}}
@@ -105,11 +113,11 @@
 
 \newcommand{\im}[1]{\ensuremath{#1}}
 
-% \newcommand{\kw}[1]{\im{\mathtt{#1}}}
-\newcommand{\kw}[1]{{\mathtt{#1}}}
+\newcommand{\kw}[1]{\im{\mathtt{#1}}}
 \newcommand{\set}[1]{\im{\{{#1}\}}}
 
 \newcommand{\mmax}{\ensuremath{\mathsf{max}}}
+
 
 \makeatletter
 \newcommand{\mysmallishfont}{\@setfontsize\mysmallishfont{8.7pt}{9.7pt}}
@@ -123,67 +131,8 @@
 \newcommand{\myecsmfont}{\@setfontsize\myecfont{8.7pt}{9.7pt}}
 \makeatother
 
-% \lstdefinelanguage{ocaml}{
-%   style=ocaml-default,
-%   keywordsprefix={'},
-%   morekeywords=[1]{},
-%   morekeywords=[2]{type,op,axiom,lemma,module,pred,const,declare},
-%   morekeywords=[3]{var,proc},
-%   morekeywords=[4]{while,if,then,else,elif,return,proof,qed,realize,rec, match},
-% }
-
-% \lstdefinestyle{ocaml-default}{
-%   escapechar=\#,
-%   upquote=true,
-%   columns=fullflexible,
-%   captionpos=b,
-%   frame=tb,
-%   xleftmargin=0pt,
-%   xrightmargin=0pt,
-%   rangebeginprefix={(**\ begin\ },
-%   rangeendprefix={(**\ end\ },
-%   rangesuffix={\ *)},
-%   includerangemarker=false,
-%   basicstyle=\mysmallishfont\sffamily,
-%   identifierstyle={},
-%   keywordstyle=[1]{\itshape},
-%   keywordstyle=[2]{\bfseries},
-%   keywordstyle=[3]{\bfseries},
-%   keywordstyle=[4]{\bfseries},
-%   keywordstyle=[5]{\bfseries},
-%   keywordstyle=[6]{\bfseries},
-%   keywordstyle=[7]{},
-%   keywordstyle=[8]{\bfseries},
-%   keywordstyle=[9]{\bfseries},
-%   literate={phi}{{$\!\phi\,$}}1
-%            {phi1}{{$\!\phi_1$}}1
-%            {phi2}{{$\!\phi_2$}}1
-%            {phi3}{{$\!\phi_3$}}1
-%            {phin}{{$\!\phi_n$}}1
-% }
-
-% \lstdefinestyle{ocaml-pretty}{
-%     basicstyle=\mysmallishfont\sffamily,
-%     literate={:=}{{$\mathrel{\gets}\;$}}1
-%               {<=}{{$\mathrel{\leq}\;$}}1
-%               {>=}{{$\mathrel{\geq}\;$}}1
-%               {<>}{{$\mathrel{\neq}\;$}}1
-%               {=\$}{{$\stackrel{\$}{\gets}\;$}}1
-%               {->}{{$\rightarrow\;$}}1
-%               {<-}{{$\leftarrow\;$}}1
-%               {<->}{{$\leftrightarrow\;$}}1
-%               {<=>}{{$\Leftrightarrow\;$}}1
-%               {=>}{{$\Rightarrow\;$}}1
-%               {==>}{{$\Longrightarrow\;$}}1
-%               {\/\\}{{$\wedge\;$}}1
-%               {\\\/}{{$\vee\;$}}1
-%               {\^}{{\textasciicircum}}1
-%               {procx}{{proc}}1
-% }
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Query While Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% While Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Language
 \newcommand{\command}{c}
@@ -228,13 +177,13 @@
 \newcommand{\dbdom}{\mathcal{DB}}
 \newcommand{\cdom}{\mathcal{C}}
 \newcommand{\ldom}{\mathcal{L}}
+\newcommand{\booldom}{\mathcal{B}}
 
 \newcommand{\emap}{~\kw{map}~}
 \newcommand{\efilter}{~\kw{filter}~}
 
 %configuration
 \newcommand{\econfig}[1]{\llbracket #1 \rrbracket}
-
 \newcommand{\config}[1]{\langle #1 \rangle}
 \newcommand{\ematch}{\kw{match}}
 \newcommand{\clabel}[1]{\left[ #1 \right]}
@@ -258,7 +207,7 @@
 
 % Operational Semantics
 \newcommand{\env}{\rho}
-\newcommand{\rname}[1]{\textsf{\small{#1}}}
+\newcommand{\rname}[1]{\textbf{\small{#1}}}
 \newcommand{\aarrow}{\Downarrow_a}
 \newcommand{\barrow}{\Downarrow_b}
 \newcommand{\earrow}{\Downarrow_e}
@@ -270,26 +219,38 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Trace and Events %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Trace 
-\newcommand{\tdom}{\mathcal{T}}
-\newcommand{\tdominf}{\tdom^{\infty}}
+\newcommand{\tdom}{\mathcal{T}^{+\infty}}
+\newcommand{\inftdom}{\mathcal{T}^{\infty}}
+\newcommand{\ftdom}{\mathcal{T}^{+}}
 
-
-%%%%%%%% annotated query
-\newcommand{\aq}{\kw{aq}}
-\newcommand{\qtrace}{\kw{qt}}
 %annotated variables
 \newcommand{\av}{\kw{av}}
 \newcommand{\vtrace}{\kw{\tau}}
 \newcommand{\ostrace}{{\kw{\tau}}}
 \newcommand{\posttrace}{{\kw{\tau}}}
-
 \newcommand{\trace}{\kw{\tau}}
 
-% \newcommand{\vcounter}{\kw{\zeta}}
-\newcommand{\vcounter}{\kw{cnt}}
+
+
+\newcommand{\counter}{\kw{cnt}}
+
+\newcommand{\lcounter}{\kw{lcnt}}
+
 
 \newcommand{\postevent}{{\kw{\epsilon}}}
 
+% \newcommand{\event}{\kw{\epsilon}}
+% \newcommand{\eventset}{\mathcal{E}}
+% \newcommand{\eventin}{\in_{\kw{e}}}
+% \newcommand{\eventeq}{=_{\kw{e}}}
+% \newcommand{\eventneq}{\neq_{\kw{e}}}
+% \newcommand{\eventgeq}{\geq_{\kw{e}}}
+% \newcommand{\eventlt}{<_{\kw{e}}}
+% \newcommand{\eventleq}{\leq_{\kw{e}}}
+% \newcommand{\eventdep}{\mathsf{DEP_{\kw{e}}}}
+% \newcommand{\asn}{\kw{{asn}}}
+% \newcommand{\test}{\kw{{test}}}
+% \newcommand{\ctl}{\kw{{ctl}}}
 \newcommand{\event}{\kw{\epsilon}}
 \newcommand{\eventset}{\mathcal{E}}
 \newcommand{\eventin}{\in_{\kw{e}}}
@@ -356,19 +317,17 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Dynamic Program Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Program Semantics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Execution Based Dependency, Graph and Adaptivity 
-\newcommand{\paths}{\mathcal{PATH}}
+\newcommand{\paths}{\mathcal{PH}}
 \newcommand{\walks}{\mathcal{WK}}
 \newcommand{\progwalks}{\mathcal{WK}^{\kw{prog}}}
 
 \newcommand{\len}{\kw{len}}
-% \newcommand{\lvar}{\mathbb{LV}}
-\newcommand{\lvar}{\mathbb{L}}
-\newcommand{\avar}{\mathbb{AV}}
-\newcommand{\qvar}{\mathbb{QV}}
+\newcommand{\lvar}{\kw{L}}
+\newcommand{\avar}{\kw{AV}}
 \newcommand{\qdep}{\mathsf{DEP_{q}}}
 \newcommand{\vardep}{\mathsf{DEP_{var}}}
 \newcommand{\avdep}{\mathsf{DEP_{\av}}}
@@ -378,7 +337,6 @@
 
 \newcommand{\llabel}{\iota}
 \newcommand{\entry}{\kw{entry}}
-\newcommand{\tlabel}{\mathbb{TL}}
 
 \newcommand{\traceG}{\kw{{G_{trace}}}}
 \newcommand{\traceV}{\kw{{V_{trace}}}}
@@ -386,6 +344,13 @@
 \newcommand{\traceF}{\kw{{Q_{trace}}}}
 \newcommand{\traceW}{\kw{{W_{trace}}}}
 \newcommand{\exeRB}{\kw{RB_{exe}}}
+
+
+\newcommand{\loopl}{\lvar_{\kw{loop}}}
+\newcommand{\tracel}{\lvar_\kw{{trace}}}
+\newcommand{\pathl}{\lvar_\kw{path}}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Static Program Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -443,36 +408,59 @@
 %program abstraction
 \newcommand{\abst}[1]{\kw{abs}{#1}}
 \newcommand{\absexpr}{\abst{\kw{expr}}}
-\newcommand{\absevent}{\stackrel{\scriptscriptstyle{\alpha}}{\event{}}}
-\newcommand{\absfinal}{\abst{\kw{final}}}
-\newcommand{\absinit}{\abst{\kw{init}}}
+% \newcommand{\absevent}{\stackrel{\scriptscriptstyle{\alpha}}{\event{}}}
+\newcommand{\absevent}{\hat{\event{}}}
+\newcommand{\absfinal}{\kw{final}}
+\newcommand{\absinit}{\kw{init}}
 \newcommand{\absflow}{\abst{\kw{trace}}}
 \newcommand{\absG}{\abst{\kw{G}}}
 \newcommand{\absV}{\abst{\kw{V}}}
 \newcommand{\absE}{\abst{\kw{E}}}
 \newcommand{\absF}{\abst{\kw{F}}}
 \newcommand{\absW}{\abst{\kw{W}}}
+\newcommand{\locbound}{\kw{rank}}
 \newcommand{\absdom}{\mathcal{ADOM}}
-\newcommand{\inpvar}{\mathcal{VAR}_{\kw{in}}}
-\newcommand{\grdvar}{\mathcal{VAR}_{\kw{guard}}}
 
-
-\newcommand{\absclr}{{\kw{Tclosure}}}
-\newcommand{\varinvar}{{\kw{Vinvar}}}
-\newcommand{\init}{\kw{init}}
-\newcommand{\constdom}{\mathcal{SMBCST}}
+%%% Variables Domain
+\newcommand{\vardom}{\mathcal{V}}
+\newcommand{\inpvardom}{\mathcal{V}_{\kw{\lin}}}
+\newcommand{\constdom}{\mathcal{SC}}
 \newcommand{\dcdom}{\mathcal{DC}}
+\newcommand{\scexprdom}{\mathcal{A}_{\kw{sc}}}
+\newcommand{\inpexprdom}{\mathcal{A}_{\lin}}
+\newcommand{\grdvardom}{\mathcal{V}_{\kw{guard}}}
+\newcommand{\scvardom}{\mathcal{SC}}
+
+
+\newcommand{\scexpr}{{\kw{A_{sc}}}}
+\newcommand{\inpexpr}{\kw{A}_{\lin}}
+\newcommand{\inpvar}{{\kw{V_{\lin}}}}
+\newcommand{\grdvar}{\kw{V}_{\kw{guard}}}
+\newcommand{\scvar}{\kw{SC}}
+
+\newcommand{\resetG}{\kw{re{G}}}
+\newcommand{\resetV}{\kw{re{V}}}
+\newcommand{\resetE}{\kw{re{E}}}
+
+
+\newcommand{\absclr}{{\kw{TB}}}
+\newcommand{\varinvar}{{\kw{VB}}}
+\newcommand{\init}{\kw{init}}
 \newcommand{\reset}{\kw{re}}
 \newcommand{\resetchain}{\kw{rechain}}
 \newcommand{\inc}{\kw{inc}}
 \newcommand{\dec}{\kw{dec}}
 
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Path Sensitive Reachability Bound Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\locbound}{\kw{rank}}
-
+\newcommand{\algrewrite}{\kw{Rewrite}}
 
 \newcommand{\tpath}{\kw{tp}}
 \newcommand{\rprog}{\kw{rp}}
@@ -480,20 +468,19 @@
 \newcommand{\rpchoose}[1]{\kw{choose}\left\{  #1 \right\}}
 \newcommand{\rprepeat}{\kw{repeat}}
 \newcommand{\rpseq}{\kw{seq}}
-\newcommand{\booldom}{\mathcal{B}}
 \newcommand{\vnorm}{\mathcal{V}_{\kw{N}}}
 \newcommand{\rfinit}{\kw{rInit}}
 \newcommand{\rffinal}{\kw{rFinal}}
 \newcommand{\rfnext}{\kw{rNext}}
 
 
-\newcommand{\outinB}{\kw{locRB}}
+\newcommand{\outinB}{\kw{pathLocRB}}
 \newcommand{\varGD}{\kw{varGD}}
 \newcommand{\rpch}{\kw{rpchain}}
 \newcommand{\rpchset}{\kw{rp}\mathcal{C}}
 
 
-\newcommand{\inoutB}{\kw{gbRB}}
+\newcommand{\inoutB}{\kw{pathRB}}
 
 \newcommand{\psRB}{\kw{psRB}}
 \newcommand{\rpchB}{\kw{rpchB}}
@@ -532,5 +519,4 @@
 \newcommand{\mgside}[1]{}
 \newcommand{\wq}[1]{}
 \newcommand{\wqside}[1]{}
-\newcommand{\rname}[1]{$\textbf{#1}$}
 \fi

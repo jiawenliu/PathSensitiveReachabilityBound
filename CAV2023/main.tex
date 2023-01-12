@@ -4,7 +4,6 @@
 %
 \documentclass[runningheads]{llncs}
 %
-\usepackage[T1]{fontenc}
 % T1 fonts will be used to generate the final print and online PDFs,
 % so please use T1 fonts in your manuscript whenever possible.
 % Other font encondings may result in incorrect characters.
@@ -57,87 +56,101 @@
 % typeset the header of the contribution
 %
 \begin{abstract}
-\todo{150--250 words.}
-Goal: bound the number of visiting times for every program control location, i.e., Solve the 
-\emph{Reachability-Bound Program}.
-\\
-Motivation: State-of-Art Techniques 
-\\
-in paper~\cite{Sumit2010rechability,sinn2017complexity} : path-insensitive 
-\\
-in paper~\cite{GulwaniJK09} : path-sensitive and precise for estimating loop bounds,
-but over-approximate reachability times of control location as the loop bound.
-\\
-in paper~\cite{ZulegerGSV11} : able to identify different paths from multiple-path loop, but aims to solve bounds for loop and path. They over-approximate reachability times of control location with loop bound.
-\\
-Contributions: 
-\\
-1. Solve the 
-\emph{Reachability-Bound Program} precisely /(improve accuracy),
-in two challenging classes of programs: Programs with Path-Sensitive Loops, and Programs with Nested Loops 
-\\
-2. Improved efficiency by abstracting program using the Difference Constraint-base method in \cite{sinn2017complexity}.
-\\
-3. Efficient implementation and evaluation results.
+    The number of times a given control location 
+    inside a procedure is visited during the program execution.
+    The upper bound on this execution number for 
+    a given control location is referred to as the reachability-bound by~\cite{GulwaniZ10} in the first place.
+    A tight reachability-bound
+    can help to improve the analysis result on other program features.
+    While computing a tight reachability-bound for a given program control location is challenging.
+    Many works in the program analysis area develop algorithms estimating the program's loop bound or overall complexity.
+    But there isn't a general analysis algorithm that
+    computes the reachability-bound
+    directly or path-sensitively.
+    To leverage these limitations,
+    we present a path-sensitive reachability-bound algorithm
+    aiming to find a precise symbolic worst-case reachability-bound on the program's every control location in this paper.
+    Our algorithm brings together two lines of program complexity analysis techniques:
+    1. ranking function based amortized bound analysis through program abstraction, and
+    2. loop summarization based multiple loop paths refinement
+    and combines them effectively. 
+    The effective combination improves the precision of the estimated reachability-bound comparing to adopt either one of them.
+    It allows us to compute precise reachability-bound on each program point path-sensitively.
+    We implement a prototype and report on an experimental comparison with state-of-art tools over four different benchmarks.
 \keywords{Loop Bound Inference, program refinement, path-sensitive}
 \end{abstract}
 %
 %
 %
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Introduction and Overview %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \label{sec:intro}
 \input{introduction}
+% %
 \section{Overview}
 \label{sec:overview}
 \input{overview}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Program Model and Definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{{Program Model}}
+\section{{Language and Program Model}}
 \label{sec:language}
 \input{language}
-\section{{Reachability Bound}}
-\label{sec:rb-def}
-\input{rb-definition}
+% %
+\section{{The Reachability-bound}}
+\label{sec:execution_rb}
+\input{rb_definition}
+% % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Path Sensitive Reachability Bound Analysis}
-\label{sec:psrb-alg}
+\section{Main Steps of Path-sensitive Reachability-bound Analysis}
+\label{sec:static_rb}
 \input{alg-preface}
-% \input{psrb-algorithm}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Sub-Steps of Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \subsection{Abstraction Transition Graph}
-    \label{sec:progabs}
-    \input{alg-progabs}
-    \subsection{Loop Refinement}
-    \label{sec:refine}
-    \input{alg-refine}
-    \subsection{Path-sensitive Reachability-Bound Analysis}
-    \label{sec:psrb}
-    \input{alg-psrb}
-    \subsection{Loop Reachability-Bound}
-    \label{sec:looprb}
-    \input{alg-looprb}
-    \subsection{Ranking Function Computation and Estimation}
-    \label{sec:rank}
-    \input{alg-rank}
-    \subsection{Reachability Bound Computation}
-    \label{sec:alg-rb}
-    \input{alg-rb}
+\section{Abstraction Transition Graph}
+\label{sec:progabs}
+\input{alg-progabs}
+\section{Loop Refinement}
+\label{sec:refine}
+\input{alg-refine}
+\section{Ranking Function Computation and Estimation}
+\label{sec:rank}
+\input{alg-rank}
+\section{Path-sensitive Reachability-bound Algorithm}
+\label{sec:psrb}
+\input{alg-psrb}
+\section{Path Local Reachability-bound Computation}
+\label{sec:pathlocalrb}
+\input{alg-pathlocalrb}
+\section{Loop Reachability-bound Computation}
+\label{sec:looprb}
+\input{alg-looprb}
+% \section{Path and Program Point Reachability-bound Computation}
+% \label{sec:alg-rb}
+% \input{alg-rb}
+\section{Path Reachability-bound Computation}
+\label{sec:pathrb}
+\input{alg-pathrb}
 
+% \section{Examples}
+% \label{sec:example}
+% \input{examples}
 
-\section{Examples and Experimental Results}
-\label{sec:example}
-
+\section{Evaluation}
+\label{sec:eval}
+\input{eval}
 \section{Related Work}
-% \input{relatedwork}
-
-\section{Conclusion and future works}
-
+\label{sec:relatedwork}
+\input{relatedwork}
+%
+\section{Conclusion and Future Works}
+\label{sec:conlusion}
+\input{conclusion}
+\clearpage
 
 \subsubsection*{Acknowledgements}
 Acknowledgments is at the end of the paper, preceded by an unnumbered run-in heading (i.e.

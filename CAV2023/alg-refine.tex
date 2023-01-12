@@ -1,16 +1,144 @@
-The refinement relies on the external algorithm, summarized as follows.
-\begin{enumerate}
-    \item \textbf{Rewrite the Program}
-    It first rewrites the program $c$ by syntax in \cite{GulwaniJK09} and preserves the same semantics, based on $\absG(c)$.
+This procedure has three sub procudes in each subsection below.
+% \begin{enumerate}
+%   \item \textbf{Collecting} all \emph{simple transition paths}.
+%   Every \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ 
+%   contains only the edges of atomic assignment or guard transitions without interleaving other paths.
+%   Each of them corresponds to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
+%   \item \textbf{Rewriting} the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics.
+%   \item \textbf{Refining} the program and computing the 
+%   refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
+%   This step invokes the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+%   refined program $\rprog$ for a program $c$ given the rewritten program as input.
+% \end{enumerate}
+
+\subsection{The Simple Transition Path}
+We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
+% \begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
+%   \label{def:loopl}
+%   \[
+%   \loopl(c) \triangleq 
+%   \left\{
+%     \begin{array}{ll}
+%       \{\}  & {c} = \clabel{\assign x e}^{l} \\
+%       \loopl({c_1}) \cup \loopl({{c_2}})  & {c} = {c_1};{c_2} \\
+%       \loopl(c_t) \cup \loopl({{c_f}})   & {c} =\eif(\clabel{\bexpr}^{l}, c_t, c_f) \\
+%   \loopl(c_w) \cup \{l\}, &  {c}   = \ewhile \clabel{\bexpr}^{l} \edo (c_w)
+%   \end{array}
+% \right.
+% \]
+%   \end{defn}
+
+% \begin{defn}[Loop Path]
+%   \label{def:looppath}
+% A simple transition path
+% $\tpath \in \paths(\absG(c))$ for the program $c$, is a path on its abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
+% \begin{itemize}
+% \item a vertices sequence $(l_0, \ldots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \ldots, n$ and
+% %
+% \item an edge sequence $(e_1, \ldots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \ldots, n$,
+% \end{itemize}
+% %
+% satisfying:
+% \begin{itemize}
+%   \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 0, \ldots, {n - 1}$,
+%   \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+%   i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
+%   \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
+%   i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$.
+% \end{itemize}
+% \end{defn}
+Then we collect all the \emph{simple transition paths}s, $\tpath \in \paths(\absG(c))$ from an abstract transition graph.
+Each $\tpath \in \paths(\absG(c))$ 
+contains only the edges of atomic assignment or guard transitions without interleaving other paths as defined below.
+Each of them corresponds to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
+\begin{defn}[Simple Transition Path]
+  \label{def:tpath}
+A \emph{simple transition path}
+$\tpath \in \paths(\absG(c))$ for the program $c$, is either a simple cyclic path, which has the same start- and end-point
+or a simple path has either different while loop headers, the program entrance or exit as its start- and end-point
+without visiting any loop header inside the path.
 \\
-Each \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ in the rewritten program
-corresponds to a path $\rho$ in the flatten program by Definition~4.1 in \cite{GulwaniJK09}.
+Specifically, a path $l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots l_n \in \paths(\absG(c))$ with the
+vertices sequence $(l_0, \ldots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \ldots, n$ and
 %
-It contains only the edges of atomic assignment or guard transition.
-\item \textbf{Refined Program}
-Then it computes the 
-refined program, $\rprog$ by Algorithm~1 in paper~\cite{GulwaniJK09}.
-\\
-This step invokes the external algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
-refined program $\rprog$ for a program $c$ given the input $c^{T}$.
-\end{enumerate}
+the edge sequence $(e_1, \ldots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \ldots, n$,
+%
+is a \emph{simple transition path} if and only if it satisfies,
+\begin{itemize}
+  \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 0, \ldots, {n - 1}$,
+  \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+  i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
+  \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
+  i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$,
+  \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
+\end{itemize}
+\end{defn}
+
+
+\paragraph{Example.}
+% \todo{The walk through example}
+$1 \to 2 \to 8 \to 1$ is a \emph{simple transition path} on $\absG(\kw{relatedNestedWhileOdd}(n, m))$ in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
+However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple (the program points $4$ is visited twice).
+In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
+
+
+\subsection{Rewrite the Program}
+The second sub-procedure rewrite the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics.
+\begin{algorithm}
+  \caption{Program Rewriting $\kw{Rewrite}$}
+  \label{alg:alg-refine_rewrite}
+  \begin{algorithmic}[1]
+    \REQUIRE program $c$
+    \STATE collects all $c$'s \emph{simple transition path}s from $\absG(c)$, $\tpath_1, \ldots, \tpath_n \in \paths(\absG(c))$.
+    \STATE \textbf{init}: candidate set $W = \{c_1, \ldots, c_n\}$, where $c_i = \tpath_i$ and $i = 1, \ldots, n$
+    \STATE \textbf{while} $W.size()> 1$:
+    \STATE \quad create $c' = \rpchoose{c_1, \ldots, c_m}$ 
+    s.t. $c_i \in W \land c_i[0] = c_j[0] \land c_i[-1] = c_j[-1], i, j = 1, \ldots, m$.
+    \\ \quad $W.add(c')$ \qquad $W.remove(c_1, \ldots, c_m)$
+    \STATE
+    \quad create $c' = \rprepeat(c)$ s.t. $c_i \in W \land c[0] = c[-1] \land c[0] \in \loopl(c)$
+    \\ \quad $W.add(c')$, \qquad $W.remove(c)$
+    \STATE \quad create $c' = c_1; c_2$ s.t. $c_1, c_2 \in W \land c_1[-1] = c_2[0]$
+    \\
+    \quad $W.add(c')$ \qquad $W.remove(c_1, c_2)$
+    \STATE \textbf{Endwhile}
+    \\ $c^T = W[0]$
+    \RETURN $c^T$.
+\end{algorithmic}
+\end{algorithm}
+%
+Algorithm~\ref{alg:alg-refine_rewrite} transformation the syntax of program following~\cite{GulwaniJK09} and preserving the semantics.
+We first use simple depth first search strategy collects all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath}. It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
+Then
+in Line-2, we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. New candidates generated in Line-4, 5 and 6 correspond to the if,
+while and sequence statement in paper~\cite{GulwaniJK09} respectively.
+\begin{itemize}
+  \item
+  Line-4: for all the candidates $c_1, \ldots, c_m$ having the same starting and ending vertices, rewrite them into if statement as~\cite{GulwaniJK09}.
+  \item
+  Line-5: for every candidate $c'$, if it starts and ends with the same vertex, rewrite it into while loop statement as~\cite{GulwaniJK09}.
+  \item
+  Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
+\end{itemize}
+% \todo{soundness of the program write}
+\subsection{Program Refinement}
+The last step, we implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+refined program $\rprog$ for a rewritten program $c$.
+
+\paragraph[example]{Walk through Example.}
+% \todo{The walk through example}
+Look again the walk through example in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
+We first collect all its simple transition paths from $\absG(\kw{relatedNestedWhileOdd}(n, m))$ as
+$\tpath_0 = (0 \to 1)$,
+$\tpath_1 = (1 \to 2 \to 3 \to 4)$,
+$\tpath_2 = (4 \to 6 \to 7 \to 1)$,
+$\tpath_3 = (4 \to 5 \to 4)$, $\tpath_4 = (1 \to 2 \to 8 \to 1)$, and $\tpath_5 = (1 \to \lex)$.
+\\ 
+Using these simple transition paths, we rewrite this program by Algorithm~\ref{alg:alg-refine_rewrite} and get the rewritten program corresponding to the syntax in~\cite{GulwaniJK09} as
+$ \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2), 
+1: \rprepeat(\tpath_4) }; \tpath_5$.
+Then we compute the refined program by REFINE algorithm in~\cite{GulwaniJK09} as follows,
+\[
+    \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), 
+    1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) }; \tpath_5.
+\]
