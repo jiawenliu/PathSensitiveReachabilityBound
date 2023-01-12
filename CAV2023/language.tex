@@ -134,23 +134,22 @@ Its first element is the variable name $x$,
 or a boolean expression (from the guard of if or while command), 
 following by 
  the label, $l$ associated to this command and the value assigned to the variable.
-
+ \[
+  \begin{array}{llll}
+    \mbox{Event} 
+    & \event & ::= & 
+    ({x}, l, v) ~ \mbox{Assignment Event} 
+    ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
+  \end{array}
+  \]  
  We have two kinds of events: \emph{assignment events} and \emph{testing events},
  and we use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively.
-
+ 
  An \emph{assignment event} tracks the execution of an assignment and consists of the assigned variable, the label of the command that generates it, the value assigned to the variable.
 
  A \emph{testing event} tracks the execution of if and while commands, specifically the evaluation of the boolean expression $b$ in the guard of a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$.
  It consists of the boolean expression $b$ in the guard of the command, the label of the guard, the result of evaluating the guard.
 %
-\[
-\begin{array}{llll}
-  \mbox{Event} 
-  & \event & ::= & 
-  ({x}, l, v) ~ \mbox{Assignment Event} 
-  ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
-\end{array}
-\]
 Event projection operators $\pi_i$ projects the $i^{th}$ element from an event: 
 $\pi_i : \eventset \to \vardom \cup \booldom \cup \ldom $
 
@@ -158,101 +157,64 @@ $\pi_i : \eventset \to \vardom \cup \booldom \cup \ldom $
 %
 A trace $\trace \in \tdom$ is a list of events, 
 collecting the events generated during a specific program execution. 
-\[
-\begin{array}{llll}
-\mbox{Trace} & \trace
-& ::= & [] ~|~ \trace :: \event 
-% ~|~ []^{\infty}
-\end{array}
-\]
-A trace can be regarded as the program history, 
+% \[
+% \begin{array}{llll}
+% \mbox{Trace} & \trace
+% & ::= & [] ~|~ \trace :: \event 
+% % ~|~ []^{\infty}
+% \end{array}
+% \]
+% A trace 
+It can be regarded as the program history, 
 which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
-\\
+We use list notation for traces, where $[]$ is the empty trace, the operator $\traceadd$ combines an event and a trace in a new event, 
+the operator $\tracecat$ concatenates two traces, and $\event \in \trace$ or $\event \notin \trace$ denotes an event $\event$ belongs or not to $\trace$.
 \highlight{
 A trace can be finite ($\trace \in \ftdom$) or infinite $\trace \in \inftdom$.
 If a program doesn't terminate when executing under some initial trace,
 it produces the infinite trace 
 from $\inftdom$, which records a non-terminating computation.
 So we denote by $\tdom$ the set of all traces, and $\tdom = \ftdom \cup \inftdom$.
-The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in \cite{Cousot19}.}
+The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in~\cite{Cousot19}.}
+%  formally defined as follows. 
+% \highlight{
+% \begin{defn}[Trace Concatenation, $\tracecat: \tdom \to \tdom\to \tdom $]
+%   \label{def:trace_concate}
+% Given two traces $\trace_1 \in \tdom, \trace_2 \in \tdom$, the trace concatenation operator 
+% $\tracecat$ is defined as:
+% \[
+% \trace_1 \tracecat \trace_2 \triangleq
+% \left\{
+% \begin{array}{ll} 
+%   \trace_1 & \trace_2 = [] \lor \trace_1 \in \inftdom \\
+%   ((\trace_1 :: \event)  \tracecat \trace_2') & \trace_1 \in \ftdom \land \trace_2 = [\event] \tracecat \trace_2'
+%   % \trace_2 &  \trace_2 \in \inftdom \\
+% \end{array}
+% \right.
+% \]
+% \end{defn}
+% }
+% \begin{defn}(An Event Belongs to A Trace)
+%   An event $\event \in \eventset$ belongs to a trace $\trace \in \tdom$, i.e., $\event \in \trace$ are defined as follows:
+% %
+% \begin{equation*}
+%   \event \in \trace  
+%   \triangleq \left\{
+%   \begin{array}{ll} 
+%     \etrue                  & \trace =  [\event] \tracecat \trace'
+%      \land \event = \event' \\
+%     \event \in \trace' & \trace =  [\event'] \tracecat \trace'
+%       \land \event \neq \event' \\ 
+%     \efalse                 & \trace = [] \lor \trace \in \inftdom
+%   \end{array}
+%   \right.
+% \end{equation*}
+% As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
+% \end{defn}
+% %
 
-We use list notation for traces, where $[]$ is the empty trace, the operator $\traceadd$ combines an event and a trace in a new event, 
-and the operator $\tracecat$ concatenates two traces formally defined as follows. 
-\highlight{
-\begin{defn}[Trace Concatenation, $\tracecat: \tdom \to \tdom\to \tdom $]
-  \label{def:trace_concate}
-Given two traces $\trace_1 \in \tdom, \trace_2 \in \tdom$, the trace concatenation operator 
-$\tracecat$ is defined as:
-\[
-\trace_1 \tracecat \trace_2 \triangleq
-\left\{
-\begin{array}{ll} 
-  \trace_1 & \trace_2 = [] \lor \trace_1 \in \inftdom \\
-  ((\trace_1 :: \event)  \tracecat \trace_2') & \trace_1 \in \ftdom \land \trace_2 = [\event] \tracecat \trace_2'
-  % \trace_2 &  \trace_2 \in \inftdom \\
-\end{array}
-\right.
-\]
-\end{defn}
-}
-\begin{defn}(An Event Belongs to A Trace)
-  An event $\event \in \eventset$ belongs to a trace $\trace \in \tdom$, i.e., $\event \in \trace$ are defined as follows:
-%
-\begin{equation*}
-  \event \in \trace  
-  \triangleq \left\{
-  \begin{array}{ll} 
-    \etrue                  & \trace =  [\event] \tracecat \trace'
-     \land \event = \event' \\
-    \event \in \trace' & \trace =  [\event'] \tracecat \trace'
-      \land \event \neq \event' \\ 
-    \efalse                 & \trace = [] \lor \trace \in \inftdom
-  \end{array}
-  \right.
-\end{equation*}
-As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
-\end{defn}
-%
 In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
-\begin{defn}[Counter Notation]
-  \label{def:counter}
-The counting operator $\counter : \tdom \to \ldom \to (\mathbb{N} \cup \{\bot\})$
-counts the appearance of a label in a trace.
-\[
-\begin{array}{llll}
-\counter([(x, l, v)] \tracecat \trace', l ) \triangleq \counter(\trace', l) + 1 & \text{if}~ l = l
-&
-\counter([(b, l, v)] \tracecat \trace', l) \triangleq \counter(\trace', l) + 1 & \text{if}~ l = l
-\\
-\counter([(x, l', v)] \tracecat \trace', l) \triangleq \counter(\trace', l)   & \text{if}~ l' \neq l
-&
-\counter([(b, l', v)] \tracecat \trace', l) \triangleq \counter(\trace', l)   & \text{if}~ l' \neq l
-\\
-\counter({[]}, l) \triangleq 0 & 
-&
-\counter(\trace, l) \triangleq \bot & \text{if }~ \trace \in \inftdom
-\end{array}
-\]
-{When the input trace is infinite, $\counter(\trace, l)$ returns $\bot$ for any program label $l$.}
-\end{defn}
-\begin{defn}[Counter Notation of Label List]
-  \label{def:lcounter}
-  The counting operator $\lcounter : \tdom \to \ldom \to (\mathbb{N} \cup \{\infty\})$
-  counts the appearance of a list of labels $[l_1, \ldots, l_n]$ as follows.
-\[
-  \begin{array}{ll}
-  \lcounter(\trace'' \tracecat \trace', [l_1, \ldots, l_n] ) 
-  \triangleq \lcounter(\trace', [l_1, \ldots, l_n]) + 1  & \text{if}~ \pi_2(\trace''[i]) = l_i, \forall i = 1, \ldots, n
-  \\ 
-  \lcounter([(\_, l, \_)] \tracecat \trace', [l_1, \ldots, l_n] ) 
-  \triangleq \lcounter(\trace', [l_1, \ldots, l_n]) & \text{if}~ l \neq l_1
-  \\ 
-  \lcounter(\trace, [l_1, \ldots, l_n] ) 
-  \triangleq \bot & \text{if }~ \trace \in \inftdom
-\end{array}
-\]
-{When the input trace is infinite, $\lcounter(\trace, L)$ returns $\bot$ for any list of labels as well.}
-\end{defn}
+We use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
 %
 We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points,
 defined as follows,
@@ -262,19 +224,19 @@ defined as follows,
 \tracel([ ]) \triangleq []
 \]
 %
-\paragraph{Environment.} $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$.  
-We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
-\[
-\begin{array}{llll}
-\env(\trace  \traceadd (x, l, v)) x \triangleq v
-&
-\env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x, y \neq x
-&
-\env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
-&
-\env({[]} ) x \triangleq \bot
-\end{array}
-\]
+% \paragraph{Environment.} $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$.  
+% We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
+% \[
+% \begin{array}{llll}
+% \env(\trace  \traceadd (x, l, v)) x \triangleq v
+% &
+% \env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x, y \neq x
+% &
+% \env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
+% &
+% \env({[]} ) x \triangleq \bot
+% \end{array}
+% \]
 %
 \begin{defn}[Well-formed Initial Traces]
   \label{def:initial_trace}
@@ -288,59 +250,62 @@ We don't use separate data structure as the environment to record each variable'
 In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
 when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
 %
-\paragraph{Expression Semantics}
-The evaluation notation for arithmetic expression is $\econfig{} : \mathcal{A} \to \tdom \to \mathcal{V}$.
-The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under trace $\trace$ following the arithmetic expression evaluation rules in Figure~\ref{fig:aexpr-eval}.
-\begin{figure}
-\begin{mathpar}
-  \boxed{ \econfig{} \, : \, \mbox{Arithmetic Expression $\to$ Trace $\to$ Arithmetic Value}}
-  \\
-  \inferrule{ 
-    \empty
-  }{
-   \econfig{n} (\trace)
-   = n
-  }
-  \and
-  \inferrule{ 
-    \env(\trace) x = v
-  }{
-   \econfig{x} (\trace)
-   = v
-  }
-  \and
-  \inferrule{ 
-    \econfig{\aexpr_1}(\trace) = v_1
-    \and 
-    \econfig{\aexpr_2}(\trace) = v_2
-    \and 
-     v_1 \oplus_a v_2 = v
-  }{
-   \econfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
-   = v
-  }
-  \and
-  \inferrule{ 
-    \econfig{\aexpr}(\trace) = v'
-    \and 
-    \elog v' = v
-  }{
-   \econfig{\elog \aexpr}(\trace) 
-   = v
-  }
-  \and
-  \inferrule{ 
-    \econfig{\aexpr}(\trace) = v'
-    \and 
-    \esign v' = v
-  }{
-   \econfig{\esign \aexpr} (\trace)
-   = v
-  }
-   \end{mathpar}
-   \caption{Evaluation Rules of Arithmetic Expression}
-   \label{fig:aexpr-eval}
-   \end{figure}
+% \paragraph{Expression Semantics}
+The evaluation for expression evaluation is standard, and 
+% the notation is $\config{\bexpr, \trace} \earrow \etrue$.
+we use notation for the expression evaluation $\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$, and $\econfig{\expr}(\trace)$ evaluates an expression $\expr$ under trace $\trace$.
+Our symbolic bound language is also a subset of our expression, we will use the same evaluation notation and rules for evaluating a symbolic bound expression.
+% The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under trace $\trace$ following the arithmetic expression evaluation rules in Figure~\ref{fig:aexpr-eval}. 
+% \begin{figure}
+% \begin{mathpar}
+%   \boxed{ \econfig{} \, : \, \mbox{Arithmetic Expression $\to$ Trace $\to$ Arithmetic Value}}
+%   \\
+%   \inferrule{ 
+%     \empty
+%   }{
+%    \econfig{n} (\trace)
+%    = n
+%   }
+%   \and
+%   \inferrule{ 
+%     \env(\trace) x = v
+%   }{
+%    \econfig{x} (\trace)
+%    = v
+%   }
+%   \and
+%   \inferrule{ 
+%     \econfig{\aexpr_1}(\trace) = v_1
+%     \and 
+%     \econfig{\aexpr_2}(\trace) = v_2
+%     \and 
+%      v_1 \oplus_a v_2 = v
+%   }{
+%    \econfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
+%    = v
+%   }
+%   \and
+%   \inferrule{ 
+%     \econfig{\aexpr}(\trace) = v'
+%     \and 
+%     \elog v' = v
+%   }{
+%    \econfig{\elog \aexpr}(\trace) 
+%    = v
+%   }
+%   \and
+%   \inferrule{ 
+%     \econfig{\aexpr}(\trace) = v'
+%     \and 
+%     \esign v' = v
+%   }{
+%    \econfig{\esign \aexpr} (\trace)
+%    = v
+%   }
+%    \end{mathpar}
+%    \caption{Evaluation Rules of Arithmetic Expression}
+%    \label{fig:aexpr-eval}
+%    \end{figure}
 
  % The evaluation rules for boolean expression and standard expression are in Figure~\ref{fig:bexpr-eval} and Figure~\ref{fig:expr-eval}.
  % \begin{figure}
@@ -574,7 +539,7 @@ The rules are standard and omitted here.
 Given an initial trace $\trace_0 \in \ftdom_0(c)$ of the program $c$,
 we use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$,
-then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$.
+then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution defined as follows.
 \\
 \begin{defn}[Non-terminating and Infinite Trace]
   \label{def:non-terminating}
