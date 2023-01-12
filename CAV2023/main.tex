@@ -56,21 +56,23 @@
 % typeset the header of the contribution
 %
 \begin{abstract}
-    The number of times a given control location 
-    inside a procedure is visited during the program execution.
-    The upper bound on this execution number for 
-    a given control location is referred to as the reachability-bound by~\cite{GulwaniZ10} in the first place.
-    A tight reachability-bound
-    can help to improve the analysis result on other program features.
-    While computing a tight reachability-bound for a given program control location is challenging.
-    Many works in the program analysis area develop algorithms estimating the program's loop bound or overall complexity.
-    But there isn't a general analysis algorithm that
-    computes the reachability-bound
-    directly or path-sensitively.
-    To leverage these limitations,
-    we present a path-sensitive reachability-bound algorithm
-    aiming to find a precise symbolic worst-case reachability-bound on the program's every control location in this paper.
-    Our algorithm brings together two lines of program complexity analysis techniques:
+    % The number of times a given control location 
+    % inside a procedure is visited during the program execution.
+    The upper bound on the number of times a given control location 
+    inside a procedure is visited during the program execution is referred as the reachability-bound.
+    %  by~\cite{GulwaniZ10} in the first place.
+    % A tight reachability-bound
+    % can help to improve the analysis result on other program features.
+    % While computing a tight reachability-bound for a given program control location is challenging.
+    % Many works in the program analysis area develop algorithms estimating the program's loop bound or overall complexity.
+    % But there isn't a general analysis algorithm that
+    % computes the reachability-bound
+    % directly or path-sensitively.
+    % To leverage these limitations,
+    This paper presents a path-sensitive reachability-bound algorithm
+    aiming to find a precise symbolic reachability-bound on the program's every control location.
+    %  in this paper.
+    In comparison with previous methods, our algorithm brings together two lines of program complexity analysis techniques:
     1. ranking function based amortized bound analysis through program abstraction, and
     2. loop summarization based multiple loop paths refinement
     and combines them effectively. 
@@ -90,6 +92,8 @@
 \label{sec:intro}
 \input{introduction}
 % %
+
+
 \section{Overview}
 \label{sec:overview}
 \input{overview}
@@ -115,9 +119,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Main Steps of Path-sensitive Reachability-bound Analysis}
-\label{sec:static_rb}
-\input{alg-preface}
+
 
 \section{Abstraction Transition Graph}
 \label{sec:progabs}

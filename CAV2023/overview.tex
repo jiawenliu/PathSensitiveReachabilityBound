@@ -1,11 +1,17 @@
 In this section, we discuss two representative examples with
 challenges of analyzing the symbolic
 \emph{reachability-bound} on
-every control location.
-We also give the technique overview of our algorithm.
-%
-\subsection{Multiple-Path Loop}
-\label{sec:overview-multiplepath}
+every control location and illustrate our key novelties, \emph{path reachability-bound} and the \emph{loop reachability-bound}.
+
+% The second key idea combining two lines of works above is the \emph{loop reachability-bound}, $\lpchB(L:\rprog, \tpath)$.
+% For each transition path $\tpath$ w.r.t each of the loops $L:\rprog$ in which $\tpath$ is nested,
+% $\lpchB(L:\rprog, \tpath)$ bounds the iterations for
+% the outside loop, $L:\rprog$ w.r.t. the innermost loop where $\tpath$ is enclosed,
+% such that during these iterations of $L:\rprog$, the innermost loop is ``entered''. 
+% Then by multiplication and summing over these two bounds where each program control point shows up, we compute each point's the \emph{reachability-bound} path-sensitively.
+
+\paragraph{The path reachability-bound}, $\inoutB(\rprog, \tpath)$ is our first key novelty.
+It is a bound for a loop free path $\tpath$ within a loop program $\rprog$ bounds the evaluation times of each loop free path instead of the entire multipath loop.
 \input{examples/whileTwoCounters-overview}
 \footnotetext{We use the notation $(l_0 \to \cdots \to l_n)$ to denote a vertices sequence $(l_0, \cdots, l_n)$, and the constraint on each edge in each transition path are omitted for concise.}
 Figure~\ref{fig:whileTwoCounters-overview}(a) shows an example of a two paths loops
@@ -25,8 +31,6 @@ Among works on program complexity, cost and loop bound analysis, \cite{GulwaniJK
 Though we can use it as the \emph{reachability-bound} for location $1$ and $2$,
 the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still unclear.
 
-
-\paragraph{Path Reachability-bound}
 To compute the bounds for locations on different paths of a loop, we compute the \emph{path reachability-bound},
 which is the first key idea of this path-sensitive \emph{reachability-bound} analysis algorithm. This bound approximate the evaluation times of each loop free path instead of the entire multipath loop.
 \\
@@ -71,10 +75,19 @@ $\psRB(4) = \psRB(5) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\}$,
 $\psRB(3) = \psRB(2) = \max\{m, m \times \lfloor\frac{n}{m}\rfloor\} + \lfloor\frac{n}{m}\rfloor + 1 $,
 and $\psRB(6) = \lfloor\frac{n}{m}\rfloor$.
 %
-\subsection{Nested Loops with Related Iterator}
-\label{sec:overview-nestedwhile}
+
 However, when there exists nested loop, computing the \emph{reachability-bound} for each location encounters another challenge.
 The \emph{path reachability-bound} is precise for each path w.r.t. the innermost loop but not the outer nested loops.
+\paragraph*{Loop reachability-bound}, $\lpchB(L:\rprog, \tpath)$ is our second key idea combining two lines of works.
+It has high accuracy and efficiency by using the estimated ranking function based on the \emph{amortized complexity analysis} methodology over the refined loop paths.
+For each transition path $\tpath$ w.r.t each of the loops $L:\rprog$ in which $\tpath$ is nested,
+$\lpchB(L:\rprog, \tpath)$ 
+\highlight{is a bound on the iterations for
+the outside loop, $L:\rprog$ w.r.t. the innermost loop where $\tpath$ is enclosed,
+such that during these iterations of $L:\rprog$, the innermost loop is ``entered''. 
+This is distinguished from the traditional methods, which only estimate the bound on the inner loop's iteration number
+in one iteration of the outside loop.}
+
 Figure~\ref{fig:threeWhile-overview}(a) shows an example of the nested loops with related 
 iterators.
 This example is adopted from the example in~\cite{GulwaniJK09}, which is common in product code.
@@ -122,23 +135,12 @@ bound on iteration numbers
 of the inner loop $L_6$ in each iteration of $L_3$ and $L_1$, which are both $N$.
 So they have to over-approximate the reachability-bound for locations inside $L_6$ with the
 overall program complexity by multiplication, i.e., $n + m^2 - m \times N$.
-% \\
 In the line of the \emph{amortized complexity analysis} through ranking function, the DC-based algorithm in \cite{SinnZV17}
 is only able to
 compute the combined loop bound and the local bound of each loop
 separately as well.
 % We are still unable to know the precise \emph{reachability-bound} for the locations in the innermost loop.
 }
-\paragraph*{Loop reachability-bound.}
-In this sense, this \emph{loop reachability-bound}, $\lpchB(L:\rprog, \tpath)$ is our second key idea combining two lines of works.
-It has high accuracy and efficiency by using the estimated ranking function based on the \emph{amortized complexity analysis} methodology over the refined loop paths.
-For each transition path $\tpath$ w.r.t each of the loops $L:\rprog$ in which $\tpath$ is nested,
-$\lpchB(L:\rprog, \tpath)$ 
-\highlight{is a bound on the iterations for
-the outside loop, $L:\rprog$ w.r.t. the innermost loop where $\tpath$ is enclosed,
-such that during these iterations of $L:\rprog$, the innermost loop is ``entered''. 
-This is distinguished from the traditional methods, which only estimate the bound on the inner loop's iteration number
-in one iteration of the outside loop.}
 \\
 Similar to the $\kw{twoPathsWhile}$ example, we also generate its abstract transition graph as well in Figure~\ref{fig:threeWhile-overview}(a),
 and compute its refined program,
