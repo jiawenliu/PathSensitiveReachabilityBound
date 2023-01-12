@@ -1,32 +1,32 @@
-\subsection{Labeled Language}
+\paragraph{Labeled Language}
 The program language a standard integer while language with labels to identify different components and equipped with a  trace-based operational semantics.
 \[
 \begin{array}{llll}
-\mbox{Arithmetic Operators} 
-& \oplus_a & ::= & + ~|~ - ~|~ \times 
-%
-~|~ \div ~|~ \emax ~|~ \emin
-\\  
-\mbox{Arithmetic Expression} 
-& \aexpr & ::= & 
-n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  
- ~|~ \elog \aexpr  ~|~ \esign \aexpr
-\\
-\mbox{Boolean Expression} & \bexpr & ::= & 
-%
-\etrue ~|~ \efalse  ~|~ \neg \bexpr
- ~|~ \bexpr \land \bexpr
-%
-~|~ \bexpr \lor \bexpr
-~|~ \aexpr \leq \aexpr 
-~|~ \aexpr < \aexpr 
-~|~ \aexpr = \aexpr 
-\\
-\mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr ~|~ [\expr, \dots, \expr]
-\\  
-%
-\mbox{Value} 
-& v & ::= & { n \in \mathbb{N}^{\infty} ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
+% \mbox{Arithmetic Operators} 
+% & \oplus_a & ::= & + ~|~ - ~|~ \times 
+% %
+% ~|~ \div ~|~ \emax ~|~ \emin
+% \\  
+% \mbox{Arithmetic Expression} 
+% & \aexpr & ::= & 
+% n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  
+%  ~|~ \elog \aexpr  ~|~ \esign \aexpr
+% \\
+% \mbox{Boolean Expression} & \bexpr & ::= & 
+% %
+% \etrue ~|~ \efalse  ~|~ \neg \bexpr
+%  ~|~ \bexpr \land \bexpr
+% %
+% ~|~ \bexpr \lor \bexpr
+% ~|~ \aexpr \leq \aexpr 
+% ~|~ \aexpr < \aexpr 
+% ~|~ \aexpr = \aexpr 
+% \\
+% \mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr ~|~ [\expr, \dots, \expr]
+% \\  
+% %
+% \mbox{Value} 
+% & v & ::= & { n \in \mathbb{N}^{\infty} ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
 %
 % \\%
 \mbox{Label} 
@@ -40,24 +40,25 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c}  
-\\ 
-\mbox{Event} 
-& \event & ::= & 
-({x}, l, v) ~ \mbox{Assignment Event} 
+% \\ 
+% \mbox{Event} 
+% & \event & ::= & 
+% ({x}, l, v) ~ \mbox{Assignment Event} 
+% % \\
+% % &&& 
+% ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
 % \\
-% &&& 
-~|~(\bexpr, l, v) ~ \mbox{Testing Event}
-\\
-\mbox{Trace} & \trace
-& ::= & [] ~|~ \trace :: \event
-\\
+% \mbox{Trace} & \trace
+% & ::= & [] ~|~ \trace :: \event
+% \\
 \end{array}
 \]
 Expressions include
-standard arithmetic (with value $n \in \mathbb{N}^{\infty}$) and boolean expression, ($\aexpr$ and $\bexpr$).
+standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with value $n \in \mathbb{N}^{\infty}$) and boolean expression, $\bexpr \in \booldom$.
 Commands are the typical ones from while languages. Each command is annotated with a label $l$, we will use natural numbers as labels and we will use them to record
 the location of each command, so that we can uniquely identify each program point.
-We denote by $\kw{FV}$ the operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$, which computes the set of free variables in an expression. For example,
+We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
+The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression. For example,
 $\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
 expression $\aexpr$ and boolean expression $\bexpr$ respectively.
 All the free variables
@@ -66,44 +67,44 @@ We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\kw{V
 
 We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
 
-We use following notations to represent the sets of corresponding terms:
-\[
-\begin{array}{lll}
-\vardom & : & \mbox{Set of Variables}  
-\\ 
-%
-\booldom & : & \mbox{Set of Boolean Expressions}  
-\\ 
-%
-\cdom & : & \mbox{Set of All Labeled Commands} 
-\\ 
-%
-\eventset  & : & \mbox{Set of Events}  
-\\
-%
-\eventset^{\asn}  & : & \mbox{Set of Assignment Events}  
-\\
-%
-\eventset^{\test}  & : & \mbox{Set of Testing Events}  
-\\
-%
-\ldom  & : & \mbox{Set of Labels}  
-\\
-%
-\highlight{\ftdom} & : & \mbox{\highlight{Set of All Finite Execution Traces}}
-\\
-\highlight{\inftdom} & : & \mbox{\highlight{Set of Infinite  Execution Traces}}
-\\
-\highlight{\tdom} & : & \mbox{\highlight{Set of All Finite Or Infinite  Execution Traces}}
-\\ 
-%
-\inpvar(c) & : & \mbox{Set of Program $c$'s Input Variables}  
-\\
-%
-\ftdom_0(c) & : & \mbox{Set of Program $c$'s Well-formed Initial Traces.}
-\\ & & \mbox{Each well formed initial trace $\trace_0 \in \ftdom_0(c)$ is finite and every input variable of the program $c$ has an initial value in $\trace_0$.}
-\end{array}
-\]
+% We use following notations to represent the sets of corresponding terms:
+% \[
+% \begin{array}{lll}
+% \vardom & : & \mbox{Set of Variables}  
+% \\ 
+% %
+% \booldom & : & \mbox{Set of Boolean Expressions}  
+% \\ 
+% %
+% \cdom & : & \mbox{Set of All Labeled Commands} 
+% \\ 
+% %
+% \eventset  & : & \mbox{Set of Events}  
+% \\
+% %
+% \eventset^{\asn}  & : & \mbox{Set of Assignment Events}  
+% \\
+% %
+% \eventset^{\test}  & : & \mbox{Set of Testing Events}  
+% \\
+% %
+% \ldom  & : & \mbox{Set of Labels}  
+% \\
+% %
+% \highlight{\ftdom} & : & \mbox{\highlight{Set of All Finite Execution Traces}}
+% \\
+% \highlight{\inftdom} & : & \mbox{\highlight{Set of Infinite  Execution Traces}}
+% \\
+% \highlight{\tdom} & : & \mbox{\highlight{Set of All Finite Or Infinite  Execution Traces}}
+% \\ 
+% %
+% \inpvar(c) & : & \mbox{Set of Program $c$'s Input Variables}  
+% \\
+% %
+% \ftdom_0(c) & : & \mbox{Set of Program $c$'s Well-formed Initial Traces.}
+% \\ & & \mbox{Each well formed initial trace $\trace_0 \in \ftdom_0(c)$ is finite and every input variable of the program $c$ has an initial value in $\trace_0$.}
+% \end{array}
+% \]
 %
 % \paragraph{Expression}
 % The expression is standard, it can be
@@ -126,10 +127,10 @@ We use following notations to represent the sets of corresponding terms:
 %   showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
 %   We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
 
-\subsection{{Trace-based Operational Semantics}}
-\label{sec:operational_semantics}
+% \paragraph{{Trace-based Operational Semantics}}
+% \label{sec:operational_semantics}
 \paragraph{Event}
-An event is a triple.
+An event, $\event \in \eventset$ is a triple.
 Its first element is the variable name $x$,
 or a boolean expression (from the guard of if or while command), 
 following by 
@@ -143,7 +144,7 @@ following by
   \end{array}
   \]  
  We have two kinds of events: \emph{assignment events} and \emph{testing events},
- and we use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively.
+ and we use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively and $\eventset = \eventset^{\asn} \cup \eventset^{\test}$.
  
  An \emph{assignment event} tracks the execution of an assignment and consists of the assigned variable, the label of the command that generates it, the value assigned to the variable.
 
@@ -213,16 +214,16 @@ The trace-based semantics with non-terminating execution is defined below follow
 % \end{defn}
 % %
 
-In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 We use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
+In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 %
-We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points,
-defined as follows,
-\[
-\tracel([(\_, l, \_)] \tracecat \trace') \triangleq [l] \tracecat \tracel(\trace')
-\qquad
-\tracel([ ]) \triangleq []
-\]
+% We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points,
+% defined as follows,
+% \[
+% \tracel([(\_, l, \_)] \tracecat \trace') \triangleq [l] \tracecat \tracel(\trace')
+% \qquad
+% \tracel([ ]) \triangleq []
+% \]
 %
 % \paragraph{Environment.} $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$.  
 % We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
@@ -240,21 +241,26 @@ defined as follows,
 %
 \begin{defn}[Well-formed Initial Traces]
   \label{def:initial_trace}
-  Given a program $c$, $\trace$ is a well-formed initial trace of $c$ if and only if all the input variables of $c$ has an initial value in this trace.
+  Given a program $c$, $\trace \in \tdom$, then is a well-formed initial trace of $c$, i.e., , $\trace \in \ftdom_0(c)$ if and only if all the input variables of $c$ has an initial value in this trace.
   \[
     \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
-    \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot
+    \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot,
     \]
+where $\ftdom_0(c)$ is the set of all well-formed initial traces for program $c$.
 \end{defn}
 %
-In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
-when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
+% In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
+% when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
 %
-% \paragraph{Expression Semantics}
+\paragraph{Trace-based Semantics}
 The evaluation for expression evaluation is standard, and 
 % the notation is $\config{\bexpr, \trace} \earrow \etrue$.
 we use notation for the expression evaluation $\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$, and $\econfig{\expr}(\trace)$ evaluates an expression $\expr$ under trace $\trace$.
 Our symbolic bound language is also a subset of our expression, we will use the same evaluation notation and rules for evaluating a symbolic bound expression.
+The trace based operational semantics is described in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another configuration
+program-state.
+The rules are standard and omitted here.
+
 % The $\econfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under trace $\trace$ following the arithmetic expression evaluation rules in Figure~\ref{fig:aexpr-eval}. 
 % \begin{figure}
 % \begin{mathpar}
@@ -403,9 +409,9 @@ Our symbolic bound language is also a subset of our expression, we will use the 
 
 % \paragraph{Operational Semantics Rules}
 %
-The trace based operational semantics is described in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another configuration
-program-state.
-The rules are standard and omitted here.
+% The trace based operational semantics is described in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another configuration
+% program-state.
+% The rules are standard and omitted here.
 % presented in Figure~\ref{fig:command-os}.
 % \begin{figure}
 %   \begin{mathpar}
@@ -567,6 +573,8 @@ then the program's execution terminates and produces a finite execution trace $\
     \end{array}
   \]
 \end{defn}
+This definition has the similar intuition as the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the semantics of the program model in~\cite{SinnZV17}.
+
 %
 % \begin{defn}[Non-terminating and Infinite Trace (alternative way)]
 %   \label{def:non-terminating-2}
@@ -621,26 +629,26 @@ then the program's execution terminates and produces a finite execution trace $\
 %   \[ \trace' = \pi_2(\lim\limits_{i \to \infty}(f(i))) \in \inftdom. \]
 % \end{defn}
 %
-This definition has the similar intuition as the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the semantics of the program model in~\cite{SinnZV17}.
-\\
-If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
-So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lem_language}, 
-specifically the trace has the property that its length never decreases during the program execution.
-\begin{lem}
-  [Trace Non-Decreasing]
-  \label{lem:tracenondec}
-  For any program $c \in \cdom$ and initial trace $\trace_0 \in \ftdom_0(c)$,
-  if there exists $\trace \in \tdom$ and $c' \in \cdom $ such that $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $ or 
-  $\config{c, \trace_0} \uparrow^{\infty} \trace$  
-  then there exists a trace $\trace' \in \tdom$ such that $\trace_0 \tracecat \trace' = \trace$ formally as follows.
-  %
-  \[
-    \begin{array}{l}
-    \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom \st
-    \Big( \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} 
-    \lor  \config{c, \trace_0} \uparrow^{\infty} \trace \Big)
-    \\ \quad
-    \implies \exists \trace' \in \tdom \st \trace_0 \tracecat \trace' = \trace 
-    \end{array}
-    \]
-  \end{lem}
+% This definition has the similar intuition as the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the semantics of the program model in~\cite{SinnZV17}.
+% \\
+% If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
+% So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lem_language}, 
+% specifically the trace has the property that its length never decreases during the program execution.
+% \begin{lem}
+%   [Trace Non-Decreasing]
+%   \label{lem:tracenondec}
+%   For any program $c \in \cdom$ and initial trace $\trace_0 \in \ftdom_0(c)$,
+%   if there exists $\trace \in \tdom$ and $c' \in \cdom $ such that $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $ or 
+%   $\config{c, \trace_0} \uparrow^{\infty} \trace$  
+%   then there exists a trace $\trace' \in \tdom$ such that $\trace_0 \tracecat \trace' = \trace$ formally as follows.
+%   %
+%   \[
+%     \begin{array}{l}
+%     \forall \trace_0 \in \ftdom_0(c), \trace \in \tdom, c, c' \in \cdom \st
+%     \Big( \config{c, \trace_0} \rightarrow^{*} \config{c', \trace} 
+%     \lor  \config{c, \trace_0} \uparrow^{\infty} \trace \Big)
+%     \\ \quad
+%     \implies \exists \trace' \in \tdom \st \trace_0 \tracecat \trace' = \trace 
+%     \end{array}
+%     \]
+%   \end{lem}

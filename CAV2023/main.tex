@@ -94,16 +94,23 @@
 \label{sec:overview}
 \input{overview}
 % %
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Program Model and Definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{{Language and Program Model}}
-\label{sec:language}
+\section{Program Model and The Reachability-bound}
+\label{sec:preliminary}
+% \input{preliminary}
 \input{language}
-% %
-\section{{The Reachability-bound}}
-\label{sec:execution_rb}
 \input{rb_definition}
+
+% \section{{Language and Program Model}}
+% \label{sec:language}
+% \input{language}
+% % %
+% \section{{The Reachability-bound}}
+% \label{sec:execution_rb}
+% \input{rb_definition}
 % % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Reachability Bound Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -111,6 +118,7 @@
 \section{Main Steps of Path-sensitive Reachability-bound Analysis}
 \label{sec:static_rb}
 \input{alg-preface}
+
 \section{Abstraction Transition Graph}
 \label{sec:progabs}
 \input{alg-progabs}
@@ -126,6 +134,7 @@
 \section{Path Local Reachability-bound Computation}
 \label{sec:pathlocalrb}
 \input{alg-pathlocalrb}
+
 \section{Loop Reachability-bound Computation}
 \label{sec:looprb}
 \input{alg-looprb}
@@ -150,7 +159,6 @@
 \section{Conclusion and Future Works}
 \label{sec:conlusion}
 \input{conclusion}
-\clearpage
 
 \subsubsection*{Acknowledgements}
 Acknowledgments is at the end of the paper, preceded by an unnumbered run-in heading (i.e.

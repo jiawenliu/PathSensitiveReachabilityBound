@@ -1,17 +1,16 @@
 
-\subsection{Loop Bound Computation}
-There are three methods for computing the loop bound, $BD(\rprepeat(\rprog'), c)$ for every sub program, specifically loop program $\rprepeat(\rprog')$ in a program $c$'s refined program $\rprog$:
-\begin{enumerate}
-  \item Estimated by $BD(\rprepeat(\rprog'), c) = BOUND(\rprepeat(\rprog'))$ from paper~\cite{GulwaniJK09}, which is precise for simple loop without nested loops but not for nested loops. We are not giving the computation detail in this paper, which can be found in paper~\cite{GulwaniJK09}.
-  \item Estimated by Equation~\ref{eq:absBD} in Section~\ref{sec:loopbound-rankbased} path-insensitively based on the estimated ranking function from Section~\ref{sec:rank}. This bound is precise when there is only one path in this loop but not for loops with multiple paths.
-  \item   We provide an alternative computation method using the variable invariant estimation idea from~\cite{SinnZV17} in Definition~\ref{def:loopbound} and the progress invariant idea from~\cite{GulwaniJK09}.
-  We compute the rank functions' abstract states, $\rfinit(\rprog, c)$, $\rffinal(\rprog, c)$, $\rfnext(\rprog, c)$ and $\varGD(\rprog, c)$ as in Definition~\ref{def:alg-absstate}.
-  Then we compute $BD(\rprepeat(\rprog'), c)$ by Definition~\ref{def:loopbound} using SMT solver.
-\end{enumerate}
+\subsubsection{Loop Bound}
+There are two methods for computing the loop bound, $BD(\rprepeat(\rprog'), c)$ for every sub program, specifically loop program $\rprepeat(\rprog')$ in a program $c$'s refined program $\rprog$,
+% \begin{enumerate}
+%   \item Estimated by $BD(\rprepeat(\rprog'), c) = BOUND(\rprepeat(\rprog'))$ from paper~\cite{GulwaniJK09}, which is precise for simple loop without nested loops but not for nested loops. We are not giving the computation detail in this paper, which can be found in paper~\cite{GulwaniJK09}.
+%   \item Estimated by Equation~\ref{eq:absBD} path-insensitively, which is based only on the estimated ranking function from Section~\ref{sec:rank}. 
+%   This bound is precise when there is only one path in this loop but not for loops with multiple paths.
+%   \item We provide a new computation approach using both the variable invariant estimation idea and the progress invariant idea from~\cite{GulwaniJK09} presented in Definition~\ref{def:loopbound}.
+% \end{enumerate}
 %
-\subsubsection{Ranking Function Based Loop Bound Computation}
+\paragraph{Ranking Function Based Loop Bound Computation}
 \label{sec:loopbound-rankbased}
-Based on the estimated ranking function from Section~\ref{sec:rank}, the $BD(\rprog, c)$ for the refined program $\rprog$ can be estimated by $\absclr(\absevent, c)$ by taking the
+Based only on the estimated ranking function from Section~\ref{sec:rank}, the $BD(\rprog, c)$ for the refined program $\rprog$ can be estimated by $\absclr(\absevent, c)$ by taking the
 minimum value over all $\absevent \in \rprog$.
 We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
 \begin{equation}
@@ -21,15 +20,16 @@ We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
 %
 This bound is accurate on the iteration numbers of a single loop, but neither tight on the iterations of different paths inside the loop, nor the nested loop.
 %
-\paragraph{Walk through Example.}
+% \paragraph{Walk through Example.}
 % \todo{The walk through example}
-In Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), by using this ranking function-based approach, we compute the loose loop bound for each subprogram,
+In our walk through program in Example~\ref{ex:relatedNestedWhileOdd_abscfg} Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), by using this ranking function-based approach, we compute the loose loop bound for each subprogram,
 $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, $BD(\rprog_1^1) = n$, and $BD(\rprog_1^2) = n $.
 The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while expected to be $\frac{m}{4}$.
 They are loose because of the nature of the path-insensitivity in the ranking function invariant computation in Definition~\ref{def:ranking_bound}. 
 
-\subsubsection{New Approach of Computing The Loop Bound} 
-Our new approach also uses the ranking function, but combines with the refined program.
+\paragraph{New Approach of Computing The Loop Bound} 
+We provide a new computation approach using both the variable invariant estimation idea and the progress invariant idea from~\cite{GulwaniJK09} presented in Definition~\ref{def:loopbound}.
+This new approach also uses the ranking function, but combines with the refined program.
 We first compute the refined abstract states for ranking function in different program point and different local program based on the refined program.
 Then we these precise abstract state, and estimate the loop bound path sensitively.
 
@@ -143,15 +143,16 @@ $\varGD(\rprog, c)$ involves the computation of $BD(\rprog, c)$ recursively as f
     \end{array}
   \]
 \end{defn}
-We show that Definition~\ref{def:loopbound} computes a sound loop bound for every loop in a refined program below in Lemma~\ref{lem:loopbound_sound} with proof in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
-\begin{lem}[Soundness of Loop Bound]
-  \label{lem:loopbound_sound}
-  For every program $c$ with it refined program $\rprog$,
-  % for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
-  $BD(\rprog, c)$ is a sound upper bound on the iterating times of this program.
-\end{lem}
+The Definition~\ref{def:loopbound} computes a sound loop bound for every loop in a refined program.
+%  below in Lemma~\ref{lem:loopbound_sound} with proof in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
+% \begin{lem}[Soundness of Loop Bound]
+%   \label{lem:loopbound_sound}
+%   For every program $c$ with it refined program $\rprog$,
+%   % for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
+%   $BD(\rprog, c)$ is a sound upper bound on the iterating times of this program.
+% \end{lem}
 
-\paragraph{Walk through Example.}
+% \paragraph{Walk through Example.}
 % \todo{The walk through example}
 Using our new approach, we compute a more precise loop bound $BD(\rprog)$ for each subprogram of our walk through example in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), in comparison to the purely ranking function-based approach in Equation~\ref{eq:absBD}.
 Specifically for $\rprog_1^1$ and $\rprog_1^2$, we compute $BD(\rprog_1^1) = \frac{m}{4}$ and $BD(\rprog_1^2) = \frac{m}{4}$ as expected,
@@ -160,8 +161,7 @@ and compute the same bounds for the other sub-programs.
 % The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while expected to be $\frac{m}{4}$.
 % They are loose because of the nature of the path-insensitivity in the ranking function invariant computation in Definition~\ref{def:ranking_bound}. 
 
-
-\subsection{Path Local Reachability-bound}
+\subsubsection{Path Local Reachability-bound}
 We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \textbf{the innermost loop} inside $\rprog$ where $\tpath$ is located. Then by using the loop bound computed by our new approach, we compute the \emph{path local reachability-bound} of
 the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlocalrb}.
 \begin{defn}[Path Local Reachability-bound Computation]
@@ -216,7 +216,7 @@ We show the \emph{path local reachability-bound} of the simple transition path $
 \end{lem}
 
 
-\paragraph{Example.}
+% \paragraph{Example.}
 % \todo{Walk through example}
 Now based on the tighter loop bound,
 %  we compute another loop bound for every subprogram in the Example~\ref{ex:relatedNestedWhileOdd_abscfg} as $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m $, $BD(\rprog_1^1) = \frac{m}{4} $, and $BD(\rprog_1^2) = \frac{m}{4} $.
@@ -233,7 +233,7 @@ $\outinB(1: \rprog_1^2, \tpath_2) = \frac{m}{4}$,
 $\outinB(1: \rprog_1^2, \tpath_4) = \frac{m}{4}$, and
 $\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ 
 
-\todo{necessary?}
+% \todo{necessary?}
 \highlight{
 Notice here we can already compute the path reachability-bound simply use the Loop Bound $BD$ recursively. By simply remove the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and use $\rprog$
 as the input. Then the same Definition~\ref{def:pathlocalrb} computes $\outinB(\rprog, \tpath)$ over the global program, $\rprog$ and use $\outinB(\rprog, \tpath)$  as the path global reachability-bound.

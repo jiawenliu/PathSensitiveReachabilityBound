@@ -1,4 +1,4 @@
-This procedure has three sub procudes in each subsection below.
+This procedure has three sub procedures in each paragraph below.
 % \begin{enumerate}
 %   \item \textbf{Collecting} all \emph{simple transition paths}.
 %   Every \emph{simple transition paths}, $\tpath \in \paths(\absG(c))$ 
@@ -11,7 +11,7 @@ This procedure has three sub procudes in each subsection below.
 %   refined program $\rprog$ for a program $c$ given the rewritten program as input.
 % \end{enumerate}
 
-\subsection{The Simple Transition Path}
+\paragraph{The Simple Transition Path}
 We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
 % \begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
 %   \label{def:loopl}
@@ -73,16 +73,14 @@ is a \emph{simple transition path} if and only if it satisfies,
   \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
 \end{itemize}
 \end{defn}
-
-
-\paragraph{Example.}
+% \paragraph{Example.}
 % \todo{The walk through example}
-$1 \to 2 \to 8 \to 1$ is a \emph{simple transition path} on $\absG(\kw{relatedNestedWhileOdd}(n, m))$ in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
+For example, the $1 \to 2 \to 8 \to 1$ is a \emph{simple transition path} on $\absG(\kw{relatedNestedWhileOdd}(n, m))$ in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
 However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple (the program points $4$ is visited twice).
 In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
 
 
-\subsection{Rewrite the Program}
+\paragraph{Rewrite the Program}
 The second sub-procedure rewrite the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics.
 \begin{algorithm}
   \caption{Program Rewriting $\kw{Rewrite}$}
@@ -121,13 +119,13 @@ while and sequence statement in paper~\cite{GulwaniJK09} respectively.
   Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
 \end{itemize}
 % \todo{soundness of the program write}
-\subsection{Program Refinement}
+\paragraph{Program Refinement}
 The last step, we implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
 refined program $\rprog$ for a rewritten program $c$.
 
-\paragraph[example]{Walk through Example.}
+% \paragraph[example]{Walk through Example.}
 % \todo{The walk through example}
-Look again the walk through example in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
+Look again the Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b) in Example~\ref{ex:relatedNestedWhileOdd_abscfg}.
 We first collect all its simple transition paths from $\absG(\kw{relatedNestedWhileOdd}(n, m))$ as
 $\tpath_0 = (0 \to 1)$,
 $\tpath_1 = (1 \to 2 \to 3 \to 4)$,

@@ -4,63 +4,62 @@ This implementation consists of the
 program abstraction from Section~\ref{sec:progabs} in OCaml,
 
 Benchmark sources:
-\\
-Icra~\hyperlink{Icra}{https://github.com/icra-team/icra}
-\\
-Loopus~\hyperlink{Loopus}{https://forsyte.at/static/people/sinn/loopusJAR/index.html}
-\\
+Icra~\hyperlink{https://github.com/icra-team/icra}{Icra}
+,
+Loopus~\hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{Loopus}
+,
 -ABC : 15
-\\
+,
 -C4B : 15
-\\
+,
 -KoAT : 3
-\\
+,
 -Loopus 11 + 14 + JAR: 10
-\\
+,
 -Rank10 : 3
-\\
+,
 -SPEED : 27
-\\
+,
 -WTC : 37
-\\
-Loopus-challenging~\hyperlink{LoopusJAR}{https://forsyte.at/static/people/sinn/loopusJAR/index.html}
-\\
+,
+Loopus-challenging~\hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}
+,
 : 37
-\\
-Icra~\hyperlink{Icra}{https://github.com/icra-team/icra}
-\\
+,
+Icra~\hyperlink{https://github.com/icra-team/icra}{Icra}
+,
 -Icra-misc : 
-\\
+,
 -Icra-SV : 
-\\
-Tianhan~\hyperlink{Tianhan}{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}
-\\
+,
+Tianhan~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}
+,
 : 69
 
 Tool Sources:
-\\
-CoFloCo~\hyperlink{CoFloCo}{https://github.com/aeflores/CoFloCo/tree/master/src}
-\\
-Icra~\hyperlink{Icra}{https://github.com/icra-team/icra}
-\\
-Tianhan~\hyperlink{Tianhan}{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}
-\\
-LoopusJAR~\hyperlink{LoopusJAR}{https://forsyte.at/software/loopus/}
-\\
-KoAT~\hyperlink{KoAT}{https://github.com/s-falke/kittel-koat}
+,
+CoFloCo~\hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}
+,
+Icra~\hyperlink{https://github.com/icra-team/icra}{Icra}
+,
+Tianhan~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}
+,
+LoopusJAR~\hyperlink{https://forsyte.at/software/loopus/}{LoopusJAR}
+,
+KoAT~\hyperlink{https://github.com/s-falke/kittel-koat}{KoAT}
 
 Paper and Technique Reports:
-\\
+,
 PathREFINE~\cite{GulwaniJK09}
-\\
+,
 LoopusJAR~\cite{SinnZV17}
-\\
+,
 CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}
-\\
+,
 KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}
-\\
+,
 Icra~\cite{KincaidBCR19,CyphertBKR19}
-\\
+,
 Tianhan~\cite{LuCT21}
 
 
@@ -78,8 +77,8 @@ Tianhan~\cite{LuCT21}
             Loopus-C & 36 & & 31 & 36 & \todo{32} & \todo{88.1\% -}  & 2 & 3 & \todo{5min31sec} \\
             \hline
             Icra-misc & & & & & & & & \\
-            \hline
-            Icra-SV & & & & & & & & \\
+            % \hline
+            % Icra-SV & & & & & & & & \\
             \hline
             Tianhan & 69 & - & 3 & 7 & 68 & 98.5\% & 1 & 0 & 1min12sec \\
             \hline
@@ -127,13 +126,13 @@ Tianhan~\cite{LuCT21}
     & $O(n)$            &  $ -$ & $-$  & - &  &  & - & \\
     \cline{2-9}
     & $O(n^2)$          &  $-$ & $ - $ & - &  &  & - \\
-    \hline
-    \multirow{3}{*}{Icra-SV} 
-    & $O(1)$            & $O(1)$ & $O(1)$  & - &  &  & -\\
-    \cline{2-9}
-    & $O(n)$            &  $-$ & $-$  & - &  &  & -  \\
-    \cline{2-9}
-    & $O(n^2)$          &  $-$ & $ - $ & - &  &  & - &  \\
+    % \hline
+    % \multirow{3}{*}{Icra-SV} 
+    % & $O(1)$            & $O(1)$ & $O(1)$  & - &  &  & -\\
+    % \cline{2-9}
+    % & $O(n)$            &  $-$ & $-$  & - &  &  & -  \\
+    % \cline{2-9}
+    % & $O(n^2)$          &  $-$ & $ - $ & - &  &  & - &  \\
     \hline \hline
     \multirow{3}{*}{Tianhan} 
     & $O(1)$            & $O(1)$ & $O(1)$  & 2  & 2 & 2 & 1 & 2 \\
