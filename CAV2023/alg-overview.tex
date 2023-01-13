@@ -17,10 +17,10 @@
     It relies on the \emph{Refined Program} and the upper bound invariant of the \emph{Ranking Function} computed previously.
     It requires to compute our two novel quantities, the \emph{Path Reachability-bound}, $\outinB(\rprog, \tpath)$ and the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath)$.
 
-    For the transition path $\tpath_3 = 4 \to 5 \to 4$ in the first interleaving pattern where $\rprog' = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
+    For the transition path $\tpath_3 = 4 \to 5 \to 4$ in the first interleaving pattern where $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
     we compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = m$ w.r.t its innermost loop $L_4$ as a local \emph{Path Reachability-bound} in Section~\ref{sec:pathlocalrb}
     
-    We also compute $\lpchB(\rprog', \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb}.
+    We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb}.
 
     Then Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
     By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.

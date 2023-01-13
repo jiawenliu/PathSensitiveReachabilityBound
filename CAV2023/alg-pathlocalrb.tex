@@ -18,11 +18,12 @@ We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
   BD(\rprog, c) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog \right\}.
 \end{equation}
 %
-This bound is accurate on the iteration numbers of a single loop, but neither tight on the iterations of different paths inside the loop, nor the nested loop.
-%
+This approach is accurate on the iteration numbers of a single loop, but neither tight on the iterations of different paths inside the loop, nor the nested loop.
 % \paragraph{Walk through Example.}
 % \todo{The walk through example}
-In our walk through program in Example~\ref{ex:relatedNestedWhileOdd_abscfg} Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), by using this ranking function-based approach, we compute the loose loop bound for each subprogram,
+For example in our walk through program in Example~\ref{ex:relatedNestedWhileOdd-overview},
+% by using this ranking function-based approach, we 
+this equation only computes for each subprogram,
 $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, $BD(\rprog_1^1) = n$, and $BD(\rprog_1^2) = n $.
 The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while expected to be $\frac{m}{4}$.
 They are loose because of the nature of the path-insensitivity in the ranking function invariant computation in Definition~\ref{def:ranking_bound}. 
@@ -157,10 +158,9 @@ The Definition~\ref{def:loopbound} computes a sound loop bound for every loop in
 %   % for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
 %   $BD(\rprog, c)$ is a sound upper bound on the iterating times of this program.
 % \end{lem}
-
 % \paragraph{Walk through Example.}
 % \todo{The walk through example}
-Using our new approach, we compute a more precise loop bound $BD(\rprog)$ for each subprogram of our walk through example in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), in comparison to the purely ranking function-based approach in Equation~\ref{eq:absBD}.
+By this approach, we compute a more precise loop bound $BD(\rprog)$ for each subprogram of our walk through example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), in comparison to the purely ranking function-based approach in Equation~\ref{eq:absBD}.
 Specifically for $\rprog_1^1$ and $\rprog_1^2$, we compute $BD(\rprog_1^1) = \frac{m}{4}$ and $BD(\rprog_1^2) = \frac{m}{4}$ as expected,
 and compute the same bounds for the other sub-programs.
 % $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, $BD(\rprog_1^1) = n$, and $BD(\rprog_1^2) = n $.
@@ -229,20 +229,20 @@ The \emph{path local reachability-bound} of the simple transition path $\tpath$ 
 
 % \paragraph{Example.}
 % \todo{Walk through example}
-Now based on the tighter loop bound,
-%  we compute another loop bound for every subprogram in the Example~\ref{ex:relatedNestedWhileOdd_abscfg} as $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m $, $BD(\rprog_1^1) = \frac{m}{4} $, and $BD(\rprog_1^2) = \frac{m}{4} $.
-% They are more precise comparing to purely ranking function-based approach in Equation~\ref{eq:absBD}.
-% Using this precise loop bound, 
-we compute local reachability-bound for every transition path w.r.t. its innermost loop as
-$\outinB(\rprog, \tpath_0) = 1$,
-$\outinB(\rprog, \tpath_4) = 1$,
-$\outinB(1: \rprog_1^1, \tpath_1) = \frac{m}{4}$,
-$\outinB(1: \rprog_1^1, \tpath_2) = \frac{m}{4}$,
-$\outinB(1: \rprog_1^1, \tpath_4) = \frac{m}{4}$,
-$\outinB(1: \rprog_1^2, \tpath_1) = \frac{m}{4}$,
-$\outinB(1: \rprog_1^2, \tpath_2) = \frac{m}{4}$,
-$\outinB(1: \rprog_1^2, \tpath_4) = \frac{m}{4}$, and
-$\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ 
+% Now based on the tighter loop bound,
+% %  we compute another loop bound for every subprogram in the Example~\ref{ex:relatedNestedWhileOdd-overview} as $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m $, $BD(\rprog_1^1) = \frac{m}{4} $, and $BD(\rprog_1^2) = \frac{m}{4} $.
+% % They are more precise comparing to purely ranking function-based approach in Equation~\ref{eq:absBD}.
+% % Using this precise loop bound, 
+% we compute local reachability-bound for every transition path w.r.t. its innermost loop as
+% $\outinB(\rprog, \tpath_0) = 1$,
+% $\outinB(\rprog, \tpath_4) = 1$,
+% $\outinB(1: \rprog_1^1, \tpath_1) = \frac{m}{4}$,
+% $\outinB(1: \rprog_1^1, \tpath_2) = \frac{m}{4}$,
+% $\outinB(1: \rprog_1^1, \tpath_4) = \frac{m}{4}$,
+% $\outinB(1: \rprog_1^2, \tpath_1) = \frac{m}{4}$,
+% $\outinB(1: \rprog_1^2, \tpath_2) = \frac{m}{4}$,
+% $\outinB(1: \rprog_1^2, \tpath_4) = \frac{m}{4}$, and
+% $\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ 
 
 % \todo{necessary?}
 \highlight{

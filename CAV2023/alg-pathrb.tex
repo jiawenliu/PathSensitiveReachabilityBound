@@ -1,8 +1,9 @@
-Using the \emph{loop reachability-bound} and \emph{path local reachability-bound}, we compute the \emph{path reachability-bound} first in Section~\ref{sec:pathrb}, 
-then the final path-sensitive reachability-bound for each program point in Section~\ref{sec:psrb}.
+% Using the \emph{loop reachability-bound} and \emph{path local reachability-bound}, we compute the \emph{path reachability-bound} first in Section~\ref{sec:pathrb}, 
+% then the final path-sensitive reachability-bound for each program point in Section~\ref{sec:psrb}.
 
-For the program $c$ with its refined program $\rprog$, we compute
-for each of its \emph{simple transition path}s, $\tpath$ the \emph{path reachability-bound} , $\inoutB(\rprog, \tpath)$ during the execution of the program $c$ as in Definition~\ref{def:pathrb}.
+% For the program $c$ with its refined program $\rprog$, we compute
+% for each of its \emph{simple transition path}s, $\tpath$ the \emph{path reachability-bound} , $\inoutB(\rprog, \tpath)$ during the execution of the program $c$ as in Definition~\ref{def:pathrb}.
+Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the execution of the program $c$ is multiplication of the $\outinB$ and $\lpchB$ for every simple transition path $\tpath$ formally as in Definition~\ref{def:pathrb}.
 %
 \begin{defn}[Path Reachability-bound Computation]
   \label{def:pathrb}
@@ -10,6 +11,7 @@ for each of its \emph{simple transition path}s, $\tpath$ the \emph{path reachabi
   $\tpath$'s reachability-bound, $\inoutB(\rprog, \tpath, c)$
   is computed recursively as follows. 
   The input $c$ is omitted in the following equations for concise given the context is clear.
+{\small 
 \[
   \begin{array}{rcl}
     \inoutB(\tpath, \tpath) & \triangleq & 1  \\
@@ -26,13 +28,14 @@ for each of its \emph{simple transition path}s, $\tpath$ the \emph{path reachabi
     \inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
     & \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
     \\
-    \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\\
-    &  & \text{this case will never be matched}
+    \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)\footnotemark
     \end{array}
   \]
-  \end{defn}
+ }
+ \end{defn}
 \footnotetext{There is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$, all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$}%
 % We show that $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ during the execution of $\rprog$
+\footnotetext{{In a well-formed program, this case will never be matched}}
 
 Again, the \emph{path reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing the program.
 %  in Lemma~\ref{lem:pathrb-sound}, with the proof in \highlight{Appendix~\ref{apdx:pathrb-sound}}.
@@ -62,7 +65,7 @@ Again, the \emph{path reachability-bound} of the simple transition path $\tpath$
 \end{lem}
 % \paragraph{Walk through Example.}
 % \todo{Walk through example with a tighter path reachability bound}
-Now we can compute the precise bound for our running program in Example~\ref{ex:relatedNestedWhileOdd_abscfg}.
+Now we can compute the precise bound for our running program in Example~\ref{ex:relatedNestedWhileOdd-overview}.
 In comparison with the substituted computation in Section~\ref{def:pathlocalrb}, now we use the \emph{loop reachability-bound}
 and compute a more precise path \emph{global} reachability-bound for the path $\tpath_3$ as $\frac{m}{4} \times 1$.
 The bounds for the other paths are the same.
@@ -75,7 +78,6 @@ $\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
 \highlight{$\psRB(5) = \frac{m}{4} \times 1$},
 and $\psRB(4) =  \frac{m}{4} + n - m + 1$.
 As expected, this bound is tight for every program point.
-
 For the Example~\ref{ex:threeNestedWhile} with the tight \emph{loop reachability-bound} computed in Section~\ref{sec:looprb},
 we also compute tight \emph{reachability-bound} for it.
 For each $\tpath_i$, the multiplication of its \emph{path local reachability-bound} with all its \emph{loop reachability-bound}s,
