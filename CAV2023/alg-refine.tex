@@ -75,9 +75,9 @@ is a \emph{simple transition path} if and only if it satisfies,
 \end{defn}
 % \paragraph{Example.}
 % \todo{The walk through example}
-For example, the $1 \to 2 \to 8 \to 1$ is a \emph{simple transition path} on $\absG(\kw{relatedNestedWhileOdd}(n, m))$ in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
+For example in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b), the $1 \to 2 \to 8 \to 1$ is a \emph{simple transition path}.
 However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple (the program points $4$ is visited twice).
-In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
+Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it visits a loop header $4$ inside the path. $1 \to 2 \to 3$ isn't either because its end-point isn't a loop header.
 
 
 \paragraph{Rewrite the Program}
@@ -140,3 +140,45 @@ Then we compute the refined program by REFINE algorithm in~\cite{GulwaniJK09} as
     \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), 
     1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) }; \tpath_5.
 \]
+
+\begin{example}[Two Counter While]
+  \label{ex:threeNestedWhile}
+  \input{examples/whileTwoCounters-overview}
+  We use another example show the usefulness of the \emph{path refinement}, which is an example of a two paths loops
+  with different \emph{reachability-bounds} on the control locations in different paths.
+  This example is adopted from the example in~\cite{GulwaniZ10}, which
+  is a skeleton code from the .Net base-class library.
+  \\
+  In this example, given $n \geq m$,
+the precise \emph{reachability-bound}s for control locations $4$ and $5$ are both $m \times \lfloor\frac{n}{m}\rfloor$,
+for location $2$ and $3$ are $(m + 1) \times \lfloor\frac{n}{m}\rfloor + 1$, 
+and $1$ for locations $0, 1$ and $\lex$. 
+\highlight{Notice here, though within the same loop $L_2$, the bounds for locations $4$ and $5$ on the first branch, and $6$ on the second branch are different.}
+\\
+However, the state-of-art \emph{reachability-bound} analysis~\cite{GulwaniZ10}
+gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$, which is tight w.r.t. $L_2$'s iteration times but not for different locations inside $L_2$ without considering multiple paths.
+Among works on program complexity, cost and loop bound analysis, \cite{GulwaniJK09} can also compute the tight bound on the loop iteration but not reachability-bound on each location path-sensitively.
+Though we can use it as the \emph{reachability-bound} for location $1$ and $2$,
+the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still unclear.
+
+To compute the bounds for locations on different paths of a loop, it is necessary to two the alternative iteration patterns of the two paths.
+So we first
+generate its abstract transition graph using the difference constraints as Figure~\ref{fig:whileTwoCounters-overview}(b), as collect all its simple transition path as in Figure~\ref{fig:whileTwoCounters-overview}(c).
+Then we transform the loop by explicitly computing the interleaving between paths and
+%  using the control-flow refinement technique from~\cite{GulwaniJK09} and 
+generates a refined program $\rprog$ as
+\\
+% 
+% The refined program for program $\kw{twoPathsWhile}$ is
+% \[
+  $
+  \tpath_0 ; 
+  \rpchoose{2: \rprepeat_2(\rprepeat_1(\tpath_1); \tpath_2), 
+  2: \rprepeat_1(\tpath_1)}; \tpath_3.
+  $
+% \]
+From this refined program, we can explicitly tell two possible path interleaving patterns.
+In the first one, $\tpath_2$ will be executed after all the iterations of $\tpath_1$ are done, and in the second one,
+the entire loop is done after $\tpath_1$ finish the iteration.
+Then the following computation based on this refined program can compute more accurate reachability-bounds.
+\end{example}

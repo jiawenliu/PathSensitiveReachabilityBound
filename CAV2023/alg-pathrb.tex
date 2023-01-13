@@ -62,7 +62,7 @@ Again, the \emph{path reachability-bound} of the simple transition path $\tpath$
 \end{lem}
 % \paragraph{Walk through Example.}
 % \todo{Walk through example with a tighter path reachability bound}
-Now we can compute the precise bound for the program in Example~\ref{ex:relatedNestedWhileOdd_abscfg}.
+Now we can compute the precise bound for our running program in Example~\ref{ex:relatedNestedWhileOdd_abscfg}.
 In comparison with the substituted computation in Section~\ref{def:pathlocalrb}, now we use the \emph{loop reachability-bound}
 and compute a more precise path \emph{global} reachability-bound for the path $\tpath_3$ as $\frac{m}{4} \times 1$.
 The bounds for the other paths are the same.
@@ -75,6 +75,13 @@ $\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
 \highlight{$\psRB(5) = \frac{m}{4} \times 1$},
 and $\psRB(4) =  \frac{m}{4} + n - m + 1$.
 As expected, this bound is tight for every program point.
+
+For the Example~\ref{ex:threeNestedWhile} with the tight \emph{loop reachability-bound} computed in Section~\ref{sec:looprb},
+we also compute tight \emph{reachability-bound} for it.
+For each $\tpath_i$, the multiplication of its \emph{path local reachability-bound} with all its \emph{loop reachability-bound}s,
+we compute
+%  is an accurate \emph{path reachability-bound} for the locations on this path.
+
 %
 
 

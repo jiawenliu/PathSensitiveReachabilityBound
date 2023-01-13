@@ -63,23 +63,24 @@ The three sub-steps are standard and based on the Definition.25 in paper~\cite{S
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
   its \emph{ranking function/local bound}, $\locbound(\absevent, c)$
   is the variable that decreases on this edge, computed as follows,
-  %
-  \[ 
-  \begin{array}{ll}
-    \locbound(\absevent, c) \triangleq 1 
-    & \absevent \notin SCC(\absG(c))
-    \\
-    \locbound(\absevent, c) \triangleq x
-    & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(c, x) \land  \absevent = (\_, \_ , x' \leq x - v) \\
-    \locbound(\absevent, c) \triangleq x
-    & \absevent \in SCC(\absG(c)) \land 
-    \absevent  \notin \bigcup_{x \in \vardom} \dec(c, x)
-    \land \absevent \notin SCC(\absG(c) \setminus \dec(c, x))\\
-    \locbound(\absevent, c) \triangleq \infty
-    & o.w..
-  \end{array}
-  \]
-  $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
+{\small
+\[ 
+\begin{array}{ll}
+  \locbound(\absevent, c) \triangleq 1 
+  & \absevent \notin SCC(\absG(c))
+  \\
+  \locbound(\absevent, c) \triangleq x
+  & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(c, x) \land  \absevent = (\_, \_ , x' \leq x - v) \\
+  \locbound(\absevent, c) \triangleq x
+  & \absevent \in SCC(\absG(c)) \land 
+  \absevent  \notin \bigcup_{x \in \vardom} \dec(c, x)
+  \land \absevent \notin SCC(\absG(c) \setminus \dec(c, x))\\
+  \locbound(\absevent, c) \triangleq \infty
+  & o.w..
+\end{array}
+\]
+}
+$SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
   \end{defn}
   %
  \paragraph{Estimating the Upper Bound Invariant for Ranking Functions}
@@ -91,15 +92,18 @@ the \emph{ranking function bound},
 $\varinvar(\locbound(\absevent, c), c)$ for the ranking function $x = \locbound(\absevent, c)$
 of this edge
 is computed as follows,
+{\small
   \[ 
 \begin{array}{lll}
   \varinvar(x, c) & \triangleq x & x \in \scvar(c) \\
   \varinvar(x, c) & \triangleq \incrs(x, c) + \max\left\{\varinvar(y, c) + v ~\mid~ (l, x' \leq y + v, l') \in \reset(c, x) \right\} & x \notin \scvar(c)
 \end{array}
 \]
+}
 %
 where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(c, x)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
 The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$  on the execution times of the transition $\absevent$, is interactively computed as well as below,
+{\small
 \[ 
 \begin{array}{lll}
 \absclr(\absevent, c) 
@@ -116,5 +120,6 @@ The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$  on the execu
 &  \quad \text{if} ~\locbound(\absevent, c) = x \land x \notin \scvar(c) & ,
 \end{array}
 \]
+}
 where $in(ch)$ is the first vertex of the reset chain $ch$.
 \end{defn}

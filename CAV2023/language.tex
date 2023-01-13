@@ -119,9 +119,7 @@ following by
   \]  
  We have two kinds of events: \emph{assignment events} and \emph{testing events},
  and we use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively and $\eventset = \eventset^{\asn} \cup \eventset^{\test}$.
- 
  An \emph{assignment event} tracks the execution of an assignment and consists of the assigned variable, the label of the command that generates it, the value assigned to the variable.
-
  A \emph{testing event} tracks the execution of if and while commands, specifically the evaluation of the boolean expression $b$ in the guard of a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$.
  It consists of the boolean expression $b$ in the guard of the command, the label of the guard, the result of evaluating the guard.
 %
@@ -230,7 +228,7 @@ where $\ftdom_0(c)$ is the set of all well-formed initial traces for program $c$
 The evaluation for expression evaluation is standard, and 
 % the notation is $\config{\bexpr, \trace} \earrow \etrue$.
 we use notation for the expression evaluation $\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$, and $\econfig{\expr}(\trace)$ evaluates an expression $\expr$ under trace $\trace$.
-Our symbolic bound language is also a subset of our expression, we will use the same evaluation notation and rules for evaluating a symbolic bound expression.
+Our symbolic bound language is also a subset of the expression, we will use the same evaluation notation and rules for evaluating the symbolic bound expression.
 The trace based operational semantics is described in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another configuration
 program-state.
 The rules are standard and omitted here.
@@ -520,7 +518,6 @@ Given an initial trace $\trace_0 \in \ftdom_0(c)$ of the program $c$,
 we use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$,
 then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution defined as follows.
-\\
 \begin{defn}[Non-terminating and Infinite Trace]
   \label{def:non-terminating}
   Given a program $c$ and an initial trace $\trace \in \ftdom_0(c)$,
@@ -547,7 +544,7 @@ then the program's execution terminates and produces a finite execution trace $\
     \end{array}
   \]
 \end{defn}
-This definition has the similar intuition as the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the semantics of the program model in~\cite{SinnZV17}.
+This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the the program model in~\cite{SinnZV17}.
 
 %
 % \begin{defn}[Non-terminating and Infinite Trace (alternative way)]
