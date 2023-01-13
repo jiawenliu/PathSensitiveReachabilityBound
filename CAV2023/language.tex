@@ -233,7 +233,7 @@ where $\ftdom_0(c)$ is the set of all well-formed initial traces for program $c$
 The evaluation for expression evaluation is standard, and 
 % the notation is $\config{\bexpr, \trace} \earrow \etrue$.
 we use notation for the expression evaluation $\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$, and $\econfig{\expr}(\trace)$ evaluates an expression $\expr$ under trace $\trace$.
-Our symbolic bound language is also a subset of the expression, we will use the same evaluation notation and rules for evaluating the symbolic bound expression.
+Our symbolic bound language is a subset of the language expression, and we use the same evaluation notation for evaluating the symbolic bound expression.
 The trace based operational semantics is described in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another configuration
 program-state.
 The rules are standard and omitted here.

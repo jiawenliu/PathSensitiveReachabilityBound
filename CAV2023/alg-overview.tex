@@ -1,7 +1,7 @@
 % \textbf{Step 1: Abstract Transition Graph}
 \textbf{Step 1: }
 The Section~\ref{sec:progabs} first 
-computes the \emph{Abstract Transition Graph}, $\absG(\kw{nestedOdd})$ as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
+computes the \emph{Abstract Transition Graph} as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
 Each edge $l \xrightarrow{dc} l'$ is an abstract transition with annotated with a constraint corresponding to the command of label $l$.
 
 % \textbf{Step 2: Program Refinement}
@@ -25,11 +25,11 @@ It requires to compute our two novel quantities, the \emph{path reachability-bou
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
 
 For the transition path $\tpath_3 = 4 \to 5 \to 4$ in the first interleaving pattern where $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
-we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = m$ w.r.t its innermost loop $L_4$ as a local \emph{Path Reachability-bound} in Section~\ref{sec:pathlocalrb}
+we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = m$ w.r.t its innermost loop $L_4$ as a local \emph{path reachability-bound} in Section~\ref{sec:pathlocalrb}
 We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb},
-and Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
+and Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{path reachability-bound} $\inoutB(\rprog, \tpath) = m$.
 
-By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
+By summing up all the $\inoutB(\rprog, \tpath)$ over $\tpath$ that contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
 For the points $0$ and $\lex$ which aren't in any loop, we compute $\psRB(0) = \psRB(\lex) = 1$,
 For the other points in different branches and loop, we compute $\psRB(1) = \frac{m}{2} + 1$,
 $\psRB(2) = \frac{m}{2} $, 

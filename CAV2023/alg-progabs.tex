@@ -47,7 +47,7 @@ difference constraint $d \in DC(\vardom  \cup \scvardom)$, a boolean expression 
 or $\top$ denotes always true.
 \end{defn}
 
-When the constraint that shows up as an edge annotation is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
+When the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
 % Then $x'$ 
 it denotes that
 the value of variable $x$
@@ -71,7 +71,7 @@ $\clabel{\assign{i}{i - 1}}^{7}$.
 The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
 that after evaluating the guard with label $l$,
 $\bexpr$ holds and the command with label $l$ will execute right after.
-For example, the boolean constraint $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
 represents the negation of the testing guard $\clabel{i > 0}^1$
 in the $\ewhile$ command, and $i \leq 0$ must hold in order to perform this transition from program point $1$ to
 the program exit. 

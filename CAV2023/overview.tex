@@ -1,7 +1,7 @@
 In this section, we discuss a representative running examples with
 challenges of analyzing the symbolic
 \emph{reachability-bound} on
-every control location and illustrate our key novelties, \emph{path reachability-bound} and the \emph{loop reachability-bound}.
+every control location and illustrate our key technique novelties, the \emph{path reachability-bound} and the \emph{loop reachability-bound}.
 This example is adopted from the example in~\cite{GulwaniZ10}, which
 is a skeleton code from the .Net base-class library.
 
@@ -11,38 +11,38 @@ is a skeleton code from the .Net base-class library.
 % \begin{itemize}
 %   \item 
 \textbf{Challenge I}
-  In this example, given $n \geq m$,
-the precise \emph{reachability-bound}s for control locations $4$ and $5$ are both $m \times \lfloor\frac{n}{m}\rfloor$,
-for location $2$ and $3$ are $(m + 1) \times \lfloor\frac{n}{m}\rfloor + 1$, 
-and $1$ for locations $0, 1$ and $\lex$. 
-\highlight{Notice here, though within the same loop $L_2$, the bounds for locations $4$ and $5$ on the first branch, and $6$ on the second branch are different.}
-The SPEEDI in~\cite{GulwaniZ10}
+  In this example, given $n \geq m \geq 0$,
+the expected \emph{reachability-bound}s for locations $3, 6, 7$ and $8$ are all $ \lfloor\frac{n-m}{4}\rfloor$,
+for location $2$ is $\lfloor\frac{n-m}{2}\rfloor$ and  $\lfloor\frac{n-m}{2}\rfloor + 1$ for location $1$.
+\highlight{Notice here, though within the same loop $L_1$, the bounds for different locations are different.}
+The SPEEDi in~\cite{GulwaniZ10}
 gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$. Though is tight w.r.t. $L_1$'s iteration times but not \emph{reachability-bound} for different locations.
 \cite{GulwaniJK09}, the Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} also can only compute the bound on the loop iteration but not reachability-bound on each location path-sensitively.
 Though we can use their estimated loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
 the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still unclear.
-
-This motivates us the first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free path $\tpath$ within a loop program $\rprog$ bounds the evaluation times of each loop free path instead of the entire multipath loop.
+%
+This motivates the first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free path $\tpath$.
+It bounds the evaluation times of each loop free path instead of the entire multipath loop.
 % \item 
 
 \textbf{Challenge II} The second challenge occurs in the nested loop.
-In line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5. So the
-while $L_6$ is only executed in the first iteration of while loop $L_1$ and $L_3$.
+In line 6, $i$ is reset by $k + m$ and $k$ is reset by $i - m$ at line 3. So the
+loop $L_4$ is only executed in the first iteration of while loop $L_1$.
 % \\
-The while loop $L_3$ at line 3 is executed only in 
-the first $m - N$ iterations of the 
-$L_1$ because $j$ is reset by $i$ in line 2.
+% The while loop $L_1$ at line 3 is executed only in 
+% the first $m - N$ iterations of the 
+% $L_1$ because $j$ is reset by $i$ in line 2.
 % \\
-So the total iterations of all the three loops is
+So the total iterations of all the two loops are
 $n + m^2 - m \times N$,
-and the precise \emph{reachability-bound} for location $7$ inside the $L_6$ is $N$,
-for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - N)$,
-and $n - N$ for locations $2$ and $9$.
+and the precise \emph{reachability-bound} for location $5$ inside the $L_4$ is $m$.
+% for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - N)$,
+% and $n - N$ for locations $2$ and $9$.
 % \\
-\highlight{Notice here the \emph{reachability-bounds} for the locations inside the loop $L_6$ is 
+\highlight{Notice here the \emph{reachability-bounds} for the locations inside the loop $L_4$ is 
 the same as its innermost loop iteration bound.
 % , as well as our \emph{path reachability-bound}.
-However, for the locations between $L_3$ and $L_6$,
+However, for the locations between $L_1$ and $L_4$,
 the \emph{reachability-bounds} are the multiplication of the inner and outer loop iteration bounds.}
 % \\
 % To the best of our knowledge, the loop bound analysis method in \cite{GulwaniJK09} can only give a loose bound $n + (m \times n) + N$ for the entire loop complexity, and 
@@ -55,20 +55,19 @@ which is non-trivial to compute even though knowing the loop bound.
 
 \highlight{
 This motivates us to consider our second novel quantity --
-the numbers of iterations of the outside loop $L_3$ and $L_1$ such that,
-during these iterations, the loop $L_6$ is ``entered''. 
-We call this the \emph{loop reachability} of the location within loop $L_6$ w.r.t the loops $L_3$ and $L_1$.
-Then by multiplying the loop iteration bound of the $L_6$ with its \emph{loop reachability} times w.r.t the  $L_3$ and $L_1$, we can compute the precise
-\emph{reachability-bounds} for location $7$.
-}
-\highlight{
+the numbers of iterations of the outside loop $L_1$ such that,
+during these iterations, the loop $L_4$ is ``entered''. 
+We refer this quantity as the \emph{loop reachability} of the loop $L_4$ w.r.t the outer loop $L_1$.
+% of the location within loop $L_6$ w.r.t the loops $L_3$ and $L_1$.
+By multiplying the \emph{path reachability-bound} of $\tpath_3$ in $L_4$ with its \emph{loop reachability-bound} w.r.t the $L_1$, we can compute a tight
+\emph{reachability-bounds} for location $5$.
 This quantity isn't considered or computed in any of the previous works.
 In the line of methods based on path refinement and loop summarization, the \emph{Progress Invariant} method in~\cite{GulwaniJK09} is only able to compute
 the
 bound on iteration numbers
-of the inner loop $L_6$ in each iteration of $L_3$ and $L_1$, which are both $N$.
-So they have to over-approximate the reachability-bound for locations inside $L_6$ with the
-overall program complexity by multiplication.
+of the inner loop $L_4$ in one iteration of $L_1$, which is $m$.
+So they have to over-approximate the reachability-bound for locations inside $L_4$ with the
+overall program complexity by multiplication as $m \times (n - m)$.
 In the line of the \emph{amortized complexity analysis} through ranking function, the LoopusJAR~\cite{SinnZV17}
 is only able to
 compute the combined loop bound and the local bound of each loop
