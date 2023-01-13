@@ -1,71 +1,45 @@
-\paragraph{Labeled Language}
-The program language a standard integer while language with labels to identify different components and equipped with a  trace-based operational semantics.
+We use a standard integer while language with labels to identify different program locations and equipped with a  trace-based operational semantics.
+\paragraph{Labeled Command}
+The commands are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. The program is a labeled command $c$ having the following syntax. 
 \[
-\begin{array}{llll}
-% \mbox{Arithmetic Operators} 
-% & \oplus_a & ::= & + ~|~ - ~|~ \times 
-% %
-% ~|~ \div ~|~ \emax ~|~ \emin
-% \\  
-% \mbox{Arithmetic Expression} 
-% & \aexpr & ::= & 
-% n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  
-%  ~|~ \elog \aexpr  ~|~ \esign \aexpr
-% \\
-% \mbox{Boolean Expression} & \bexpr & ::= & 
-% %
-% \etrue ~|~ \efalse  ~|~ \neg \bexpr
-%  ~|~ \bexpr \land \bexpr
-% %
-% ~|~ \bexpr \lor \bexpr
-% ~|~ \aexpr \leq \aexpr 
-% ~|~ \aexpr < \aexpr 
-% ~|~ \aexpr = \aexpr 
-% \\
-% \mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr ~|~ [\expr, \dots, \expr]
-% \\  
-% %
-% \mbox{Value} 
-% & v & ::= & { n \in \mathbb{N}^{\infty} ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
-%
-% \\%
-\mbox{Label} 
-& l & \in & (\mathbb{N} \cup \{\lin, \lex\}) 
-\\ 
-%
-\mbox{Labeled Command} 
-& {c} & ::= &  
+{c} ::= 
 \clabel{\assign{x}{\expr}}^l 
 ~|~  \clabel{\eskip}^l
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
-~|~ {c};{c}  
-% \\ 
-% \mbox{Event} 
-% & \event & ::= & 
-% ({x}, l, v) ~ \mbox{Assignment Event} 
-% % \\
-% % &&& 
-% ~|~(\bexpr, l, v) ~ \mbox{Testing Event}
-% \\
-% \mbox{Trace} & \trace
-% & ::= & [] ~|~ \trace :: \event
-% \\
-\end{array}
+~|~ {c};{c} 
 \]
-Expressions include
-standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with value $n \in \mathbb{N}^{\infty}$) and boolean expression, $\bexpr \in \booldom$.
-Commands are the typical ones from while languages. Each command is annotated with a label $l$, we will use natural numbers as labels and we will use them to record
+We use label to record
 the location of each command, so that we can uniquely identify each program point.
 We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
-The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression. For example,
-$\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
-expression $\aexpr$ and boolean expression $\bexpr$ respectively.
+% \[
+% \begin{array}{llll}
+% % \mbox{Label} 
+% & l & \in & (\mathbb{N} \cup \{\lin, \lex\}) 
+% \\ 
+% %
+% % \mbox{Labeled Command} 
+% & {c} & ::= &  
+% \clabel{\assign{x}{\expr}}^l 
+% ~|~  \clabel{\eskip}^l
+% ~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
+% ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
+% ~|~ {c};{c}  
+% \end{array}
+% \]
+Expressions include
+standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with value $n \in \mathbb{N} \cup \{ \infty\}$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
+% They are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. We use label to record
+% the location of each command, so that we can uniquely identify each program point.
+% We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
+The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression.
+% For example,
+% $\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
+% expression $\aexpr$ and boolean expression $\bexpr$ respectively.
 All the free variables
 showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
 We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
 
-We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
 
 % We use following notations to represent the sets of corresponding terms:
 % \[
