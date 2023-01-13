@@ -5,13 +5,13 @@ every control location and illustrate our key novelties, \emph{path reachability
 This example is adopted from the example in~\cite{GulwaniZ10}, which
 is a skeleton code from the .Net base-class library.
 
-\paragraph{Challenges.}
+% \paragraph{Challenges.}
 \input{examples/relatedNestedWhileOdd-overview}
 \footnotetext{We use the notation $(l_0 \to \cdots \to l_n)$ to denote a vertices sequence $(l_0, \cdots, l_n)$, and the constraint on each edge in each transition path are omitted for concise.}
-
-\todo{Shorten}
-\begin{itemize}
-  \item \textbf{Challenge I}
+% \todo{Shorten}
+% \begin{itemize}
+%   \item 
+\textbf{Challenge I}
   In this example, given $n \geq m$,
 the precise \emph{reachability-bound}s for control locations $4$ and $5$ are both $m \times \lfloor\frac{n}{m}\rfloor$,
 for location $2$ and $3$ are $(m + 1) \times \lfloor\frac{n}{m}\rfloor + 1$, 
@@ -25,7 +25,9 @@ Though we can use it as the \emph{reachability-bound} for location $1$ and $2$,
 the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still unclear.
 
 This motivates us the first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free path $\tpath$ within a loop program $\rprog$ bounds the evaluation times of each loop free path instead of the entire multipath loop.
-\item \textbf{Challenge II}
+% \item 
+
+\textbf{Challenge II}
   Then in line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5. So the
 while $L_6$ is only executed in the first iteration of while loop $L_1$ and $L_3$.
 % \\
@@ -75,7 +77,7 @@ compute the combined loop bound and the local bound of each loop
 separately as well.
 % We are still unable to know the precise \emph{reachability-bound} for the locations in the innermost loop.
 }
-\end{itemize}
+% \end{itemize}
 With the two key novelties, our algorithm computes the reachability-bound for this example through the following steps.
 % \paragraph{Main Steps of Path-sensitive Reachability-bound Analysis}
 % \label{sec:static_rb}

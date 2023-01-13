@@ -19,15 +19,20 @@
 
     For the transition path $\tpath_3 = 4 \to 5 \to 4$ in the first interleaving pattern where $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
     we compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = m$ w.r.t its innermost loop $L_4$ as a local \emph{Path Reachability-bound} in Section~\ref{sec:pathlocalrb}
-    
-    We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb}.
-
-    Then Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
+    We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb},
+    and Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
+   
     By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
-    
+    For the points $0$ and $\lex$ which aren't in any loop, we compute $\psRB(0) = \psRB(\lex) = 1$,
+    For the other points in different branches and loop, we compute $\psRB(1) = \frac{m}{2} + 1$,
+    $\psRB(2) = \frac{m}{2} $, 
+    $\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
+    \highlight{$\psRB(5) = \frac{m}{4} \times 1$},
+    and $\psRB(4) =  \frac{m}{4} + n - m + 1$ as expected.
+
     Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
-    To compute the \emph{reachability-bound}  compute the path reachability-bound for 
-    We compute the $\lpchB(l: \rprog, \tpath)$ for 
+    % To compute the \emph{reachability-bound}  compute the path reachability-bound for 
+    % We compute the $\lpchB(l: \rprog, \tpath)$ for 
     % \begin{enumerate}
         % \item Based on the ranking function and its upper bound invariant, we first compute the \emph{Path Local Reachability-bound}, $\outinB(\rprog, \tpath)$ for every \emph{simple transition path} $\tpath$ in Section~\ref{sec:pathlocalrb}. 
         % This bounds the reaching / visiting times of $\tpath$ when executing program $\rprog$, and $\rprog$ is the closest loop where $\tpath$ is nested.

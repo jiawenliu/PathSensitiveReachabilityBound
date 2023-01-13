@@ -87,11 +87,15 @@ a \emph{reachability-bound} for every program point $l$ in a program $c$ in a pa
 % \caption{Architecture of the path-sensitive reachability-bound algorithm.}
 % \label{fig:psRB-architecture}
 % \end{figure}
-The contributions of this work can be summarized as follows,
-\begin{itemize}
-  \item the main contribution is the combination of the \emph{amortized program analysis} through ranking function estimation and the path refinement and loop summarization based on \emph{algebraic program analysis} in bound analysis algorithm.
-  \item A path-sensitive reachability-bound computation algorithm.
+The main contributions of this work are
+\\
+% \begin{itemize}
+%   \item 
+1. the combination of the \emph{amortized program analysis} through ranking function estimation and the path refinement and loop summarization based on \emph{algebraic program analysis} in bound analysis algorithm.
+  % \item 
+2. A path-sensitive reachability-bound computation algorithm.
   This algorithm can compute the evaluation times of each program point accurately and path-sensitively.
-  \item A prototype implementation of this algorithm and an evaluation over 5 different benchmarks.
+  % \item 
+3. A prototype implementation of this algorithm and an evaluation over 5 different benchmarks.
   The evaluation results show that we can compute tight bound on the evaluation times of each program point in a program. For program with multi-path loop, we compute different bounds for the points on different paths.
-\end{itemize}
+% \end{itemize}

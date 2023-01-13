@@ -107,10 +107,10 @@ $\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
 % \label{sec:operational_semantics}
 \paragraph{Event}
 An event, $\event \in \eventset$ is a triple.
-Its first element is the variable name $x$,
+Its first element is the variable name $x$
 or a boolean expression (from the guard of if or while command), 
 following by 
- the label, $l$ associated to this command and the value assigned to the variable.
+the label, $l$ associated to this command and an evaluated value.
  \[
   \begin{array}{llll}
     \mbox{Event} 
@@ -120,9 +120,11 @@ following by
   \end{array}
   \]  
  We have two kinds of events: \emph{assignment events} and \emph{testing events},
- and we use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively and $\eventset = \eventset^{\asn} \cup \eventset^{\test}$.
- An \emph{assignment event} tracks the execution of an assignment and consists of the assigned variable, the label of the command that generates it, the value assigned to the variable.
- A \emph{testing event} tracks the execution of if and while commands, specifically the evaluation of the boolean expression $b$ in the guard of a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$.
+ and we use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively where $\eventset = \eventset^{\asn} \cup \eventset^{\test}$.
+ An \emph{assignment event} tracks the execution of an assignment and consists of the variable, the label of the command that generates it, the value assigned to the variable.
+ A \emph{testing event} tracks the evaluation of $b$ in
+%  if and while commands, specifically the evaluation of the boolean expression $b$ in 
+the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$.
  It consists of the boolean expression $b$ in the guard of the command, the label of the guard, the result of evaluating the guard.
 %
 Event projection operators $\pi_i$ projects the $i^{th}$ element from an event: 
@@ -151,6 +153,8 @@ it produces the infinite trace
 from $\inftdom$, which records a non-terminating computation.
 So we denote by $\tdom$ the set of all traces, and $\tdom = \ftdom \cup \inftdom$.
 The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in~\cite{Cousot19}.}
+We use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
+In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 %  formally defined as follows. 
 % \highlight{
 % \begin{defn}[Trace Concatenation, $\tracecat: \tdom \to \tdom\to \tdom $]
@@ -187,9 +191,8 @@ The trace-based semantics with non-terminating execution is defined below follow
 % As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
 % \end{defn}
 % %
-
-We use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
-In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
+% We use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
+% In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 %
 % We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points,
 % defined as follows,
@@ -525,26 +528,27 @@ then the program's execution terminates and produces a finite execution trace $\
   Given a program $c$ and an initial trace $\trace \in \ftdom_0(c)$,
   when $c$ executes with $\trace$,  we define the execution of $c$ under $\trace$ is non-terminating and produces an infinite trace $\trace' \in \inftdom$, as 
   $\config{c, \trace_0} \uparrow^{\infty} \trace' \in \lim(\uparrow)$
-  where the limit is defined as follows.
-  \[
-    \begin{array}{l}
-      \lim(\uparrow) 
-      % \in \left( (\cdom \times \ftdom) \times (\cdom \times \inftdom) \right) 
-      \triangleq 
-    \\ \quad
-    \Big\{
-      (\config{c, \trace}, \trace') ~\vert~ 
-      c\in \cdom, \trace \in \ftdom_0(c),
-      \trace' \in \inftdom 
-      \land \exists \trace_0 \in \ftdom, c_0 \in \cdom \st 
-      \config{c, \trace} \to \config{c_0, \trace_0}
-      \\ \qquad \qquad \qquad 
-      \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \ftdom, \trace'' \in \inftdom, c_i, c_{i + 1} \in \cdom \st 
-      \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}} 
-      \land  \trace' = \trace_{i + 1} \tracecat \trace''
-    \Big\}
-    \end{array}
-  \]
+  where the limit $\lim(\uparrow) \triangleq $
+{\small 
+\[
+  \begin{array}{l}
+  %   \lim(\uparrow) 
+  %   \triangleq 
+  % \\ \quad
+  \Big\{
+    (\config{c, \trace}, \trace') ~\vert~ 
+    c\in \cdom, \trace \in \ftdom_0(c),
+    \trace' \in \inftdom 
+    \land \exists \trace_0 \in \ftdom, c_0 \in \cdom \st 
+    \config{c, \trace} \to \config{c_0, \trace_0}
+    \\ 
+    \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \ftdom, \trace'' \in \inftdom, c_i, c_{i + 1} \in \cdom \st 
+    \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}} 
+    \land  \trace' = \trace_{i + 1} \tracecat \trace''
+  \Big\}
+  \end{array}
+\]
+}
 \end{defn}
 This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the the program model in~\cite{SinnZV17}.
 

@@ -1,7 +1,9 @@
 This path-sensitive reachability-bound algorithm
-is performed on basis of an \emph{Abstract Transition Graph} for the program $c$.
-An \emph{Abstract Transition Graph}, $\absG(c) =(\absV(c), \absE(c))$ for a program $c$ is composed of
-a vertex set $\absV(c)$ and an edge set $\absE(c)$.
+is performed on basis of an \emph{Abstract Transition Graph}, $\absG(c)$
+% $ =(\absV(c), \absE(c))$ 
+for the program $c$.
+% An \emph{Abstract Transition Graph}, $\absG(c) =(\absV(c), \absE(c))$ for a program $c$ is composed of
+% with a vertex set $\absV(c)$ and an edge set $\absE(c)$.
 %
 % \\
 % Every 
@@ -24,7 +26,7 @@ a vertex set $\absV(c)$ and an edge set $\absE(c)$.
 %   In the third step, we compute the \textbf{Abstract Event} and generate the set of edges for the program.
 %   Each edge composed of an initial and a continuation execution state.
 %
-
+We first introduce some components on this graph.
 \begin{defn}[Symbolic Constant, Symbolic Expression]
   \label{def:symbolic_expr}
 The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$, in which a symbolic constant can be a natural number, $\infty$, or a program's input variable.
@@ -105,7 +107,7 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
   and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
   where $\pathl : \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
   \end{defn}
-  For example, $1 \to 2 \to 3 \to 4 \to 5 \to 4$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
+  For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
 
   % \\
   % \subsection{Abstract Transition Graph of The Walk through Example}
