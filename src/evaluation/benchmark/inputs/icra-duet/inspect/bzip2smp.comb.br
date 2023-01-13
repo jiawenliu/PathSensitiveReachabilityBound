@@ -1,0 +1,127 @@
+#2419
+[ k <- nblock ] 0;
+while [ >= (k, 0) ] do 1 {
+   [ c1 <- block_i1 ] 2;
+   [ c2 <- block_i2 ] 3;
+   if [ != (c1, c2) ] 4
+   then { [ k <- -1] 5 }
+   else { [ skip ] 6 };
+   
+   [ s1 <- quadrant_i1 ] 7;
+   [ s2 <- quadrant_i2 ] 8;
+   if [ != (s1, s2) ] 9
+   then { [ k <- -1] 10 }
+   else { [ skip ] 11 };
+   
+   [ i1 <- (i1, 1) ] 12;
+   [ i2 <- (i2, 1) ] 13;
+   [ c1 <- block_i1 ] 14;
+   [ c2 <- block_i2 ] 15;
+   
+   if [ != (c1, c2) ] 16
+   then { [ k <- -1] 17 }
+   else { [ skip ] 18 };
+   
+   [ s1 <- quadrant_i1 ] 19;
+   [ s2 <- quadrant_i2 ] 20;
+   
+   if [ >= (i1, nblock) ] 21
+   then { [ i1 <- -(i1, nblock) ] 22 }
+   else { [ skip ] 23 };
+   
+   if [ >= (i2, nblock) ] 24 
+   then { [ i1 <- -(i2, nblock) ] 25}
+   else { [ skip ] 26};
+   
+   [ k <- - (k, 8) ] 27
+
+}
+
+
+#2523
+while [ > (sp, 0) ] 0 do {
+    if [ || ( < ( hi_lo, MAIN_QSORT_SMALL), >(d, MAIN_QSORT_DEPTH) ) ] 1
+	then {
+	  if [ < (budget, 0) ] 2
+	  then { [ sp <- 0] 3 }
+	  else { [ skip ] 4 };
+	
+	}
+	else { [ skip ] 5 }
+}
+
+#3092
+[ i <- 0 ] 0;
+while [ < (i, s_nblock) ] 1 do {
+     [ i <- + (i, 1) ] 2;
+	 if [ == (ptr_i, 0) ] 3
+	 then { [ s_origPtr <- i ] 4;
+            [ i <- s_nblock ] 5;  
+	 }
+	 else { [ skip ] 6 }
+}
+
+#3541
+while [ > (es, 0) ] 0 do  {
+	if [ >= (nblock, nblockMAX ) ] 1
+	then { [ es <- -1] 2}
+	else { [ skip ] 3};
+	[ es <- -(es, 1) ] 4
+
+}
+
+#3636
+[ i <- 0 ] 0;
+while [ <= (i, 256) ] 1 do {
+	[ i <- + (i, 1) ] 2;
+	if [ || ( < (s_cfrtab_i, 0), > (s_cftab_i, nblock) ) ] 3
+	then { [ i <- 257 ] 4 }
+	else { [ skip ] 5 }
+}
+
+#4641
+while [ != ( - (na, nb), 1 ) ] 0 do {
+	[ mid <- +(nb, na) ] 1;
+	if [ >= (indx, cftab_mid )] 2
+	then { [ nb <- mid ] 3 }
+	else { [na <- mid ] 4 }
+	  
+}
+
+#6061
+[ x <- 1] 0;
+while [ < (x, argc) ] 1 do {
+  [ x <- +(x, 1) ] 2;
+  if [ != (argv_x_0, 45) ] 3
+  then { [ x<- argc ] 4 }
+  else { [ skip ] 5 };
+  
+  if [ < ( strcmp_help, 0) ] 6
+  then { [ x<- argc ] 7 }
+  else { [ skip ] 8 }
+}
+
+
+#6176
+[ x <- 0 ] 0;
+while [ < (x, threadsCount) ] 1 do {
+    [ x <- + (x, 1) ] 2;
+	if [ == (pthread_create, 0) ] 3
+	then { [x <- threadsCount ] 4 }
+	else { [ skip ] 5 }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

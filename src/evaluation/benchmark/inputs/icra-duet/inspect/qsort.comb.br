@@ -1,0 +1,44 @@
+#379
+[ ii <- first ] 0;
+[ jj <- - (last, 1) ] 1;
+[ done <- 0 ] 2;
+while [ == (done, 0) ] 3 do {
+    [ii <- + (ii, 1) ] 4;
+	
+	while [ < (cmopare_base_ii_test, 0) ] 5 do {
+		[ii <- + (ii, 1) ] 6;
+	}
+	
+	  [jj <- - (jj, 1) ] 7;
+	
+	while [ > (cmopare_base_jj_test, 0) 8 ] do {
+	  [jj <- - (jj, 1) ] 9;
+	}
+	
+    if [ < (ii, jj) ] 10
+	then { [ skip ] 11 } 
+	else { [ done <- 1] 12 }
+}
+
+#655
+[ ii <-1 ] 0;
+while [ < (ii, SIZE)] 1 do{
+	[ ii <- + (ii, 1) ] 2;
+	if [ > (sort_arry_ii_1, sort_arry_ii) ]3
+	then { [ ii <- SIZE ] 4 }
+	else { [ skip ] 5 }
+}
+
+#304
+while [ == (thread_finished, 0) ] 0 do {
+   if [ != (pthread_cond_wait, 0) ] 1
+   then { [ thread_finished <- 1] 2 }   
+   else { [ skip ] 3 }
+}
+
+
+
+
+
+
+

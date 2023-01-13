@@ -1,0 +1,93 @@
+#307
+[ j <- 0 ] 0;
+while [ <= (j, - (n, bmp_saved_m) ) ] 1 do {
+    [ i <- - (bmp_saved_m, 1) ] 2;
+	if [ && ( >= (i, 0) , == (bmp_saved_x , bmp_icase) ) ] 3
+    then { [i <- - (i, 1) ] 4 }
+	else { [ skip ] 5 };
+	
+	if [ < (i, 0) ] 6
+	then {
+	   if [ != (mfun, NULL) ] 7
+	   then [ [ nm <- +(nm, 1)] 8 
+	          [ c <- mfun ] 9
+			  if [ != (c, NULL) 10 ]
+			  then{ [ j <- +(- (n, bmp_saved_m),1 ) ] 11 }
+			  else{ [skip] 12 };
+			  [ j <- +(j, bmp_bmGs) ] 13; 
+	   
+	        ]
+	   else { [ j <- +(- (n, bmp_saved_m),1 ) ] 14 };
+	   
+	
+	}
+	else { [ c <- bmp_icase ] 15
+	       [ j <- +(j, MAX_bmp)] 16
+	}
+
+}
+#889
+[ j <- 0 ] 0;
+while [ < (j, nworkers) ] 1 do {
+    [ j <- + (j, 1) ] 2;
+	if [ != (pthread_create, 0) ] 3
+	then { [ j <- nworkers] 4}
+	else { [ skip ] 5 }
+
+}
+
+
+#515
+while [&& ( < (len ,slen), < (len, manxlen) ) ] 0 do {
+    if [ != (isprint, 0) ] 1
+	then { [ skip ] 2 }
+	else {
+	   if [ == (str, 0) ] 3
+	   then { [ skip ] 4 }
+	   else { [ len <- slen ] 5 };
+	   
+	   if [ == (str, 10) ] 6
+	   then { [ skip ] 7 }
+	   else { [ len <- slen ] 8 };
+	
+	   if [ == (str, 13) ] 9
+	   then { [ skip ] 10 }
+	   else { [ len <- slen ] 11 };
+	
+	   if [ == (str, 9) ] 12
+	   then { [ skip ] 13 }
+	   else { [ len <- slen ] 14 };
+	
+	};
+    [ len <- + (len, 1) ]; 15
+	[ str <- + (str, 1) ] 16
+
+}
+
+#420
+[ wp <- str ] 0;
+[ rp <- wp ] 1;
+while [ != (rp, NULL) ] 2 do {
+     while [ && ( != (rp, NULL), ( != isspace_rp, NULL) ] 3 do {
+			[ rp <- + (rp, 1) ] 4;
+	 }
+	 if [ == (rp, 0) ] 5
+	 then { [ rp <- NULL ] 6 }
+	 else { [ skip ] 7 };
+	 
+	 if [ == (isxdigit_rp, NULL) ] 8
+	 then { [ rp <- NULL ] 9}
+	 else { [ skip ] } 10
+
+}  
+
+
+
+
+
+
+
+
+
+
+

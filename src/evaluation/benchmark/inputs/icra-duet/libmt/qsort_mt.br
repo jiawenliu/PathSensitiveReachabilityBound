@@ -1,0 +1,35 @@
+#440
+[ i <- 0 ] 0;
+while [ < (i, c_nthreads) ] 1 do {
+	[ i <- +(i, 1) ] 2;
+	if [ == (c_pool_i_st, ts_idle) ] 3
+	then { [i <- c_nthreads ] 4}
+	else { [ skip ] 5}
+}
+
+#509
+[ r <- cmp_thunk_pb_a ] 0;
+while [ & ( <= (pb, pc), <= (r, 0) ] 1 do {
+    if [ == (r, 0) ] 2
+	then { 
+	   [ t <- pa] 3;
+	   [ pa <- pb] 4;
+	   [ pb <- t] 5;
+	   [ pa <- + (pa, es) ] 6;
+	}
+	else { [ skip ] 7};
+	[ pb <- + (pb, es)] 8
+}
+
+[ r <- cmp_thunk_pc_a ] 0;
+while [ & ( <= (pb, pc), <= (r, 0) ] 1 do {
+    if [ == (r, 0) ] 2
+	then { 
+	   [ t <- pd] 3;
+	   [ pd <- pc] 4;
+	   [ pc <- t] 5;
+	   [ pd <- - (pd, es) ] 6;
+	}
+	else { [ skip ] 7};
+	[ pc <- - (pc, es)] 8
+}
