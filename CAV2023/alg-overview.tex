@@ -1,47 +1,87 @@
-% Our static program analysis algorithm computes 
-% a \emph{reachability-bound} for every program point $l$ in a program $c$ in a path sensitive manner.
-% The main steps of this algorithm and the organization the following sections are summarized as follows.
-\begin{enumerate}
-    \item  The Section~\ref{sec:progabs} first 
-    computes the \emph{Abstract Transition Graph}, $\absG(\kw{nestedOdd})$ as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
-    Each edge $l \xrightarrow{dc} l'$ is an abstract transition with annotated with a constraint corresponding to the command of label $l$.
-    \item The second step in Section~\ref{sec:refine}
-    computes the \emph{Refined Program}, $\rprog$ for a program $c$ based on 
-    its abstraction transition graph and transforms the multiple-paths loops
-    into multiple loops where
-    the interleaving of paths is explicit as in bottom part of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
-    \item In the same time of refining the program, we also compute the \emph{Ranking Function} in Section~\ref{sec:rank}
-    for every edge 
-    and estimate the upper bound invariant w.r.t, the input variables on every ranking function's maximum value.
-    \item The \emph{path-sensitive reachability-bound} algorithm computes the \emph{reachability-bound}, $\psRB(l, c)$ for every program point.
-    It relies on the \emph{Refined Program} and the upper bound invariant of the \emph{Ranking Function} computed previously.
-    It requires to compute our two novel quantities, the \emph{Path Reachability-bound}, $\outinB(\rprog, \tpath)$ and the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath)$.
+% \textbf{Step 1: Abstract Transition Graph}
+\textbf{Step 1: }
+The Section~\ref{sec:progabs} first 
+computes the \emph{Abstract Transition Graph}, $\absG(\kw{nestedOdd})$ as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
+Each edge $l \xrightarrow{dc} l'$ is an abstract transition with annotated with a constraint corresponding to the command of label $l$.
 
-    For the transition path $\tpath_3 = 4 \to 5 \to 4$ in the first interleaving pattern where $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
-    we compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = m$ w.r.t its innermost loop $L_4$ as a local \emph{Path Reachability-bound} in Section~\ref{sec:pathlocalrb}
-    We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb},
-    and Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
-   
-    By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
-    For the points $0$ and $\lex$ which aren't in any loop, we compute $\psRB(0) = \psRB(\lex) = 1$,
-    For the other points in different branches and loop, we compute $\psRB(1) = \frac{m}{2} + 1$,
-    $\psRB(2) = \frac{m}{2} $, 
-    $\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
-    \highlight{$\psRB(5) = \frac{m}{4} \times 1$},
-    and $\psRB(4) =  \frac{m}{4} + n - m + 1$ as expected.
+% \textbf{Step 2: Program Refinement}
+\textbf{Step 2: }
+The second step in Section~\ref{sec:refine}
+computes the \emph{Refined Program}, $\rprog$ for a program $c$ based on 
+its abstraction transition graph and transforms the multiple-paths loops
+into multiple loops where
+the interleaving of paths is explicit as in bottom part of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
 
-    Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
-    % To compute the \emph{reachability-bound}  compute the path reachability-bound for 
-    % We compute the $\lpchB(l: \rprog, \tpath)$ for 
-    % \begin{enumerate}
-        % \item Based on the ranking function and its upper bound invariant, we first compute the \emph{Path Local Reachability-bound}, $\outinB(\rprog, \tpath)$ for every \emph{simple transition path} $\tpath$ in Section~\ref{sec:pathlocalrb}. 
-        % This bounds the reaching / visiting times of $\tpath$ when executing program $\rprog$, and $\rprog$ is the closest loop where $\tpath$ is nested.
-        % The local reachability-bound  considers only the execution of $\tpath$'s closest enclosing loop, i.e., $\kw{enclosed}(\tpath)$.
-        % \item Then in Section~\ref{sec:looprb}, we compute the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath)$ for every \emph{simple transition path} $\tpath$
-        % w.r.t its nested loop. 
-        % This is the bound on iteration numbers of the outside loop $l$,
-        % such that during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
-        % \item The \emph{Path Reachability-bound}, $\inoutB(\rprog, \tpath)$  is a global upper bound on the execution times of a \emph{simple transition path} $\tpath$ computed in Section~\ref{sec:pathrb}.
-        % With the global reachability-bound of every simple transition path, now we can sum up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, and compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$ as in Definition~\ref{def:point_psrb}.
-    % \end{enumerate}
-    \end{enumerate}
+% \textbf{Step 3: Ranking Function Estimation}
+\textbf{Step 3: }
+In the same time of refining the program, we also compute the \emph{Ranking Function} in Section~\ref{sec:rank}
+for every edge 
+and estimate the upper bound invariant w.r.t, the input variables on every ranking function's maximum value.
+
+% \textbf{Step 4: Path-sensitive Reachability-bound Computation.}
+\textbf{Step 4: }
+The \emph{path-sensitive reachability-bound} algorithm computes the \emph{reachability-bound}, $\psRB(l, c)$ for every program point over the \emph{Refined Program} and the upper bound invariant of the \emph{Ranking Function} computed previously.
+It requires to compute our two novel quantities, the \emph{path reachability-bound}, $\outinB(\rprog, \tpath)$ and the \emph{loop reachability-bound}, $\lpchB(l: \rprog, \tpath)$.
+Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
+
+For the transition path $\tpath_3 = 4 \to 5 \to 4$ in the first interleaving pattern where $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
+we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = m$ w.r.t its innermost loop $L_4$ as a local \emph{Path Reachability-bound} in Section~\ref{sec:pathlocalrb}
+We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb},
+and Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
+
+By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
+For the points $0$ and $\lex$ which aren't in any loop, we compute $\psRB(0) = \psRB(\lex) = 1$,
+For the other points in different branches and loop, we compute $\psRB(1) = \frac{m}{2} + 1$,
+$\psRB(2) = \frac{m}{2} $, 
+$\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
+\highlight{$\psRB(5) = \frac{m}{4} \times 1$},
+and $\psRB(4) =  \frac{m}{4} + n - m + 1$ as expected.
+
+
+%     % Our static program analysis algorithm computes 
+% % a \emph{reachability-bound} for every program point $l$ in a program $c$ in a path sensitive manner.
+% % The main steps of this algorithm and the organization the following sections are summarized as follows.
+% \begin{enumerate}
+%     \item  The Section~\ref{sec:progabs} first 
+%     computes the \emph{Abstract Transition Graph}, $\absG(\kw{nestedOdd})$ as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
+%     Each edge $l \xrightarrow{dc} l'$ is an abstract transition with annotated with a constraint corresponding to the command of label $l$.
+%     \item The second step in Section~\ref{sec:refine}
+%     computes the \emph{Refined Program}, $\rprog$ for a program $c$ based on 
+%     its abstraction transition graph and transforms the multiple-paths loops
+%     into multiple loops where
+%     the interleaving of paths is explicit as in bottom part of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
+%     \item In the same time of refining the program, we also compute the \emph{Ranking Function} in Section~\ref{sec:rank}
+%     for every edge 
+%     and estimate the upper bound invariant w.r.t, the input variables on every ranking function's maximum value.
+%     \item The \emph{path-sensitive reachability-bound} algorithm computes the \emph{reachability-bound}, $\psRB(l, c)$ for every program point.
+%     It relies on the \emph{Refined Program} and the upper bound invariant of the \emph{Ranking Function} computed previously.
+%     It requires to compute our two novel quantities, the \emph{Path Reachability-bound}, $\outinB(\rprog, \tpath)$ and the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath)$.
+
+%     For the transition path $\tpath_3 = 4 \to 5 \to 4$ in the first interleaving pattern where $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
+%     we compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = m$ w.r.t its innermost loop $L_4$ as a local \emph{Path Reachability-bound} in Section~\ref{sec:pathlocalrb}
+%     We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb},
+%     and Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
+
+%     By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
+%     For the points $0$ and $\lex$ which aren't in any loop, we compute $\psRB(0) = \psRB(\lex) = 1$,
+%     For the other points in different branches and loop, we compute $\psRB(1) = \frac{m}{2} + 1$,
+%     $\psRB(2) = \frac{m}{2} $, 
+%     $\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
+%     \highlight{$\psRB(5) = \frac{m}{4} \times 1$},
+%     and $\psRB(4) =  \frac{m}{4} + n - m + 1$ as expected.
+
+%     Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
+%     % To compute the \emph{reachability-bound}  compute the path reachability-bound for 
+%     % We compute the $\lpchB(l: \rprog, \tpath)$ for 
+%     % \begin{enumerate}
+%         % \item Based on the ranking function and its upper bound invariant, we first compute the \emph{Path Local Reachability-bound}, $\outinB(\rprog, \tpath)$ for every \emph{simple transition path} $\tpath$ in Section~\ref{sec:pathlocalrb}. 
+%         % This bounds the reaching / visiting times of $\tpath$ when executing program $\rprog$, and $\rprog$ is the closest loop where $\tpath$ is nested.
+%         % The local reachability-bound  considers only the execution of $\tpath$'s closest enclosing loop, i.e., $\kw{enclosed}(\tpath)$.
+%         % \item Then in Section~\ref{sec:looprb}, we compute the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath)$ for every \emph{simple transition path} $\tpath$
+%         % w.r.t its nested loop. 
+%         % This is the bound on iteration numbers of the outside loop $l$,
+%         % such that during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
+%         % \item The \emph{Path Reachability-bound}, $\inoutB(\rprog, \tpath)$  is a global upper bound on the execution times of a \emph{simple transition path} $\tpath$ computed in Section~\ref{sec:pathrb}.
+%         % With the global reachability-bound of every simple transition path, now we can sum up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, and compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$ as in Definition~\ref{def:point_psrb}.
+%     % \end{enumerate}
+%     \end{enumerate}

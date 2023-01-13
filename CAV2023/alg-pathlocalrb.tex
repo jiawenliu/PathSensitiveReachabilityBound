@@ -1,6 +1,6 @@
 
 \subsubsection{Loop Bound}
-There are two methods for computing the loop bound, $BD(\rprepeat(\rprog'), c)$ for every sub program, specifically loop program $\rprepeat(\rprog')$ in a program $c$'s refined program $\rprog$,
+There are two methods for computing the loop bound, $BD(\rprepeat(\rprog'), c)$ for every sub program, specifically loop program $\rprepeat(\rprog')$ in a program $c$'s refined program $\rprog$.
 % \begin{enumerate}
 %   \item Estimated by $BD(\rprepeat(\rprog'), c) = BOUND(\rprepeat(\rprog'))$ from paper~\cite{GulwaniJK09}, which is precise for simple loop without nested loops but not for nested loops. We are not giving the computation detail in this paper, which can be found in paper~\cite{GulwaniJK09}.
 %   \item Estimated by Equation~\ref{eq:absBD} path-insensitively, which is based only on the estimated ranking function from Section~\ref{sec:rank}. 
@@ -8,8 +8,9 @@ There are two methods for computing the loop bound, $BD(\rprepeat(\rprog'), c)$ 
 %   \item We provide a new computation approach using both the variable invariant estimation idea and the progress invariant idea from~\cite{GulwaniJK09} presented in Definition~\ref{def:loopbound}.
 % \end{enumerate}
 %
-\paragraph{Ranking Function Based Loop Bound Computation}
-\label{sec:loopbound-rankbased}
+% \paragraph{Ranking Function Based Loop Bound Computation}
+% \label{sec:loopbound-rankbased}
+
 Based only on the estimated ranking function from Section~\ref{sec:rank}, the $BD(\rprog, c)$ for the refined program $\rprog$ can be estimated by $\absclr(\absevent, c)$ by taking the
 minimum value over all $\absevent \in \rprog$.
 We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
@@ -28,7 +29,7 @@ $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, $BD(\
 The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while expected to be $\frac{m}{4}$.
 They are loose because of the nature of the path-insensitivity in the ranking function invariant computation in Definition~\ref{def:ranking_bound}. 
 
-\paragraph{New Approach of Computing The Loop Bound} 
+\paragraph{New Approach} 
 We provide a new computation approach using both the variable invariant estimation idea and the progress invariant idea from~\cite{GulwaniJK09} presented in Definition~\ref{def:loopbound}.
 This new approach also uses the ranking function, but combines with the refined program.
 We first compute the refined abstract states for ranking function in different program point and different local program based on the refined program.
@@ -161,8 +162,8 @@ The Definition~\ref{def:loopbound} computes a sound loop bound for every loop in
 % \paragraph{Walk through Example.}
 % \todo{The walk through example}
 By this approach, we compute a more precise loop bound $BD(\rprog)$ for each subprogram of our walk through example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), in comparison to the purely ranking function-based approach in Equation~\ref{eq:absBD}.
-Specifically for $\rprog_1^1$ and $\rprog_1^2$, we compute $BD(\rprog_1^1) = \frac{m}{4}$ and $BD(\rprog_1^2) = \frac{m}{4}$ as expected,
-and compute the same bounds for the other sub-programs.
+% Specifically for $\rprog_1^1$ and $\rprog_1^2$, we compute $BD(\rprog_1^1) = \frac{m}{4}$ and $BD(\rprog_1^2) = \frac{m}{4}$ as expected,
+% and compute the same bounds for the other sub-programs.
 % $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, $BD(\rprog_1^1) = n$, and $BD(\rprog_1^2) = n $.
 % The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while expected to be $\frac{m}{4}$.
 % They are loose because of the nature of the path-insensitivity in the ranking function invariant computation in Definition~\ref{def:ranking_bound}. 
@@ -246,26 +247,29 @@ The \emph{path local reachability-bound} of the simple transition path $\tpath$ 
 
 % \todo{necessary?}
 \highlight{
-Notice here we can already compute the path reachability-bound simply use the Loop Bound $BD$ recursively. By simply remove the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and use $\rprog$
-as the input. Then the same Definition~\ref{def:pathlocalrb} computes $\outinB(\rprog, \tpath)$ over the global program, $\rprog$ and use $\outinB(\rprog, \tpath)$  as the path global reachability-bound.
-Given we have already computed the path global reachability-bound,
-we are able to compute the \emph{Reachability-bound} for every program point  $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
-\[ 
+Notice here we can already compute the \emph{reachability-bound} by simply using the $BD$ and $\outinB(\rprog, \tpath)$. By removing the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and use $\rprog$
+as the input, $\outinB(\rprog, \tpath)$ computes global \emph{path reachability-bound} loosely.
+%  over the global program, $\rprog$ and use $\outinB(\rprog, \tpath)$  as the path global reachability-bound.
+% Given we have already computed the path reachability-bound,
+Using this loose \emph{path reachability-bound},
+we compute the \emph{Reachability-bound} for every program point $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
+\begin{equation}
+  \label{eq:psrb-sub}
   \psRB(c, l) = 
   \sum
   \left\{ \outinB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
-  l \in \tpath \right\}
-\]
-But this substitution will compute loose reachability-bound for every path.
-\paragraph{Walk through Example.}
-To show the imprecision of this simple substitution, we compute the global reachability-bound for every transition paths for our walk through example as
-$\outinB(\rprog, \tpath_0) = 1$,
-$\outinB(\rprog, \tpath_1) = \frac{m}{4}$,
-$\outinB(\rprog, \tpath_2) = \frac{m}{4}$,
-$\outinB(\rprog, \tpath_3) = \frac{m}{4} \times (n - m)$,
-$\outinB(\rprog, \tpath_4) = \frac{m}{4}$, and
-$\outinB(\rprog, \tpath_5) = 1$.
-It is loose for the $\tpath_3$ because the substituted computation assumes the loop $4$ is reached in every iteration of its outside loop $1$. Naturally, the program point reachability-bound computed using $\outinB(\rprog, \tpath)$ will be loose as well for location $4$ and $5$.
-In this sense, we compute the \emph{loop reachability-bound} in the next section for a tighter program point \emph{Reachability-bound}.
+  l \in \tpath \right\}.
+\end{equation}
+Using our running program in Example~\ref{ex:relatedNestedWhileOdd-overview},
+we compute the path reachability-bound $\outinB(\rprog, \tpath_i)$ for $\tpath_0$ and $\tpath_5$ as $1$,
+for paths $\tpath_1$, $\tpath_2$ and $\tpath_4$ as $\frac{m}{4}$ and $\outinB(\rprog, \tpath_3) = \frac{m}{4} \times (n - m)$.
+% $\outinB(\rprog, \tpath_0) = 1$,
+% $\outinB(\rprog, \tpath_1) = \frac{m}{4}$,
+% $\outinB(\rprog, \tpath_2) = \frac{m}{4}$,
+% $\outinB(\rprog, \tpath_3) = \frac{m}{4} \times (n - m)$,
+% $\outinB(\rprog, \tpath_4) = \frac{m}{4}$, and
+% $\outinB(\rprog, \tpath_5) = 1$.
+It is loose for the $\tpath_3$ because the Eq.~\ref{eq:psrb-sub} assumes the loop $4$ is reached in every iteration of its outside loop $1$. Naturally, the program point reachability-bound computed using $\outinB(\rprog, \tpath)$ will be loose as well for location $4$ and $5$.
+In this sense, we compute the \emph{loop reachability-bound} in the next section for a tighter \emph{reachability-bound}.
 % \todo{Walk through example with a loose path and point reachability bound}
 }

@@ -7,7 +7,6 @@ is a skeleton code from the .Net base-class library.
 
 % \paragraph{Challenges.}
 \input{examples/relatedNestedWhileOdd-overview}
-\footnotetext{We use the notation $(l_0 \to \cdots \to l_n)$ to denote a vertices sequence $(l_0, \cdots, l_n)$, and the constraint on each edge in each transition path are omitted for concise.}
 % \todo{Shorten}
 % \begin{itemize}
 %   \item 
@@ -17,18 +16,17 @@ the precise \emph{reachability-bound}s for control locations $4$ and $5$ are bot
 for location $2$ and $3$ are $(m + 1) \times \lfloor\frac{n}{m}\rfloor + 1$, 
 and $1$ for locations $0, 1$ and $\lex$. 
 \highlight{Notice here, though within the same loop $L_2$, the bounds for locations $4$ and $5$ on the first branch, and $6$ on the second branch are different.}
-\\
-However, the state-of-art \emph{reachability-bound} analysis~\cite{GulwaniZ10}
-gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$, which is tight w.r.t. $L_2$'s iteration times but not for different locations inside $L_2$ without considering multiple paths.
-Among works on program complexity, cost and loop bound analysis, \cite{GulwaniJK09} can also compute the tight bound on the loop iteration but not reachability-bound on each location path-sensitively.
-Though we can use it as the \emph{reachability-bound} for location $1$ and $2$,
+The SPEEDI in~\cite{GulwaniZ10}
+gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$. Though is tight w.r.t. $L_1$'s iteration times but not \emph{reachability-bound} for different locations.
+\cite{GulwaniJK09}, the Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} also can only compute the bound on the loop iteration but not reachability-bound on each location path-sensitively.
+Though we can use their estimated loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
 the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still unclear.
 
 This motivates us the first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free path $\tpath$ within a loop program $\rprog$ bounds the evaluation times of each loop free path instead of the entire multipath loop.
 % \item 
 
-\textbf{Challenge II}
-  Then in line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5. So the
+\textbf{Challenge II} The second challenge occurs in the nested loop.
+In line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5. So the
 while $L_6$ is only executed in the first iteration of while loop $L_1$ and $L_3$.
 % \\
 The while loop $L_3$ at line 3 is executed only in 
@@ -46,41 +44,41 @@ the same as its innermost loop iteration bound.
 % , as well as our \emph{path reachability-bound}.
 However, for the locations between $L_3$ and $L_6$,
 the \emph{reachability-bounds} are the multiplication of the inner and outer loop iteration bounds.}
-\\
-To the best of our knowledge, the loop bound analysis method in \cite{GulwaniJK09} can only give a loose bound $n + (m \times n) + N$ for the entire loop complexity, and 
-the DC-based algorithm in \cite{SinnZV17} is able to
-compute a better but still loose bound, $n + m^2 - m \times N$ on total iteration times.
+% \\
+% To the best of our knowledge, the loop bound analysis method in \cite{GulwaniJK09} can only give a loose bound $n + (m \times n) + N$ for the entire loop complexity, and 
+% the DC-based algorithm in \cite{SinnZV17} is able to
+% compute a better but still loose bound, $n + m^2 - m \times N$ on total iteration times.
+Again, existing approach either computes loose bound for the loop or ignores the path sensitivity.
 None of them can give the precise \emph{reachability-bound} for every location in these nested loops,
 which is non-trivial to compute even though knowing the loop bound.
 % especially for the locations similar to $7$ in $\kw{threeNestedWhile}$.
 
 \highlight{
-This motivates use consider our second novel quantity --
+This motivates us to consider our second novel quantity --
 the numbers of iterations of the outside loop $L_3$ and $L_1$ such that,
 during these iterations, the loop $L_6$ is ``entered''. 
 We call this the \emph{loop reachability} of the location within loop $L_6$ w.r.t the loops $L_3$ and $L_1$.
 Then by multiplying the loop iteration bound of the $L_6$ with its \emph{loop reachability} times w.r.t the  $L_3$ and $L_1$, we can compute the precise
 \emph{reachability-bounds} for location $7$.
 }
-
 \highlight{
 This quantity isn't considered or computed in any of the previous works.
-In the line of methods based on path refinement and loop summarization, the \emph{Progress Invariant} method in \cite{GulwaniJK09} is only able to compute
+In the line of methods based on path refinement and loop summarization, the \emph{Progress Invariant} method in~\cite{GulwaniJK09} is only able to compute
 the
 bound on iteration numbers
 of the inner loop $L_6$ in each iteration of $L_3$ and $L_1$, which are both $N$.
 So they have to over-approximate the reachability-bound for locations inside $L_6$ with the
-overall program complexity by multiplication, i.e., $n + m^2 - m \times N$.
-In the line of the \emph{amortized complexity analysis} through ranking function, the DC-based algorithm in \cite{SinnZV17}
+overall program complexity by multiplication.
+In the line of the \emph{amortized complexity analysis} through ranking function, the LoopusJAR~\cite{SinnZV17}
 is only able to
 compute the combined loop bound and the local bound of each loop
 separately as well.
 % We are still unable to know the precise \emph{reachability-bound} for the locations in the innermost loop.
 }
+
 % \end{itemize}
 With the two key novelties, our algorithm computes the reachability-bound for this example through the following steps.
-% \paragraph{Main Steps of Path-sensitive Reachability-bound Analysis}
-% \label{sec:static_rb}
+
 \input{alg-overview}
 
 

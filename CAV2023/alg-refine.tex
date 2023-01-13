@@ -88,6 +88,7 @@ Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition p
 \paragraph{Rewrite the Program}
 The second sub-procedure rewrite the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics.
 {\small
+\vspace{-0.5cm}
 \begin{algorithm}
 \caption{Program Rewriting $\kw{Rewrite}$}
 \label{alg:alg-refine_rewrite}
@@ -109,13 +110,15 @@ The second sub-procedure rewrite the program $c$ by rearranging all \emph{simple
   \RETURN $W[0]$.
 \end{algorithmic}
 \end{algorithm}
+\vspace{-0.5cm}
 }%
 Algorithm~\ref{alg:alg-refine_rewrite} transformation the syntax of program following~\cite{GulwaniJK09} and preserving the semantics.
-We first use simple depth first search strategy collects all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath}. It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
+We first use simple depth first search strategy collects all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath} as the algorithm input.
+% It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
 Then
-in Line-2, we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. New candidates generated in Line-4, 5 and 6 correspond to the if,
+in Line-1, we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. New candidates generated in Line-3, 4 and 5 correspond to the if,
 while and sequence statement in paper~\cite{GulwaniJK09} respectively.
-Then Line-4:5 recursively update the candidate set until stabilized.
+The Line-3:5 are recursively updating the candidate set $W$ until $W$ is stabilized.
 % \begin{itemize}
 %   \item
 %   Line-4: for all the candidates $c_1, \ldots, c_m$ having the same starting and ending vertices, rewrite them into if statement as~\cite{GulwaniJK09}.
