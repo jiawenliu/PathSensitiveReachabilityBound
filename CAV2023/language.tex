@@ -28,7 +28,7 @@ We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all la
 % \end{array}
 % \]
 Expressions include
-standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with value $n \in \mathbb{N} \cup \{ \infty\}$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
+standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
 % They are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. We use label to record
 % the location of each command, so that we can uniquely identify each program point.
 % We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
@@ -38,7 +38,9 @@ The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of f
 % expression $\aexpr$ and boolean expression $\bexpr$ respectively.
 All the free variables
 showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
-We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
+We denote by
+% $\inpvardom$ the universe of all input variables and 
+$\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
 
 
 % We use following notations to represent the sets of corresponding terms:
@@ -99,7 +101,7 @@ We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\kw{V
 %   expression $\aexpr$ and boolean expression $\bexpr$ respectively.
 %   All the free variables
 %   showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
-%   We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
+%   We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\inpvar(c)$ the set of input variables in a given program $c$.
 
 % \paragraph{{Trace-based Operational Semantics}}
 % \label{sec:operational_semantics}

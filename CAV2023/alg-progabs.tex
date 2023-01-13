@@ -28,23 +28,21 @@ a vertex set $\absV(c)$ and an edge set $\absE(c)$.
 \begin{defn}[Symbolic Constant, Symbolic Expression]
   \label{def:symbolic_expr}
 The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$, in which a symbolic constant can be a natural number, $\infty$, or a program's input variable.
- The \emph{symbolic expression} of a program $\scexpr(c)$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ for the program $c$.
+ The \emph{symbolic expression} of a program $\scexpr(c) \subseteq \mathcal{A}$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ for the program $c$.
 \end{defn}
 
 \begin{defn}[Difference Constraints]
  The difference constraints $DC(\vardom  \cup \scvardom)$ is the set of all the inequality of
-form $x' \leq y + v$ or $x' \leq v$ where $x \in \vardom $, 
-$y \in \vardom$ and $v \in \scvardom$.
+form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.
 An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
-at most the value of $y$ in the previous state plus the symbolic constant $v$.
-An inequality $x' \leq v$ describes that the value of $x$ in the current state is
-at most the value $v$.
+at most the value of $y$ in the previous state plus the symbolic constant $v$, and $x' \leq v$ describes that the value of $x$ in the current state is
+at most $v$.
 \end{defn}
 
 \begin{defn}[Constraints]
 A constraints $dc \in \dcdom^{\top} = DC(\vardom  \cup \scvardom) \cup \booldom\cup \{\top\}$  can be either a
 difference constraint $d \in DC(\vardom  \cup \scvardom)$, a boolean expression $\bexpr \in \booldom$
-or $\top$ denotes always true, is preserved for $\eskip$ command or the commands that don't interfere any guard variable.
+or $\top$ denotes always true.
 \end{defn}
 
 When the constraint that shows up as an edge annotation is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
@@ -54,14 +52,28 @@ the value of variable $x$
 after executing the command at $l$ is at most
 % and the right-hand side describes 
 the value of variable $y$ plus $v$ before the execution,
-and $l \xrightarrow{x' \leq v} l'$ respectively denotes value of variable $x$
-after executing the command at $l$ is at most
+and $l \xrightarrow{x' \leq v} l'$ respectively denotes
+% value of variable $x$
+% after executing the command at $l$ is 
+$x$ has at most
 % and the right-hand side describes 
-the value of the symbolic constant $v$ before the execution.
-For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in~\cite{SinnZV17}. 
+the value of the symbolic constant $v$.
+%  before the execution.
+For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+describes the execution of
+ the command at line $7$, 
+$\clabel{\assign{i}{i - 1}}^{7}$. 
+
+% For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in~\cite{SinnZV17}. 
+
 The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
 that after evaluating the guard with label $l$,
 $\bexpr$ holds and the command with label $l$ will execute right after.
+For example, the boolean constraint $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
+represents the negation of the testing guard $\clabel{i > 0}^1$
+in the $\ewhile$ command, and $i \leq 0$ must hold in order to perform this transition from program point $1$ to
+the program exit. 
+We also have $\top$, which is preserved for $\eskip$ command or the commands that don't interfere any guard variable.
 
 \begin{defn}[Abstract Transition Graph]
   \label{def:abs_cfg}
@@ -77,8 +89,11 @@ the command with label $l'$ can execute right after the execution of the command
 % if and only if there is a control flow between two program points.
 The constraint $dc \in \dcdom$ on each edge is generated from the command with label $l$, which describes the abstract execution of this command.
 \end{defn}
+Again in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
+the edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 
+$\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the while loop with header at location $1$ , $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed right after.
 
-\begin{defn}[Path on Abstract Transition Graph]
+\begin{defn}[Path]
   \label{def:abs_cfgpath} 
   A path on $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots $ with
   \begin{itemize}
@@ -90,34 +105,36 @@ The constraint $dc \in \dcdom$ on each edge is generated from the command with l
   and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
   where $\pathl : \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
   \end{defn}
+  For example, $1 \to 2 \to 3 \to 4 \to 5 \to 4$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
+
   % \\
   % \subsection{Abstract Transition Graph of The Walk through Example}
   % \label{sec:abs_prog_example}
   % 
 % \paragraph*{Walk Through Example}
-% \input{examples/relatedNestedWhileOdd_abscfg}
-Our running example in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(a) has two paths loop with different reachability-bounds on the control
-locations in different paths.
-Its abstract control flow graph is shown in Figure~\ref{fig:relatedNestedWhileOdd_abscfg}(b).
-The edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 
-$\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the
-command $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed next.
-The annotation $i' \leq n$ is a difference constraint 
-computed by $\absexpr$ over
-the expression $n$ in the assignment command $\assign{i}{n}$.
-It represents that the value of $i$ is less than or equal to value of $n$ after the
-execution of $\clabel{\assign{i}{n}}^0$ and before evaluating the guard $\clabel{i > 0}^1$.
-Another example constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
-describes the execution of
- the command at line $7$, 
-$\clabel{\assign{i}{i - 1}}^{7}$. 
-The $i'$ on the left side of $i' \leq i - 1$ represents the value of $i$ after the assignment operation,
-and the right-hand side $i$ stores the value before the assignment.
-The boolean constraint $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
-represents the negation of the testing guard $\clabel{i > 0}^1$
-in the $\ewhile$ command.
-$1 \xrightarrow{i \leq 0} \lex$ denotes that $i \leq 0$ must hold in order to perform this transition from program point $1$ to
-the program exit. 
+% \input{examples/relatedNestedWhileOdd-overview}
+% Our running example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(a) has two paths loop with different reachability-bounds on the control
+% locations in different paths.
+% Its abstract control flow graph is shown in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
+% The edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 
+% $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the
+% command $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed next.
+% The annotation $i' \leq n$ is a difference constraint 
+% computed by $\absexpr$ over
+% the expression $n$ in the assignment command $\assign{i}{n}$.
+% It represents that the value of $i$ is less than or equal to value of $n$ after the
+% execution of $\clabel{\assign{i}{n}}^0$ and before evaluating the guard $\clabel{i > 0}^1$.
+% Another example constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+% describes the execution of
+%  the command at line $7$, 
+% $\clabel{\assign{i}{i - 1}}^{7}$. 
+% The $i'$ on the left side of $i' \leq i - 1$ represents the value of $i$ after the assignment operation,
+% and the right-hand side $i$ stores the value before the assignment.
+% The boolean constraint $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
+% represents the negation of the testing guard $\clabel{i > 0}^1$
+% in the $\ewhile$ command.
+% $1 \xrightarrow{i \leq 0} \lex$ denotes that $i \leq 0$ must hold in order to perform this transition from program point $1$ to
+% the program exit. 
 % \paragraph{Constraint Computation}
 % In this step, we first show how to compute the constraints for expressions in a program $c$,
 % by a program abstraction method adopted from the
@@ -421,4 +438,4 @@ the program exit.
 % \subsection{Abstract Transition Graph of The Walk through Example}
 % \label{sec:abs_prog_example}
 % % 
-% \input{examples/relatedNestedWhileOdd_abscfg}
+% \input{examples/relatedNestedWhileOdd-overview}

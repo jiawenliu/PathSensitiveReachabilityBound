@@ -66,17 +66,15 @@ Our algorithm combines two lines of complexity analysis techniques.
   The limitation occurs when composing the bound between nested loops. Recursively unrolling the nested loops and computing the interleaving between unrolled paths are heavy and non-terminating.
 \end{itemize}
 Our combination improves in both limitations, and computes 
-a \emph{reachability-bound} for every program point $l$ in a program $c$ in a path sensitive manner as the follows.
+a \emph{reachability-bound} for every program point $l$ in a program $c$ in a path sensitive manner.
+%  as the follows.
 % shown in Figure~\ref{fig:psRB-architecture}.
 % Based on an abstract transition graph through program abstraction presented in Section~\ref{sec:abs_cfg},
 % we perform both the path refinement and the ranking estimation over this graph.
 % We utilize the effectiveness of the \emph{amortized complexity analysis} by computing the ranking function $\locbound(\absevent, c)$ for each transition edge $\absevent$, and then estimating the bound on each ranking function, $\varinvar(\locbound(\absevent, c), c)$ and transition edge, $\absclr(\absevent, c)$ alternatively and path-insensitively.
 % In the meantime, we also take advantage from the accuracy of the path refinement techniques through a light-weight path refinement algorithm adapted from~\cite{GulwaniJK09} presented in Section~\ref{alg:alg-refine_rewrite}.
-
 % Built on this, we compute the bounds over two novel quantities, the \emph{path reachability-bound} and \emph{loop reachability-bound}. These two bounds effectively combines the strength of the two different bound computation methods above.
-
 % The first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free path $\tpath$ within a loop program $\rprog$ bounds the evaluation times of each loop free path instead of the entire multipath loop.
-
 % The second key idea combining two lines of works above is the \emph{loop reachability-bound}, $\lpchB(L:\rprog, \tpath)$.
 % For each transition path $\tpath$ w.r.t each of the loops $L:\rprog$ in which $\tpath$ is nested,
 % $\lpchB(L:\rprog, \tpath)$ bounds the iterations for

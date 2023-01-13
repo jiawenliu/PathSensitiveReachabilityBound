@@ -1,15 +1,15 @@
-The algorithm in this step is inspired from the Algorithm.2 in paper~\cite{SinnZV14},
+The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite{SinnZV14},
   % which assigns a variable to each edge on which this variable decrease as its ranking function.
   the Algorithm.3 in paper~\cite{ZulegerGSV11},
-  and the Definition.25 in Section 4 of paper~\cite{SinnZV17}.
-  Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
-  and estimates the maximum value each variable in this set.
-  Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decrease as its ranking function
-  and then estimates the maximum value for the ranking function.
-  The Definition.25 in paper~\cite{SinnZV17}
-  assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
+  and the Definition.25 in Section 4 of paper~\cite{SinnZV17} with three sub-steps.
+  % Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
+  % and estimates the maximum value each variable in this set.
+  % Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decrease as its ranking function
+  % and then estimates the maximum value for the ranking function.
+  % The Definition.25 in paper~\cite{SinnZV17}
+  % assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
 
-The three sub-steps are standard and based on the Definition.25 in paper~\cite{SinnZV17}.
+% The three sub-steps are standard and based on the Definition.25 in paper~\cite{SinnZV17}.
 
 \paragraph{Collecting Variable Modifications}
   For each variable $x$ in a program $c$, this step computes three edge sets, $\inc(c, x)$, $\dec(c, x)$,

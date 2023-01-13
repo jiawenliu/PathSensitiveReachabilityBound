@@ -13,15 +13,15 @@ This algorithm transforms the multiple-paths loops
 into multiple loops where
 the interleaving of paths is explicit.
 \item In the same time of refining the program, we also compute the \emph{Ranking Function} in Section~\ref{sec:rank}
-% \footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
-% and \textbf{local bound} is the name used in \cite{ZulegerGSV11,SinnZV17}.
-% We refer to the two names as the same meaning in this paper.}  
+\footnote{\textbf{ranking function} is the named used in \cite{SinnZV14}
+and \textbf{local bound} is the name used in \cite{ZulegerGSV11,SinnZV17}.
+We refer to the two names as the same meaning in this paper.}  
 for every edge 
 and estimate the upper bound invariant w.r.t, the input variables on every ranking function's maximum value.
 
-\item The \emph{path-sensitive reachability-bound} algorithm computes the \emph{reachability-bound} for every program point.
+\item The \emph{path-sensitive reachability-bound} algorithm computes the \emph{reachability-bound}, $\psRB(l, c)$ for every program point.
 It relies on the \emph{Refined Program} and the upper bound invariant of the \emph{Ranking Function} computed previously.
-It requires to compute the two novelty quantities, the \emph{Path Reachability-bound} and the \emph{Loop Reachability-bound}.
+It requires to compute our two novel quantities, the \emph{Path Reachability-bound} and the \emph{Loop Reachability-bound}.
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
 % \begin{enumerate}
     \item Based on the ranking function and its upper bound invariant, we first compute the \emph{Path Local Reachability-bound}, $\outinB(\rprog, \tpath)$ for every \emph{simple transition path} $\tpath$ in Section~\ref{sec:pathlocalrb}. 
