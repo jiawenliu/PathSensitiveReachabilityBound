@@ -12,16 +12,18 @@ is a skeleton code from the .Net base-class library.
 %   \item 
 \textbf{Challenge I}
   In this example, given $n \geq m \geq 0$,
-the expected \emph{reachability-bound}s for locations $3, 6, 7$ and $8$ are all $ \lfloor\frac{n-m}{4}\rfloor$,
-for location $2$ is $\lfloor\frac{n-m}{2}\rfloor$ and  $\lfloor\frac{n-m}{2}\rfloor + 1$ for location $1$.
+the expected \emph{reachability-bound}s for locations $3, 6$ and $7$ are all $\lfloor\frac{m}{4}\rfloor$, for $8$ is $\lfloor\frac{m}{4}\rfloor + 1$,
+for location $2$ is $\lfloor\frac{n-m}{2}\rfloor$ and $\lfloor\frac{m}{2}\rfloor + 1$ for location $1$.
 \highlight{Notice here, though within the same loop $L_1$, the bounds for different locations are different.}
-The SPEEDi in~\cite{GulwaniZ10}
-gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$. Though is tight w.r.t. $L_1$'s iteration times but not \emph{reachability-bound} for different locations.
-\cite{GulwaniJK09}, the Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} also can only compute the bound on the loop iteration but not reachability-bound on each location path-sensitively.
-Though we can use their estimated loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
-the \emph{reachability-bounds} for control locations $4, 5$ and $6$ are still unclear.
+The amortized analysis methodology (inlcuding Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15}) ignores path sensitivity and approximate the bound $n$ as the bound for loop $L_1$. 
+The path-refinement and loop-summarizaton based method (inlcuding SPEEDi in~\cite{GulwaniZ10} and \cite{GulwaniJK09} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}) still give the same bound for all the locations within the loop $L_1$. 
+% The SPEEDi in~\cite{GulwaniZ10}
+% gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$. Though is tight w.r.t. $L_1$'s iteration times but not \emph{reachability-bound} for different locations.
+% \cite{GulwaniJK09}, the Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} also can only compute the bound on the loop iteration but not reachability-bound on each location path-sensitively.
+Though we can reuse their estimated loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
+the \emph{reachability-bounds} for control locations $3, 6, 7$ and $8$ are still unclear.
 %
-This motivates the first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free path $\tpath$.
+This motivates our first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free path $\tpath$.
 It bounds the evaluation times of each loop free path instead of the entire multipath loop.
 % \item 
 
@@ -34,7 +36,7 @@ loop $L_4$ is only executed in the first iteration of while loop $L_1$.
 % $L_1$ because $j$ is reset by $i$ in line 2.
 % \\
 So the total iterations of all the two loops are
-$n + m^2 - m \times N$,
+$n - m + \lfloor\frac{m}{2}\rfloor + 1$,
 and the precise \emph{reachability-bound} for location $5$ inside the $L_4$ is $m$.
 % for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - N)$,
 % and $n - N$ for locations $2$ and $9$.
