@@ -1,0 +1,7 @@
+while [ != ( - (na, nb), 1 ) ] 0 do {
+	[ mid <- +(nb, na) ] 1;
+	if [ >= (indx, cftab_mid )] 2
+	then { [ nb <- mid ] 3 }
+	else { [na <- mid ] 4 }
+	  
+}

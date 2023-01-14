@@ -1,0 +1,10 @@
+while [ < (td_offset, foffset)] 0 do  {
+    [ dr <- recv ] 1;
+	if [ > ( + (td_offset, dr), foffset)] 2
+	then { [ dw <- pwrite_1] 3 }
+	else { [ dw <- pwrite_2] 4 };
+	
+	[td_offset <- + (td_offset, dw) ] 5;
+	[bwritten <- + (bwritten, dw) ] 6
+
+}

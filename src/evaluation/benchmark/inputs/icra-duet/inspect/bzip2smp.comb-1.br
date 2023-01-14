@@ -1,0 +1,38 @@
+[ k <- nblock ] 0;
+while [ >= (k, 0) ] do 1 {
+   [ c1 <- block_i1 ] 2;
+   [ c2 <- block_i2 ] 3;
+   if [ != (c1, c2) ] 4
+   then { [ k <- -1] 5 }
+   else { [ skip ] 6 };
+   
+   [ s1 <- quadrant_i1 ] 7;
+   [ s2 <- quadrant_i2 ] 8;
+   if [ != (s1, s2) ] 9
+   then { [ k <- -1] 10 }
+   else { [ skip ] 11 };
+   
+   [ i1 <- (i1, 1) ] 12;
+   [ i2 <- (i2, 1) ] 13;
+   [ c1 <- block_i1 ] 14;
+   [ c2 <- block_i2 ] 15;
+   
+   if [ != (c1, c2) ] 16
+   then { [ k <- -1] 17 }
+   else { [ skip ] 18 };
+   
+   [ s1 <- quadrant_i1 ] 19;
+   [ s2 <- quadrant_i2 ] 20;
+   
+   if [ >= (i1, nblock) ] 21
+   then { [ i1 <- -(i1, nblock) ] 22 }
+   else { [ skip ] 23 };
+   
+   if [ >= (i2, nblock) ] 24 
+   then { [ i1 <- -(i2, nblock) ] 25}
+   else { [ skip ] 26};
+   
+   [ k <- - (k, 8) ] 27
+
+}
+

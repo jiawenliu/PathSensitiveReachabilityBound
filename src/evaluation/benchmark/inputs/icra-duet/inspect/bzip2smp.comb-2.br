@@ -1,0 +1,8 @@
+while [ > (sp, 0) ] 0 do {
+    if [ || ( < ( hi_lo, MAIN_QSORT_SMALL), >(d, MAIN_QSORT_DEPTH) ) ] 1
+  then {
+    if [ < (budget, 0) ] 2
+    then { [ sp <- 0] 3 }
+    else { [ skip ] 4 }}
+  else { [ skip ] 5 }
+}
