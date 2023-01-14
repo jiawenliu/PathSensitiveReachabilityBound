@@ -1,0 +1,44 @@
+[ b <- hctx_table ] 0 ;
+while [ != (b, NULL) ] 1 do {
+	if [ & ( != (b_key, NULL),( == (strcasecmp_b_key, 0) ) ) ] 2
+	then { 
+		if [ != (data, NULL ) ] 3
+		then {
+			[ b_data <- calloc_datalen ] 4;
+			if [ == (b_data, NULL) ] 5
+			then {
+				[ errno <- ENOMEM ] 6;
+				[ b <- NULL ] 7
+			}
+			else { [ skip ] 8 }
+		}
+		else { [ skip ] 9 };
+		[ errno <- 0 ] 10;
+		[ b<- NULL ] 11
+	 }
+	else { [ skip ] 12 };
+	[ b <- b_next ] 13
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

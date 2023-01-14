@@ -1,0 +1,21 @@
+[ count <- 0 ] 0;
+while [ < (count, 255) ] 1 do {
+	[ tmp <- queue_test_t ] 2;
+	[ qt <- tmp ] 3;
+	if [ == (qt, 0) ] 4
+	then { [count <- 255 ] 5 }
+	else { [ skip ] 6};
+	
+	[ qt_addr1 <- qt ] 7;
+	[ qt_addr2 <- count ] 8;
+	[ status <- queue_enqueue_q ] 9;
+	if [ != (status, 0U) ] 10
+	then { [ count <- 255 ] 11 }
+	else { [ skip ] 12 };
+	[ count <- + (count, 1) ] 13
+
+}
+
+
+
+

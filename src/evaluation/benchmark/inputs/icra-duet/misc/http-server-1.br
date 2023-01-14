@@ -1,0 +1,7 @@
+while [ < (index_0, numStr) ] 0 do {
+	[ tmp <- strcasecmp ] 1;
+	if [ == (tmp, 0) ] 2
+	then { [ index_0 <- numStr ] 3}
+	else { [ skip ] 4 };
+	[ index_0 <- + (index_0, 1) ] 5
+}

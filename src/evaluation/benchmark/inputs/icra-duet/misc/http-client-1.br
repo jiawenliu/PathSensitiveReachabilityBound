@@ -1,0 +1,23 @@
+[ curNumRequest <- 0 ] 0;
+while [ < (curNumRequest, 30) ] 1 do {	
+	[ tmp <- connect_clientSocket ] 2; 
+	if [ < (tmp, 0) ] 3
+	then { [ numFailConn <- + (numFailConn,1)] 4;
+	       [ curNumRequest <- 30 ] 5
+	}
+	else { [ skip ] 6 }
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

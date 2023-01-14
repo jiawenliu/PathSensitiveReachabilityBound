@@ -1,0 +1,12 @@
+while [ != ( + (str, index_0), 0) ] 0 do {
+	if [ == ( + (str, index_0), character) ] 1
+	then {
+		[ curr_occur <- + (curr_occur, 1) ] 2;
+		if [ == (curr_occur, occurence) ] 3
+		then { [ + (str, index_0) <- 0 ] 4}
+		else { [ skip ] 5 }
+	
+	}
+	else { [ skip ] 6};
+	[ index_0 <- + (index_0, 1) ] 7
+}

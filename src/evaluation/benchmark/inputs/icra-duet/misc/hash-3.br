@@ -1,0 +1,39 @@
+[ b <- hctx_table_bucket ] 0;
+while [ != (b, NULL) ] 1 do {
+	if [ & ( != (b_key, NULL), == (strcasecmp_b_key, 0) ) ] 2
+	then {
+		if [ != (b_previous, NULL ) ] 3
+		then { [ b_previous_next <- b_next ] 4}
+		else { [ skip ] 5 };
+		
+		if [ != (b_next, NULL ) ] 6
+		then { [ b_next_previous <- b_previous ] 7 }
+		else { [ skip ] 8 };
+		[ b <- hash_freebucket ] 9;
+		[ b <- NULL ] 10
+	}
+	else { [ skip ] 11 };
+	[ b <- b_next ] 12
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

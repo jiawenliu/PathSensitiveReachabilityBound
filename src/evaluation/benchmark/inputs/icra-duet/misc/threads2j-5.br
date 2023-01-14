@@ -1,0 +1,6 @@
+while [ == (slot, set_next) ] 0 do {
+	[ set <- + (bt_mgr_latchsets, slot) ] 1;
+	if [ == (page_no, set_page_no) ] 2
+	then { [ slot <- + (set_next, 1) ] 3 }
+	else { [ skip ] 4 }
+}

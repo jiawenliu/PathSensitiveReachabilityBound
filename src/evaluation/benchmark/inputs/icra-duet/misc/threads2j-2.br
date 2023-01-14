@@ -1,0 +1,7 @@
+[ idx <- slot ] 0;
+while [ < (idx, set_page_cnt) ] 1 do {
+    [ idx <- + (idx, 1) ] 2;
+	if [ != (slotptr_dead, NULL) ]3
+	then { [ idx <- set_page_cnt ] 4 }
+	else { [ skip ] 5}
+}

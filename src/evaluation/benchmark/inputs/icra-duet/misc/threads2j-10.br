@@ -1,0 +1,10 @@
+while [ < (page_no, bt_getid) ] 0 do {
+	if [ < (amt, bt_mgr_page_size) ] 1
+	then { [ page_no <- bt_getid ] 2 }
+	else { [ skip ] 3}
+
+}
+
+
+
+

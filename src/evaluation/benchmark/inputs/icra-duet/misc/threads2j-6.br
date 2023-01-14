@@ -1,0 +1,13 @@
+while [ <= (last, mgr_poolmask) ] 0 do {
+    if [ == (mgr_idx, NULL) ] 1
+	then { [ last <- + (mgr_poolmask, 1) ] 2}
+	else { [ skip ] 3};
+	
+	if [ < (amt, mgr_page_size) ] 4
+	then { [ last <- + (mgr_poolmask, 1) ] 5 }
+	else { [ skip ] 6 };
+	
+	[ last <- + (last, 1) ] 7
+
+}
+

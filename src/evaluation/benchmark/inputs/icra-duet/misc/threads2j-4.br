@@ -1,0 +1,15 @@
+while [ < (page_no, bt_getid_bt_mgr) ] 0 do {
+	[ uid_off <- page_no_bt ] 1;
+	if [ == (ReadFile, NULL) ] 2
+	then { [ page_no <- bt_getid_bt_mgr ] 3 }
+	else { [ skip ] 4 };
+	
+	if [ < (amt, bt_mgr_page_size) ] 5
+	then { [ page_no <- bt_getid_bt_mgr ] 6}
+	else { [ skip ] 7 };
+	
+	if [ > (page_no, LEAF_page) ] 8
+	then { [ next <- + (page_no, 1) ] 9}
+	else { [ skip ] 10};
+	[ page_no <- next ] 11
+}

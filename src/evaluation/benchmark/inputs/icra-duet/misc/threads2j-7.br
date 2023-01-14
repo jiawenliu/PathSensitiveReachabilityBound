@@ -1,0 +1,5 @@
+while [ != (pool_basepage, page_no) ] 0 do {
+	if [ == (pool, pool_hashnext) ] 1
+	then { [ skip ] 2 }
+	else { [ pool_basepage <- page_no ] 3}
+}

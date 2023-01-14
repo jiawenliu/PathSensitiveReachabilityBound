@@ -1,44 +1,9 @@
+#24
+[ i <- 0 ] 0;
+while [ < (i, NUM_THREADS) ] 1 do {
+	[ i <- + (i, 1) ] 2;
+	if [ != (i, MASTER_ID) ] 3
+	then { [ i <- NUM_THREADS ] 4 }
+	else { [ skip ] 5}
 
-#define NUM_THREADS     4
-#define MASTER_ID       0
-#define MAX_POINTS 10000000
-#define RADIUS 500
-#define SQR_RADIUS RADIUS*RADIUS
-
- ThreadData *data = (ThreadData*)threadData;
-
-
- while(data->numPoints!=MAX_POINTS){
-
-    x = rand()%(RADIUS+1);
-    y = rand()%(RADIUS+1);
-
-    if( (x*x + y*y) < SQR_RADIUS)
-       data->numHits++;
-
-    data->numPoints++;
- }
-
-
-
-for(i=0;i<NUM_THREADS;++i)
-       if(i!=MASTER_ID)
-          pthread_join(data->threadDataList[i].thread,NULL);
-
-
-    unsigned long totalHits=0,totalPoints=0;
-
-    for(i=0;i<NUM_THREADS;++i){
-       totalHits+= data->threadDataList[i].numHits;
-       totalPoints+= data->threadDataList[i].numPoints;
-    }
-
-
-
-for(i=0;i<NUM_THREADS;++i){
-  threads[i].threadId = i;
-  threads[i].numHits = 0;
-  threads[i].numPoints =0;
-  pthread_create(&threads[i].thread,&attr,calculatePI,(void*) &threads[i]);
-}
-
+} 

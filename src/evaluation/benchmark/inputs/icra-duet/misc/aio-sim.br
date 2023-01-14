@@ -1,0 +1,44 @@
+[ i <- 1 ] 0 ;
+while [ > (i, 1) ] 1 do
+{
+	[ aio_thread <- aio_thread_t ] 2;
+	if [ == (aio_thread, 0) ] 3
+	then { [i <- 0] 4 }
+	else { [ skip ] 5 };
+
+	[ req_q <- aio_req_queue_t ] 6;
+	if [ == (aio_thread, 0) ] 7
+	then { [i <- 0] 8 }
+	else { [ skip ] 9 };
+	
+	[ req_q <- aio_req_queue_t ] 10;
+	if [ == (req_q, 0) ] 11
+	then { [i <- 0] 12 }
+	else { [ skip ] 13 };
+	
+	[ aio_thread_req_queue <- req_q ] 14 ;
+
+    [ tstatus <- pthread_mutex_init_aio_thread_req_queue ] 15 ;
+
+
+	if [ == (tstatus, 0) ] 16
+	then { [ skip ] 17 }
+	else { [i <- 0] 18 };
+
+	[ tstatus <- pthread_cond_init ] 19;
+	if [ == (tstatus, 0) ] 20
+	then { [ skip ] 21 }
+	else { [i <- 0] 22 };
+	
+	[ queue <- queue_create ] 23 ;
+	if [ == (queue, 0) ] 24
+	then { [i <- 0] 25 }
+	else { [ skip ] 26 };
+
+	[ status <- & (aio_thread_q, aio_thread_link) ] 27 ;
+
+	if [ != (status, 0U) ] 28
+	then { [i <- 0] 29 }
+	else { [ skip ] 30 };
+	[ i <- - (i, 1) ] 31
+}

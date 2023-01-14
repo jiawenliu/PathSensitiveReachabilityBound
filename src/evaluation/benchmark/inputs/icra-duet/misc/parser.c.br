@@ -1,0 +1,56 @@
+#define CPUS 1
+        for( i= 38, dig = line[i] ; dig != ' ' ; i++, dig = line[i] ){
+            continue;
+        }
+
+
+        for( i= 38, dig = line[i] ; dig != ' ' ; i++, dig = line[i] ){
+            continue;
+        }
+    for ( i=0 ; i < CPUS ; i++ ) {
+        par_arg[i].start = i*chunk_size;
+        par_arg[i].stop = (i+1)*chunk_size - 1;
+        par_arg[i].fname = fname;
+        par_arg[i].o_buff = (char *)malloc(chunk_size);
+        par_arg[i].thread = i;
+        par_arg[i].written = 0;
+        printf("CPU %i: starting at %d, ending at %d\n", i,i*chunk_size, (i+1)*chunk_size - 1);
+        //parse_lines( in_file, start, stop );
+        st = pthread_create (&threads[i], &attr, parse_lines, (void *)&par_arg[i]);
+        if (st){
+            printf("ERROR; return code from pthread_create() is %d\n", st);
+            exit(-1);
+        }
+    }
+
+    for(i=0; i < CPUS; i++) {
+        st = pthread_join(threads[i], &status);
+        if (st) {
+            printf("ERROR; return code from pthread_join() is %d\n", st);
+            exit(-1);
+        }
+        printf("Main: completed join with thread %ld having a status of %ld\n",(long)i,(long)status);
+//        printf("%i = %s",(int)i,par_arg[i].o_buff);
+        fwrite( par_arg[i].o_buff, 1, par_arg[i].written, out_file );
+    }
+
+    int start = ((struct par_arg*)args)->start;
+    int stop = ((struct par_arg*)args)->stop;
+    int thread = ((struct par_arg*)args)->thread;
+
+    char line[BUFF_SIZE];
+    size_t len;
+    fseek( fp, start, SEEK_SET );
+    if( start != 0 ){ // We need the start thread to just start.
+        while ( fgetc( fp ) != '\n' ) {
+            start++;
+        }
+        start++;  // fp points at new line. Move one up.
+    }
+
+    while( fgets( line, BUFF_SIZE, fp ) != NULL && start < stop ) {
+        len = strlen( line );
+        //printf("%d = line is: %s\n",thread,line);
+        parse_line( args, line , len);
+        start += len;
+    }

@@ -1,0 +1,8 @@
+while [ == (idx, - (set_page_cnt, 1) ) ] 0 do {
+	if [ != (slotptr_dead, NULL) ] 1
+	then { [ skip ] 2}
+	else { [ idx <- set_page_cnt ] 3 }
+}
+
+
+
