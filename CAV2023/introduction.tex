@@ -48,6 +48,7 @@ the overall complexity
 by inferring the bounds on the loop iteration numbers,
 or the worst-case running time and resource cost of the program's entire execution.
 None of them computes the reachability-bound on a given program control location directly or path-sensitively.
+\todo{Combine the next two limitations with the general limitations above}
 
 To leverage these limitations,
 we introduce a path-sensitive reachability-bound analysis algorithm in this paper, which aims to solve 
@@ -65,6 +66,7 @@ Most of them over-approximate the loop bound when the path interleaving affects 
   \\
   The limitation occurs when composing the bound between nested loops. Recursively unrolling the nested loops and computing the interleaving between unrolled paths are heavy and non-terminating.
 \end{itemize}
+\todo{more details}
 The effective combination complements the limitations in both lines. 
 Built over the combination, we introduce two novel quantities,
 the \emph{path reachability-bound} and \emph{loop reachability-bound}. Through estimating the two quantities accurately over the combination, we compute the \emph{reachability-bound} for each program point path-sensitively.
@@ -100,6 +102,6 @@ This algorithm can compute the evaluation times of each program point accurately
 2. The combination of the \emph{amortized loop bound analysis} through ranking function estimation and the path refinement based approach in our algorithm.
 3. Two novel quantities, the \emph{path reachability-bound} and \emph{loop reachability-bound} and the corresponding estimating algorithms.
 % \item 
-4. A prototype implementation of this algorithm and an evaluation over 5 different benchmarks.
+4. A prototype implementation of this algorithm and an evaluation over four different benchmarks.
   The evaluation results show that we can compute tight bound on the evaluation times of each program point in a program. For program with multi-path loop, we compute different bounds for the points on different paths.
 % \end{itemize}

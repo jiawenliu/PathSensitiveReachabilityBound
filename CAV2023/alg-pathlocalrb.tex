@@ -183,6 +183,7 @@ This approach computes a sound loop bound for subprogram in a refined program.
 % \end{lem}
 % \paragraph{Walk through Example.}
 % \todo{The walk through example}
+\todo{How it is computed}
 In comparison to the purely ranking function-based approach in Equation~\ref{eq:absBD}, Definition~\ref{def:loopbound}
 also computes more accurate bound. For example, it computes $BD(\rprog_1^1) = \frac{m}{4}$ for $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), 
 % Specifically for $\rprog_1^1$ and $\rprog_1^2$, we compute $BD(\rprog_1^1) = \frac{m}{4}$ and $BD(\rprog_1^2) = \frac{m}{4}$ as expected,
@@ -218,7 +219,8 @@ the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlo
     \]
     }
   \end{defn}
-The \emph{path local reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing its enclosed loop $\kw{enclosed}(\rprog, \tpath)$ as in Lemma~\ref{lem:pathlocalrb-sound}.
+  \todo{How it is computed}
+  The \emph{path local reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing its enclosed loop $\kw{enclosed}(\rprog, \tpath)$ as in Lemma~\ref{lem:pathlocalrb-sound}.
 % , with the proof in \highlight{Appendix~\ref{apdx:pathlocalrb-sound}}.
 \begin{lem}[Soundness of the Path Local Reachability-bound]
   \label{lem:pathlocalrb-sound}
