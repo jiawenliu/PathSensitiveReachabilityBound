@@ -62,8 +62,8 @@ For our running program in Example~\ref{ex:relatedNestedWhileOdd-overview}, sinc
 While for $\tpath_3$ we compute  the $\inoutB(\rprog, \tpath_3) = \frac{m}{4} \times 1$ by multiplying its local bound with loop reachability bound.
 % path is $\tpath_3 = \frac{m}{4} \times 1 = \frac{m}{4} $.
 
-\paragraph{Program Points Reachability-bound Computation}
-\label{sec:point-psrb}
+% \paragraph{Program Points Reachability-bound Computation}
+% \label{sec:point-psrb}
 The \emph{Reachability-bound} for program points is finally computed as follows.
 For each program point in a program $c$, $l \in \lvar(c)$,
 %  in a program $c$,
@@ -85,7 +85,7 @@ and $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path in $\absG(c
 \footnotetext{$l \in \tpath$ and $\tpath \in \rprog$, the $\in$ notation is abused to denote
 the program point $l$ is a vertex on this path and $\tpath$ is a simple transition path on $\absG(c)$ respectively.}
 \end{defn}
-We prove that $\econfig{\psRB(c, l)}$ is a \emph{Reachability-bound} for every program point $l$ in a program $c$ as follows.
+We guarantee that $\econfig{\psRB(c, l)}$ is a \emph{reachability-bound} for every program point $l$ in a program $c$.
 \begin{thm}[Soundness of the Path-sensitive Reachability-bound Estimation]
 \label{thm:pathsensitive_rb_soundness}
 For every program ${c}$ and every label $l$ in this program,

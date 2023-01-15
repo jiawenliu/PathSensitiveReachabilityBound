@@ -1,19 +1,16 @@
-Similar to our new approach of computing loop bound,
-we first compute two refined abstract states for each loop w.r.t. a simple transition path inside it,
+Similar to the loop bound computation,
+we first compute two abstract states for each loop w.r.t. a simple transition path inside it,
 $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c)$ based on the refined program
 as in Definition~\ref{def:alg-absstate}.
 \begin{defn}[Loop Abstract States]
 \label{def:alg-loopabsstate}
-Given a program $c$, with $l:\rprog$ as a sub-program (a loop) in $c$'s refined program, 
-where $l: \rprog \subseteq REFINE(\kw{Rewrite(c)})$, 
-we compute four two abstract states for the ranking functions of this loop, 
-   $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c) \in \scexpr(c)$
-   are formally presented as follows.
+Given a program $c$ with its refined program $\rprog_c$ and a loop sub-program  and $l:\rprog$ in $\rprog_c$,
+we compute four two abstract states for the ranking functions in this loop, 
+   $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c) \in \scexpr(c)$ as follows.
    \begin{itemize}%
    \item 
 The loop initial state 
-$\lpinit(l: \rprog, \tpath, c) \in \scexpr(c)$ is symbolic expression as well. 
-It describes the abstract initial value of $\tpath$'s ranking function before
+$\lpinit(l: \rprog, \tpath, c) \in \scexpr(c)$ computes a symbolic expression estimating the abstract initial value of $\tpath$'s ranking function before
 any visit of $\tpath$ and during the first execution of $l: \rprog$.
 \[
   \begin{array}{l}
@@ -35,8 +32,8 @@ any visit of $\tpath$ and during the first execution of $l: \rprog$.
 \item
 The loop next state 
 $\lpnext(l: \rprog, \tpath, c) \in \scexpr(c)$ 
-describes how much $\tpath$'s ranking function
-is modified before
+computes the amount of $\tpath$'s ranking function
+that is is modified before
 the second visit of $\tpath$ but during the second execution of $l: \rprog$.
 %
 \[
@@ -85,7 +82,7 @@ Then we compute the
 $\lpchB(l: \rprog, \tpath)$
 is a sound upper bound on iteration numbers of the outside loop $l$,
 such that,
-during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached, formally in Lemma~\ref{lem:looprb-sound}.
+during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached, formally as below.
 %  with proof in \highlight{Appendix~\ref{apdx:looprb-sound}}.
 \begin{lem}[Soundness of the Loop Reachability-Bound]
   \label{lem:looprb-sound}
@@ -100,15 +97,15 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
     \land 
     \rprog = \algrewrite(c_l)
     \land
-    \Big(
+    \big(
     \config{c_l, \trace_0} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
     \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-    \Big)
+    \big)
     \\ \qquad
     \implies
     \econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0) 
     \\ \qquad \geq 
-      \sum\Big\{
+      \sum\big\{
       \lcounter(\trace, \tracel(\trace_{l \to l_t})) ~\vert~ \trace_{l \to l_t} \in 
       \big\{\trace_{l \to l_t} ~\vert~ 
       % \\ \qquad \qquad \qquad \qquad
@@ -118,7 +115,7 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
       \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' \tracecat [(\_, l_t, \etrue)]
       \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
       \big\}
-      \Big\}.
+      \big\}.
 \end{array}
   \]
   }
