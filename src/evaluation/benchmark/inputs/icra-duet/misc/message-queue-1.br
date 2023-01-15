@@ -1,5 +1,5 @@
 [ cur_node <- queue ] 0;
-while [ != (cur_node, 0) ] 1 do {
+while [ > (cur_node, 0) ] 1 do {
 	if [ > (cur_node_priority, priority ) ] 2
 	then {
 		[ node_next <- cur_node ] 3;
@@ -10,7 +10,7 @@ while [ != (cur_node, 0) ] 1 do {
 	}
 	else { [ skip ] 8};
 	[ prev_node <- cur_node ] 9;
-	[ cur_node <- cur_node_next ]10
+	[ cur_node <- - ( cur_nore, 1 ) ]10
 }
 
 

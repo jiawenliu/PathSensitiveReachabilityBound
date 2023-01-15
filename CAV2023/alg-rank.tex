@@ -21,22 +21,36 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
   or reset
   % $\reset(c, x)$, 
   respectively.
-  \\
-  $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
-  is the set of the edges where the variable increase, 
-  %\\
-  \[ \inc(c, x) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absE(c) \right\} \]
-  %\\
-  $\dec: \vardom \to \mathcal{P}(\absevent) $
-  is the set of abstract events where the variable decrease,
-  %\\
-  \[\dec(c, x) = \left\{\absevent| \absevent = (l,  x' \leq x - v, l') \land \absevent \in \absE(c) \right\}\]
-  %\\
-  $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset,
-%
-  \[\reset(c, x) = \left\{ \absevent| \absevent = (l,  x' \leq y - v, l') \land x \neq y \land \absevent \in \absE(c) \right\}\]
+  \begin{defn}[Variable Modifications]
+    \label{def:var_modi}
+    For each variable $x$ in a program $c$ with $\absG(c)$,
+    $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
+    is the set of the edges where the variable increase, $\inc(c, x) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absE(c) \right\}$;
+    $\dec: \vardom \to \mathcal{P}(\absevent) $
+    is the set of abstract events where the variable decrease where
+    %\\
+    $\dec(c, x) = \left\{\absevent| \absevent = (l,  x' \leq x - v, l') \land \absevent \in \absE(c) \right\}$;
+    %\\
+    $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset such that
+  %
+    $\reset(c, x) = \left\{ \absevent| \absevent = (l,  x' \leq y - v, l') \land x \neq y \land \absevent \in \absE(c) \right\}$.  
+  \end{defn}
+%   \\
+%   $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
+%   is the set of the edges where the variable increase, 
+%   %\\
+%   \[ \inc(c, x) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absE(c) \right\} \]
+%   %\\
+%   $\dec: \vardom \to \mathcal{P}(\absevent) $
+%   is the set of abstract events where the variable decrease,
+%   %\\
+%   \[\dec(c, x) = \left\{\absevent| \absevent = (l,  x' \leq x - v, l') \land \absevent \in \absE(c) \right\}\]
+%   %\\
+%   $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset,
+% %
+%   \[\reset(c, x) = \left\{ \absevent| \absevent = (l,  x' \leq y - v, l') \land x \neq y \land \absevent \in \absE(c) \right\}\]
   Additionally,
-  we also compute the reset graph $\resetG(c)$ and the reset chain for higher precision. We omite the computation, which is mainly following the Definition~20 in~\cite{SinnZV17}.
+  we also implement the reset graph and the reset chain for higher precision. The computation is mainly following the Definition~20 in~\cite{SinnZV17}.
   % \[\resetG(c) = (\resetV(c), \resetE(c))\]
   % \[\resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(c, x) \land \absevent = (l, x' \leq y + c, l') \right\} \]
   % \[\resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in \resetE(c) \lor (\_, \_, x) \in \resetE(c) \right\} \]
@@ -53,11 +67,10 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
   % In the following steps, $c$ is omitted in $\inc(c, x)$,
   % $\dec(c, x)$ and $\reset(c, x)$ for concise when the reference of a program $c$ is clear in the context.
 
-  \paragraph{Assigning The Ranking Function to An Edge}
+  \paragraph{Assigning The Ranking Function}
   For each edge in the transition graph $\absG(c)$ of a program $c$,
   this step assigns the variable that decreases on this edge as the ranking function of this edge.
-  This step adopts the local bound computation method in Section 4 of~\cite{SinnZV17} to assign the local bound to each edge,
-  formally as follows.
+  This step adopts the local bound computation method in Section 4 of~\cite{SinnZV17} to assign the local bound to each edge as follows.
   \begin{defn}[Ranking Function Generatation]
   \label{def:ranking_gen}
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
@@ -103,23 +116,40 @@ is computed as follows,
 %
 where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(c, x)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
 The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$  on the execution times of the transition $\absevent$, is interactively computed as well as below,
+\footnote{We only give the sub-routine computation based on the variable reset set ($\reset$) for  easier understanding.
+% instead of the reset chain ($\resetchain$), and 
+And we implement the reset graph and the reset chain based approach for higher precision.
+}
 {\small
+% \[ 
+% \begin{array}{lll}
+% \absclr(\absevent, c) 
+% & \triangleq \varinvar(\locbound(\absevent, c), c)  &  \\
+% & \quad \text{if} ~ \locbound(\absevent, c) \in \scvar(c) & \\
+% \absclr(\absevent, c) 
+% & \triangleq
+%   \sum \left\{ \incrs(y, c) | ch \in \resetchain(x, c) \land y \in ch \right\} & \\
+%   & \quad + 
+% \sum\limits_{ch \in \resetchain(x, c)}
+% \min \left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
+% \big(\varinvar(in(ch), c) 
+% + \sum\limits_{(\_, (\_, x' \leq y + v, \_), \_) \in ch} v \big) & \\
+% &  \quad \text{if} ~\locbound(\absevent, c) = x \land x \notin \scvar(c) & ,
+% \end{array}
+% \]
 \[ 
 \begin{array}{lll}
-\absclr(\absevent, c) 
-& \triangleq \varinvar(\locbound(\absevent, c), c)  &  \\
-& \quad \text{if} ~ \locbound(\absevent, c) \in \scvar(c) & \\
-\absclr(\absevent, c) 
-& \triangleq
-  \sum \left\{ \incrs(y, c) | ch \in \resetchain(x, c) \land y \in ch \right\} & \\
-  & \quad + 
-\sum\limits_{ch \in \resetchain(x, c)}
-\min \left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
-\big(\varinvar(in(ch), c) 
-+ \sum\limits_{(\_, (\_, x' \leq y + v, \_), \_) \in ch} v \big) & \\
-&  \quad \text{if} ~\locbound(\absevent, c) = x \land x \notin \scvar(c) & ,
+  \absclr(\absevent, c) 
+  & \triangleq \varinvar(\locbound(\absevent, c), c)   \qquad \qquad  \text{if} \quad  \locbound(\absevent, c) \in \constdom & \\
+  \absclr(\absevent, c) 
+  & \triangleq \incrs(x, c) 
+   + 
+  \sum\limits_{\absevent' \in \reset(x, c) \land \absevent' = (l, x \leq y + v, l') }
+  \Big( \absclr(\absevent', c) \times \big( \varinvar(y, c) + v \big) \Big)
+  & \\
+  &  \text{if} \quad  \locbound(\absevent, c) = x \land x \notin \constdom &.
 \end{array}
-\]
+  \]
 }
-where $in(ch)$ is the first vertex of the reset chain $ch$.
+% where $in(ch)$ is the first vertex of the reset chain $ch$.
 \end{defn}

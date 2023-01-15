@@ -1,5 +1,5 @@
 while [ == (page_no, next) ] 0 do {
 	if [ set_pool <- bt_pinpool ] 1
 	then { [ set_page <- bt_page ] 2}
-	else { [ page_no <- +(next, 1) ] 3 }
+	else { [ page_no 	<- + (page_no, 1) ] 3 }
 }

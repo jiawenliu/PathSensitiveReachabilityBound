@@ -1,4 +1,5 @@
-while [ != ( + (str, index_0), 0) ] 0 do {
+
+while [ > ( + (str, index_0), 0) ] 0 do {
 	if [ == ( + (str, index_0), character) ] 1
 	then {
 		[ curr_occur <- + (curr_occur, 1) ] 2;
@@ -8,5 +9,5 @@ while [ != ( + (str, index_0), 0) ] 0 do {
 	
 	}
 	else { [ skip ] 6};
-	[ index_0 <- + (index_0, 1) ] 7
+	[ index_0 <- - (index_0, 1) ] 7
 }

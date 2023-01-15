@@ -1,9 +1,9 @@
 [ cur_node <- queue ] 0;
-while [ != (cur_node, 0) ] 1 do {
+while [ > (cur_node, 0) ] 1 do {
 	if [ == (cur_node_read, NULL) ] 2
 	then { [ cur_node <- 0 ] 3}
 	else { [ skip ] 4}
-	[ cur_node <- cur_node_next ] 5
+	[ cur_node <- - ( cur_nore, 1 ) ] 5
 
 }
 

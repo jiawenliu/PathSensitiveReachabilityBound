@@ -12,18 +12,19 @@
       \kw{nestedOdd}(n, m) \triangleq \\
       \clabel{ \assign{i}{n} }^{0} ; \\
           \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
-          \quad \Big(
+          \quad \big(
             \eif(\clabel{i \% 2 \neq 0 }^{2},
             \quad \clabel{\assign{k}{i - m}}^{3};\\
             \quad \ewhile ~ \clabel{k > 0}^{4} ~ \edo ~
-            \Big( \clabel{\assign{k}{k - 1}}^{5} \Big);\\
+            ( \clabel{\assign{k}{k - 1}}^{5} );\\
             \quad \clabel{\assign{i}{k + m}}^{6};
             \clabel{\assign{i}{i - 1}}^{7}, \\
             \quad \clabel{\assign{i}{i - 3}}^{8})
-            \Big)
+            \big)
       \end{array}
     $
     }
+    % \vspace{-0.2cm}
     \caption{}
     \end{centering}
     \end{subfigure}
@@ -58,6 +59,7 @@
   \draw[ thick, -latex] (-7.5, 7)  --  node [left] {\scriptsize $i' \leq i - 1$ }(-0.5, 9.5);
   % \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
   \end{tikzpicture}
+  \vspace{-0.5cm}
   \caption{}
     \end{centering}
     \end{subfigure}
