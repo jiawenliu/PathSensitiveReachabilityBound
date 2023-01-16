@@ -75,7 +75,7 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
   \label{def:ranking_gen}
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
   its \emph{ranking function/local bound}, $\locbound(\absevent, c)$
-  is the variable that decreases on this edge, computed as follows,
+  is the symbol $x\in \scvardom(c)$ that decreases on this edge as follows,
 {\small
 \[ 
 \begin{array}{ll}
@@ -96,7 +96,10 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
 $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
   \end{defn}
   %
-  \todo{Example of ranking function estimated}
+  % \todo{Example of ranking function estimated}
+  In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we assign variable $i$ to edge $7 \xrightarrow{i' \leq i - 1} 1$ as ranking.
+  If we remove this edge, the edges on $\tpath_2$ and $\tpath_1$ are not in any SCC, so they also have the same ranking.
+In the same way, ranking for edges on $\tpath_4$ is $i$ as well and $k$ for them on $\tpath_3$.
  \paragraph{Estimating the Upper Bound Invariant for Ranking Functions}
 Then we estimate the upper bound invariant,  $\varinvar(\locbound(\absevent, c), c)$ for the ranking function of each abstract transition, $\locbound(\absevent, c)$. Meanwhile, we interactively compute an iteration upper bound,  $\absclr(\absevent, c)$  for each $\absevent$ path-insensitively when estimating the ranking function invariant.
 \begin{defn}[Ranking Function Estimation]
@@ -154,4 +157,7 @@ And we implement the reset graph and the reset chain based approach for higher p
 }
 % where $in(ch)$ is the first vertex of the reset chain $ch$.
 \end{defn}
-\todo{Example of computed invariant for ranking function and the transition bound}
+% \todo{Example of computed invariant for ranking function and the transition bound}
+In Example~\ref{ex:relatedNestedWhileOdd-overview}, the ranking $i$ is reset by $n$ at edge $0 \to 1$ and 
+$k + m$ at edge $6 \to 7$ and $k$ is assigned value $i - m$ at edge $3 \to 4$. Through reset chain graph (which we do not fully presented but can be found in the Definition~20 in~\cite{SinnZV17}), we estimate a symbolic value $n$ for both ranking variable $i$ and $k$.
+Interactively, iteration bounds for all the edges in this loop are $n$ as well path-insensitively.

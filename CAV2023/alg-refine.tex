@@ -99,12 +99,12 @@ The second sub-procedure rewrite the program $c$ by rearranging all \emph{simple
   \STATE \textbf{init}: candidate set $W = \{c_1, \ldots, c_n\}$, where $c_i = \tpath_i$ and $i = 1, \ldots, n$
   \STATE \textbf{while} $W.size()> 1$:
   \STATE \quad 
-  for all $c_i \in W \land c_i[0] = c_j[0] \land c_i[-1] = c_j[-1], i, j = 1, \ldots, m$.
+  for all $c_i \in W \land c_i.start = c_j.start \land c_i.end = c_j.end, i, j = 1, \ldots, n$.
   \\ \quad create $c' = \rpchoose{c_1, \ldots, c_m}$, \qquad  $W.add(c')$ \qquad $W.remove(c_1, \ldots, c_m)$
   \STATE
-  \quad for all $c_i \in W \land c[0] = c[-1] \land c[0] \in \loopl(c)$
+  \quad for all $c_i \in W \land c.start = c.end \land c.start \in \loopl(c)$
   \\ \quad create $c' = \rprepeat(c)$, \qquad $W.add(c')$, \qquad $W.remove(c)$
-  \STATE \quad for all $c_1, c_2 \in W \land c_1[-1] = c_2[0]$
+  \STATE \quad for all $c_1, c_2 \in W \land c_1.end = c_2.start$
   \\
   \quad create $c' = c_1; c_2$, \quad $W.add(c')$ \qquad $W.remove(c_1, c_2)$
   % \STATE \textbf{Endwhile}
@@ -129,9 +129,11 @@ The Line-3:5 are recursively updating the candidate set $W$ until $W$ is stabili
 %   Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
 % \end{itemize}
 % \todo{soundness of the program write}
-In our running Example~\ref{ex:threeNestedWhile}, the rewritten program corresponding to the syntax in~\cite{GulwaniJK09} is
-$ \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2), 
-1: \rprepeat(\tpath_4) }; \tpath_5$.
+In Example~\ref{ex:relatedNestedWhileOdd-overview}, the rewritten program corresponding to the syntax in~\cite{GulwaniJK09} is
+$ 
+\tpath_0 ; \rpchoose{ \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2), 
+\rprepeat(\tpath_4) }; \tpath_5
+$.
 
 \paragraph{Program Refinement}
 The last step, we implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
