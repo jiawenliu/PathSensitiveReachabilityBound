@@ -81,12 +81,59 @@ or commands that don't interfere any guard variable.
 \end{itemize}
 \end{itemize}
 
+\highlight{Definitions}
+\begin{defn}[Symbolic Constant, Symbolic Expression]
+  \label{def:symbolic_expr}
+The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$, in which a symbolic constant can be a natural number, $\infty$, or a program's input variable.
+ The \emph{symbolic expression} of a program $\scexpr(c) \subseteq \mathcal{A}$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ for the program $c$.
+\end{defn}
+
+\begin{defn}[Difference Constraints]
+ The difference constraints $DC(\vardom  \cup \scvardom)$ is the set of all the inequality of
+form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.
+An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
+at most the value of $y$ in the previous state plus the symbolic constant $v$, and $x' \leq v$ describes that the value of $x$ in the current state is
+at most $v$.
+\end{defn}
+
+\begin{defn}[Constraints]
+A constraints $dc \in \dcdom^{\top} = DC(\vardom  \cup \scvardom) \cup \booldom\cup \{\top\}$  can be either a
+difference constraint $d \in DC(\vardom  \cup \scvardom)$, a boolean expression $\bexpr \in \booldom$
+or $\top$ denotes always true.
+\end{defn}
+
+When the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
+% Then $x'$ 
+it denotes that
+the value of variable $x$
+after executing the command at $l$ is at most
+% and the right-hand side describes 
+the value of variable $y$ plus $v$ before the execution,
+and $l \xrightarrow{x' \leq v} l'$ respectively denotes
+% value of variable $x$
+% after executing the command at $l$ is 
+$x$ has at most
+% and the right-hand side describes 
+the value of the symbolic constant $v$.
+%  before the execution.
+For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+describes the execution of
+ the command at line $7$, 
+$\clabel{\assign{i}{i - 1}}^{7}$. 
+
+% For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in~\cite{SinnZV17}. 
+
+The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
+that after evaluating the guard with label $l$,
+$\bexpr$ holds and the command with label $l$ will execute right after.
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
+represents the negation of the testing guard $\clabel{i > 0}^1$
+in the $\ewhile$ command, and $i \leq 0$ must hold in order to perform this transition from program point $1$ to
+the program exit. 
+We also have $\top$, which is preserved for $\eskip$ command or the commands that don't interfere any guard variable.
+
 \highlight{Computation Steps:}
 
-\begin{defn}[Symbolic Expression of a Program($\scexpr(c)$)]
-  \label{def:symbolic_expr}
-  $\scexpr(c)$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ for a given program $c$.
-\end{defn}
 
 \begin{defn}[Constraint Computation]
   \label{def:constraint_compute}
@@ -309,25 +356,39 @@ With the vertices $\absV(c)$ and edges $\absE(c)$ ready, we construct the abstra
 Definition~\ref{def:abs_cfg}.
 %
 \begin{defn}[Abstract Transition Graph]
-\label{def:abs_cfg}
-Given a program $c$, 
-its \emph{abstract transition graph} $\absG(c) \triangleq (\absV(c), \absE(c))$ where
-$\absE(c) \triangleq \{(l_1, dc, l_2) | (l_1, dc, l_2) \in \absflow(c)\}$,
-and
-$\absV(c) \triangleq \lvar(c)\cup\{\lex\}$.
-
-A path on $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots $ with
-\begin{itemize}
-\item the vertices sequence $(l_0, \ldots)$, where $l_i \in \absV(c)$ for every $i = 0, 1, \ldots$ and
-%
-\item the edge sequence $(e_0, \ldots)$, where $e_i = (l_{i}, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, 1, \ldots$.
-\end{itemize}
-A path is cyclic, if it has the same start- and end-point. A path is simple, if it does not visit a location twice except for start- and end-location. We use $\paths(\absG(c))$ to denote the set of all the paths on $\absG(c)$,
-and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
-where $\pathl : \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
+  \label{def:abs_cfg}
+  The \emph{abstract transition graph} of a program $c$ is $\absG(c) \triangleq (\absV(c), \absE(c))$, where
+  $\absV(c) \triangleq \lvar(c)\cup\{\lex\}$
+  and 
+  % $\absE(c) \triangleq \{(l_1, dc, l_2) | (l_1, dc, l_2) \in \absflow(c)\}$,
+  % and
+  % .
+  each edge $(l, dc, l') \in \absE(c)$ is an abstract transition
+between two program points $l, l'$ if and only if
+the command with label $l'$ can execute right after the execution of the command with label $l$.
+% if and only if there is a control flow between two program points.
+The constraint $dc \in \dcdom$ on each edge is generated from the command with label $l$, which describes the abstract execution of this command.
 \end{defn}
+Again in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
+the edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 
+$\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the while loop with header at location $1$ , $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed right after.
+
+\begin{defn}[Path]
+  \label{def:abs_cfgpath} 
+  A path on $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots $ with
+  \begin{itemize}
+  \item the vertices sequence $(l_0, \ldots)$, where $l_i \in \absV(c)$ for every $i = 0, 1, \ldots$ and
+  %
+  \item the edge sequence $(e_0, \ldots)$, where $e_i = (l_{i}, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, 1, \ldots$.
+  \end{itemize}
+  A path is cyclic, if it has the same start- and end-point. A path is simple, if it does not visit a location twice except for start- and end-location. We use $\paths(\absG(c))$ to denote the set of all the paths on $\absG(c)$,
+  and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
+  where $\pathl : \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
+  \end{defn}
+  For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
 % \\
-\subsection{Abstract Transition Graph of The Walk through Example}
+\subsection{Abstract Transition Graph Illustration through the Running Example}
 \label{sec:abs_prog_example}
 % 
+\todo{Change Or remove}
 \input{examples/relatedNestedWhileOdd_abscfg}

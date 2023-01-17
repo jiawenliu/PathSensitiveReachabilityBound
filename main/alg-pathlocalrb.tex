@@ -160,6 +160,12 @@ and compute the same bounds for the other sub-programs.
 % The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while expected to be $\frac{m}{4}$.
 % They are loose because of the nature of the path-insensitivity in the ranking function invariant computation in Definition~\ref{def:ranking_bound}. 
 
+Specifically, in Example~\ref{ex:relatedNestedWhileOdd-overview}, for subprogram $\rprepeat(\tpath_3)$, we first compute $\rfinit = \{k = n - m\}$,
+and $\rffinal = \{k = 0\}$ and $\rfnext = 1$. So we compute $BD(\rprepeat(\tpath_3)) = n - m$ tighter than $n$ by Eq.~\ref{eq:absBD}.
+
+For the first iteration pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we also compute 
+$\rfinit = \{k = n - m, i = m\}$, $\rffinal = \{k = 0, i = 0\}$ and $\varGD(\rprog_1^1) = 4$. So we compute $BD(\rprog_1^1) = \lfloor \frac{m}{4} \rfloor $ as expected.
+
 
 \subsection{Path Local Reachability-bound}
 We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \textbf{the innermost loop} inside $\rprog$ where $\tpath$ is located. Then by using the loop bound computed by our new approach, we compute the \emph{path local reachability-bound} of
@@ -233,7 +239,11 @@ $\outinB(1: \rprog_1^2, \tpath_2) = \frac{m}{4}$,
 $\outinB(1: \rprog_1^2, \tpath_4) = \frac{m}{4}$, and
 $\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ 
 
-\todo{necessary?}
+Specifically, for program in the first interleaving pattern $\rprog_1^1$ in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop program of $\tpath_1$, $\tpath_2$ and $\tpath_4$.
+We compute $\outinB(\rprog_1^1, \tpath_1) = BD(\rprog_1^1, c) \times \outinB(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4, \tpath_1)
+= BD(\rprog_1^1, c) \times (1 + 0) = \lfloor \frac{m}{4} \rfloor $ and the same for $\tpath_2$ and $\tpath_4$.
+
+
 \highlight{
 Notice here we can already compute the path reachability-bound simply use the Loop Bound $BD$ recursively. By simply remove the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and use $\rprog$
 as the input. Then the same Definition~\ref{def:pathlocalrb} computes $\outinB(\rprog, \tpath)$ over the global program, $\rprog$ and use $\outinB(\rprog, \tpath)$  as the path global reachability-bound.
