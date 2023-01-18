@@ -4,13 +4,13 @@
 while [ == (done, 0) ] 3 do {
     [ii <- + (ii, 1) ] 4;
 	
-	while [ < (cmopare_base_ii_test, 0) ] 5 do {
+	while [ < (ii, 0) ] 5 do {
 		[ii <- + (ii, 1) ] 6;
 	};
 	
 	  [jj <- - (jj, 1) ] 7;
 	
-	while [ > (cmopare_base_jj_test, 0) 8 ] do {
+	while [ > (jj, 0) 8 ] do {
 	  [jj <- - (jj, 1) ] 9;
 	};
 	

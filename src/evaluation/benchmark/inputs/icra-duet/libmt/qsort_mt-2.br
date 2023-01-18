@@ -1,12 +1,28 @@
-[ r <- cmp_thunk_pb_a ] 0;
-while [ & ( <= (pb, pc), <= (r, 0) ] 1 do {
-    if [ == (r, 0) ] 2
+[ pa <- 0 ] 0;
+[ pb <- 0 ] 1;
+[ pc <- n ] 2;
+[ pd <- n ] 3;
+[ r <- cmp_thunk_pb_a ] 4;
+while [ & ( <= (pb, pc), <= (r, 0) ] 5 do {
+    if [ == (r, 0) ] 6
 	then { 
-	   [ t <- pa] 3;
-	   [ pa <- pb] 4;
-	   [ pb <- t] 5;
-	   [ pa <- + (pa, es) ] 6;
+	   [ t <- pa] 7;
+	   [ pa <- pb] 8;
+	   [ pb <- t] 9;
+	   [ pa <- + (pa, 1) ] 10;
 	}
-	else { [ skip ] 7};
-	[ pb <- + (pb, es)] 8
+	else { [ skip ] 11};
+	[ pb <- + (pb, 1)] 12
+}
+[ r <- cmp_thunk_pc_a ] 13;
+while [ & ( <= (pb, pc), <= (r, 0) ] 14 do {
+    if [ == (r, 0) ] 15
+	then { 
+	   [ t <- pd] 16;
+	   [ pd <- pc] 17;
+	   [ pc <- t] 18;
+	   [ pd <- - (pd, 1) ] 19;
+	}
+	else { [ skip ] 20};
+	[ pc <- - (pc, 1)] 21
 }

@@ -2,7 +2,7 @@
 [ w <- word_num_ ] 1;
 [ b <- bit_num_ ] 2;
 while [ > (p, 0) ] 3 do {
-	[ w <- - (2, w) ] 4;
+	[ w <- - (w, 2) ] 4;
 	while [ > (w, 0) ] 5 do {
 	if [ rand ] 6 
 	then { 

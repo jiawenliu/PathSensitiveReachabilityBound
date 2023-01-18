@@ -2,7 +2,7 @@
 [ gs <- 0 ] 1 ;
 while [ > (nPart, 0) ] 2
 do {
-	[ ge <- - (gs, 1) ] 3
+	[ ge <- - (gs, 1) ] 3;
 	while [ < ( ge, alphaSize - 1) ] 4
 	do { 
 		[ ge <- + (ge, 1) ] 5

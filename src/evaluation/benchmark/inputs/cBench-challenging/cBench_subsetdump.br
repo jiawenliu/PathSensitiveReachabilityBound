@@ -10,5 +10,5 @@ while [ > (cnum, 0) ] 1 do {
 		while [ > (rangestart, 0) ] 8 do 
 		{ [ rangestart <- - (rangestart, 1)] 9 }
 	  }
-	else { [skip] 10 }
+	else { [ cnum <- - (cnum, 1)] 10 }
 }

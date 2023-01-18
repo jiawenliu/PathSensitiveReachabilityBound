@@ -1,14 +1,3 @@
-void terminate(int i, int j, int k){
-  int ell;
-  while(i <= 100 && j <= k){
-    ell = i;
-    i = j;
-    j = ell+1;
-    k--;
-  }
-}
-
-
 [ j <- 0 ] 0 ;
 [ i <- 0 ] 1 ;
 while [  && (<= (j , k), <= (i , 100)) ] 2 do {

@@ -1,4 +1,3 @@
-
 [p <- pr_ptr] 0 ; 
 [rlimit <- pr_limit] 1; 
 [bits_left <- ss_bits_left] 2;
