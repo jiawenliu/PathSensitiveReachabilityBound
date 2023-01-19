@@ -43,12 +43,12 @@ Gulwani et. al
 gave a two-step solution by combining the abstract interpretation and proof-rules-based techniques but not solve this problem in a path-sensitive manner.
 % However, their solution
 % does not solve this problem in a path-sensitive manner.
-It over-approximates the reachability-bounds on different paths inside a while loop.
+It over-approximates the reachability-bounds on different paths inside a while loop with the overall while loop.
 % \\
 Techniques in program complexity analysis~\cite{GustafssonEL05,HumenbergerJK18} 
 or worst-case resource cost analysis
 ~\cite{BrockschmidtEFFG16,AlbertAGP08,AliasDFG10,Flores-MontoyaH14} can be reused to estimate similar quantity such as the
-loop iteration bounds, execution complexity bound, etc.
+bounds on loop iterations, execution time, etc.
 While these quantities focus only on  
 the overall complexity.
 % There are also many works in analyzing the program complexity~\cite{GustafssonEL05,HumenbergerJK18},
@@ -60,25 +60,27 @@ the overall complexity.
 % by inferring the bounds on the loop iteration numbers,
 % or the worst-case running time and resource cost of the program's entire execution.
 None of them computes the reachability-bound on a given program control location directly or path-sensitively.
-This leads to the inaccuracy in the data leakage analysis, cost analysis, etc.
+This leads to the inaccuracy in the data leakage analysis, resource analysis, etc.
 %  cannot be effectively used.
 % conflation of paths/useless result/or whatever people 
 % \todo{Combine the next two limitations with the general limitations above}
 To overcome these limitations and solve 
 the reachability-bounds problem efficiently and path-sensitively, 
-we introduce a novel path-sensitive reachability-bound analysis algorithm that is built over abstract transition graph and effectively combines amortized complexity analysis and loop summarization based loop path refinement techniques.
+we introduce a novel path-sensitive reachability-bound analysis algorithm that is built over abstract transition graph and effectively combines the amortized complexity analysis with loop summarization based loop paths refinement techniques.
 The effective combination complements the limitations in both lines. Below are some related works and the limitations in these lines.
 
 \begin{itemize}
 \item \emph{Program Abstraction.}
 
-The program abstraction techniques are widely used in program analysis area as a preprocess step to precisely summarize the key property of the program. 
-When analyzing the loop bounds, the unified lattice model~\cite{CousotH78}, polyhedra~\cite{CousotC77} and octagons~\cite{Mine06} are used in~\cite{GulwaniZ10} for summarize the loop transition and generating the transition system.
-But none of the three abstraction models can represent the if guard in multipath loop, and solving the transition system using these abstraction models is low-efficient.
+Many program abstraction techniques are used in program analysis area as a preprocess step to precisely summarize the key property of the program, such as the unified lattice model~\cite{CousotH78}, polyhedra~\cite{CousotC77} and octagons~\cite{Mine06} are used in~\cite{GulwaniZ10} for summarize the loop transition and generating the transition system.
+% But none of the three abstraction models can represent the if guard in multipath loop, and solving the transition system using these abstraction models is low-efficient.
 The wedge abstract developed in~\cite{KincaidCBR18} for generating the non-linear loop invariant
-computing the reachability-bound can also be used. While it only works well for the specific targeting problem, and still low-efficient or inaccuracy in summarizing the multipath loops and solving the path-sensitive reachability-bound problem.
+computing the reachability-bound can also be used. While it only works well for the specific targeting problem.
+The trade-off between the accuracy and the low-efficient in generating and solving these constraints is the main bottleneck
+% , inaccuracy in summarizing the multipath loops
+%  and solving the path-sensitive reachability-bound problem.
 
-Comparing to them, we choose to use the difference constrain based~\cite{SinnZV17,SinnZV14} program abstraction model combined with boolean expression abstraction to generate our abstract transition graph. It can represent the program loops path-sensitively and is more accurate and efficient comparing to the other models. 
+We choose to use the difference constrain based~\cite{SinnZV17,SinnZV14} program abstraction model combined with boolean expression abstraction to generate our abstract transition graph. It can represent the program loops path-sensitively and is more accurate, it is also efficient to solve. 
 % than the state-of-art program abstraction models mentioned above.
 % While our program abstraction model is based on the difference constrain model in~\cite{SinnZV17} and the size change abstraction in~\cite{SinnZV14}, which is more efficient comparing to the models above. 
 % The efficiency also benefit from our
@@ -93,13 +95,16 @@ One line of complexity analysis mainly based on the \emph{amortized complexity a
   But estimating the counter or ranking function invariant ignores the interleaving between multiple paths in the same loop.
 Most of them over-approximate the loop bound when the path interleaving affects the loop execution.
   For the same reason, some existing tools CofloCo~\cite{Montoya17,Flores-MontoyaH14,Flores-Montoya16}, KoAT~\cite{BrockschmidtEFFG16,BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, and the amortized algorithm in~\cite{LuCT21} which we evaluated over our benchmarks give the entire loop bound path-insensitively.
-  Another kind of \emph{amortized complexity analysis} based on type refinement or annotation. For example \cite{CraryW00} presents a type system for the certification of resource bounds (once they are provided by the programmer). In contrast, we infer bounds for different program location. 
-  \cite{JostHLH10} uses linear programming to infer bounds for functional programs, but they are restricted to computing only linear bounds.
-  Other techniques that are based on
-  type system~\cite{CicekBG0H17,RajaniG0021}, the cost analysis via effect systems~\cite{CicekBG0H17,RadicekBG0Z18,QuG019}, and Hoare logic~\cite{CarbonneauxHS15}
+  % Another kind of \emph{amortized complexity analysis} based on type refinement or annotation. For example \cite{CraryW00} presents a type system for the certification of resource bounds (once they are provided by the programmer).
+  % %  In contrast, we infer bounds for different program location. 
+  % \cite{JostHLH10} uses linear programming to infer bounds for functional programs, but they are restricted to computing only linear bounds.
+  % Other techniques that are based on
+  % type system~\cite{CicekBG0H17,RajaniG0021}, the cost analysis via effect systems~\cite{CicekBG0H17,RadicekBG0Z18,QuG019}, and Hoare logic~\cite{CarbonneauxHS15}
+  % give the approximated upper bound of the program's total resource cost as well but still failed to consider the path sensitivity and the resource cost on different program points.
+  Another kind of \emph{amortized complexity analysis} based on type refinement or annotation such as~\cite{CraryW00,JostHLH10,CicekBG0H17,RajaniG0021,CarbonneauxHS15}
   give the approximated upper bound of the program's total resource cost as well but still failed to consider the path sensitivity and the resource cost on different program points.
-  To improve in the setting of multiple paths, our method combines this analysis with loop refinement techniques to complement its limitations.
 
+  To improve in the setting of multiple paths, our method combines this analysis with loop refinement techniques to complement its limitations.
 \item
 \emph{Loop Summarization and Path Refinement Based Complexity Analysis}
 
