@@ -2,8 +2,8 @@
 [ j <- m ] 1 ;
 [ k <- m ] 2 ;
 while [  > ( i , 0 ) ] 3 do { 
-  if [ < ( a , b ) ] 4     
-  then {  while [  > ( k , 0 ) ] 5 do 
+  if [ rand ] 4     
+  then {  while [  > ( j , 0 ) ] 5 do 
   			{
   				[ j <- - ( j, 1 ) ] 6
   			}

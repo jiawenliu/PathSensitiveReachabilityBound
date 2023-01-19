@@ -1,12 +1,13 @@
 [ x <- 0 ] 0 ;
 [ y <- 0 ] 1 ;
-while [  true ] 2 do {
+[ break <- 1 ];
+while [  == ( break, 1 ) ] 2 do {
 	if [ < ( x , n ) ] 3     
 	then {  [ y <- + ( y , 1 ) ] 4;
 			[ x <- + ( x , 1 ) ] 5 }
 	else {  if [ < ( y , m ) ] 6     
 			then {  [ y <- + ( y , 1 ) ] 7;
 					[ x <- + ( x , 1 ) ] 8 }
-			else {  [ skip ] 9  }  
+			else {  [ break <- 0 ] 9  }  
 		  }
 }

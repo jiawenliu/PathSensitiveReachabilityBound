@@ -3,14 +3,14 @@
 while [ > ( cur_node, 0) ] 2 do {
 	if [ == (cur_node, target_node ) ] 3
 	then {
-		if [ != (prev_node, NULL) ] 4
-		then { [ prev_node_next <- cur_node_next ] 5}
-		else { [ queue <- cur_node_next ] 6 };
+		if [ != (prev_node, 0) ] 4
+		then { [ prev_node_next <- - ( cur_node , 1 ) ] 5}
+		else { [ queue <- - ( cur_node , 1 ) ] 6 };
 		[ cur_node <- 0 ] 7
 		
 	}
 	else { [ skip ] 8 };
-	[ cur_node <- - ( cur_nore, 1 ) ] 9
+	[ cur_node <- - ( cur_node , 1 ) ] 9
 }
 
 

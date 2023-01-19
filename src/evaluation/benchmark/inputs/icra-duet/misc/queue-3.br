@@ -1,6 +1,6 @@
 [ element <- itable_element ] 0;
 [ index_0 <- + (index_0, 1) ] 1;
-while [ > (element, 0) ] 2 do {
+while [ == (element, 0) ] 2 do {
 	if [ >= (index_0, itable_length )] 3 
 	then {
 	  [ element <- 0 ] 4;
@@ -8,8 +8,8 @@ while [ > (element, 0) ] 2 do {
 	  [ element <- 1] 6
 	}
 	else { [ skip ] 7 };
-	[ index_0 <- + (index_0, 1) ] 8;
-	[ element <- - (element, 1) ] 9
+	[ element <- itable_element ] 8;
+	[ index_0 <- + (index_0, 1) ] 9
 }
 
 

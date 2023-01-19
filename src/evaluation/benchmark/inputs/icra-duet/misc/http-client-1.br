@@ -1,23 +1,10 @@
-[ curNumRequest <- 0 ] 0;
-while [ < (curNumRequest, 30) ] 1 do {	
-	[ tmp <- connect_clientSocket ] 2; 
-	if [ < (tmp, 0) ] 3
-	then { [ numFailConn <- + (numFailConn,1)] 4;
-	       [ curNumRequest <- 30 ] 5
-	}
-	else { [ skip ] 6 }
-	
+[ index_0 <- 0 ] 0;
+while [ < (index_0, numThread) ] 1 do {
+	[ pthread_id_index_0 <- index_0 ] 2;
+	[ rtnValue <- pthread_create ] 3;
+	if [ != (rtnValue, NULL) ] 4
+	then { [ index_0 <- numThread ] 5 }
+	else { [ skip ] 6};
+	[ index_0 <- + (index_0, 1) ] 7
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -9,7 +9,8 @@ while [  > (increment , 0) ] 1 do {
       [ j <- - ( j, increment ) ] 7;
       [ numbersj <- numbersjincrement ] 8
     };
-    [ numbersj <- temp  ] 9
+    [ numbersj <- temp  ] 9;
+    [ i <- - ( i , 1 )  ] 10
   }
-  [ increment <- / ( increment, 2 ) ] 10
+  [ increment <- / ( increment, 2 ) ] 11
 }

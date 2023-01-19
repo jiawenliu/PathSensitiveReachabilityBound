@@ -3,10 +3,10 @@
 [ i <- len ] 2 ;
 while [  > ( i, 0 ) ] 3 do {
     [ i <- - ( i, 1 ) ] 4;
-    if [ > ( a, b ) ] 5     
+    if [ rand ] 5     
     then {  [ end <- i ] 6 }
     else {  [ skip ] 7 };
-    if [ > ( a, b ) ] 8
+    if [ rand ] 8
       then { [ k <- - ( end, beg ) ] 9 ;
              while [ > (k, 0)] 10 do
             { 
@@ -16,7 +16,7 @@ while [  > ( i, 0 ) ] 3 do {
               [ beg <- end ] 13 
            }
       else { 
-            if [ > ( a, b ) ] 14     
+            if [ rand ] 14     
             then {  [ end <- i ] 15;
                     [ beg <- end ] 16 }
             else {  [ skip ] 17 }

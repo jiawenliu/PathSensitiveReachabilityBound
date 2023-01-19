@@ -1,7 +1,7 @@
 [ x <- n ] 0 ;
 [ y <- 0 ] 1 ;
 while [  > (x , 0) ] 2 do {
-	if [ < ( y , m) ] 3     
+	if [ rand ] 3     
 	then {  [ x <- - (x, 1) ] 4 }
 	else {  [ x <- - (x, 1) ] 5 }
 }

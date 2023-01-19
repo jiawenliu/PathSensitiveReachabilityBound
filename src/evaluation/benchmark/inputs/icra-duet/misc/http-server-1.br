@@ -1,7 +1,10 @@
-while [ < (index_0, numStr) ] 0 do {
-	[ tmp <- strcasecmp ] 1;
-	if [ == (tmp, 0) ] 2
-	then { [ index_0 <- numStr ] 3}
-	else { [ skip ] 4 };
-	[ index_0 <- + (index_0, 1) ] 5
+[ threadIndex <- 0 ] 0;
+[ numWorker <- n ] 1;
+while [ < (threadIndex, numWorker) ] 2 do {
+	[ returnVal <- pthread_create ] 3;
+	if [ != (returnVal, 0) ] 4
+	then { [ threadIndex <- numWorker ] 5}
+	else { [ skip ] 6};
+	
+	[ threadIndex <- + (threadIndex, 1) ] 7
 }

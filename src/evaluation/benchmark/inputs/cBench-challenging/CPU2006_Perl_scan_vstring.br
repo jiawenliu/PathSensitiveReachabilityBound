@@ -5,7 +5,7 @@ if [ rand ] 3
 then { [ pos <- + (pos, 1) ] 4   }
 else { [skip] 5 };
 while [ < (pos, PL_bufend) ] 6 do {
-	[ pos <- - (pos, 1) ] 7
+	[ pos <- + (pos, 1) ] 7
 	};
 if [ rand ] 8 
 then { 

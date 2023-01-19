@@ -10,9 +10,9 @@ and XXX $C$ programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\c
 We translated the programs from different benchmarks into our syntax.
 
 As the comparison evaluation, we also evaluated four existing loop inference tools, 
-LoopusJAR~\hyperlink{https://forsyte.at/software/loopus/}{LoopusJAR}~\cite{SinnZV17},
-CoFloCo~\hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}
-and Tianhan~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}~\cite{LuCT21}
+\hyperlink{https://forsyte.at/software/loopus/}{LoopusJAR}~\cite{SinnZV17},
+\hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}
+and \hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}~\cite{LuCT21}
 and self-implemented SPEEDi based on paper~\cite{GulwaniJK09}
 over the same benchmarks.
 
@@ -91,9 +91,9 @@ As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem be
         \multirow{2}{*}{Benchmark} & \multirow{2}{*}{\# P}  & \multirow{2}{*}{M.P.L \#} & Nested  & \multirow{2}{*}{Bounded} & {Success} & \multirow{2}{*}{Failed} & Time  & Total\\
          &  &  & Loop \# & & Rate &  & Outs &   Runtime \\
         \hline
-            \todo{Loopus} & {110}  & 53  & 52  & 79 & 66.3\% & 18 &  13 & 7min42sec \\
+            \todo{Loopus} & {110}  & 53  & 52  & 89 & 80.1\% & 4 &  2 & 7min42sec \\
             \hline
-            Loopus-C & 25  & 17 & 21 & {23} & {92\%}  & 2 & 3 & {12min39sec} \\
+            Loopus-C & 23  & 20 & 20 & {20} & {86\%}  & 2 & 3 & {12min39sec} \\
             \hline
             \todo{Icra} & 72 & 72 & 6 & {55} + \todo{-} & + \todo{-} & 0 & 0 & \todo{1min58sec} \\
             \hline
@@ -108,41 +108,43 @@ As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem be
     \label{tb:accuracy-eval}
     \centering
     {\scriptsize
-    \begin{tabular}{ >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c  }
-    {Benchmark} &  {Worst} & \multirow{2}{*}{$\psRB$ on Loop Paths} & \multicolumn{5}{c}{Computed}  \\
-    \cline{5-9}
-     Suit &  & &  {\tiny \THESYSTEM} & {\tiny Loopus} & {\tiny CoFloCo} & {\tiny SPEED} & {\tiny Tianhan} \\
+    \begin{tabular}{ >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c }
+    {Benchmark} &  {Theory} & & {\THESYSTEM} & \multicolumn{5}{c}{Computed}  \\
+    \cline{5-8}
+     Suit & Worst & \# & on Loop Paths  & {\tiny \THESYSTEM} & {\tiny Loopus} & {\tiny CoFloCo} & {\tiny SPEED} & {\tiny Tianhan} \\
     %  & {\tiny Icra} \\
     \hline
     \multirow{5}{*}{Loopus} 
-    & $O(1)$            & $O(1)$  & 3  & 2 & 3 & 2 & 1 \\
+    & $O(1)$      &   4   & $O(1)$  & 2   & 2 & 3 & 2 & 1 \\
     \cline{2-9}
-    & $O(n)$            & $O(1), O(n)$  & 49 & 51 & 45 & 46 & 32 \\
+    & $O(n)$      &  59   & $O(1), O(n)$  & 47  & 51 & 45 & 46 & 40 \\
     \cline{2-9}
-    & $O(n^2)$          & $O(n), O(n^2)$ & 24 & 27 & 34 & 37 & 49 \\
+    & $O(n^2)$    &  31   & $O(1), O(n), O(n^2)$ & 34  & 27 & 34 & 37 & 49 \\
     \cline{2-9}
-    & $O(n^3)$          & $O(1), O(n), O(n^3)$     & 2 & 1 & 2 & 5 & 23 \\
+    & $O(n\log(n))$    &  6   & $-$ & 0  & 0 & 0 & 0 & 0 \\
     \cline{2-9}
-    & $O(n^{4})$        & $O(n^4), O(n^3)$  & 1 & 5 & 3 & 5 & 5 \\
-    \hline
+    & $O(n^3)$    &  2    & $O(n^3)$     & 4  & 1 & 2 & 5 & 7 \\
+    \cline{2-9}
+    & $O(n^{4})$  & 3     & $O(n^4)$  & 4  & 5 & 3 & 5 & 5 \\
+    \hline \hline
     % \multirow{2}{*}{Loopus} 
-    & $O(1)$           & $O(1)$  & 1  & 3 & 1 & 0 & 0 \\
+    & $O(1)$      & 1     & $-$  & 0  & 3 & 1 & 0 & 0 \\
     \cline{2-9}
-    Loopus & $O(n)$     & $O(1), O(n)$   & 14 & 17 & 17 & 15 & 11 \\
+    Loopus & $O(n)$  & 13   & $O(1), O(n)$   & 14 & 17 & 17 & 15 & 11 \\
+    \cline{2-9}
+    & $O(n^2)$      & 4    &$O(n), O(n^2)$ & 3 & 14 & 15 & 16 & 21 \\
     \cline{2-9}
     Challenging
-    & $O(n^2)$          &$O(n), O(n^2)$ & 3 & 14 & 15 & 16 & 21 \\
+    & $O(n^3)$     & 4     &  $O(1), O(n), O(n^3)$ & 2 & 1 & 0 & 2 & 2 \\
     \cline{2-9}
-    & $O(n^3)$          &  $O(1), O(n), O(n^3)$ & 4 & 1 & 0 & 2 & 2 \\
-    \cline{2-9}
-    & $O(n^{4})$        & $O(n^4), O(n^3)$  & 1 & 5 & 3 & 5 & 5 \\
+    & $O(n^{4})$    & 1    & $O(n^4), O(n^3)$  & 1 & 5 & 3 & 5 & 5 \\
     \hline \hline
     \multirow{3}{*}{Icra} 
-    & $O(1)$            & $O(1)$  & - &  &  & - & \\
+    & $O(1)$       & 3     & $O(1)$  & - &  &  & - & \\
     \cline{2-9}
-    & $O(n)$            &  $ O(1), O(n)$ & 51  & 51 & - & - & - & \\
+    & $O(n)$       & 3     &  $ O(1), O(n)$ & 51  & 51 & - & - & - & \\
     \cline{2-9}
-    & $O(n^2)$          &  $O(1), O(n), O(n^2)$ & 4 & - & - & - & - \\
+    & $O(n^2)$     & 3     &  $O(1), O(n), O(n^2)$ & 4 & - & - & - & - \\
     % \hline
     % \multirow{3}{*}{Icra-SV} 
     % & $O(1)$            & $O(1)$ & $O(1)$  & - &  &  & -\\
@@ -152,11 +154,9 @@ As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem be
     % & $O(n^2)$          &  $-$ & $ - $ & - &  &  & - &  \\
     \hline \hline
     \multirow{3}{*}{Tianhan} 
-    % & $O(1)$            & -  & 0  & 0 & 0 & 0 & 0 \\
-    % \cline{2-9}
-    & $O(n)$            & $O(1), O(n) $ & 35 & 35 & 35 & 35 & 35 \\
+    & $O(n)$       & 34     & $O(n) $ & 34 & 35 & 35 & 35 & 35 \\
     \cline{2-9}
-    & $O(n^2)$          &   $O(1), O(n), O(n^2)$  & 2 & 2 & 2 & 2 & 2 \\
+    & $O(n^2)$      & 3    &  $O(n^2)$  & 3 & 2 & 2 & 2 & 2 \\
     \hline
     \end{tabular}
     }
@@ -177,7 +177,7 @@ As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem be
     \multirow{5}{*}{Loopus} 
     & $O(1)$            & $O(1)$ & $O(1)$  & 3  & 2 & 3 & 2 & 1 \\
     \cline{2-9}
-    & $O(n)$            & $O(1), O(n), \frac{O(n)}{c}, \frac{O(n)}{O(m)} $ & $O(n)$  & 49 & 51 & 45 & 46 & 32 \\
+    & $O(n)$            & $O(1), O(n), \frac{O(n)}{c}, \frac{O(n)}{O(m)} $ & $O(n)$  & 49 / 59 & 51 & 45 & 46 & 32 \\
     \cline{2-9}
     & $O(n^2)$          & $O(1), O(n), \frac{O(n)}{c}, \frac{O(n^2)}{c}$ & $O(n), O(n^2)$ & 24 & 27 & 34 & 37 & 49 \\
     \cline{2-9}

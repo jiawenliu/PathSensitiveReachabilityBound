@@ -1,10 +1,10 @@
 [ da <- r ] 0 ;
 [ db <- r ] 1 ;
 while [ > (da, 0)] 2 do
-  { if [ > ( da , 0 ) ] 3     
+  { if [ rand ] 3     
     then {  [ da <- - ( da, 1 ) ] 4 }
     else {  [ temp <- da ] 5;
             [ da <- - (db, 1) ] 6;
             [ db <- da ] 7
-           }
+         }
   }

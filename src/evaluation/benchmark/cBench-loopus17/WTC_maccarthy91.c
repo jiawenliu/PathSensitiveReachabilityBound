@@ -16,7 +16,7 @@ void sipma91(int x, int z){
       y2 = y2 - 1;
       if(y1 > 100 && y2 == 1) z = y1 - 10;
       else {
-	if(y1 > 100){
+	     if(y1 > 100){
           y1 = y1 - 10;
           y2 = y2 - 1;
         }

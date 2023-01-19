@@ -2,7 +2,7 @@
 [ yy <- y ] 1 ;
 [ xy <- - ( xx , yy ) ] 2 ;
 while [  >= ( xy , 0 ) ] 3 do {
-  if [ < ( a, b ) ] 4     
+  if [ rand ] 4     
   then {  [ xx <- - ( (- ( xx , 1 )) , tx ) ] 5 ;
           [ xy <- - ( xy , 1 ) ] 6 ;
           [ xy <- - ( xy , tx ) ] 7 

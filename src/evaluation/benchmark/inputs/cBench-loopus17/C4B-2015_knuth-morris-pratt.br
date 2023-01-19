@@ -1,5 +1,3 @@
-/* Knuth-Morris-Pratt string searching */
-
 [ i <- n ] 0 ;
 [ j <- m  ] 1;
 [ k <- -1  ] 2;
