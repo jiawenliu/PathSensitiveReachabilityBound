@@ -1,0 +1,9 @@
+[ cur <- list_to_insert_into_head ] 0;
+[ prev <- NULL ] 1;
+while [ > (cur, 0) ] 2 do {
+	if [ < (index, cur_index) ] 3
+	then { [ cur <- 0 ] 4 }
+	else { [ skip ] 5 };
+	[ prev <- cur ] 6;
+	[ cur <- - (cur, 1) ] 7
+}

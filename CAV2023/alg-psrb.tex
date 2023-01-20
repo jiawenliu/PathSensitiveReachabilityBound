@@ -52,8 +52,8 @@ we aim to compute $1$ for $\lpchB(\rprog_1^1, \tpath_3, c)$ in Section~\ref{sec:
 % is the bound on iteration numbers of the outside loop $l$,
 % such that,
 % during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
-Now we introduce the other new quantity, \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ for each $\tpath$.
-It aims to bound the execution times of $\tpath$ globally during the execution of $c$ and Section~\ref{sec:pathrb} presents the estimating algorithm.
+The \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ for each $\tpath$
+aims to bound the execution times of $\tpath$ globally during the execution of $c$ and Section~\ref{sec:pathrb} presents the estimating algorithm.
 %
 \begin{defn}[Path Reachability-bound]
 % \label{def:pathrb}
@@ -90,7 +90,7 @@ and $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path in $\absG(c
 \footnotetext{$l \in \tpath$ and $\tpath \in \rprog$, the $\in$ notation is abused to denote
 the program point $l$ is a vertex on this path and $\tpath$ is a simple transition path on $\absG(c)$ respectively.}
 \end{defn}
-We guarantee that $\econfig{\psRB(c, l)}$ is a \emph{reachability-bound} for every program point $l$ in a program $c$.
+$\econfig{\psRB(c, l)}$ is a \emph{reachability-bound} for every program point $l$ in a program $c$.
 \begin{thm}[Soundness of the Path-sensitive Reachability-bound Estimation]
 \label{thm:pathsensitive_rb_soundness}
 For every program ${c}$ and every label $l$ in this program,

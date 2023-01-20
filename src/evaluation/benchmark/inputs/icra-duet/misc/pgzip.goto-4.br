@@ -1,0 +1,33 @@
+while [ == (gc_processed_blocks_head_index, gc_next_block_to_output) ] 0 do {
+	
+	[ gc_next_block_to_output <- + (gc_next_block_to_output, 1) ] 1;
+	if [ != (gc_processed_blocks_head, NULL) ] 2
+	then { [ gc_processed_blocks_head_index <- + (gc_next_block_to_output, 1) ] 3 }
+	else { [ skip ] 4 }
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

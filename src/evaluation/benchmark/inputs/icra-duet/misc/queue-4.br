@@ -1,0 +1,15 @@
+[ count <- 0 ] 0;
+while [ < (count, 255) ] 1 do {
+	[ tmp_0 <- queue_dequeue_q ] 2;
+	[ qt <- tmp_0 ] 3;
+	if [ == (qt, 0) ] 4
+	then { [ count <- 255 ] 5 }
+	else { [ skip ] 6};
+	
+	if [ != (qt_addr2, count) ] 7
+	then { [ count <- 255 ] 8 }
+	else { [ skip ] 9 };
+	[ count <- + (count, 1) ] 10
+
+}
+

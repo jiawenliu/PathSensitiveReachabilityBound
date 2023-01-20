@@ -1,0 +1,64 @@
+[ nargs <- 1 ] 0;
+[ maxarglen <- 0 ] 1;
+[ t <- 1 ] 2;
+[ p <- 1 ] 3;
+[ q <- 1 ] 4;
+while [ > (t, 0) ] 5 do {
+	[ tmp_4 <- fgets_fp ] 6;
+	if [ == (tmp_4, 0) ] 7
+	then { [ t <- 0 ] 8 }
+	else { [ skip ] 9 };
+	[ targ <- strtok_argline ] 10;
+	if [ == (targ, 0) ] 11
+	then { [ p <- 0 ] 12}
+	else { [ skip ] 13};
+
+	if [ > (p, 0) ] 14
+	then {
+		[ tmp_1 <- strlen_targ ] 15;
+		if [ > (tmp_1, maxarglen) ] 16
+		then {
+			[ tmp_0 <- strlen_targ ] 17;
+			[ maxarglen <- tmp_0 ] 18
+		}
+		else { [ skip ] 19};
+		[ nargs <- + (nargs, 1) ] 20;
+		while [ > (q, 0) ] 21 do {
+			[ targ <- strtok_restrict ] 22;
+			if [ == (targ, 0) ] 23
+			then { [ q <- 0 ] 24 }
+			else { [ skip ] 25 };
+			
+			[ tmp_3 <- strlen_targ ] 26;
+			if [ > (tmp_3, maxarglen) ] 27
+			then { [ tmp_2 <- strlen_targ ] 28; 
+				   [ maxarglen <- tmp_2 ] 29
+			}
+			else { [ skip ] 30};
+			[ nargs <- + (nargs, 1) ] 31
+		
+		}
+	
+	
+	}
+	else { [ skip ] 32}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

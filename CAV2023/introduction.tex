@@ -66,20 +66,19 @@ This leads to the inaccuracy in the data leakage analysis, resource analysis, et
 % \todo{Combine the next two limitations with the general limitations above}
 To overcome these limitations and solve 
 the reachability-bounds problem efficiently and path-sensitively, 
-we introduce a novel path-sensitive reachability-bound analysis algorithm that is built over abstract transition graph and effectively combines the amortized complexity analysis with loop summarization based loop paths refinement techniques.
+we introduce a novel path-sensitive reachability-bound analysis algorithm that is built over abstract transition graph and effectively combines the amortized complexity analysis with loop summarization based multipath refinement algorithm.
 The effective combination complements the limitations in both lines. Below are some related works and the limitations in these lines.
 
 \begin{itemize}
 \item \emph{Program Abstraction.}
 
-Many program abstraction techniques are used in program analysis area as a preprocess step to precisely summarize the key property of the program, such as the unified lattice model~\cite{CousotH78}, polyhedra~\cite{CousotC77} and octagons~\cite{Mine06} are used in~\cite{GulwaniZ10} for summarize the loop transition and generating the transition system.
+Program abstraction are usually used in program analysis area as a preprocess step to abstract the program feature and generate transition graph or system. For example, \cite{GulwaniZ10} summarizes the program into abstract domain such as the unified lattice~\cite{CousotH78}, polyhedra~\cite{CousotC77} or octagons~\cite{Mine06} domain and generates the transition system for counter variables.
 % But none of the three abstraction models can represent the if guard in multipath loop, and solving the transition system using these abstraction models is low-efficient.
-The wedge abstract developed in~\cite{KincaidCBR18} for generating the non-linear loop invariant
-computing the reachability-bound can also be used. While it only works well for the specific targeting problem.
-The trade-off between the accuracy and the low-efficient in generating and solving these constraints is the main bottleneck
+Paper \cite{KincaidCBR18} abstracts program into the wedge domain and generates the non-linear loop invariant.
+%  While it only works well for the specific targeting problem.
+The trade-off between the accuracy and the low-efficient in generating and solving these constraints is the main bottleneck.
 % , inaccuracy in summarizing the multipath loops
 %  and solving the path-sensitive reachability-bound problem.
-
 We choose to use the difference constrain based~\cite{SinnZV17,SinnZV14} program abstraction model combined with boolean expression abstraction to generate our abstract transition graph. It can represent the program loops path-sensitively and is more accurate, it is also efficient to solve. 
 % than the state-of-art program abstraction models mentioned above.
 % While our program abstraction model is based on the difference constrain model in~\cite{SinnZV17} and the size change abstraction in~\cite{SinnZV14}, which is more efficient comparing to the models above. 
@@ -108,11 +107,10 @@ Most of them over-approximate the loop bound when the path interleaving affects 
 \item
 \emph{Loop Summarization and Path Refinement Based Complexity Analysis}
 
-Another line of loop bound analysis through loop summarization and path refinement seek for precise loop path representation~\cite{ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19}, and compute loop bound over accurate loop summarization~\cite{GulwaniJK09,ZulegerGSV11}.
-Paper \cite{KincaidBCR19} introduce a precise closed-form loop summarization techniques which can help to improve the accuracy of the path refinement, as well as the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. 
-
+Another line of loop bound analysis through loop summarization and path refinement seek for precise loop path representation~\cite{ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19}, and compute the interleaving between paths~\cite{GulwaniJK09,ZulegerGSV11}.
+Paper~\cite{KincaidBCR19} introduces a precise closed-form loop summarization techniques which can help to improve the accuracy of the path refinement, as well as the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. 
 % Some works transform loops into equivalent sequential forms~\cite{Aubert23} and analysis over the canonical form.
-They do well in summarizing the loop path and computing the interleaving between paths, and computing a precise bound.
+% They do well in summarizing the loop path and computing the interleaving between paths, and computing a precise bound.
 But the limitation occurs when composing the bound between nested loops. Recursively unrolling the nested loops and computing the interleaving between unrolled paths are heavy and non-terminating.
 
 % There are numerous works studying the loop termination, 
@@ -123,8 +121,11 @@ But the limitation occurs when composing the bound between nested loops. Recursi
 % Paper \cite{KincaidBCR19} introduce a precise closed-form loop summarization techniques which can help to improve the accuracy of the path refinement, as well as the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. 
 % They are all heavy compare to our light-weight path refinement implementation adapted from~\cite{GulwaniJK09}.
 % \cite{CyphertBKR19} introduced a precise path refinement techniques over regular expression. While it is accurate only for loop summarizing and invariant generating under the specific recurrence loop program, and doesn't work well in multipath loop refinement.
-Our path refinement is inspired from the path refinement algorithm in~\cite{GulwaniJK09} and improve it by contextualization techniques in~\cite{ManoliosV06} which are used in both~\cite{ZulegerGSV11,SinnZV14} as well. To leverage the efficiency and non-terminating,
-we limit the iterations of the refinement algorithm to a constant.
+We simplify the path refinement algorithm in~\cite{GulwaniJK09} by contextualization techniques in~\cite{ZulegerGSV11,SinnZV14}, which is originated from~\cite{ManoliosV06},
+%  which are used in both~\cite{ZulegerGSV11,SinnZV14} as well, 
+and limit the iterations of the refinement algorithm to a constant in our bound analysis algorithm.
+% To leverage the efficiency and non-terminating,
+% we limit the iterations of the refinement algorithm to a constant.
 \end{itemize}
 % \todo{shorten or move after related work}
 % The effective combination complements the limitations in both lines. 

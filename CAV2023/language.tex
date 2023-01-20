@@ -105,7 +105,7 @@ $\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
 
 % \paragraph{{Trace-based Operational Semantics}}
 % \label{sec:operational_semantics}
-\paragraph{Event}
+\paragraph{Event and Trace.}
 An event, $\event \in \eventset$ is a triple.
 Its first element is the variable name $x$
 or a boolean expression (from the guard of if or while command), 
@@ -128,7 +128,7 @@ the label, $l$ associated to this command and an evaluated value.
 Event projection operators $\pi_i$ projects the $i^{th}$ element from an event: 
 $\pi_i : \eventset \to \vardom \cup \booldom \cup \ldom $.
 
-\paragraph{Trace.}
+% \paragraph{Trace.}
 %
 A trace $\trace \in \tdom$ is a list of events, 
 collecting the events generated during a specific program execution. 
@@ -528,6 +528,7 @@ then the program's execution terminates and produces a finite execution trace $\
   when $c$ executes with $\trace$,  we define the execution of $c$ under $\trace$ is non-terminating and produces an infinite trace $\trace' \in \inftdom$, as 
   $\config{c, \trace_0} \uparrow^{\infty} \trace' \in \lim(\uparrow)$
   where the limit $\lim(\uparrow) \triangleq $
+  % \footnote{This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the program model in~\cite{SinnZV17}.}
 {\small 
 \[
   \begin{array}{l}
@@ -549,8 +550,9 @@ then the program's execution terminates and produces a finite execution trace $\
 \]
 }
 \end{defn}
-This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the the program model in~\cite{SinnZV17}.
-
+% \footnotetext{
+  This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a} and the program model in~\cite{SinnZV17}.
+% }
 %
 % \begin{defn}[Non-terminating and Infinite Trace (alternative way)]
 %   \label{def:non-terminating-2}

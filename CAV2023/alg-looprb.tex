@@ -84,7 +84,7 @@ Again in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\tpath_3$ has an oute
 We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\rffinal(\tpath_3, c) = 0$ as before.
 Then we compute $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
 
-We also guarantee the soundness of $\lpchB(l: \rprog, \tpath)$ as below.
+We also guarantee the soundness of $\lpchB(l: \rprog, \tpath)$ in \highlight{Appendix~\ref{apdx:looprb-sound}}.
 % is a sound upper bound on iteration numbers of the outside loop $l$,
 % such that,
 % during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached, formally as below.

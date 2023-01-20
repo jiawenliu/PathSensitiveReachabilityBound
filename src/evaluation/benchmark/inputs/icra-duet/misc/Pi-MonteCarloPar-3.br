@@ -1,4 +1,3 @@
-#24
 [ i <- 0 ] 0;
 while [ < (i, NUM_THREADS) ] 1 do {
 	[ i <- + (i, 1) ] 2;
