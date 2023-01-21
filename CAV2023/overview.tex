@@ -55,11 +55,11 @@ Existing approach either ignores the path sensitivity or computes the same bound
 None of them can give the precise \emph{reachability-bound}s for different locations in the loop,
 which is non-trivial to compute even though knowing the loop bound.
 % especially for the locations similar to $7$ in $\kw{threeNestedWhile}$.
-
-\highlight{
 This motivates us to consider our second novel quantity --
 the numbers of iterations of the outer loop $L_1$ such that,
 during these iterations, the loop $L_4$ is ``entered''. 
+
+\highlight{
 We refer this quantity as the \emph{loop reachability} of the loop $L_4$ w.r.t the outer loop $L_1$.
 % of the location within loop $L_6$ w.r.t the loops $L_3$ and $L_1$.
 By multiplying the \emph{path reachability-bound} of $\tpath_3$ within $L_4$,
@@ -79,7 +79,6 @@ Paper~\cite{GulwaniJK09} considers a similar quantity, the \emph{Progress Invari
 % separately as well.
 % We are still unable to know the precise \emph{reachability-bound} for the locations in the innermost loop.
 }
-
 % \end{itemize}
 With the two key novelties, our algorithm computes the reachability-bound for this example through the following steps.
 

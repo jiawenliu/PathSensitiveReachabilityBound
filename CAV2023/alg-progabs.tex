@@ -64,18 +64,18 @@ the value of the symbolic constant $v$.
 For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
 describes the execution of
  the command at line $7$, 
-$\clabel{\assign{i}{i - 1}}^{7}$. 
-
+$\clabel{\assign{i}{i - 1}}^{7}$, and value of $i$ is at most the previous $i$'s value minus $1$.
+%
 % For every expression in each of the label command, it is computed in three steps via program abstraction method adopted from the Section~6 in~\cite{SinnZV17}. 
-
+%
 The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
 that after evaluating the guard with label $l$,
-$\bexpr$ holds and the command with label $l$ will execute right after.
+$\bexpr$ holds to execute the command with label $l'$.
 In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
 represents the negation of the testing guard $\clabel{i > 0}^1$
 in the $\ewhile$ command, and $i \leq 0$ must hold in order to perform this transition from program point $1$ to
 the program exit. 
-We also have $\top$, which is preserved for $\eskip$ command or the commands that don't interfere any guard variable.
+$\top$ is preserved for $\eskip$ command or the commands that don't interfere any guard variable.
 
 \begin{defn}[Abstract Transition Graph]
   \label{def:abs_cfg}
@@ -107,7 +107,7 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
   and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
   where $\pathl : \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
   \end{defn}
-  For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
+ In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
 
   % \\
   % \subsection{Abstract Transition Graph of The Walk through Example}

@@ -88,30 +88,31 @@ We choose to use the difference constrain based~\cite{SinnZV17,SinnZV14} program
 % \paragraph{Type-Based Static Cost Analysis.}
 \item \emph{Amortized Complexity Analysis.}
 
-One line of complexity analysis mainly based on the \emph{amortized complexity analysis} originated from Tarjan's influential paper~\cite{PotechinP17} combined with ranking function~\cite{BradleyMS05,CookSZ13,Zuleger18} or counter increment and developed in~\cite{ZulegerGSV11,SinnZV14,SinnZV17,LuCT21,AliasDFG10}.
-  They do well in nested loops by alternating the loop bound computation with the ranking or counter estimation. This alternation is efficient without recursively unrolling the nested loops when composing the bound of different paths.
+One line of complexity analysis follows the idea of the \emph{amortized complexity analysis} originated from Tarjan's influential paper~\cite{PotechinP17} combined with ranking function~\cite{BradleyMS05,CookSZ13,Zuleger18} or counter increment and developed in~\cite{ZulegerGSV11,SinnZV14,SinnZV17,LuCT21,AliasDFG10}.
+They do well in nested loops by alternating the loop bound computation with the ranking or counter estimation. This alternation is efficient without recursively unrolling the nested loops when composing the bound of different paths.
   % \\
   But estimating the counter or ranking function invariant ignores the interleaving between multiple paths in the same loop.
-Most of them over-approximate the loop bound when the path interleaving affects the loop execution.
-  For the same reason, some existing tools CofloCo~\cite{Montoya17,Flores-MontoyaH14,Flores-Montoya16}, KoAT~\cite{BrockschmidtEFFG16,BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, and the amortized algorithm in~\cite{LuCT21} which we evaluated over our benchmarks give the entire loop bound path-insensitively.
+Most of them (including some existing tools CofloCo~\cite{Montoya17,Flores-MontoyaH14,Flores-Montoya16}, KoAT~\cite{BrockschmidtEFFG16,BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, and the amortized algorithm in~\cite{LuCT21}) over-approximate the loop bound when the path interleaving affects the loop execution. They give the entire loop bound path-insensitively as the reachability-bound on different points. Another kind of \emph{amortized complexity analysis} based on type refinement or annotation such as~\cite{CraryW00,JostHLH10,CicekBG0H17,RajaniG0021,CarbonneauxHS15} have the same weakness in considering the paths interleaving, and over-approximating the resource cost on different program points.
+%   For the same reason, some 
+% including some existing tools CofloCo~\cite{Montoya17,Flores-MontoyaH14,Flores-Montoya16}, KoAT~\cite{BrockschmidtEFFG16,BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, and the amortized algorithm in~\cite{LuCT21} which we evaluated over our benchmarks give the entire loop bound path-insensitively.
   % Another kind of \emph{amortized complexity analysis} based on type refinement or annotation. For example \cite{CraryW00} presents a type system for the certification of resource bounds (once they are provided by the programmer).
   % %  In contrast, we infer bounds for different program location. 
   % \cite{JostHLH10} uses linear programming to infer bounds for functional programs, but they are restricted to computing only linear bounds.
   % Other techniques that are based on
   % type system~\cite{CicekBG0H17,RajaniG0021}, the cost analysis via effect systems~\cite{CicekBG0H17,RadicekBG0Z18,QuG019}, and Hoare logic~\cite{CarbonneauxHS15}
   % give the approximated upper bound of the program's total resource cost as well but still failed to consider the path sensitivity and the resource cost on different program points.
-  Another kind of \emph{amortized complexity analysis} based on type refinement or annotation such as~\cite{CraryW00,JostHLH10,CicekBG0H17,RajaniG0021,CarbonneauxHS15}
-  give the approximated upper bound of the program's total resource cost as well but still failed to consider the path sensitivity and the resource cost on different program points.
+  % Another kind of \emph{amortized complexity analysis} based on type refinement or annotation such as~\cite{CraryW00,JostHLH10,CicekBG0H17,RajaniG0021,CarbonneauxHS15}
+  % give the approximated upper bound of the program's total resource cost as well but still failed to consider the path sensitivity and the resource cost on different program points.
 
   To improve in the setting of multiple paths, our method combines this analysis with loop refinement techniques to complement its limitations.
 \item
 \emph{Loop Summarization and Path Refinement Based Complexity Analysis}
 
-Another line of loop bound analysis through loop summarization and path refinement seek for precise loop path representation~\cite{ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19}, and compute the interleaving between paths~\cite{GulwaniJK09,ZulegerGSV11}.
+Another line of loop bound analysis through loop summarization and path refinement seeks for precise loop path representation~\cite{ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19}, and explicating the interleaving between paths~\cite{GulwaniJK09,ZulegerGSV11}.
 Paper~\cite{KincaidBCR19} introduces a precise closed-form loop summarization techniques which can help to improve the accuracy of the path refinement, as well as the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. 
 % Some works transform loops into equivalent sequential forms~\cite{Aubert23} and analysis over the canonical form.
 % They do well in summarizing the loop path and computing the interleaving between paths, and computing a precise bound.
-But the limitation occurs when composing the bound between nested loops. Recursively unrolling the nested loops and computing the interleaving between unrolled paths are heavy and non-terminating.
+But the limitation occurs when composing the bound between nested loops in most works of this line, which recursively unrolls the nested loops. This is heavy and non-terminating.
 
 % There are numerous works studying the loop termination, 
 % invariant generation. Algorithms and techniques in this area are closely related to the bound analysis and loop path refinement.

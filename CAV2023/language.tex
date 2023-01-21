@@ -1,17 +1,18 @@
 We use a standard integer while language with labels to identify different program locations and equipped with a  trace-based operational semantics.
 \paragraph{Labeled Command}
 The commands are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. The program is a labeled command $c$ having the following syntax. 
-\[
+\\
+$
 {c} ::= 
 \clabel{\assign{x}{\expr}}^l 
 ~|~  \clabel{\eskip}^l
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c} 
-\]
-We use label to record
+$
+\\
+Label records
 the location of each command, so that we can uniquely identify each program point.
-We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
 % \[
 % \begin{array}{llll}
 % % \mbox{Label} 
@@ -32,15 +33,15 @@ standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in 
 % They are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. We use label to record
 % the location of each command, so that we can uniquely identify each program point.
 % We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
-The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression,
+The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression.
 % For example,
 % $\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
 % expression $\aexpr$ and boolean expression $\bexpr$ respectively.
 % All the free variables
 % showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
-and
+We denote by $\cdom$ the universe of all labeled commands, $\ldom$ for all labels, and
 % $\inpvardom$ the universe of all input variables and 
-$\inpvar(c) \subseteq \vardom$ denotes the set of all input variables in a program $c$.
+$\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
 
 
 % We use following notations to represent the sets of corresponding terms:
@@ -110,9 +111,9 @@ An event, $\event \in \eventset$ is a triple $({x}, l, v)$--\emph{assignment eve
 %  if and while commands, specifically the evaluation of the boolean expression $b$ in 
 the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$ respectively.
 Its first element is the variable name $x$
-or a boolean expression (from the guard of if or while command), 
+or the boolean expression $b$, 
 following by 
-the label, $l$ associated to this command and an evaluated value.
+the label, $l$ associated to this command and the evaluated value.
 %   \begin{center}
 %     $ \event ::= 
 %     ({x}, l, v) ~ \mbox{Assignment Event} 
@@ -150,16 +151,12 @@ We use list notation for traces, where $[]$ is the empty trace,
 the operator $\tracecat$ concatenates two traces, and $\event \in \trace$ or $\event \notin \trace$ denotes an event $\event$ belongs or not to $\trace$.
 {
 A trace can be finite, $\trace \in \ftdom$ or infinite $\trace \in \inftdom$ if a program doesn't terminate,
-%  when executing under some initial trace,
-% it produces the infinite trace from $\inftdom$,
-% , which records a non-terminating computation,
-% So we denote by $\tdom$ the set of all traces, 
 and $\tdom = \ftdom \cup \inftdom$.
 % The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in~\cite{Cousot19}.
 }
 We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$, and we use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
 % In the rest of the paper, We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
-We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$, and each input variable has an initial in an initial trace.
+We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$.
 % $\trace \in \ftdom_0(c)$.
 % \begin{defn}[Well-formed Initial Traces]
 %   \label{def:initial_trace}
@@ -174,9 +171,12 @@ We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$, an
 % when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
 %
 \paragraph{Trace-based Semantics}
-The evaluation for expression evaluation is standard, and 
+We evaluate the expression by algorithmic computation in math, denoted by
 % the notation is $\config{\bexpr, \trace} \earrow \etrue$.
-we use notation, $\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$ for the expression evaluation, and $\econfig{\expr}(\trace)$ evaluates an expression $\expr$ under trace $\trace$.
+% we use notation, 
+$\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$ where
+%  for the expression evaluation, and 
+$\econfig{\expr}(\trace)$ evaluates $\expr$ under trace $\trace$.
 Our symbolic bound expression is a subset of arithmetic expression, and we use the same evaluation notation for evaluating the bound expression.
 The trace based operational semantics is described in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another
 one.
@@ -464,7 +464,7 @@ The rules are standard and omitted here.
 We use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$ under an initial trace 
 $\trace_0 \in \ftdom_0(c)$,
-then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution. The formal definition for the non-terminating and infinite trace can be found in Appendices~\ref{apdx:language}.
+then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution. The complete rules and definition can be found in Appendices~\ref{apdx:language}.
 % \begin{defn}[Non-terminating and Infinite Trace]
 %   \label{def:non-terminating}
 %   Given a program $c$ and an initial trace $\trace \in \ftdom_0(c)$,
