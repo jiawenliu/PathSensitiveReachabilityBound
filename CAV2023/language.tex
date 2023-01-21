@@ -521,38 +521,38 @@ The rules are standard and omitted here.
 We use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$ under an initial trace 
 $\trace_0 \in \ftdom_0(c)$,
-then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution defined as follows.
-\begin{defn}[Non-terminating and Infinite Trace]
-  \label{def:non-terminating}
-  Given a program $c$ and an initial trace $\trace \in \ftdom_0(c)$,
-  when $c$ executes with $\trace$,  we define the execution of $c$ under $\trace$ is non-terminating and produces an infinite trace $\trace' \in \inftdom$, as 
-  $\config{c, \trace_0} \uparrow^{\infty} \trace' \in \lim(\uparrow)$
-  where the limit $\lim(\uparrow) \triangleq $
-  % \footnote{This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the program model in~\cite{SinnZV17}.}
-{\small 
-\[
-  \begin{array}{l}
-  %   \lim(\uparrow) 
-  %   \triangleq 
-  % \\ \quad
-  \Big\{
-    (\config{c, \trace}, \trace') ~\vert~ 
-    c\in \cdom, \trace \in \ftdom_0(c),
-    \trace' \in \inftdom 
-    \land \exists \trace_0 \in \ftdom, c_0 \in \cdom \st 
-    \config{c, \trace} \to \config{c_0, \trace_0}
-    \\ 
-    \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \ftdom, \trace'' \in \inftdom, c_i, c_{i + 1} \in \cdom \st 
-    \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}} 
-    \land  \trace' = \trace_{i + 1} \tracecat \trace''
-  \Big\}
-  \end{array}
-\]
-}
-\end{defn}
-% \footnotetext{
-  This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a} and the program model in~\cite{SinnZV17}.
+then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution. The formal definition for the non-terminating and infinite trace can be found in Appendices~\ref{apdx:language}.
+% \begin{defn}[Non-terminating and Infinite Trace]
+%   \label{def:non-terminating}
+%   Given a program $c$ and an initial trace $\trace \in \ftdom_0(c)$,
+%   when $c$ executes with $\trace$,  we define the execution of $c$ under $\trace$ is non-terminating and produces an infinite trace $\trace' \in \inftdom$, as 
+%   $\config{c, \trace_0} \uparrow^{\infty} \trace' \in \lim(\uparrow)$
+%   where the limit $\lim(\uparrow) \triangleq $
+%   % \footnote{This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the program model in~\cite{SinnZV17}.}
+% {\small 
+% \[
+%   \begin{array}{l}
+%   %   \lim(\uparrow) 
+%   %   \triangleq 
+%   % \\ \quad
+%   \Big\{
+%     (\config{c, \trace}, \trace') ~\vert~ 
+%     c\in \cdom, \trace \in \ftdom_0(c),
+%     \trace' \in \inftdom 
+%     \land \exists \trace_0 \in \ftdom, c_0 \in \cdom \st 
+%     \config{c, \trace} \to \config{c_0, \trace_0}
+%     \\ 
+%     \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \ftdom, \trace'' \in \inftdom, c_i, c_{i + 1} \in \cdom \st 
+%     \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}} 
+%     \land  \trace' = \trace_{i + 1} \tracecat \trace''
+%   \Big\}
+%   \end{array}
+% \]
 % }
+% \end{defn}
+% % \footnotetext{
+%   This definition follows the intuition of the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a} and the program model in~\cite{SinnZV17}.
+% % }
 %
 % \begin{defn}[Non-terminating and Infinite Trace (alternative way)]
 %   \label{def:non-terminating-2}

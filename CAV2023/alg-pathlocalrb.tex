@@ -35,7 +35,7 @@ it computes $BD(\rprog_1^1) = n$ and $BD(\rprog_1^2) = n $ for the two interleav
 But both of their iteration bounds are expected to be $\lfloor\frac{m}{4}\rfloor$.
 The inaccuracy is resulted by the nature of the path-insensitivity in the ranking function invariant estimation in Definition~\ref{def:ranking_bound}. 
 
-\paragraph{New Approach} 
+% \paragraph{New Approach} 
 We provide a new computation approach over the refined program.
 %  using
 %  both the variable invariant estimation idea and the progress invariant idea from~\cite{GulwaniJK09} presented in Definition~\ref{def:loopbound}.
@@ -140,37 +140,37 @@ We first compute three abstract states for each ranking function in different su
 Now we compute $BD(\rprog, c)$ recursively by interactively computing another quantity, $\varGD(\rprog, c)$ as follows.
 \begin{defn}[Loop Bound Computation]
 \label{def:loopbound}
-Given a program $c$ with its refined program $\rprog$ and a subprogram $\rprog' \in \rprog$,
+Given a program $c$ with its refined program $\rprog$ and a subprogram $\rprepeat(\rprog_l) \in \rprog$,
 the \emph{Variable Gradient Decent}, 
- $\varGD(\rprog', c)$ is an invariant of the minimum amount decreased in one execution of $\rprog'$ for the ranking functions in $\rprog$ computed as follows.
+ $\varGD(\rprepeat(\rprog_l), c)$ is an invariant of the minimum amount decreased in one execution of $\rprog'$ for the ranking functions in $\rprog$, which is interactively computed together with $BD(\rprepeat(\rprog_l), c)$ as follows.
 %  and recursively computes the loop bound, $BD(\rprog, c)$ in the meantime.
  \\
- {$\varGD(\rprepeat(\rprog_l), c) =  BD(\rprog_l, c)  \times
-{\varGD(\rprog_l, c)}$} if $\rprog' = \rprepeat(\rprog_l)$
+ {$\varGD(\rprepeat(\rprog'), c) =  BD(\rprog', c)  \times
+{\varGD(\rprog', c)}$} if $\rprog_l = \rprepeat(\rprog_l)$
  \\
  $\varGD(\rprog_1;\rprog_2, c) =  \varGD(\rprog_1, c) + \varGD(\rprog_2, c)$ if $\rprog' = \rprog_1;\rprog_2$
  \\
  $\varGD(\tpath, c) =  \min\left\{v  ~|~ x = v \in \rfnext(\tpath, c) \right\}  $  if $\rprog' = \tpath$
 
- Then the \emph{loop bound}, $BD(\rprog')$ for $\rprog'$ is computed inductively as follows.
+%  Then the \emph{loop bound}, $BD(\rprog')$ for $\rprog'$ is computed inductively as follows.
 {\small
-  \[
-    \begin{array}{rcl}
-      BD(\tpath, c) & \triangleq & 1 \\
-      BD(\rprog_1;\rprog_2, c) & \triangleq & \min \left\{BD(\rprog_1, c), BD(\rprog_2, c) \right\} \\
-      BD(\rpchoose{\rprog_1, \ldots, \rprog_m }, c) & \triangleq 
-      & \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\} \\
-      BD(\rprepeat(\rprog_l), c) & \triangleq 
-      &
-      \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog_l \land \absevent \in \tpath \right\}}
-      \big\{ \highlight{\frac{a - b}{\varGD(\rprog_l, c)}}
-      \\ & & \qquad
-      ~\vert~ x = a \in \rfinit(\rprog_l, c)
-      % \\ & & \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
-      \land x = b \in \rffinal(\rprog_l, c)
-      \big\} 
-    \end{array}
-  \]
+\[
+  \begin{array}{rcl}
+    BD(\rprepeat(\tpath), c) & \triangleq &  \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+    \Big\{ \highlight{\frac{a - b}{\varGD(\tpath, c)}} 
+    \\ & & \qquad 
+    ~\vert~
+    x = a \in \rfinit(\tpath, c)
+    \land x = b \in \rffinal(\tpath, c)
+    \Big\} 
+    \\
+    BD(\rprepeat(\rprog_1;\rprog_2), c) & \triangleq & 
+    \frac{\min\{ \rfinit(\rprog_1), \rfinit(\rprog_1) - \varGD(\rprog_1) \} - \rffinal(\rprog_2;\rprog_2)}{ 
+    \varGD(\rprog_1;\rprog_2)} 
+    \\
+    BD(\rprepeat(\rpchoose{\ldots }), c) & \triangleq  & 0 
+  \end{array}
+\]
 }
 \end{defn}
 This approach computes a sound loop bound for subprogram in a refined program formally in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
@@ -187,7 +187,7 @@ This approach computes a sound loop bound for subprogram in a refined program fo
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, for subprogram $\rprepeat(\tpath_3)$, we first compute $\rfinit = \{k = n - m\}$,
 and $\rffinal = \{k = 0\}$ and $\rfnext = 1$. So we compute $BD(\rprepeat(\tpath_3)) = n - m$ tighter than $n$ by Eq.~\ref{eq:absBD}.
 For the first iteration pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we also compute 
-$\rfinit = \{k = n - m, i = m\}$, $\rffinal = \{k = 0, i = 0\}$ and $\varGD(\rprog_1^1) = 4$. So we compute $BD(\rprog_1^1) = \lfloor \frac{m}{4} \rfloor $ as expected.
+$\rfinit = \{k = n - m, i = m - 1\}$, $\rffinal = \{k = 0, i = 0\}$ and $\varGD(\rprog_1^1) = 4$. So we compute $BD(\rprog_1^1) = \lfloor \frac{m}{4} \rfloor $ as expected.
 % In comparison to the purely ranking function-based approach in Equation~\ref{eq:absBD}, Definition~\ref{def:loopbound}
 % also computes more accurate bound. For example, it computes $BD(\rprog_1^1) = \frac{m}{4}$ for $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), 
 % Specifically for $\rprog_1^1$ and $\rprog_1^2$, we compute $BD(\rprog_1^1) = \frac{m}{4}$ and $BD(\rprog_1^2) = \frac{m}{4}$ as expected,

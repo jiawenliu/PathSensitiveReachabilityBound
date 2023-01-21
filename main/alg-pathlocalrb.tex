@@ -122,51 +122,43 @@ Then we these precise abstract state, and estimate the loop bound path sensitive
 \end{defn}
 The computation of the \emph{Variable Gradient Decent}, 
 $\varGD(\rprog, c)$ involves the computation of $BD(\rprog, c)$ recursively as follows.
+% \begin{defn}[Loop Bound Computation]
+% \label{def:loopbound}
+% \[
+%   \begin{array}{rcl}
+%     BD(\tpath, c) & \triangleq & 1 \\
+%     BD(\rprog_1;\rprog_2, c) & \triangleq & \min \left\{BD(\rprog_1, c), BD(\rprog_2, c) \right\} \\
+%     BD(\rpchoose{\rprog_1, \ldots, \rprog_m }, c) & \triangleq 
+%     & \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\} \\
+%     BD(\rprepeat(\rprog_l), c) & \triangleq 
+%     &
+%     \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog_l \land \absevent \in \tpath \right\}}
+%     \big\{ \highlight{\frac{a - b}{\varGD(\rprog_l, c)}}
+%     \\ & & \qquad
+%     ~\vert~ x = a \in \rfinit(\rprog_l, c)
+%     % \\ & & \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+%     \land x = b \in \rffinal(\rprog_l, c)
+%     \big\} 
+%   \end{array}
+% \]
+% \end{defn}
 \begin{defn}[Loop Bound Computation]
-\label{def:loopbound}
-\[
-  \begin{array}{rcl}
-    BD(\tpath, c) & \triangleq & 1 \\
-    BD(\rprog_1;\rprog_2, c) & \triangleq & \min \left\{BD(\rprog_1, c), BD(\rprog_2, c) \right\} \\
-    BD(\rpchoose{\rprog_1, \ldots, \rprog_m }, c) & \triangleq 
-    & \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\} \\
-    BD(\rprepeat(\rprog_l), c) & \triangleq 
-    &
-    \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog_l \land \absevent \in \tpath \right\}}
-    \big\{ \highlight{\frac{a - b}{\varGD(\rprog_l, c)}}
-    \\ & & \qquad
-    ~\vert~ x = a \in \rfinit(\rprog_l, c)
-    % \\ & & \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
-    \land x = b \in \rffinal(\rprog_l, c)
-    \big\} 
-  \end{array}
-\]
-\end{defn}
-\begin{defn}[Loop Bound Computation - 2]
   \label{def:loopbound}
     \[
       \begin{array}{rcl}
-        BD(\rprepeat(\tpath), c) & \triangleq &  \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog' \land \absevent \in \tpath \right\}}
-        \Big\{ \highlight{\frac{a - b}{\varGD(\rprog', c)}} ~\vert~
-        x = a \in \rfinit(\rprog', c)
-        \\ & & \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
-        \land x = b \in \rffinal(\rprog', c)
+        BD(\rprepeat(\tpath), c) & \triangleq &  \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+        \Big\{ \highlight{\frac{a - b}{\varGD(\tpath, c)}} 
+        \\ & & \qquad 
+        ~\vert~
+        x = a \in \rfinit(\tpath, c)
+        \land x = b \in \rffinal(\tpath, c)
         \Big\} 
         \\
         BD(\rprepeat(\rprog_1;\rprog_2), c) & \triangleq & 
-        \frac{\rfinit(\rprog_1) - \varGD(\rprog_1) - \rffinal(\rprog_2)}{ \min\{\varGD(\rprog_1), \varGD(\rprog_2)\} } 
+        \frac{\min\{ \rfinit(\rprog_1), \rfinit(\rprog_1) - \varGD(\rprog_1) \} - \rffinal(\rprog_2;\rprog_2)}{ 
+        \varGD(\rprog_1;\rprog_2)} 
         \\
-        BD(\rprepeat(\rpchoose{\rprog_1, \ldots, \rprog_m }), c) & \triangleq  & 0 \\
-        BD(\rprepeat(\rprog'), c) & \triangleq 
-        &
-        \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog' \land \absevent \in \tpath \right\}}
-        \Big\{ \highlight{\frac{a - b}{\varGD(\rprog', c)}} ~\vert~
-        x = a \in \rfinit(\rprog', c)
-        \\ & & \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
-        \land x = b \in \rffinal(\rprog', c)
-        \Big\} 
-        % \\
-        % BD(l: \rprog_l, c) & \triangleq & BD(\rprog_l, c)
+        BD(\rprepeat(\rpchoose{\rprog_1, \ldots, \rprog_m }), c) & \triangleq  & 0 
       \end{array}
     \]
   \end{defn}

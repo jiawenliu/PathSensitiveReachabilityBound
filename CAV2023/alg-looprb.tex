@@ -83,48 +83,48 @@ Then we compute the
 Again in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop program $\rprog_1^1$.
 We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\rffinal(\tpath_3, c) = 0$ as before.
 Then we compute $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
-
+%
 We also guarantee the soundness of $\lpchB(l: \rprog, \tpath)$ in \highlight{Appendix~\ref{apdx:looprb-sound}}.
 % is a sound upper bound on iteration numbers of the outside loop $l$,
 % such that,
 % during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached, formally as below.
 %  with proof in \highlight{Appendix~\ref{apdx:looprb-sound}}.
-\begin{lem}[Soundness of the Loop Reachability-Bound]
-  \label{lem:looprb-sound}
-  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$, is bounded by $\econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0)$.
-  {\small
-  \[
-    \begin{array}{l}
-    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-    \rprog = REFINE(\algrewrite(c))
-    \\ \qquad
-    \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
-    \land 
-    \rprog = \algrewrite(c_l)
-    \land
-    \big(
-    \config{c_l, \trace_0} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-    \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-    \big)
-    \\ \qquad
-    \implies
-    \econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0) 
-    \\ \qquad \geq 
-      \sum\big\{
-      \lcounter(\trace, \tracel(\trace_{l \to l_t})) ~\vert~ \trace_{l \to l_t} \in 
-      \big\{\trace_{l \to l_t} ~\vert~ 
-      % \\ \qquad \qquad \qquad \qquad
-      \trace_{l \to l_t}, \trace' \in \ftdom, \trace'' \in \tdom
-      \land \trace = \trace_{l \to l_t} \tracecat \trace''
-      \\ \qquad \qquad \qquad \qquad
-      \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' \tracecat [(\_, l_t, \etrue)]
-      \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
-      \big\}
-      \big\}.
-\end{array}
-  \]
-  }
-\end{lem}
+% \begin{lem}[Soundness of the Loop Reachability-Bound]
+%   \label{lem:looprb-sound}
+%   For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$, is bounded by $\econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0)$.
+%   {\small
+%   \[
+%     \begin{array}{l}
+%     \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+%     \rprog = REFINE(\algrewrite(c))
+%     \\ \qquad
+%     \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
+%     \land 
+%     \rprog = \algrewrite(c_l)
+%     \land
+%     \big(
+%     \config{c_l, \trace_0} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+%     \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+%     \big)
+%     \\ \qquad
+%     \implies
+%     \econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0) 
+%     \\ \qquad \geq 
+%       \sum\big\{
+%       \lcounter(\trace, \tracel(\trace_{l \to l_t})) ~\vert~ \trace_{l \to l_t} \in 
+%       \big\{\trace_{l \to l_t} ~\vert~ 
+%       % \\ \qquad \qquad \qquad \qquad
+%       \trace_{l \to l_t}, \trace' \in \ftdom, \trace'' \in \tdom
+%       \land \trace = \trace_{l \to l_t} \tracecat \trace''
+%       \\ \qquad \qquad \qquad \qquad
+%       \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' \tracecat [(\_, l_t, \etrue)]
+%       \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
+%       \big\}
+%       \big\}.
+% \end{array}
+%   \]
+%   }
+% \end{lem}
 %
 
 The $\lpchB(l:\rprog, \tpath)$ 
