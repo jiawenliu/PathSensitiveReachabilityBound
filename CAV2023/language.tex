@@ -1,8 +1,9 @@
 We use a standard integer while language with labels to identify different program locations and equipped with a  trace-based operational semantics.
-\paragraph{Labeled Command}
-The commands are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. The program is a labeled command $c$ having the following syntax. 
+
+\emph{Labeled Command}
+The commands are the typical ones from while languages with each annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$ to uniquely identify each program point. The program is a labeled command $c$ having the following syntax. 
 \\
-$
+$ \qquad \qquad
 {c} ::= 
 \clabel{\assign{x}{\expr}}^l 
 ~|~  \clabel{\eskip}^l
@@ -10,9 +11,9 @@ $
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c} 
 $
-\\
-Label records
-the location of each command, so that we can uniquely identify each program point.
+% \\
+% Label records
+% the location of each command, so that we can uniquely identify each program point.
 % \[
 % \begin{array}{llll}
 % % \mbox{Label} 
@@ -28,19 +29,11 @@ the location of each command, so that we can uniquely identify each program poin
 % ~|~ {c};{c}  
 % \end{array}
 % \]
+\\
 Expressions include
-standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
-% They are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. We use label to record
-% the location of each command, so that we can uniquely identify each program point.
-% We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
-The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression.
-% For example,
-% $\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
-% expression $\aexpr$ and boolean expression $\bexpr$ respectively.
-% All the free variables
-% showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
+integer arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
+% The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression.
 We denote by $\cdom$ the universe of all labeled commands, $\ldom$ for all labels, and
-% $\inpvardom$ the universe of all input variables and 
 $\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
 
 
@@ -106,14 +99,14 @@ $\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
 
 % \paragraph{{Trace-based Operational Semantics}}
 % \label{sec:operational_semantics}
-\paragraph{Event and Trace.}
+\emph{Event and Trace.}
 An event, $\event \in \eventset$ is a triple $({x}, l, v)$--\emph{assignment event} or $(\bexpr, l, v)$--\emph{testing events} tracking the execution of an assignment command or evaluation of $b$ in
 %  if and while commands, specifically the evaluation of the boolean expression $b$ in 
 the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$ respectively.
 Its first element is the variable name $x$
 or the boolean expression $b$, 
 following by 
-the label, $l$ associated to this command and the evaluated value.
+the label, $l$ of this command and the evaluated value.
 %   \begin{center}
 %     $ \event ::= 
 %     ({x}, l, v) ~ \mbox{Assignment Event} 
@@ -122,7 +115,7 @@ the label, $l$ associated to this command and the evaluated value.
 %  We have two kinds of events: \emph{assignment events} and \emph{testing events} to track the execution of an assignment command or evaluation of $b$ in
 %  %  if and while commands, specifically the evaluation of the boolean expression $b$ in 
 %  the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$ respectively.
- We use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively where $\eventset = \eventset^{\asn} \cup \eventset^{\test}$.
+%  We use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively where $\eventset = \eventset^{\asn} \cup \eventset^{\test}$.
 %  An \emph{assignment event} tracks the execution of an assignment and consists of the variable, the label of the command that generates it, the value assigned to the variable.
 %  A \emph{testing event} tracks the evaluation of $b$ in
 % the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$.
@@ -170,7 +163,8 @@ We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$, an
 % In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
 % when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
 %
-\paragraph{Trace-based Semantics}
+
+\emph{Trace-based Semantics}
 We evaluate the expression by algorithmic computation in math, denoted by
 % the notation is $\config{\bexpr, \trace} \earrow \etrue$.
 % we use notation, 

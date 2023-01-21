@@ -12,9 +12,10 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
 % The three sub-steps are standard and based on the Definition.25 in paper~\cite{SinnZV17}.
 
 \paragraph{Collecting Variable Modifications}
-  For each variable $x$ in a program $c$, this step computes three edge sets, $\inc(c, x)$, $\dec(c, x)$,
+  For each variable $x$ in a program $c$, this step computes three transition sets, $\inc(c, x)$, $\dec(c, x)$,
   and $\reset(c, x)$ for $x$.
-  Every edge in a set corresponds to a transition in which $x$ is increased,
+  % Every edge in a set corresponds to a transition 
+  in which $x$ is increased,
   %  $\inc(c, x)$,
   decreased
   % $\dec(c, x)$ and 
@@ -69,8 +70,9 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
 
   \paragraph{Assigning The Ranking Function}
   For each edge in the transition graph $\absG(c)$ of a program $c$,
-  this step assigns the variable that decreases on this edge as the ranking function of this edge.
-  This step adopts the local bound computation method in Section 4 of~\cite{SinnZV17} to assign the local bound to each edge as follows.
+  we assign the variable that decreases on this edge as the ranking function of this edge.
+  It is similar to the local bound computation in~\cite{SinnZV17}.
+  %  to assign the local bound to each edge as follows.
   \begin{defn}[Ranking Function Generatation]
   \label{def:ranking_gen}
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
@@ -99,8 +101,8 @@ $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
   % \todo{Example of ranking function estimated}
   In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we assign variable $i$ to edge $7 \xrightarrow{i' \leq i - 1} 1$ as ranking.
   If we remove this edge, the edges on $\tpath_2$ and $\tpath_1$ are not in any SCC, so they also have the same ranking.
-In the same way, ranking for edges on $\tpath_4$ is $i$ as well and $k$ for them on $\tpath_3$.
- \paragraph{Estimating the Upper Bound Invariant for Ranking Functions}
+In the same way, ranking for edges on $\tpath_4$ is $i$ and $\tpath_3$ is $k$.
+ \paragraph{Estimating the Upper Bound Invariant}
 Then we estimate the upper bound invariant,  $\varinvar(\locbound(\absevent, c), c)$ for the ranking function of each abstract transition, $\locbound(\absevent, c)$. Meanwhile, we interactively compute an iteration upper bound,  $\absclr(\absevent, c)$  for each $\absevent$ path-insensitively when estimating the ranking function invariant.
 \begin{defn}[Ranking Function Estimation]
   \label{def:ranking_bound}
@@ -120,9 +122,9 @@ is computed as follows,
 %
 where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(c, x)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
 The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$  on the execution times of the transition $\absevent$, is interactively computed as well as below,
-\footnote{We only give the sub-routine computation based on the variable reset set ($\reset$) for  easier understanding.
-% instead of the reset chain ($\resetchain$), and 
-And we implement the reset graph and the reset chain based approach for higher precision.
+\footnote{We only give the sub-routine computation based on the variable reset set ($\reset$) for  easier understanding
+% instead of the reset chain ($\resetchain$), 
+and the reset graph based approach is in Appendices.
 }
 {\small
 % \[ 

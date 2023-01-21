@@ -32,13 +32,13 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
   \]
  }
  \end{defn}
-\footnotetext{In a well-formed program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$, all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$ and the last case will never be matched}%
+\footnotetext{In a refined program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$.}
+% , all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$ and the last case will never be matched}%
 % We show that $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ during the execution of $\rprog$
 % \footnotetext{{In a well-formed program, this case will never be matched}}
-
 % \todo{How it is computed}
-Still for in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\tpath_3$, we already computed $\lpchB(\rprog_1^1, \tpath_3, c) = 1$,
-$\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$. Now we obtain $\inoutB(\rprog, \tpath) = 1 \times (n - m)$ as tight as expected again.
+In Example~\ref{ex:relatedNestedWhileOdd-overview}, we already computed $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
+$\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ for $\tpath_3$. Now we obtain $\inoutB(\rprog, \tpath) = 1 \times (n - m)$ as tight as expected.
 
 We also guarantee that \emph{path reachability-bound} for the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound on $\tpath$'s execution times when executing $\rprog$
 % in Lemma~\ref{lem:pathrb-sound} 

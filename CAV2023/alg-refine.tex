@@ -56,7 +56,7 @@ Then we collect all the \emph{simple transition path}s, $\tpath$ from its abstra
 \begin{defn}[Simple Transition Path]
   \label{def:tpath}
 A \emph{simple transition path}
-$\tpath \in \paths(\absG(c))$ for the program $c$, is either a simple cyclic path
+$\tpath$ for the program $c$, is either a simple cyclic path
 % , which has the same start- and end-point
 or a simple path having either different while loop headers, the program entrance or exit as its start- and end-point
 without visiting any loop header inside the path.
@@ -114,8 +114,10 @@ The second sub-procedure rewrite the program $c$ by rearranging all \emph{simple
 % % \vspace{-0.5cm}
 % }%
 % Algorithm~\ref{alg:alg-refine_rewrite} transformation the syntax of program following~\cite{GulwaniJK09} and preserving the semantics.
-We first use simple depth first search strategy collects all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath} as the algorithm input. Then we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. We generate new candidate program by composing and deleting existing ones in each iteration and update the candidate set untile we have the only one candidate.
-The Line-3:5 are recursively updating the candidate set $W$ until $W$ is stabilized.
+We first collect all the \emph{simple transition path}s as the algorithm input. 
+The algorithm initializes each candidate with a \emph{simple transition path} and generates new candidate program by composing and deleting existing ones in each iteration and update the candidate set until it has the only one candidate as the output.
+% The Line-3:5 are 
+% and recursively update the candidate set $W$ until $W$ is stabilized.
 % It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
 % Then
 % in Line-1, we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. New candidates generated in Line-3, 4 and 5 correspond to the if,
@@ -130,7 +132,7 @@ The Line-3:5 are recursively updating the candidate set $W$ until $W$ is stabili
 %   Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
 % \end{itemize}
 % \todo{soundness of the program write}
-In Example~\ref{ex:relatedNestedWhileOdd-overview}, the rewritten program corresponding to the syntax in~\cite{GulwaniJK09} is
+In Example~\ref{ex:relatedNestedWhileOdd-overview}, the corresponding rewritten program is
 $ 
 \tpath_0 ; \rpchoose{ \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2), 
 \rprepeat(\tpath_4) }; \tpath_5

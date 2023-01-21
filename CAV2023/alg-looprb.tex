@@ -35,12 +35,16 @@ $\lpnext(l: \rprog, \tpath, c) \in \scexpr(c)$
 computes the amount of $\tpath$'s ranking function
 that is is modified before
 the second visit of $\tpath$ but during the second execution of $l: \rprog$.
+$ 
+\lpnext(l: \rprog, \tpath, c) \triangleq 
+\max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+$
 %
 \[
   \begin{array}{l}
-  \lpnext(l: \rprog, \tpath, c) \triangleq 
-  \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
-  \\
+  % \lpnext(l: \rprog, \tpath, c) \triangleq 
+  % \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+  % \\
   \left\{
     \begin{array}{l}
   \sum\limits_{\absevent \in \inc(x, c) }
@@ -163,14 +167,17 @@ the numbers of iterations of the outside loop $L_3$ and $L_1$ such that,
 during these iterations, the loop $L_6$ is ``entered'', which is exactly our \emph{loop reachability-bound}.
 
 Again we first generate its abstract transition graph, $\absG(\kw{threeNestedWhile})$ in Figure~\ref{fig:threeWhile-overview}(a),
-and compute its refined program,
-$\rprog = \tpath_0; 1: \rprepeat(\tpath_1;$ 
-$3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5);$ 
-$\tpath_6$,
-where the $\tpath_0, \ldots$ are shown in the middle part of Figure~\ref{fig:threeWhile-overview}(b).
-We use $\rprog_1$ and $\rprog_3$ denote the body of the loop $L_1$ and $L_3$ respectively as in the bottom part of Figure~\ref{fig:threeWhile-overview}(b), and still compute the \emph{path reachability-bound} for each $\tpath_i$ but only w.r.t. the innermost loop it is nested.
-Now we compute \emph{loop reachability-bound}, specifically for $\tpath_3$ w.r.t. each of its outer nested loops.
-For $\tpath_3$ we compute
+and compute its refined program as in the bottom of Figure~\ref{fig:threeWhile-overview}. 
+% $\rprog = \tpath_0; 1: \rprepeat(\tpath_1;$ 
+% $3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5);$ 
+% $\tpath_6$,
+% where the $\tpath_0, \ldots$ are shown in the middle part of Figure~\ref{fig:threeWhile-overview}(b).
+We use $\rprog_1$ and $\rprog_3$ denote the body of the loop $L_1$ and $L_3$ respectively.
+%  as in the bottom part of Figure~\ref{fig:threeWhile-overview}(b), and still c
+In the first place, we compute the local \emph{path reachability-bound} for each $\tpath_i$ w.r.t. the innermost loop.
+%  it is nested.
+Now we compute \emph{loop reachability-bound}, specifically for $\tpath_3$ w.r.t. each of its outer nested loops, i.e., $\rprog_1$ and $\rprog_3$ as
+% For $\tpath_3$ we compute
 $\lpchB(1: \rprog_1, \tpath_3) = 1$ and
 $\lpchB(3: \rprog_3, \tpath_3) = 1$.
 Both are tight because loop $L_6$ will only be entered once among all iterations of $L_1$ and $L_3$, and in all the rest iterations, the body of loop $L_6$ isn't executed at all.

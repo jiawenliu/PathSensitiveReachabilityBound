@@ -42,7 +42,9 @@ at most $v$.
 \end{defn}
 
 \begin{defn}[Constraints]
-A constraints $dc \in \dcdom^{\top} = DC(\vardom  \cup \scvardom) \cup \booldom\cup \{\top\}$  can be either a
+A constraint $dc \in \dcdom^{\top}$
+% $ = DC(\vardom  \cup \scvardom) \cup \booldom\cup \{\top\}$  
+is either a
 difference constraint $d \in DC(\vardom  \cup \scvardom)$, a boolean expression $\bexpr \in \booldom$
 or $\top$ denotes always true.
 \end{defn}
@@ -89,7 +91,10 @@ $\top$ is preserved for $\eskip$ command or the commands that don't interfere an
 between two program points $l, l'$ if and only if
 the command with label $l'$ can execute right after the execution of the command with label $l$.
 % if and only if there is a control flow between two program points.
-The constraint $dc \in \dcdom$ on each edge is generated from the command with label $l$, which describes the abstract execution of this command.
+The constraint $dc \in \dcdom$ on each edge
+describes the abstract execution of the command with label $l$.
+% is generated from the command with label $l$.
+% , which describes the abstract execution of this command.
 \end{defn}
 Again in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
 the edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 

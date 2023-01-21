@@ -72,14 +72,16 @@ The effective combination complements the limitations in both lines. Below are s
 \begin{itemize}
 \item \emph{Program Abstraction.}
 
-Program abstraction are usually used in program analysis area as a preprocess step to abstract the program feature and generate transition graph or system. For example, \cite{GulwaniZ10} summarizes the program into abstract domain such as the unified lattice~\cite{CousotH78}, polyhedra~\cite{CousotC77} or octagons~\cite{Mine06} domain and generates the transition system for counter variables.
+Program abstraction are commonly used in program analysis area as a preprocess step to abstract the program feature and generate transition graph or system. For example, \cite{GulwaniZ10} summarizes the program into abstract domain such as the unified lattice~\cite{CousotH78}, polyhedra~\cite{CousotC77} or octagons~\cite{Mine06} domain and generates the transition system for counter variables.
 % But none of the three abstraction models can represent the if guard in multipath loop, and solving the transition system using these abstraction models is low-efficient.
-Paper \cite{KincaidCBR18} abstracts program into the wedge domain and generates the non-linear loop invariant.
+\cite{KincaidCBR18} abstracts program into the wedge domain and computes the non-linear loop invariant.
 %  While it only works well for the specific targeting problem.
 The trade-off between the accuracy and the low-efficient in generating and solving these constraints is the main bottleneck.
 % , inaccuracy in summarizing the multipath loops
 %  and solving the path-sensitive reachability-bound problem.
-We choose to use the difference constrain based~\cite{SinnZV17,SinnZV14} program abstraction model combined with boolean expression abstraction to generate our abstract transition graph. It can represent the program loops path-sensitively and is more accurate, it is also efficient to solve. 
+We choose to use the difference constrain based~\cite{SinnZV17,SinnZV14} program abstraction model combined with boolean expression abstraction to generate our abstract transition graph.
+It is more accurate in the sense of representing the program loops path-sensitively and comparatively lightweight.
+%  and is more accurate, it is also efficient to solve. 
 % than the state-of-art program abstraction models mentioned above.
 % While our program abstraction model is based on the difference constrain model in~\cite{SinnZV17} and the size change abstraction in~\cite{SinnZV14}, which is more efficient comparing to the models above. 
 % The efficiency also benefit from our
@@ -112,7 +114,7 @@ Another line of loop bound analysis through loop summarization and path refineme
 Paper~\cite{KincaidBCR19} introduces a precise closed-form loop summarization techniques which can help to improve the accuracy of the path refinement, as well as the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. 
 % Some works transform loops into equivalent sequential forms~\cite{Aubert23} and analysis over the canonical form.
 % They do well in summarizing the loop path and computing the interleaving between paths, and computing a precise bound.
-But the limitation occurs when composing the bound between nested loops in most works of this line, which recursively unrolls the nested loops. This is heavy and non-terminating.
+But the limitation occurs when composing the bound between nested loops in most works of this line, which recursively unrolls the nested loops. This is heavy and non-terminating in most cases.
 
 % There are numerous works studying the loop termination, 
 % invariant generation. Algorithms and techniques in this area are closely related to the bound analysis and loop path refinement.
@@ -192,7 +194,7 @@ Our evaluation on the prototype implementation in Section~\ref{sec:eval} shows t
 1. A path-sensitive reachability-bound computation algorithm.
 This algorithm can compute the evaluation times of each program point accurately and path-sensitively.
  \item 
-2. The combination of the \emph{amortized loop bound analysis} through ranking function estimation and the path refinement based approach in our algorithm.
+2. The combination of the \emph{amortized bound analysis} through ranking function estimation and the path refinement approach in our algorithm.
 \item 
 3. Two novel quantities, the \emph{path reachability-bound} and \emph{loop reachability-bound} and the corresponding estimating algorithms.
 \item 

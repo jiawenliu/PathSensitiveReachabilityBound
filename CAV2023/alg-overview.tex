@@ -26,6 +26,7 @@ and estimate a symbolic upper bound invariant for it.
 The algorithm computes the \emph{Reachability-bound}, $\psRB(l, c)$ for every program point $l$ using the $\rprog$ and the upper bound invariant of the $\locbound(\absevent, c)$ where $\absevent = (l,dc,l')$.
 It requires to compute our two novel quantities, the \emph{Path Reachability-bound}, $\inoutB(\rprog, \tpath)$ and the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath)$.
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
+The soundness of each algorithm is in the Appendices.
 
 In the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$ in Figure~\ref{fig:relatedNestedWhileOdd-overview},
 we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath_3) = n - m$ for $\tpath_3$ in its innermost loop $L_4$ as a local \emph{path reachability-bound} in Section~\ref{sec:pathlocalrb}.
