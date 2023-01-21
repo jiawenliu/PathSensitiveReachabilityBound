@@ -32,15 +32,15 @@ standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in 
 % They are the typical ones from while languages. Each command is annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$. We use label to record
 % the location of each command, so that we can uniquely identify each program point.
 % We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all labels.
-The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression.
+The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression,
 % For example,
 % $\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
 % expression $\aexpr$ and boolean expression $\bexpr$ respectively.
-All the free variables
-showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
-We denote by
+% All the free variables
+% showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
+and
 % $\inpvardom$ the universe of all input variables and 
-$\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
+$\inpvar(c) \subseteq \vardom$ denotes the set of all input variables in a program $c$.
 
 
 % We use following notations to represent the sets of corresponding terms:
@@ -106,19 +106,21 @@ $\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
 % \paragraph{{Trace-based Operational Semantics}}
 % \label{sec:operational_semantics}
 \paragraph{Event and Trace.}
-An event, $\event \in \eventset$ is a triple.
+An event, $\event \in \eventset$ is a triple $({x}, l, v)$--\emph{assignment event} or $(\bexpr, l, v)$--\emph{testing events} tracking the execution of an assignment command or evaluation of $b$ in
+%  if and while commands, specifically the evaluation of the boolean expression $b$ in 
+the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$ respectively.
 Its first element is the variable name $x$
 or a boolean expression (from the guard of if or while command), 
 following by 
 the label, $l$ associated to this command and an evaluated value.
-  \begin{center}
-    $ \event ::= 
-    ({x}, l, v) ~ \mbox{Assignment Event} 
-    ~|~(\bexpr, l, v) ~ \mbox{Testing Event} $
-  \end{center}
- We have two kinds of events: \emph{assignment events} and \emph{testing events} to track the execution of an assignment command or evaluation of $b$ in
- %  if and while commands, specifically the evaluation of the boolean expression $b$ in 
- the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$ respectively.
+%   \begin{center}
+%     $ \event ::= 
+%     ({x}, l, v) ~ \mbox{Assignment Event} 
+%     ~|~(\bexpr, l, v) ~ \mbox{Testing Event} $
+%   \end{center}
+%  We have two kinds of events: \emph{assignment events} and \emph{testing events} to track the execution of an assignment command or evaluation of $b$ in
+%  %  if and while commands, specifically the evaluation of the boolean expression $b$ in 
+%  the guard for a $\eif(\clabel{b}^l, c_1, c_2)$ command or $\ewhile \clabel{b}^l \edo (c)$ respectively.
  We use $\eventset^{\asn}$ and $\eventset^{\test}$ to denote the set of all assignment events and testing events, respectively where $\eventset = \eventset^{\asn} \cup \eventset^{\test}$.
 %  An \emph{assignment event} tracks the execution of an assignment and consists of the variable, the label of the command that generates it, the value assigned to the variable.
 %  A \emph{testing event} tracks the evaluation of $b$ in
@@ -131,7 +133,7 @@ $\pi_i : \eventset \to \vardom \cup \booldom \cup \ldom $.
 % \paragraph{Trace.}
 %
 A trace $\trace \in \tdom$ is a list of events, 
-collecting the events generated during a specific program execution. 
+collecting the events generated in each program evaluation step during the excution. 
 % \[
 % \begin{array}{llll}
 % \mbox{Trace} & \trace
@@ -140,92 +142,33 @@ collecting the events generated during a specific program execution.
 % \end{array}
 % \]
 % A trace 
-It can be regarded as the program history, 
-which records every event generated in each program evaluation step.
+% It can be regarded as the program history, 
+% which records every event generated in each program evaluation step.
 %  of  for assignment commands and guards in $\eif$ and $\ewhile$ command.
 We use list notation for traces, where $[]$ is the empty trace,
 % the operator $\traceadd$ combines an event and a trace in a new event, 
 the operator $\tracecat$ concatenates two traces, and $\event \in \trace$ or $\event \notin \trace$ denotes an event $\event$ belongs or not to $\trace$.
-\highlight{
-A trace can be finite, $\trace \in \ftdom$ or infinite $\trace \in \inftdom$ if a program doesn't terminate when executing under some initial trace,
+{
+A trace can be finite, $\trace \in \ftdom$ or infinite $\trace \in \inftdom$ if a program doesn't terminate,
+%  when executing under some initial trace,
 % it produces the infinite trace from $\inftdom$,
 % , which records a non-terminating computation,
 % So we denote by $\tdom$ the set of all traces, 
 and $\tdom = \ftdom \cup \inftdom$.
 % The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in~\cite{Cousot19}.
 }
-We use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
-In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
-%  formally defined as follows. 
-% \highlight{
-% \begin{defn}[Trace Concatenation, $\tracecat: \tdom \to \tdom\to \tdom $]
-%   \label{def:trace_concate}
-% Given two traces $\trace_1 \in \tdom, \trace_2 \in \tdom$, the trace concatenation operator 
-% $\tracecat$ is defined as:
-% \[
-% \trace_1 \tracecat \trace_2 \triangleq
-% \left\{
-% \begin{array}{ll} 
-%   \trace_1 & \trace_2 = [] \lor \trace_1 \in \inftdom \\
-%   ((\trace_1 :: \event)  \tracecat \trace_2') & \trace_1 \in \ftdom \land \trace_2 = [\event] \tracecat \trace_2'
-%   % \trace_2 &  \trace_2 \in \inftdom \\
-% \end{array}
-% \right.
-% \]
+We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$, and we use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
+% In the rest of the paper, We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
+We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$, and each input variable has an initial in an initial trace.
+% $\trace \in \ftdom_0(c)$.
+% \begin{defn}[Well-formed Initial Traces]
+%   \label{def:initial_trace}
+%   Given a program $c$, $\trace \in \tdom$ is a well-formed initial trace of $c$ if and only if all the input variables of $c$ has an initial value in this trace. $\ftdom_0(c)$ is the set of all well-formed initial traces for program $c$.
+%  $
+%     \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
+%     \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot.
+% $
 % \end{defn}
-% }
-% \begin{defn}(An Event Belongs to A Trace)
-%   An event $\event \in \eventset$ belongs to a trace $\trace \in \tdom$, i.e., $\event \in \trace$ are defined as follows:
-% %
-% \begin{equation*}
-%   \event \in \trace  
-%   \triangleq \left\{
-%   \begin{array}{ll} 
-%     \etrue                  & \trace =  [\event] \tracecat \trace'
-%      \land \event = \event' \\
-%     \event \in \trace' & \trace =  [\event'] \tracecat \trace'
-%       \land \event \neq \event' \\ 
-%     \efalse                 & \trace = [] \lor \trace \in \inftdom
-%   \end{array}
-%   \right.
-% \end{equation*}
-% As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
-% \end{defn}
-% %
-% We use the operator $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
-% In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
-%
-% We define the operator $\tracel : \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points,
-% defined as follows,
-% \[
-% \tracel([(\_, l, \_)] \tracecat \trace') \triangleq [l] \tracecat \tracel(\trace')
-% \qquad
-% \tracel([ ]) \triangleq []
-% \]
-%
-% \paragraph{Environment.} $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot\})$.  
-% We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
-% \[
-% \begin{array}{llll}
-% \env(\trace  \traceadd (x, l, v)) x \triangleq v
-% &
-% \env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x, y \neq x
-% &
-% \env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
-% &
-% \env({[]} ) x \triangleq \bot
-% \end{array}
-% \]
-%
-\begin{defn}[Well-formed Initial Traces]
-  \label{def:initial_trace}
-  Given a program $c$, $\trace \in \tdom$ is a well-formed initial trace of $c$ if and only if all the input variables of $c$ has an initial value in this trace. $\ftdom_0(c)$ is the set of all well-formed initial traces for program $c$.
- $
-    \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
-    \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot.
-$
-% where $\ftdom_0(c)$ is the set of all well-formed initial traces for program $c$.
-\end{defn}
 %
 % In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
 % when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
