@@ -134,14 +134,16 @@ and limit the iterations of the refinement algorithm to a constant in our bound 
 % The effective combination complements the limitations in both lines. 
 % Based on an abstract transition graph through program abstraction presented in Section~\ref{sec:abs_cfg},
 We perform both the path refinement and the ranking estimation over an abstract transition graph through program abstraction presented in Section~\ref{sec:progabs}.
-The combination utilizes the effectiveness of the \emph{amortized complexity analysis} by computing the ranking function $\locbound(\absevent, c)$ for each transition edge $\absevent$, and estimating the bound on each ranking function in Section~\ref{sec:rank}.
+The combination utilizes the effectiveness of the \emph{amortized complexity analysis} by computing the ranking function
+% $\locbound(\absevent, c)$ for each transition edge $\absevent$, 
+and estimating its bound invariant in Section~\ref{sec:rank}.
 % , $\varinvar(\locbound(\absevent, c), c)$ and transition edge, $\absclr(\absevent, c)$ alternatively and path-insensitively.
-In the meantime, it is benefited from the accuracy of the path refinement techniques through a light-weight path refinement algorithm adapted from~\cite{GulwaniJK09} presented in Section~\ref{sec:refine}.
+In the meantime, it is benefited from the accuracy of the path refinement techniques through a light-weight path refinement algorithm adopted from~\cite{GulwaniJK09} in Section~\ref{sec:refine}.
 Build over this combination, we introduce two novel quantities,
 the \emph{path reachability-bound} and \emph{loop reachability-bound}.
 The first one bounds the evaluation times of each loop free and interleaving free path in a refined program, and the second one bounds the iterations of an outer loop w.r.t. the innermost loop such that in these iterations of outer loop, the innermost loop is ``entered''. 
-Through estimating the two quantities accurately over the combination in Section~\ref{sec:looprb} and~\ref{sec:pathrb}, we compute the \emph{reachability-bound} for each program point path-sensitively in Section~\ref{sec:psrb}.
-Our evaluation on the prototype implementation in Section~\ref{sec:eval} shows that we can accurately estimate different bounds for different program points on different loop paths. The main contributions of this work are as follows.
+Then we present the algorithm for estimating the two quantities in Section~\ref{sec:looprb} and~\ref{sec:pathrb} and compute the \emph{reachability-bound} for each program point path-sensitively in Section~\ref{sec:psrb}.
+Our evaluation on the prototype implementation in Section~\ref{sec:eval} shows that we can accurately estimate different bounds for different program points on multiple loop paths. The main contributions are as follows.
 % \begin{itemize}
 %   \item The first one lines up the \emph{amortized complexity analysis} originated from Tarjan's influential paper~\cite{PotechinP17} combined with ranking function~\cite{BradleyMS05} or counter increment and developed in~\cite{ZulegerGSV11,SinnZV14,SinnZV17,LuCT21,AliasDFG10}.
 %   They do well in nested loops by alternating the loop bound computation with the ranking or counter estimation. This alternation is efficient without recursively unrolling the nested loops when composing the bound of different paths.
@@ -191,13 +193,13 @@ Our evaluation on the prototype implementation in Section~\ref{sec:eval} shows t
 % \end{figure}
 \begin{itemize}
   \item 
-1. A path-sensitive reachability-bound computation algorithm.
-This algorithm can compute the evaluation times of each program point accurately and path-sensitively.
+1. A path-sensitive reachability-bound algorithm, which computes sound bound on the evaluation times of each program point path-sensitively.
  \item 
 2. The combination of the \emph{amortized bound analysis} through ranking function estimation and the path refinement approach in our algorithm.
 \item 
 3. Two novel quantities, the \emph{path reachability-bound} and \emph{loop reachability-bound} and the corresponding estimating algorithms.
 \item 
-4. A prototype implementation of this algorithm and an evaluation over four different benchmarks.
-  The evaluation results show that we can compute tight bound on the evaluation times of each program point in a program. For program with multi-path loop, we compute different bounds for the points on different paths.
+4. A prototype implementation with evaluation over four different benchmarks.
+  The evaluation shows that we can compute different bounds on the evaluation times of different program points in the same loop accurately.
+  %  For program with multi-path loop, we compute different bounds for the points on different paths.
 \end{itemize}

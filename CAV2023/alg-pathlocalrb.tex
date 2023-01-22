@@ -171,17 +171,7 @@ the \emph{Variable Gradient Decent},
 \]
 }
 \end{defn}
-This approach computes a sound loop bound for subprogram in a refined program formally in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
-%  below in Lemma~\ref{lem:loopbound_sound} with proof in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
-% \begin{lem}[Soundness of Loop Bound]
-%   \label{lem:loopbound_sound}
-%   For every program $c$ with it refined program $\rprog$,
-%   % for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
-%   $BD(\rprog, c)$ is a sound upper bound on the iterating times of this program.
-% \end{lem}
-% \paragraph{Walk through Example.}
-% \todo{The walk through example}
-% \todo{How it is computed}
+% This approach computes a sound loop bound for subprogram in a refined program formally in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, we first compute $\rfinit = \{k = n - m\}$, $\rffinal = \{k = 0\}$ and $\rfnext = 1$ for subprogram $\rprepeat(\tpath_3)$ and get $BD(\rprepeat(\tpath_3)) = n - m$ tighter than $n$ by Eq.~\ref{eq:absBD}.
 For the first iteration pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we compute 
 $\rfinit = \{k = n - m, i = m - 1\}$, $\rffinal = \{k = 0, i = 0\}$, $\varGD(\rprog_1^1) = 4$, and get $BD(\rprog_1^1) = \lfloor \frac{m}{4} \rfloor $ as expected.
@@ -201,22 +191,27 @@ each $\tpath$ w.r.t. its \textbf{the innermost loop}, $\kw{enclosed}(\rprog, \tp
     Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
     let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be a sub loop program in $\rprog$,
     then $\tpath$'s \emph{local reachability-bound} $\outinB(\rprog_l, \tpath, c)$ w.r.t. $l: \rprog_l$
-    is computed inductively as follows.
-    The input $c$ is omitted in the following equations for concise given the context is clear.
+    is computed inductively.
+    % The input $c$ is omitted in the following equations for concise given the context is clear.
     {\small
     \[
-    \begin{array}{rcl}
-      \outinB(\tpath, \tpath) & \triangleq & 1 \\
-      \outinB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
-      \outinB(\rprog_1;\rprog_2, \tpath) & \triangleq & \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) \\
-      \outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
-      & \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\} \\
-      \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
-      & BD(\rprepeat(\rprog'), c) \times \outinB(\rprog', \tpath)
-       \\
-       \outinB(l: \rprog_l, \tpath) & \triangleq & \outinB(\rprog_l, \tpath) \\
-       \outinB(l': \rprog', \tpath) & \triangleq & 0  \qquad \text{if } l': \rprog' \neq \kw{enclosed}(\rprog, \tpath)
+      \left\{
+    \begin{array}{ll}
+       1  & \rprog = \tpath\\
+      \highlight{0} & \rprog = \tpath' \neq \tpath\\
+      \outinB(\rprog_1, \tpath) + \outinB(\rprog_2, \tpath) & \rprog = \rprog_1;\rprog_2 \\
+      % \outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
+      % & 
+      \max\left\{ \outinB(\rprog_1, \tpath), \ldots, \outinB(\rprog_m, \tpath) \right\} 
+      & \rprog = \rpchoose{\rprog_1, \ldots, \rprog_m } \\
+      % \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
+      % & 
+      BD(\rprepeat(\rprog'), c) \times \outinB(\rprog', \tpath) & \rprog = \rprepeat(\rprog')
+      %  \\
+      %  \outinB(\rprog_l, \tpath) & \rprog = l: \rprog_l\\
+      %  \outinB(l': \rprog', \tpath) & \triangleq & 0  \qquad \text{if } l': \rprog' \neq \kw{enclosed}(\rprog, \tpath)
     \end{array}
+    \right.
     \]
     }
   \end{defn}
@@ -278,12 +273,11 @@ Soundness of the \emph{path local reachability-bound} is in \highlight{Appendix~
 
 % \todo{necessary?}
 % \highlight{
-Notice here, we can compute a loose $\psRB$ using the $BD$ and $\outinB(\rprog, \tpath)$. By removing the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} and using $\rprog$
-as the input, $\outinB(\rprog, \tpath)$ computes global \emph{path reachability-bound} loosely.
+Notice here, we can compute a loose $\psRB$ just using $\outinB(\rprog, \tpath)$. By replacing the restriction, $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ in Definition~\ref{def:pathlocalrb} with $\rprog$, $\outinB(\rprog, \tpath)$ computes global \emph{path reachability-bound} loosely.
 %  over the global program, $\rprog$ and use $\outinB(\rprog, \tpath)$  as the path global reachability-bound.
 % Given we have already computed the path reachability-bound,
-Using this loose \emph{path reachability-bound},
-we compute the $\psRB$ for every program point $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
+% Using this loose \emph{path reachability-bound},
+Then we can compute the $\psRB$ for every program point $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
 \begin{equation}
   \label{eq:psrb-sub}
   \psRB(c, l) = 
@@ -291,20 +285,19 @@ we compute the $\psRB$ for every program point $l \in \lvar(c)$ by replacing the
   \left\{ \outinB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
   l \in \tpath \right\}.
 \end{equation}
-In Example~\ref{ex:relatedNestedWhileOdd-overview},
-we compute
+It computes
 % the path reachability-bound
 % $\outinB(\rprog, \tpath_i)$
 % for $\tpath_0$ and $\tpath_5$ as $1$,
 % for paths $\tpath_1$, $\tpath_2$ and $\tpath_4$ as $\frac{m}{4}$ and 
-$\outinB(\rprog, \tpath_3) = \frac{m}{4} \times (n - m)$.
+$\outinB(\rprog, \tpath_3) = \frac{m}{4} \times (n - m)$ in Example~\ref{ex:relatedNestedWhileOdd-overview}.
 % $\outinB(\rprog, \tpath_0) = 1$,
 % $\outinB(\rprog, \tpath_1) = \frac{m}{4}$,
 % $\outinB(\rprog, \tpath_2) = \frac{m}{4}$,
 % $\outinB(\rprog, \tpath_3) = \frac{m}{4} \times (n - m)$,
 % $\outinB(\rprog, \tpath_4) = \frac{m}{4}$, and
 % $\outinB(\rprog, \tpath_5) = 1$.
-It is loose because the Eq.~\ref{eq:psrb-sub} assumes the loop $L_4$ is reached in every iteration of the outer loop $L_1$. In this sense, the reachability-bound computed by using $\outinB(\rprog, \tpath)$ is loose as well for location $4$ and $5$.
+It is loose because the Eq.~\ref{eq:psrb-sub} assumes the loop $L_4$ is reached in every iteration of the outer loop $L_1$. In this sense, $\psRB(c, 4) = \frac{m}{4} \times (n - m)$ is loose as well.
 % \todo{Walk through example with a loose path and point reachability bound}
 % }
 While the \emph{loop reachability-bound} in the next section can help to compute the tighter \emph{reachability-bound}.

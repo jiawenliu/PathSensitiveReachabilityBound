@@ -9,26 +9,24 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
   Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
   $\tpath$'s reachability-bound, $\inoutB(\rprog, \tpath, c)$
   is computed recursively as follows. 
-  The input $c$ is omitted in the following equations for concise given the context is clear.
+  % The input $c$ is omitted in the following equations for concise given the context is clear.
 {\small 
 \[
-  \begin{array}{rcl}
-    \inoutB(\tpath, \tpath) & \triangleq & 1  \\
-    \inoutB(\tpath', \tpath) & \triangleq & \highlight{0} \qquad \text{if } \tpath' \neq \tpath\\
-    \inoutB(\rprog_1;\rprog_2, \tpath) & \triangleq & \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) \\
-    \inoutB(l: \rprog_l, \tpath) & \triangleq & 
-    \highlight{\outinB(\rprog', \tpath), \qquad \text{if } l = \kw{enclosed}(\tpath)}
-    \\
-    &  & 
-    \highlight{
-      \lpchB(l:\rprog_l, \tpath ) }
-    \highlight{\times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
-   \{\inoutB(l':\rprog', \tpath)\} } \footnotemark, o.w. \\
-    \inoutB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
-    & \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
-    \\
-    \inoutB(\rprepeat(\rprog'), \tpath) & \triangleq & \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath)
-    \end{array}
+  \left\{ 
+  \begin{array}{ll}
+    1  & \rprog = \tpath\\
+    \highlight{0} & \rprog = \tpath' \neq \tpath\\
+    \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) & \rprog = \rprog_1;\rprog_2 \\
+    % & 
+    \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
+    & \rprog = \rpchoose{\rprog_1, \ldots, \rprog_m } \\
+    \outinB(\rprog', \tpath), & l: \rprog_l \land l = \kw{enclosed}(\tpath) \\
+    \lpchB(l:\rprog_l, \tpath )
+    \times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
+   \{\inoutB(l':\rprog', \tpath)\} \footnotemark, & l: \rprog_l \land l \neq \kw{enclosed}(\tpath) \\
+  %  \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath) & \rprog = \rprepeat(\rprog')\\
+  \end{array}
+  \right.
   \]
  }
  \end{defn}
