@@ -387,8 +387,29 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
   \end{defn}
   For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
 % \\
-\subsection{Abstract Transition Graph Illustration through the Running Example}
-\label{sec:abs_prog_example}
+% \subsection{Abstract Transition Graph Illustration through the Running Example}
+% \label{sec:abs_prog_example}
 % 
-\todo{Change Or remove}
-\input{examples/relatedNestedWhileOdd_abscfg}
+% \todo{Change Or remove}
+% \input{examples/relatedNestedWhileOdd_abscfg}
+\paragraph{Example.}
+More specifically, in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
+The edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 
+$\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the
+command $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed next.
+The annotation $i' \leq n$ is a difference constraint 
+computed by $\absexpr$ over
+the expression $n$ in the assignment command $\assign{i}{n}$.
+It represents that the value of $i$ is less than or equal to value of $n$ after the
+execution of $\clabel{\assign{i}{n}}^0$ and before evaluating the guard $\clabel{i > 0}^1$.
+Another example constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+describes the execution of
+ the command at line $7$, 
+$\clabel{\assign{i}{i - 1}}^{7}$. 
+The $i'$ on the left side of $i' \leq i - 1$ represents the value of $i$ after the assignment operation,
+and the right-hand side $i$ stores the value before the assignment.
+The boolean constraint $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
+represents the negation of the testing guard $\clabel{i > 0}^1$
+in the $\ewhile$ command.
+$1 \xrightarrow{i \leq 0} \lex$ denotes that $i \leq 0$ must hold in order to perform this transition from program point $1$ to
+the program exit. 

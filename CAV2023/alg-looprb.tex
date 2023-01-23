@@ -40,6 +40,7 @@ $
 \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
 $
 %
+{\small
 \[
   \begin{array}{l}
   % \lpnext(l: \rprog, \tpath, c) \triangleq 
@@ -65,6 +66,7 @@ $
     \right\}
   \end{array}
   \]
+  }
     \end{itemize}
 \end{defn}
 %
@@ -79,109 +81,53 @@ Then we compute the
   is computed interactively with the abstract loop states as follows. 
   \[
     \lpchB(l: \rprog, \tpath, c) \triangleq
-    \frac{\lpinit(\rprog, \tpath, c) - \rffinal(\tpath, c)}{\lpnext(\rprog, \tpath, c)}
+    \max\limits_{x = a \in \rffinal(\tpath, c)}
+    \frac{\lpinit(\rprog, \tpath, c) - a }{\lpnext(\rprog, \tpath, c)}
   \]
 \end{defn}
 %
-% \todo{How it is computed??}
 Again in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop program $\rprog_1^1$.
-We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\rffinal(\tpath_3, c) = 0$ as before.
-Then we compute $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
-%
-We also guarantee the soundness of $\lpchB(l: \rprog, \tpath)$ in \highlight{Appendix~\ref{apdx:looprb-sound}}.
-% is a sound upper bound on iteration numbers of the outside loop $l$,
-% such that,
-% during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached, formally as below.
-%  with proof in \highlight{Appendix~\ref{apdx:looprb-sound}}.
-% \begin{lem}[Soundness of the Loop Reachability-Bound]
-%   \label{lem:looprb-sound}
-%   For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$, is bounded by $\econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0)$.
-%   {\small
-%   \[
-%     \begin{array}{l}
-%     \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-%     \rprog = REFINE(\algrewrite(c))
-%     \\ \qquad
-%     \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
-%     \land 
-%     \rprog = \algrewrite(c_l)
-%     \land
-%     \big(
-%     \config{c_l, \trace_0} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-%     \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-%     \big)
-%     \\ \qquad
-%     \implies
-%     \econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0) 
-%     \\ \qquad \geq 
-%       \sum\big\{
-%       \lcounter(\trace, \tracel(\trace_{l \to l_t})) ~\vert~ \trace_{l \to l_t} \in 
-%       \big\{\trace_{l \to l_t} ~\vert~ 
-%       % \\ \qquad \qquad \qquad \qquad
-%       \trace_{l \to l_t}, \trace' \in \ftdom, \trace'' \in \tdom
-%       \land \trace = \trace_{l \to l_t} \tracecat \trace''
-%       \\ \qquad \qquad \qquad \qquad
-%       \land \trace_{l \to l_t} = [(\_, l, \etrue)] \tracecat \trace' \tracecat [(\_, l_t, \etrue)]
-%       \land \counter(\trace', l) = \counter(\trace', l_t) = 0 
-%       \big\}
-%       \big\}.
-% \end{array}
-%   \]
-%   }
-% \end{lem}
+We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
 %
 
+We also guarantee the soundness of \emph{loop reachability-bound} in \highlight{Appendix~\ref{apdx:looprb-sound}}.
 The $\lpchB(l:\rprog, \tpath)$ 
 can also be over-approximated by
 $I(l, l')$ through the progress invariant in paper\cite{GulwaniJK09}.
 While $I(l, l')$ over-approximates this value largely
 by estimating the bound on iteration numbers of $l'$ in one iteration of $l$.
 
-In Example~\ref{ex:relatedNestedWhileOdd-overview}, since there is only two level nested loop,
-the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^1, \tpath_3)$ 
-w.r.t. $\tpath_3$ and its outside loop $1$. We illustrate Example~\ref{ex:threeNestedWhile} with three nested loop better show the precision of the \emph{loop reachability-bound}.
-% We compute $1$ for both $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^2, \tpath_3)$. It is tight and indicating there is only $1$ iteration of $\rprog_1^1$, also $\rprog_1^2$ such that the inner loop $4$ will be entered.
+Example~\ref{ex:relatedNestedWhileOdd-overview} has only two level nested loop, and
+the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$.
+We illustrate Example~\ref{ex:threeNestedWhile} with three nested loops, which can better show the improvement of the \emph{loop reachability-bound}.
 \begin{example}[Three Nested Loop]
   \label{ex:threeNestedWhile}
 \input{examples/threeNestedWhile-overview}
-In line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5. So the
-while $L_6$ is only executed in the first iteration of while loop $L_1$ and $L_3$.
-% \\
-The while loop $L_3$ at line 3 is executed only in 
-the first $m - N$ iterations of the 
-$L_1$ because $j$ is reset by $i$ in line 2.
+This example has 3 nested loops with related iterators. It is similar to the loop $L_4$ nested in the second branch in example~\ref{ex:relatedNestedWhileOdd-overview}.
+Similarly, in line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5,  $L_6$ is only executed in the first iteration of while loop $L_1$ and $L_3$.
 % \\
 So the total iterations of all the three loops is
 $n + m^2 - m \times N$,
-and the precise \emph{reachability-bound} for location $7$ inside the $L_6$ is $N$,
+and the expected \emph{reachability-bound} for location $7$ inside the $L_6$ is $N$,
 for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - N)$,
 and $n - N$ for locations $2$ and $9$.
 % \\
-Notice here the \emph{reachability-bounds} for the locations inside the loop $L_6$ is 
-the same as its innermost loop iteration bound.
+The challenge here is that the locations inside the loop $L_6$ has the same
+$\psRB$ as loop iteration times of $L_6$.
 % , as well as our \emph{path reachability-bound}.
-However, for the locations between $L_3$ and $L_6$,
-the \emph{reachability-bounds} are the multiplication of the inner and outer loop iteration bounds.
-In order to precisely compute how many times the location $7$ is reached, it is critical to know
+However, the locations between $L_3$ and $L_6$'s $\psRB$ are the multiplication of the inner and outer loop iteration bounds.
+In order to precisely compute their $\psRB$, it is critical to know
 the numbers of iterations of the outside loop $L_3$ and $L_1$ such that,
 during these iterations, the loop $L_6$ is ``entered'', which is exactly our \emph{loop reachability-bound}.
 
-Again we first generate its abstract transition graph, $\absG(\kw{threeNestedWhile})$ in Figure~\ref{fig:threeWhile-overview}(a),
-and compute its refined program as in the bottom of Figure~\ref{fig:threeWhile-overview}. 
-% $\rprog = \tpath_0; 1: \rprepeat(\tpath_1;$ 
-% $3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5);$ 
-% $\tpath_6$,
-% where the $\tpath_0, \ldots$ are shown in the middle part of Figure~\ref{fig:threeWhile-overview}(b).
-We use $\rprog_1$ and $\rprog_3$ denote the body of the loop $L_1$ and $L_3$ respectively.
-%  as in the bottom part of Figure~\ref{fig:threeWhile-overview}(b), and still c
-In the first place, we compute the local \emph{path reachability-bound} for each $\tpath_i$ w.r.t. the innermost loop.
+Figure~\ref{fig:threeWhile-overview}(a) shows its abstract transition graph,
+and we compute its refined program in the bottom of Figure~\ref{fig:threeWhile-overview}. 
+We first compute the $\outinB(\tpath_3, \rprepeat(\tpath_3)) = N $ for $\tpath_3$ w.r.t. its innermost loop.
+Since $\tpath_3$ has two outer loops, $L_1$ and $L_3$.
 %  it is nested.
-Now we compute \emph{loop reachability-bound}, specifically for $\tpath_3$ w.r.t. each of its outer nested loops, i.e., $\rprog_1$ and $\rprog_3$ as
-% For $\tpath_3$ we compute
-$\lpchB(1: \rprog_1, \tpath_3) = 1$ and
-$\lpchB(3: \rprog_3, \tpath_3) = 1$.
-Both are tight because loop $L_6$ will only be entered once among all iterations of $L_1$ and $L_3$, and in all the rest iterations, the body of loop $L_6$ isn't executed at all.
-So $1$ as \emph{loop reachability-bound} of this path is tight w.r.t. both the loop $L_3$ and $L_1$.
-% In the same way, we also compute $\lpchB(3: \rprog_3, \tpath_3) = 1$ precisely.
-% Then for each $\tpath_i$, the multiplication of its \emph{path reachability-bound} with all its \emph{loop reachability-bound}s is an accurate \emph{loop reachability-bound} for the locations on this path.
+To compute $\lpchB(3: \rprog_3, \tpath_3)$, where we use $\rprog_3$ denotes the body of the loop $L_3$,
+we first compute $\lpinit( \rprog_1, \tpath_3, c) = N$
+$\lpnext( \rprog_1, \tpath_3, c) =  N + 1 $, and
+$\rffinal(\rprog_1, c) = \{ i = 0, k = 0 \}$.
+So we can know $\lpchB(1: \rprog_1, \tpath_3, c) = \max\{ \frac{n - 0}{n - N - 1}, \frac{N - 0}{N +  1}\} = 1$, as expected.
 \end{example}

@@ -67,7 +67,7 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
     \end{itemize}
 \end{defn}
 %
-\begin{defn}[Loop Reachability-Bound Computation]
+\begin{defn}[Loop Reachability-bound Computation]
   \label{def:looprb}
   Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
   let $l: \rprog_l$ be a loop program in $\rprog$,
@@ -75,7 +75,8 @@ the program point $l'$ is a vertex on a path in the program $\rprog$.}
   is computed interactively with the abstract loop states as follows. 
   \[
     \lpchB(l: \rprog, \tpath, c) \triangleq
-    \frac{\lpinit(\rprog, \tpath, c) - \rffinal(\tpath, c)}{\lpnext(\rprog, \tpath, c)}
+    \max\limits_{x = a \in \rffinal(\tpath, c)}
+    \frac{\lpinit(\rprog, \tpath, c) - a }{\lpnext(\rprog, \tpath, c)}
   \]
 \end{defn}
 %
@@ -116,28 +117,6 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
       \Big\}.
 \end{array}
   \]
-% \[
-  %   \begin{array}{l}
-  %   \forall c, c_l, c_l' \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-  %   \rprog = REFINE(\algrewrite(c))
-  %   \\ \qquad
-  %   \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
-  %   \land \rprog = \algrewrite(c_l)
-  %   \land
-  %   \Big(
-  %   \config{c_l, \trace_0} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-  %   \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-  %   \Big)
-  %   \\ \qquad
-  %   \implies
-  %   \econfig{\lpchB(l: \rprog, \tpath)}(\trace_0) 
-  %   \\ \qquad \geq 
-  %   \# \left\{\trace_{l \to l_t} ~\vert~ \trace_{l \to l_t} \in \trace, L' \in \mathcal{LIST}(\ldom) \land 
-  %   \tracel(\trace_{l \to l_t}) = [l] ++ L' ++ [l_t]
-  %   \land l, l_t \notin L'
-  %   \right\}.
-  %   \end{array}
-  % \]
 \end{lem}
 %
 The $\lpchB(l:\rprog, \tpath)$ 
@@ -148,11 +127,46 @@ by estimating the bound on iteration numbers of $l'$ in one iteration of $l$.
 
 \paragraph{Example.}
 % \todo{Walk through example}
-Since there is only two level nested loop in Example~\ref{ex:relatedNestedWhileOdd_abscfg},
+Since there is only two level nested loop in Example~\ref{ex:relatedNestedWhileOdd-overview},
 the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^1, \tpath_3)$ 
 w.r.t. $\tpath_3$ and its outside loop $1$.
 We compute $1$ for both $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^2, \tpath_3)$. It is tight and indicating there is only $1$ iteration of $\rprog_1^1$, also $\rprog_1^2$ such that the inner loop $4$ will be entered.
 
-Specifically, for the program in Example~\ref{ex:relatedNestedWhileOdd-overview}, since there is only two level nested loop,
-the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^1, \tpath_3)$ 
-w.r.t. $\tpath_3$ and its outside loop $1$. We illustrate Example~\ref{ex:threeNestedWhile} with three nested loop better show the precision of the \emph{loop reachability-bound}.
+$\tpath_3$ has an outer loop program $\rprog_1^1$.
+We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
+%
+
+Example~\ref{ex:relatedNestedWhileOdd-overview} has only two level nested loop, and
+the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$.
+We illustrate Example~\ref{ex:threeNestedWhile} with three nested loops, which can better show the improvement of the \emph{loop reachability-bound}.
+\begin{example}[Three Nested Loop]
+  \label{ex:threeNestedWhile-looprb}
+\input{examples/threeNestedWhile-overview}
+This example has 3 nested loops with related iterators. It is similar to the loop $L_4$ nested in the second branch in example~\ref{ex:relatedNestedWhileOdd-overview}.
+Similarly, in line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5,  $L_6$ is only executed in the first iteration of while loop $L_1$ and $L_3$.
+% \\
+So the total iterations of all the three loops is
+$n + m^2 - m \times N$,
+and the expected \emph{reachability-bound} for location $7$ inside the $L_6$ is $N$,
+for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - N)$,
+and $n - N$ for locations $2$ and $9$.
+% \\
+The challenge here is that the locations inside the loop $L_6$ has the same
+$\psRB$ as loop iteration times of $L_6$.
+% , as well as our \emph{path reachability-bound}.
+However, the locations between $L_3$ and $L_6$'s $\psRB$ are the multiplication of the inner and outer loop iteration bounds.
+In order to precisely compute their $\psRB$, it is critical to know
+the numbers of iterations of the outside loop $L_3$ and $L_1$ such that,
+during these iterations, the loop $L_6$ is ``entered'', which is exactly our \emph{loop reachability-bound}.
+
+Figure~\ref{fig:threeWhile-overview}(a) shows its abstract transition graph,
+and we compute its refined program in the bottom of Figure~\ref{fig:threeWhile-overview}. 
+We first compute the $\outinB(\tpath_3, \rprepeat(\tpath_3)) = N $ for $\tpath_3$ w.r.t. its innermost loop.
+Since $\tpath_3$ has two outer loops, $L_1$ and $L_3$.
+%  it is nested.
+To compute $\lpchB(3: \rprog_3, \tpath_3)$, where we use $\rprog_3$ denotes the body of the loop $L_3$,
+we first compute $\lpinit( \rprog_1, \tpath_3, c) = N$
+$\lpnext( \rprog_1, \tpath_3, c) =  N + 1 $, and
+$\rffinal(\rprog_1, c) = \{ i = 0, k = 0 \}$.
+So we can know $\lpchB(1: \rprog_1, \tpath_3, c) = \max\{ \frac{n - 0}{n - N - 1}, \frac{N - 0}{N +  1}\} = 1$, as expected.
+\end{example}

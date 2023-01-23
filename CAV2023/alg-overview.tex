@@ -24,17 +24,18 @@ and estimates an upper bound invariant for each.
 \textbf{Step 4: }
 % The \emph{path-sensitive reachability-bound} 
 The algorithm computes the \emph{Reachability-bound}, $\psRB(l, c)$ for every program point $l$ using the $\rprog$ and the upper bound invariant of the $\locbound(\absevent, c)$ where $\absevent = (l,dc,l')$.
-It requires to compute our two novel quantities, the \emph{Path Reachability-bound}, $\inoutB(\rprog, \tpath)$ and the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath)$.
+It requires to compute our two novel quantities, the \emph{Path Reachability-bound}, $\inoutB(\rprog, \tpath, c)$ and the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath, c)$.
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
-The soundness of each algorithm is in the Appendices.
+The soundness of each algorithm is in the Appendices and the input $c$ will be omitted if the context is clear.
 
 In the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$ in Figure~\ref{fig:relatedNestedWhileOdd-overview},
-we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath_3) = n - m$ for $\tpath_3$ in its innermost loop $L_4$ as a local \emph{path reachability-bound} in Section~\ref{sec:pathlocalrb}.
+we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath_3) = n - m$
+ for $\tpath_3$ in its innermost loop $L_4$ as a local \emph{path reachability-bound} in Section~\ref{sec:pathlocalrb}.
 Then we compute $\lpchB(\rprog_1^1, \tpath_3) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb}. In the second interleaving pattern, we compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = n - m - 3$ and the same for $\lpchB$.
 So Section~\ref{sec:pathrb} computes $\inoutB(\rprog, \tpath_3) = \max\{ 1 \times (n - m), 1 \times (n - m - 3) \} = n - m$ globally.
 
-Then for every program point $l$, we sum up all the $\inoutB(\rprog, \tpath)$ over $\tpath$ that contains $l$ and get $\psRB(c, l)$.
-Since point $5$ only shows up on $\tpath_3$, we compute \highlight{$\psRB(5) = n - m$}.
+Then for every program point $l$, we sum up all the $\inoutB(\rprog, \tpath)$ over $\tpath$ that contains $l$ and get $\psRB(l, c)$.
+Since point $5$ only shows up on $\tpath_3$, we compute \highlight{$\psRB(5, c) = n - m$}.
 The points $0$ and $\lex$ are not in any loop, so $\psRB(0) = \psRB(\lex) = 1$,
 The points $3, 6, 7$ and $8$ which only show up once on $\tpath_2$ and $\tpath_4$ are all equal to $\lfloor\frac{m}{4}\rfloor$, which are same as their $\inoutB$.
 For the loop headers $1$ and $4$, we only sum up the $\inoutB(\rprog, \tpath)$ where they show up as start-point of the $\tpath$.
@@ -71,7 +72,7 @@ So $\psRB(4) =  \lfloor\frac{m}{4}\rfloor + n - m + 1$ and $\psRB(1) = 2 \times 
 %     We also compute $\lpchB(\rprog_1^1, \tpath) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb},
 %     and Section~\ref{sec:pathrb} computes $\tpath_3$'s global \emph{Path Reachability-bound} $\inoutB(\rprog, \tpath) = m$.
 
-%     By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$.
+%     By summing up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, we compute the \emph{Reachability-bound}, $\psRB(l, c)$ for every program point $l \in \lvar(c)$.
 %     For the points $0$ and $\lex$ which aren't in any loop, we compute $\psRB(0) = \psRB(\lex) = 1$,
 %     For the other points in different branches and loop, we compute $\psRB(1) =2 \times \lfloor\frac{m}{4}\rfloor + 1$,
 %     $\psRB(2) =2 \times \lfloor\frac{m}{4}\rfloor $, 
@@ -91,6 +92,6 @@ So $\psRB(4) =  \lfloor\frac{m}{4}\rfloor + n - m + 1$ and $\psRB(1) = 2 \times 
 %         % This is the bound on iteration numbers of the outside loop $l$,
 %         % such that during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
 %         % \item The \emph{Path Reachability-bound}, $\inoutB(\rprog, \tpath)$  is a global upper bound on the execution times of a \emph{simple transition path} $\tpath$ computed in Section~\ref{sec:pathrb}.
-%         % With the global reachability-bound of every simple transition path, now we can sum up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, and compute the \emph{Reachability-bound}, $\psRB(c, l)$ for every program point $l \in \lvar(c)$ as in Definition~\ref{def:point_psrb}.
+%         % With the global reachability-bound of every simple transition path, now we can sum up all the \emph{path reachability-bounds}, $\inoutB(\rprog, \tpath)$ over the $\tpath$ which contains the program point $l$, and compute the \emph{Reachability-bound}, $\psRB(l, c)$ for every program point $l \in \lvar(c)$ as in Definition~\ref{def:point_psrb}.
 %     % \end{enumerate}
 %     \end{enumerate}

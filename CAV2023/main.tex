@@ -73,9 +73,10 @@
     aiming to find a precise symbolic reachability-bound on the program's every control location path-sensitively.
     %  in this paper.
     In comparison with previous methods, our algorithm brings together two lines of program complexity analysis techniques:
-    1. ranking function based amortized bound analysis through program abstraction, and
+    1. amortized bound analysis through program abstraction and ranking function estimation , and
     2. loop summarization based multiple loop paths refinement
-    and combines them effectively. 
+    and introduce two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound} over the combination.
+    % combines them effectively. 
     The effective combination leverages the precision and efficiency trade-off comparing to adopt either one of them.
     It allows us to compute precise reachability-bound on each program point path-sensitively.
     We implement a prototype and report on an experimental comparison with state-of-art tools over four different benchmarks.

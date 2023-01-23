@@ -19,9 +19,6 @@ for location $2$ is $\lfloor\frac{m}{2}\rfloor$ and $\lfloor\frac{m}{2}\rfloor +
 \highlight{Though within the same loop $L_1$, the bounds for different locations are different.}
 The amortized analysis methodology (inlcuding Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15}) ignores path sensitivity and approximate the bound $n$ as the bound for loop $L_1$. 
 And the path-refinement based method (\cite{GulwaniZ10} and \cite{GulwaniJK09} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}) only give the same bound for all the locations within the loop $L_1$. 
-% The SPEEDi in~\cite{GulwaniZ10}
-% gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$. Though is tight w.r.t. $L_1$'s iteration times but not \emph{reachability-bound} for different locations.
-% \cite{GulwaniJK09}, the Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} also can only compute the bound on the loop iteration but not reachability-bound on each location path-sensitively.
 Though we can reuse their estimated loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
 the \emph{reachability-bounds} for control locations $3, 6, 7$ and $8$ are still unclear.
 %

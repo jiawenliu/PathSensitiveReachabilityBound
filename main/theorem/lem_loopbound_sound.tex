@@ -69,6 +69,36 @@ This assumption comes from the computation of the $\varGD$ and the depth first s
 % The soundness also relies on the operation $\frac{\rfinit(\rprog) - \rffinal(\rprog)}{\varGD(\rprog)}$,
 % which can be solved by external SMT solver,
 % or solved by Definition~\ref{def:ranking_bound} in Section~\ref{sec:rank}.
+Below we prove the soundness of a more general version Loop Bound Computation, $BD(\tpath, c)$, for an arbitrarty sub program $\rprog$ in $c_r$'s refined program
+\[
+  \left\{
+  \begin{array}{lll}
+    1 &  \rprog = \tpath\\
+    \min \left\{BD(\rprog_1, c), BD(\rprog_2, c) \right\} & \rprog = \rprog_1;\rprog_2\\
+    \max\left\{ BD(\rprog_1, c), \ldots, BD(\rprog_m, c) \right\} & \rprog = \rpchoose{\rprog_1, \ldots, \rprog_m } \\
+    % \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog_l \land \absevent \in \tpath \right\}}
+    % \big\{ \highlight{\frac{a - b}{\varGD(\rprog_l, c)}} & \rprog = \rprepeat(\rprog_l) 
+    % \\  \qquad
+    % ~\vert~ x = a \in \rfinit(\rprog_l, c)
+    % % \\ & & \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+    % \land x = b \in \rffinal(\rprog_l, c)
+    % \big\} \\
+    \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+    \Big\{ \highlight{\frac{a - b}{\varGD(\tpath, c)}}  &  \rprog = \rprepeat(\tpath)
+    \\ \qquad 
+    ~\vert~
+    x = a \in \rfinit(\tpath, c)
+    \land x = b \in \rffinal(\tpath, c)
+    \Big\} 
+    \\
+    \frac{\min\{ \rfinit(\rprog_1), \rfinit(\rprog_1) - \varGD(\rprog_1) \} - \rffinal(\rprog_2;\rprog_2)}{ 
+    \varGD(\rprog_1;\rprog_2)}  & \rprog = \rprepeat(\rprog_1;\rprog_2)
+    \\
+    0  &  o.w.
+\end{array}
+\right.
+\]
+ 
 \begin{proof}
 \emph{Soundness} of the \emph{Loop Bound}.
   \\
@@ -343,15 +373,26 @@ This case is proved.
 % $\absinit(\rprog) = \absinit(c_1) = \absinit(c_1)$, $\absfinal(\rprog) = \absfinal(\rprog_2)$ and $(\absinit(\rprog_2), \_) \in \absfinal(c_1)$. 
 % \\
 % Because $c_1$ and $c_2$ are sub-loop program of $c_r$,
-\caseL{$\rprog = \rprepeat(\rprog')$}
+\caseL{$\rprog = \rprepeat(\rprog_l)$}
 In this case, we have
 \[
-  BD(\rprepeat(\rprog'), c) =
-  \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}}
-  \left\{ \highlight{\frac{a - b}{\varGD(\rprog', c)}} ~\vert~
-  x = a \in \rfinit(\rprog', c)
-  \land x = b \in \rffinal(\rprog', c)
-  \right\}.
+  BD(\rprepeat(\rprog_l), c) =
+  \left\{ 
+  \begin{array}{lll}
+    \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+    \Big\{ \highlight{\frac{a - b}{\varGD(\tpath, c)}}  &  \rprog_l = (\tpath)
+    \\ \qquad 
+    ~\vert~
+    x = a \in \rfinit(\tpath, c)
+    \land x = b \in \rffinal(\tpath, c)
+    \Big\} 
+    \\
+    \frac{\min\{ \rfinit(\rprog_1), \rfinit(\rprog_1) - \varGD(\rprog_1) \} - \rffinal(\rprog_2;\rprog_2)}{ 
+    \varGD(\rprog_1;\rprog_2)}  & \rprog_l = (\rprog_1;\rprog_2)
+    \\
+    0  &  o.w.
+\end{array}
+\right.
 \]
 Then we have the soundness guaranteed by the three states,
 $\rfinit(\rprog)$, $\rffinal(\rprog)$, $\rfnext(\rprog)$ computed in Definition~\ref{def:alg-loopabsstate}.
@@ -507,13 +548,13 @@ $\varGD(\rprog, c)$ contains the equations $x = e$, where $e \in \scexpr(c)$ is 
   for each transition path $\tpath$ in this program with $x$ as the ranking function.
 \\
  By induction on the $\rprog$, we have the following subcases.
- \subcaseL{$\rprog = \tpath$}
+ \subcaseL{$\rprog_l = \tpath$}
  By Definition~\ref{def:alg-absstate}, we have
 \[
    \varGD(\tpath, c) =  \min\left\{v  ~|~ x = v \in \rfnext(\tpath, c) \right\}.
 \]
 In this case, we have the soundness guaranteed by the soundness of $\rfnext(\tpath, c)$ for each transition path $\tpath$.
- \subcaseL{$\rprog = \rprog_1;\rprog_2$}
+ \subcaseL{$\rprog_l = \rprog_1;\rprog_2$}
  By Definition~\ref{def:alg-absstate}, we have
 \[
 \varGD(\rprog_1;\rprog_2, c) =  \varGD(\rprog_1, c) + \varGD(\rprog_2, c).
@@ -572,14 +613,14 @@ the following holds.
     \Big\}.
     \end{array}
 \]
-Then we have this case proved by
+Then in the first subcase, $\rprog' = \rprepeat(\rprog_l) = \tpath$, we have this case proved by
 \[
   \begin{array}{l}
     \econfig{
       \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}}
-      \left\{ \highlight{\frac{a - b}{\varGD(\rprog', c)}} ~\vert~
-      x = a \in \rfinit(\rprog', c)
-      \land x = b \in \rffinal(\rprog', c)
+      \left\{ \highlight{\frac{a - b}{\varGD(\tpath, c)}} ~\vert~
+      x = a \in \rfinit(\tpath, c)
+      \land x = b \in \rffinal(\tpath, c)
       \right\} 
     }(\trace_0) \\
     \geq
@@ -587,12 +628,41 @@ Then we have this case proved by
     \land \trace = \trace_a \tracecat \trace_{l_s \to l_f} \tracecat \trace_b
     \land \trace_{l_s \to l_f} = \tracecat \trace' \tracecat [(\_, l_f, \_)]
     \\ \qquad \qquad
-    \land (l_{f}, \_) \in \absfinal(\rprog_2)
-    \land l_s = \absinit(\rprog_2)
+    \land (l_{f}, \_) \in \absfinal(\tpath)
+    \land l_s = \absinit(\tpath)
     \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
     \Big\}.
     \end{array}
 \]
+In the subcase of $\rprog_l = \rprog_1; \rprog_2$, 
+we know 
+$\min\{ \rfinit(\rprog_1), \rfinit(\rprog_1) - \varGD(\rprog_1) \}$ bounds the minimum initial value of the counter during the first loop iteration.
+
+We also have $\rffinal(\rprog_2;\rprog_2) = \rffinal(\rprog_l)$ and $\varGD(\rprog_l) = \varGD(\rprog_1;\rprog_2)$.
+Then this subcase is proved by 
+\[
+  \begin{array}{l}
+    \econfig{
+      \max\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\}}
+      \Big\{ \highlight{\frac{a - b}{\varGD(\rprog_l, c)}} 
+      \\ \qquad
+      ~\vert~
+      x = a \in \min\{ \rfinit(\rprog_1), \rfinit(\rprog_1) - \varGD(\rprog_1) \}
+      \land x = b \in \rffinal(\rprog', c)
+      \Big\} 
+    }(\trace_0) \\
+    \geq
+    \# \Big\{\trace_{l_s \to l_f} ~\vert~ \trace_{l_s \to l_f}, \trace_a \in \ftdom, \trace_b \in \ftdom
+    \land \trace = \trace_a \tracecat \trace_{l_s \to l_f} \tracecat \trace_b
+    \land \trace_{l_s \to l_f} = \tracecat \trace' \tracecat [(\_, l_f, \_)]
+    \\ \qquad \qquad
+    \land (l_{f}, \_) \in \absfinal(\rprog_l)
+    \land l_s = \absinit(\rprog_l)
+    \land \counter(\trace', l_s) = \counter(\trace', l_f) = 0 
+    \Big\}.
+    \end{array}
+\]
+In the other subcases, since they will not show up by our refine algorithm, we return for these cases all $0$.
 \caseL{$\rprog = l : \rprog_l$}
 In this case, we have
 \[

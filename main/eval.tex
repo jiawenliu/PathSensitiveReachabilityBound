@@ -2,25 +2,29 @@ We implemented {\THESYSTEM} as a tool which takes a labeled command as input
 and outputs the reachability-bound on each program point.
 This implementation consists of the 
 program abstraction from Section~\ref{sec:progabs} in OCaml and the program refinement, ranking function estimation and the path-sensitive reachability-bound algorithm in Python.
-We evaluated it on our self-extracted programs from literatures, and XX programs extracted from four benchmarks. 
-Including 75 $C$ programs (including ABC : 15, C4B : 15, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11} : 3, Loopus 11 + 14 + JAR: 10, Rank10 : 3, SPEED : 27, WTC : 37) and 37 challenging $C$ programs 
+We evaluated it on our self-extracted programs from literatures, and 270 programs extracted from four benchmarks. 
+Including 75 {\tt .c} programs from different benchmarks\footnote{ABC: 15, C4B: 15, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37} and 37 challenging {\tt .c} programs 
 from the \hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}~\cite{SinnZV17},
-37 $JAVA$ programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{LuCT21}
-and XXX $C$ programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{KincaidBCR19,CyphertBKR19}.
-We translated the programs from different benchmarks into our syntax.
-
-As the comparison evaluation, we also evaluated four existing loop inference tools, 
+37 {\tt .java} programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{LuCT21}
+and 100 {\tt .c} programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{KincaidBCR19,CyphertBKR19}.
+We translated the programs from different benchmarks into our language model.
+As the comparison, we also evaluated four bound analysis tools, 
 \hyperlink{https://forsyte.at/software/loopus/}{LoopusJAR}~\cite{SinnZV17},
 \hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}
 and \hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}~\cite{LuCT21}
 and self-implemented SPEEDi based on paper~\cite{GulwaniJK09}
 over the same benchmarks.
 
-In table Tab.~\ref{tb:accuracy-eval}, we show the accuracy evaluation results including the bounded number for loops, and bounds on different path locations.
-Since we are the only tool compute different bounds on different path points, we present only the bounded numbers from other tools. For almost all the multipath loops, our tool infers different bounds on different path location with different complexity, which never be computed be any of the existing tools.
-Though for complex and challenging nested loops, we do slightly worse but still comparable to existing tools.
 
-As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem because of the implementation and the possible non-terminating in REFINE algorithm and the ranking function estimating algorithm.
+Tab.~\ref{tb:accuracy-eval} shows the evaluation results including the theoretical bounds, and empirical bounds computed.
+% on different path locations.
+We are the only one that computes different bounds on different path points,
+and we present only the computed numbers by other tools. In column $4$, for almost all the multipath loops, the bounds on different path location are significantly different, which never be computed be any of the existing tools.
+For the challenging loops without multipath, we do slightly worse but still comparable to existing tools.
+% As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem because of the implementation and the possible non-terminating in REFINE algorithm and the ranking function estimating algorithm.
+
+Our tool suffers the efficiency problem because of the possible non-terminating in program refining and the ranking function estimating.
+As in Tab.~\ref{tb:performance-eval}, also the implementation based on Python downsides the efficiency.
 
 % Icra~\hyperlink{https://github.com/icra-team/icra}{Icra}
 % ,

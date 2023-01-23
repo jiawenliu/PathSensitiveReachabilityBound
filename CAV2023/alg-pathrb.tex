@@ -1,7 +1,3 @@
-% Using the \emph{loop reachability-bound} and \emph{path local reachability-bound}, we compute the \emph{path reachability-bound} first in Section~\ref{sec:pathrb}, 
-% then the final path-sensitive reachability-bound for each program point in Section~\ref{sec:psrb}.
-% For the program $c$ with its refined program $\rprog$, we compute
-% for each of its \emph{simple transition path}s, $\tpath$ the \emph{path reachability-bound} , $\inoutB(\rprog, \tpath)$ during the execution of the program $c$ as in Definition~\ref{def:pathrb}.
 Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the execution of the program $c$ is multiplication of the $\outinB$ and $\lpchB$ for every simple transition path $\tpath$ formally as in Definition~\ref{def:pathrb}.
 %
 \begin{defn}[Path Reachability-bound Computation]
@@ -16,12 +12,12 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
   \begin{array}{ll}
     1  & \rprog = \tpath\\
     \highlight{0} & \rprog = \tpath' \neq \tpath\\
-    \inoutB(\rprog_1, \tpath) + \inoutB(\rprog_2, \tpath) & \rprog = \rprog_1;\rprog_2 \\
+    \inoutB(\rprog_1, \tpath, c) + \inoutB(\rprog_2, \tpath, c) & \rprog = \rprog_1;\rprog_2 \\
     % & 
-    \max\left\{ \inoutB(\rprog_1, \tpath), \ldots, \inoutB(\rprog_m, \tpath) \right\} 
+    \max\left\{ \inoutB(\rprog_1, \tpath, c), \ldots, \inoutB(\rprog_m, \tpath, c) \right\} 
     & \rprog = \rpchoose{\rprog_1, \ldots, \rprog_m } \\
-    \outinB(\rprog', \tpath), & l: \rprog_l \land l = \kw{enclosed}(\tpath) \\
-    \lpchB(l:\rprog_l, \tpath )
+    \outinB(\rprog', \tpath, c), & l: \rprog_l \land l = \kw{closest}(\tpath) \\
+    \lpchB(\rprog_l, \tpath , c)
     \times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
    \{\inoutB(l':\rprog', \tpath)\} \footnotemark, & l: \rprog_l \land l \neq \kw{enclosed}(\tpath) \\
   %  \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath) & \rprog = \rprepeat(\rprog')\\
@@ -31,105 +27,8 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
  }
  \end{defn}
 \footnotetext{In a refined program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$.}
-% , all the others $\inoutB(l':\rprog'', \tpath)$ where $\tpath \notin \rprog''$ equal to $0$ and the last case will never be matched}%
-% We show that $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ during the execution of $\rprog$
-% \footnotetext{{In a well-formed program, this case will never be matched}}
-% \todo{How it is computed}
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, we already computed $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
 $\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ for $\tpath_3$. Now we obtain $\inoutB(\rprog, \tpath) = 1 \times (n - m)$ as tight as expected.
 
 We also guarantee that \emph{path reachability-bound} for the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound on $\tpath$'s execution times when executing $\rprog$
-% in Lemma~\ref{lem:pathrb-sound} 
 in \highlight{Appendix~\ref{apdx:pathrb-sound}}.
-% \begin{lem}[Soundness of the Path Reachability-bound]
-%   \label{lem:pathrb-sound}
-%   For any program with its refined program $\rprog$ and a simple transition path $\tpath$ in this program,
-%   the execution times of $\tpath$ when executing the $\rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$ is bounded by $\econfig{\inoutB(\rprog, \tpath)}(\trace_0)$.
-%   \[
-%     \begin{array}{l}
-%     \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l \in \ldom, \rprog \st 
-%     \\ \qquad
-%     REFINE(\algrewrite(c)) = \rprog
-%     \land 
-%     \algrewrite(c_r) = \rprog
-%     \land
-%     \\ \qquad
-%     \land 
-%     \Big(
-%       \config{c_r, \trace_r} \rightarrow^* \config{\clabel{\eskip}^{l}, \trace_r \tracecat \trace}
-%       \lor \config{c_r, \trace_r} \uparrow^{\infty} \trace_r \tracecat \trace 
-%       \Big)
-%   \\ \qquad
-%     \implies
-%     \econfig{\inoutB(\rprog, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
-%     \end{array}
-%   \]  
-% \end{lem}
-% % \paragraph{Walk through Example.}
-% \todo{Walk through example with a tighter path reachability bound}
-% Now we can compute the precise bound for our running program in Example~\ref{ex:relatedNestedWhileOdd-overview}.
-% In comparison with the substituted computation in Section~\ref{def:pathlocalrb}, now we use the \emph{loop reachability-bound}
-% and compute a more precise path \emph{global} reachability-bound for the path $\tpath_3$ as $\frac{m}{4} \times 1$.
-% % The bounds for the other paths are the same.
-% As shown iy summing up all the $\inoutB(\rprog, \tpath)$ where each program point $l$ shows up on the $\tpath$, we finally compute
-% the \emph{reachability-bound} for every point path-sensitively as
-% $\psRB(0) = \psRB(\lex) = 1$,
-% $\psRB(1) = \frac{m}{2} + 1$,
-% $\psRB(2) = \frac{m}{2} $, 
-% $\psRB(3) = \psRB(6) = \psRB(7)  = \psRB(8) = \frac{m}{4} $,
-% \highlight{$\psRB(5) = \frac{m}{4} \times 1$},
-% and $\psRB(4) =  \frac{m}{4} + n - m + 1$.
-% As expected, this bound is tight for every program point.
-% For the Example~\ref{ex:threeNestedWhile} with the \emph{loop reachability-bound} computed by Section~\ref{sec:looprb},
-% we compute the \emph{path reachability-bound} for each path as well as the \emph{reachability-bound} for every point.
-% Especially we compute $N$ for the point $7$.
-%
-
-
-% \subsection{Program Points Path-sensitive Reachability-bound}
-% \label{sec:point-psrb}
-% For each program point in a program $c$, $l \in \lvar(c)$,
-% %  in a program $c$,
-% its \emph{reachability-bound}, $\psRB(c, l)$ during the execution of $c$ is computed as follows.
-% %
-%  \begin{defn}[Path-Sensitive Reachability-bound Computation]
-%   \label{def:point_psrb}
-%   Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and refined program $\rprog$,
-%   the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(c, l)$ 
-%   sums up all the path reachability bounds, $\inoutB(\rprog, \tpath)$ over all simple transition paths $\tpath$ that contains the program point $l$.
-%   \[ 
-%     \psRB(c, l) = 
-%     \sum
-%     % \limits_{\tpath \in \left\{ \tpath | \tpath \in \rprog \land 
-%     % l \in p \right\}} 
-%     \left\{ \inoutB(\rprog, \tpath) ~\vert~ \tpath \in \rprog \land 
-%     l \in \tpath \right\}
-%   \]
-%   $l \in \tpath$ denotes that the program point $l$ is a vertex on $\tpath$ 
-%   and $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path of program $c$.
-%  \end{defn}
-% We prove that $\econfig{\psRB(c, l)}$ is a \emph{Reachability-bound} for every program point $l$ in a program $c$ with proof in \highlight{Appendix~\ref{apdx:psrb-sound}}.
-% \begin{thm}[Soundness of the Path-sensitive Reachability-bound Estimation]
-%   \label{thm:pathsensitive_rb_soundness}
-%   For every program ${c}$ and every label $l$ in this program,
-%   $\econfig{\psRB(c, l)}$ is a \emph{Reachability-bound} for $l$ in $c$.
-%   %
-%   \[
-%     \begin{array}{l}
-%       \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-%       \\ \qquad
-%       \rprog = REFINE(\algrewrite(c))
-%       \land 
-%       \rprog = \algrewrite(c_r)
-%       \land
-%       \\ \qquad
-%       \land
-%       \Big(
-%       \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-%       \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-%       \Big)
-%       \\ \qquad
-%       \implies \econfig{\psRB(c, l)}(\trace_0) \geq \counter(\trace, l)
-%     \end{array}.
-%   \]
-%   \end{thm}
