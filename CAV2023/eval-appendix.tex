@@ -1,8 +1,6 @@
-As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem because of the implementation and the possible non-terminating in REFINE algorithm and the ranking function estimating algorithm.
-
-This implementation consists of the 
-program abstraction from Section~\ref{sec:progabs} in OCaml and the program refinement, ranking function estimation and the path-sensitive reachability-bound algorithm in Python.
-We evaluated it on our self-extracted programs from literatures, and XX programs extracted from four benchmarks. 
+As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem because of the possible non-terminating in REFINE algorithm and the ranking function estimating algorithm.
+Also, since the implementation consists of the 
+program abstraction from Section~\ref{sec:progabs} in OCaml and the program refinement, ranking function estimation and the path-sensitive reachability-bound algorithm in Python, the inter-procedures connection in the implementation also reduces the efficiency.
 
 
 \begin{table}[H]
@@ -18,7 +16,7 @@ We evaluated it on our self-extracted programs from literatures, and XX programs
             \hline
             Loopus-C & 23  & 20 & 20 & {20} & {86\%}  & 2 & 3 & {12min39sec} \\
             \hline
-            \todo{Icra} & 72 & 72 & 6 & {55} + \todo{-} & + \todo{-} & 0 & 0 & \todo{1min58sec} \\
+            \todo{Icra} & 100 & 100 & - &  \todo{-} & \todo{-} & 0 & 0 & \todo{1min58sec} \\
             \hline
             Tianhan & 37 & 2 & 3 & 37 & 100.0\% & 1 & 0 & 1min03sec \\
             \hline
