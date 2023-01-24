@@ -1,0 +1,16 @@
+[ streampos <- ftell_ph_ifp ] 0;
+[ i <- 0 ] 1;
+while [ < (i, streampos) ] 2 do {
+
+	if [ > ( - (streampos, i), 65536) ] 3
+	then { [ readsize <- 65536 ] 4 }
+	else { [ readsize <- - (streampos, i) ] 5};
+	
+	[ i <- + (i, readsize) ] 6;
+	[ j <- 0 ] 7;
+	while [ < (j, readsize) ] 8 do {
+		[ j <- + (j, 1) ] 9
+	}	
+
+}
+

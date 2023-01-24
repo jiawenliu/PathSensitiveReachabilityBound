@@ -1,0 +1,11 @@
+[ subject <- str ] 0;
+[ i <- 0 ] 1;
+while [ < (subject, 0) ] 2 do {
+	[ replicate <- subject ] 3;
+	while [ < (replicate, 0) ] 4 do {
+		[ replicate_imageIndex <- i ] 5;
+		[ i <- + (i, 1) ] 6;
+		[ replicate <- + (replicate, 1) ] 7
+	}
+	[ subject <- + (subject, 1) ] 8
+} 

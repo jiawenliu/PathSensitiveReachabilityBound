@@ -1,0 +1,10 @@
+[ i <- 0 ] 0;
+[ j <- 1 ] 1;
+while [ > (j, 0) ] 2 do {
+	[ line <- index_line ] 3;
+	if [ == (line, 0) ] 4
+	then { [ j <- 0 ] 5 }
+	else { [ skip ] 6 };
+	[ line <- + (line, 1) ] 7;
+	[ j <- - (j, 1) ] 8
+}
