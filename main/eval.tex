@@ -99,7 +99,7 @@ As in Tab.~\ref{tb:performance-eval}, also the implementation based on Python do
             \hline
             Loopus-C & 23  & 20 & 20 & {20} & {86\%}  & 2 & 3 & {12min39sec} \\
             \hline
-            \todo{Icra} & 100 & 72 & 6 & {55} + \todo{-} & + \todo{-} & 0 & 0 & \todo{1min58sec} \\
+            {Icra} & 118 & 111 & 21 & 107 & 90.1\% & 11 & 1 & {4min48sec} \\
             \hline
             Tianhan & 37 & 2 & 3 & 37 & 100.0\% & 1 & 0 & 1min03sec \\
             \hline
@@ -144,18 +144,17 @@ As in Tab.~\ref{tb:performance-eval}, also the implementation based on Python do
     & $O(n^{4})$    & 1    & $O(n^4), O(n^3)$  & 1 & 5 & 3 & 5 & 5 \\
     \hline \hline
     \multirow{3}{*}{Icra} 
-    & $O(1)$       & 3     & $O(1)$  & - &  &  & - & \\
+    & $O(1)$       & 4      &   $O(1)$  & 1 & 3 & 2 & 2 & 0 \\
     \cline{2-9}
-    & $O(n)$       & 3     &  $ O(1), O(n)$ & 51  & 51 & - & - & - & \\
+    & $O(\log(n))$ &  2     &   $-$ & 0  & 0 & 0 & 0 & 0 \\
     \cline{2-9}
-    & $O(n^2)$     & 3     &  $O(1), O(n), O(n^2)$ & 4 & - & - & - & - \\
-    % \hline
-    % \multirow{3}{*}{Icra-SV} 
-    % & $O(1)$            & $O(1)$ & $O(1)$  & - &  &  & -\\
-    % \cline{2-9}
-    % & $O(n)$            &  $-$ & $-$  & - &  &  & -  \\
+    & $O(n)$       & 79     &   $ O(1), O(n)$ & 78  & 80 & - & - & - & \\
     \cline{2-9}
-    & unbounded & -  & O(1), $\infty$ & & - &  &  & - &  \\
+    & $O(n^2)$     & 12     &   $O(1), O(n), O(n^2)$ & 18 & 14 & - & - & - \\
+    \cline{2-9}
+    & $O(n^3)$      &  1    &   $O(n^3)$     & 1  & 1 & 1 & 1 & 1 \\
+    \cline{2-9}
+    & unbounded    &  20    &   $O(1), O(n), O(n^2), \infty$  & 9  & 0 & 0 & 0 & 0 \\
     \hline \hline
     \multirow{3}{*}{Tianhan} 
     & $O(n)$       & 34     & $O(n) $ & 34 & 35 & 35 & 35 & 35 \\

@@ -9,17 +9,17 @@ program abstraction from Section~\ref{sec:progabs} in OCaml and the program refi
     \centering
         {\footnotesize
         \begin{tabular}{ >{\small}c | c | c | c | c | c | c | c | c | c }
-        \multirow{2}{*}{Benchmark} & \multirow{2}{*}{\# P}  & \multirow{2}{*}{M.P.L \#} & Nested  & \multirow{2}{*}{Bounded} & {Success} & \multirow{2}{*}{Failed} & Time  & Total\\
-         &  &  & Loop \# & & Rate &  & Outs &   Runtime \\
-        \hline
-            {Loopus} & {110}  & 53  & 52  & 98 & 89.1\% & 11 & 7 & 7min42sec \\
+            \multirow{2}{*}{Benchmark} & \multirow{2}{*}{\# P}  & \multirow{2}{*}{M.P.L \#} & Nested  & \multirow{2}{*}{Bounded} & {Success} & \multirow{2}{*}{Failed} & Time  & Total\\
+             &  &  & Loop \# & & Rate &  & Outs &   Runtime \\
             \hline
-            Loopus-C & 23  & 20 & 20 & {20} & {86\%}  & 2 & 3 & {12min39sec} \\
-            \hline
-            \todo{Icra} & 100 & 100 & - &  \todo{-} & \todo{-} & 0 & 0 & \todo{1min58sec} \\
-            \hline
-            Tianhan & 37 & 2 & 3 & 37 & 100.0\% & 1 & 0 & 1min03sec \\
-            \hline
-        \end{tabular}
+                {Loopus} & {110}  & 53  & 52  & 98 & 89.1\% & 11 & 7 & 7min42sec \\
+                \hline
+                Loopus-C & 23  & 20 & 20 & {20} & {86\%}  & 2 & 3 & {12min39sec} \\
+                \hline
+                {Icra} & 118 & 111 & 21 & 107 & 90.1\% & 11 & 1 & {4min48sec} \\
+                \hline
+                Tianhan & 37 & 2 & 3 & 37 & 100.0\% & 1 & 0 & 1min03sec \\
+                \hline
+            \end{tabular}    
         }
     \end{table}
