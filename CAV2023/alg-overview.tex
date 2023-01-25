@@ -1,4 +1,4 @@
-% \textbf{Step 1: Abstract Transition Graph}
+
 \textbf{Step 1: }
 The Section~\ref{sec:progabs} first 
 computes the \emph{Abstract Transition Graph} as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
@@ -30,8 +30,8 @@ The soundness of each algorithm is in the Appendices and the input $c$ will be o
 
 In the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$ in Figure~\ref{fig:relatedNestedWhileOdd-overview},
 we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath_3) = n - m$
- for $\tpath_3$ in its innermost loop $L_4$ as a local \emph{path reachability-bound} in Section~\ref{sec:pathlocalrb}.
-Then we compute $\lpchB(\rprog_1^1, \tpath_3) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{def:looprb}. In the second interleaving pattern, we compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = n - m - 3$ and the same for $\lpchB$.
+ for $\tpath_3$ in its innermost loop $L_4$ as a local \emph{path reachability-bound} by Section~\ref{sec:pathlocalrb}.
+Then we compute $\lpchB(\rprog_1^1, \tpath_3) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{sec:looprb}. In the second interleaving pattern, we compute $\outinB(4:\rprepeat(\tpath_3), \tpath) = n - m - 3$ and the same for $\lpchB$.
 So Section~\ref{sec:pathrb} computes $\inoutB(\rprog, \tpath_3) = \max\{ 1 \times (n - m), 1 \times (n - m - 3) \} = n - m$ globally.
 
 Then for every program point $l$, we sum up all the $\inoutB(\rprog, \tpath)$ over $\tpath$ that contains $l$ and get $\psRB(l, c)$.
