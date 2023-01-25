@@ -149,14 +149,14 @@ and the reset graph based approach is in Appendices.
 \[ 
 \begin{array}{lll}
   \absclr(\absevent, c) 
-  & \triangleq \varinvar(\locbound(\absevent, c), c)   \qquad \qquad  \text{if} \quad  \locbound(\absevent, c) \in \constdom & \\
+  & \triangleq \varinvar(\locbound(\absevent, c), c)   \qquad \qquad  \text{if} \quad  \locbound(\absevent, c) \in \scvar(c)  & \\
   \absclr(\absevent, c) 
   & \triangleq \incrs(x, c) 
    + 
   \sum\limits_{\absevent' \in \reset(x, c) \land \absevent' = (l, x \leq y + v, l') }
   \Big( \absclr(\absevent', c) \times \big( \varinvar(y, c) + v \big) \Big)
   & \\
-  &  \text{if} \quad  \locbound(\absevent, c) = x \land x \notin \constdom &.
+  &  \text{if} \quad  \locbound(\absevent, c) = x \land x \notin \scvar(c)  &.
 \end{array}
   \]
 }
