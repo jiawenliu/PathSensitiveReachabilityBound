@@ -18,7 +18,7 @@ over the same benchmarks.
 Tab.~\ref{tb:accuracy-eval} shows the evaluation results including the theoretical bounds, and empirical bounds computed.
 % on different path locations.
 We are the only one that computes different bounds on different path points,
-and we present only the computed numbers by other tools. In column $4$, for almost all the multipath loops, the bounds on different path location are significantly different, which never be computed be any of the existing tools.
+and we present only the computed numbers by other tools. In column $4$, for almost all the multipath loops, the bounds on different path location are significantly different, which never be computed by any of the existing tools.
 For the challenging loops without multipath, we do slightly worse but still comparable to existing tools.
 % As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem because of the implementation and the possible non-terminating in REFINE algorithm and the ranking function estimating algorithm.
 Our tool suffers the efficiency problem because of the possible non-terminating in program refining and the ranking function estimating.
@@ -86,11 +86,11 @@ The performance evaluation is in Appendices~\ref{apdx:eval-performance}.
             \cline{2-9}
             & $O(\log(n))$ &  2     &   $-$ & 0  & 0 & 0 & 0 & 0 \\
             \cline{2-9}
-            & $O(n)$       & 79     &   $ O(1), O(n)$ & 78  & 80 & - & - & - & \\
+            & $O(n)$       & 79     &   $ O(1), O(n)$ & 78  & 80 & 82 & 78 & 77 & \\
             \cline{2-9}
-            & $O(n^2)$     & 12     &   $O(1), O(n), O(n^2)$ & 18 & 14 & - & - & - \\
+            & $O(n^2)$     & 12     &   $O(1), O(n), O(n^2)$ & 18 & 14 & 11 & 16 & 17 \\
             \cline{2-9}
-            & $O(n^3)$      &  1    &   $O(n^3)$     & 1  & 1 & 1 & 1 & 1 \\
+            & $O(n^3)$      &  1    &   $O(n^3)$     & 1  & 1 & 4 & 2 & 4 \\
             \cline{2-9}
             & unbounded    &  20    &   $O(1), O(n), O(n^2), \infty$  & 9  & 0 & 0 & 0 & 0 \\
             \hline \hline

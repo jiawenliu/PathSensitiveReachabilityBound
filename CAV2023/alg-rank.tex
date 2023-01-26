@@ -1,7 +1,7 @@
-The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite{SinnZV14},
+The approach in this step is inspired mainly from the Algorithm.2 in~\cite{SinnZV14},
   % which assigns a variable to each edge on which this variable decrease as its ranking function.
-  the Algorithm.3 in paper~\cite{ZulegerGSV11},
-  and the Definition.25 in Section 4 of paper~\cite{SinnZV17} with three sub-steps.
+  the Algorithm.3 in~\cite{ZulegerGSV11},
+  and the Definition.25 in Section 4 from~\cite{SinnZV17}, and enriched with path-sensitivity.
   % Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
   % and estimates the maximum value each variable in this set.
   % Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decrease as its ranking function
@@ -79,8 +79,8 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
   \begin{defn}[Ranking Function Generatation]
   \label{def:ranking_gen}
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
-  its \emph{ranking function/local bound}, $\locbound(\absevent, c)$
-  is the symbol $x\in \scvardom(c)$ that decreases on this edge as follows,
+  its \emph{ranking function}, $\locbound(\absevent, c)$
+  is the symbol $x\in \scvar(c)$ that decreases on this edge as follows,
 {\small
 \[ 
 \begin{array}{ll}
@@ -89,6 +89,9 @@ The approach in this step is inspired mainly from the Algorithm.2 in paper~\cite
   \\
   \locbound(\absevent, c) \triangleq x
   & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
+  \locbound(\absevent, c) \triangleq x
+  & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \land \locbound(\absevent', c) = x \\
+  % \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
   \locbound(\absevent, c) \triangleq x
   & \absevent \in SCC(\absG(c)) \land 
   \absevent  \notin \bigcup_{x \in \vardom} \dec(x, c)
@@ -125,9 +128,9 @@ is computed as follows,
 %
 where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(x, c)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
 The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$  on the execution times of the transition $\absevent$, is interactively computed as well as below,
-\footnote{We only give the sub-routine computation based on the variable reset set ($\reset$) for  easier understanding
+\footnote{We only give the computation based on the variable reset set ($\reset$) for  easier understanding
 % instead of the reset chain ($\resetchain$), 
-and the reset graph based approach is in Appendices.
+and the reset graph based approach is in Appendices~\ref{apdx:alg-resetgraph}.
 }
 {\small
 % \[ 
@@ -164,5 +167,7 @@ and the reset graph based approach is in Appendices.
 \end{defn}
 % \todo{Example of computed invariant for ranking function and the transition bound}
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, the ranking $i$ is reset by $n$ at edge $0 \to 1$ and 
-$k + m$ at edge $6 \to 7$ and $k$ is assigned value $i - m$ at edge $3 \to 4$. Through reset chain graph (which we do not fully presented but can be found in the Definition~20 in~\cite{SinnZV17}), we estimate a symbolic value $n$ for both ranking variable $i$ and $k$.
+$k + m$ at edge $6 \to 7$ and $k$ is assigned value $i - m$ at edge $3 \to 4$. Through reset graph, 
+% (which we do not fully presented but can be found in the Definition~20 in~\cite{SinnZV17}), 
+we estimate a symbolic value $n$ for both ranking variable $i$ and $k$.
 Interactively, iteration bounds for all the edges in this loop are $n$ as well path-insensitively.

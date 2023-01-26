@@ -76,20 +76,23 @@ Three steps:
   is the variable that decreases on this edge, computed as follows,
   %
   \[ 
-  \begin{array}{ll}
-    \locbound(\absevent, c) \triangleq 1 
-    & \absevent \notin SCC(\absG(c))
-    \\
-    \locbound(\absevent, c) \triangleq x
-    & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
-    \locbound(\absevent, c) \triangleq x
-    & \absevent \in SCC(\absG(c)) \land 
-    \absevent  \notin \bigcup_{x \in \vardom} \dec(x, c)
-    \land \absevent \notin SCC(\absG(c) \setminus \dec(x, c))\\
-    \locbound(\absevent, c) \triangleq \infty
-    & o.w..
-  \end{array}
-  \]
+\begin{array}{ll}
+  \locbound(\absevent, c) \triangleq 1 
+  & \absevent \notin SCC(\absG(c))
+  \\
+  \locbound(\absevent, c) \triangleq x
+  & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
+  \locbound(\absevent, c) \triangleq x
+  & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \land \locbound(\absevent', c) = x \\
+  % \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
+  \locbound(\absevent, c) \triangleq x
+  & \absevent \in SCC(\absG(c)) \land 
+  \absevent  \notin \bigcup_{x \in \vardom} \dec(x, c)
+  \land \absevent \notin SCC(\absG(c) \setminus \dec(x, c))\\
+  \locbound(\absevent, c) \triangleq \infty
+  & o.w..
+\end{array}
+\]
   $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
   \end{defn}
     The first case is straightforward. 

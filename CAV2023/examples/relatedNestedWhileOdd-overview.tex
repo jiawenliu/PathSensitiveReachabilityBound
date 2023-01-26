@@ -11,12 +11,12 @@
     \begin{array}{l}
       \kw{nestedOdd}(n, m) \triangleq \\
       \clabel{ \assign{i}{n} }^{0} ; \\
-          \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
+          L_1: \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
           \quad \big(
             \eif(\clabel{i \% 2 \neq 0 }^{2},
-            \quad \clabel{\assign{k}{i - m}}^{3};\\
-            \quad \ewhile ~ \clabel{k > 0}^{4} ~ \edo ~
-            ( \clabel{\assign{k}{k - 1}}^{5} );\\
+            \clabel{\assign{k}{i - m}}^{3};\\
+            \quad L_4: \ewhile ~ \clabel{k > 0}^{4} \edo \\
+            \quad ( \clabel{\assign{k}{k - 1}}^{5} );\\
             \quad \clabel{\assign{i}{k + m}}^{6};
             \clabel{\assign{i}{i - 1}}^{7}, \\
             \quad \clabel{\assign{i}{i - 3}}^{8})
@@ -24,7 +24,7 @@
       \end{array}
     $
     }
-    % \vspace{-0.2cm}
+    \vspace{-0.2cm}
     \caption{}
     \end{centering}
     \end{subfigure}
@@ -45,7 +45,7 @@
   % \draw[] (6, 4) circle (0pt) node {{ $ex$}};
   %
   % Control Flow Edges:
-  \draw[ thick, -latex] (-6, 10)    -- node [above] {\scriptsize $i' \leq n$}(-0.5, 10);
+  \draw[ thick, -latex] (-6, 10)    -- node [above]{\scriptsize $i' \leq n$}(-0.5, 10);
   \draw[ thick, -latex] (0, 9.5)    -- node [left] {\scriptsize $i > 0$} (0, 7.5) ;
   \draw[ thick, -latex] (0.5, 7)    -- node [above] {\scriptsize $ i \% 2 = 0 $}  (4, 4.5);
   \draw[ thick, -latex] (4.5, 4)    to  [out=70,in=0]   node [right] {\scriptsize $i' \leq i - 3$ }(0.5, 9.5);

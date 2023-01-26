@@ -17,13 +17,13 @@ the expected \emph{reachability-bound}s for locations in outer loop $3, 6, 7$ an
 %  for $8$ is $\lfloor\frac{m}{4}\rfloor + 1$,
 for location $2$ is $\lfloor\frac{m}{2}\rfloor$ and $\lfloor\frac{m}{2}\rfloor + 1$ for location $1$.
 \highlight{Though within the same loop $L_1$, the bounds for different locations are different.}
-The amortized analysis methodology (inlcuding Loopus in~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15}) ignores path sensitivity and approximate the bound $n$ as the bound for loop $L_1$. 
-And the path-refinement based method (\cite{GulwaniZ10} and \cite{GulwaniJK09} and CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}) only give the same bound for all the locations within the loop $L_1$. 
-Though we can reuse their estimated loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
-the \emph{reachability-bounds} for control locations $3, 6, 7$ and $8$ are still unclear.
+The amortized analysis methodology such as Loopus~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15}, etc. ignores path sensitivity and approximate the bound $n$ as the bound for loop $L_1$. 
+While some path-refinement based methods such as \cite{GulwaniZ10,GulwaniJK09}, CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} and etc. only give the same bound for all the locations within the loop $L_1$. 
+Though we can reuse their results i.e., loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
+but it is still unclear for locations $3, 6, 7$ and $8$.
 %
 This motivates our first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop free and interleaving free path $\tpath$.
-It bounds the evaluation times of each path over a path-refined program in the first step.
+It bounds the evaluation times of each path over a path-refined program.
 % \item 
 
 \textbf{Challenge II} The second challenge occurs in the nested loop.
@@ -64,7 +64,7 @@ By multiplying the \emph{path reachability-bound} of $\tpath_3$ within $L_4$,
 with its \emph{loop reachability-bound} w.r.t $L_1$, we can obtain an accurate
 \emph{reachability-bound} for location $5$.
 This quantity isn't considered or computed in any of the previous works.
-Paper~\cite{GulwaniJK09} considers a similar quantity, the \emph{Progress Invariant}. But it bounds the iteration times of inner loop $L_4$ w.r.t. one iteration of $L_1$, which is $m$. Then they still over-approximate the bound for locations inside $L_4$ as $m \times (n - m)$ by multiplication.
+\cite{GulwaniJK09} considers a similar quantity, the \emph{Progress Invariant}. But it bounds the iteration times of inner loop $L_4$ w.r.t. one iteration of $L_1$, which is $m$. Then they still over-approximate the bound for locations inside $L_4$ as $m \times (n - m)$ by multiplication.
 }
 % \end{itemize}
 With the two key novelties, our algorithm computes the reachability-bound for this example through the following steps.
