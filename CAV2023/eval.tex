@@ -3,7 +3,7 @@ and outputs the reachability-bound on each program point.
 This implementation consists of the 
 program abstraction in OCaml and the program refinement, ranking function estimation, and the path-sensitive reachability-bound algorithm in Python.
 We evaluate it on 20 self-adopted programs from the literatures and 270 programs extracted from four benchmarks. 
-Including 75{\tt .c} programs from 7 benchmarks~\cite{BenchmarkLoops}\footnote{ABC: 15, C4B: 15, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37} and 37 challenging{\tt .c} programs 
+Including 75{\tt .c} programs from 7 benchmarks~\cite{BenchmarkLoops}\footnote{ABC: 15, C4B: 15, KoAT: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37} and 37 challenging{\tt .c} programs 
 from the \hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}~\cite{BenchmarkLoops,SinnZV17},
 37{\tt .java} programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{BenchmarkTianhan,LuCT21}
 and 118{\tt .c} programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{BenchmarkIcra,KincaidBCR19,CyphertBKR19}.
@@ -21,11 +21,6 @@ Tab.~\ref{tb:accuracy-eval} shows the evaluation results including the theoretic
 The $2^{nd}$ and $3^{rd}$ columns are the theoretical worst-case bound on the overall complexity and the number of programs that have this complexity. The column $5^{th}-9^{th}$ shows the empirical bounds computed by us and the other tools for comparison in terms of the overall complexity.
 To show the effectiveness, 
 we present in column $4^{th}$ our results for different locations in different loop paths. for almost all the multipath loops, our tool computes precise bounds on different path locations that have significantly different \emph{reachability-bound}s.
-%  within one loop for almost all the multipath loops.
-% We are the only one that computes different bounds on different path points,
-% and we present only the computed numbers by other tools. 
-% None of existing tools
-% In column $4$, for almost all the multipath loops, the bounds on different path locations are  different, which never be computed by any of the existing tools.
 Even for the unbounded loops, we can still compute finite \emph{reachability-bound}s on certain program points which are not involved with the unbounded loop paths.
 While none of the existing tools can compute reasonable bounds for these programs.
 For the challenging loops without multipath, we do slightly worse but still comparable to existing tools.
