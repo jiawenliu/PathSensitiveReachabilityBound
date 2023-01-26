@@ -1,12 +1,12 @@
 
-\textbf{Step 1: }
-The Section~\ref{sec:progabs} first 
-computes the \emph{Abstract Transition Graph} as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
+\textbf{Step 1}
+in Section~\ref{sec:progabs} first 
+generates the \emph{Abstract Transition Graph} as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
 Each edge $l \xrightarrow{dc} l'$ is an abstract transition $\absevent = (l, dc, l')$ annotated with a constraint $dc$ corresponding to the command of label $l$.
 
 % \textbf{Step 2: Program Refinement}
-\textbf{Step 2: }
-The second step in Section~\ref{sec:refine}
+\textbf{Step 2} in Section~\ref{sec:refine}
+% The second step in Section~\ref{sec:refine}
 computes the \emph{Refined Program}, $\rprog$ for a program $c$ based on 
 its abstraction transition graph and transforms the multiple-paths loops
 into multiple loops where
@@ -15,25 +15,24 @@ It has two interleaving patterns in the loop $L_1$.
 %  denoted as $\rprog_1^1$ and $\rprog_1^2$.
 
 % \textbf{Step 3: Ranking Function Estimation}
-\textbf{Step 3: }
-In the meanwhile, Section~\ref{sec:rank} computes the \emph{Ranking Function}, $\locbound(\absevent, c)$ 
+\textbf{Step 3} computes the \emph{Ranking Function}, $\locbound(\absevent, c)$ 
 for every edge $\absevent$ 
-and estimates an upper bound invariant for each.
+and estimates an upper bound invariant, which is presented in Section~\ref{sec:rank}.
 
 % \textbf{Step 4: Path-sensitive Reachability-bound Computation.}
-\textbf{Step 4: }
+\textbf{Step 4}
 % The \emph{path-sensitive reachability-bound} 
-The algorithm computes the \emph{Reachability-bound}, $\psRB(l, c)$ for every program point $l$ using the $\rprog$ and the upper bound invariant of the $\locbound(\absevent, c)$ where $\absevent = (l,dc,l')$.
-It requires to compute our two novel quantities, the \emph{Path Reachability-bound}, $\inoutB(\rprog, \tpath, c)$ and the \emph{Loop Reachability-bound}, $\lpchB(l: \rprog, \tpath, c)$.
+computes the \emph{reachability-bound}, $\psRB(l, c)$ for every program point $l$ using the $\rprog$ and the upper bound invariant of the $\locbound(\absevent, c)$ where $\absevent = (l,dc,l')$.
+It requires computing our two quantities, the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ and the \emph{loop reachability-bound}, $\lpchB(l: \rprog, \tpath, c)$.
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
-The soundness of each algorithm is in the Appendices and the input $c$ will be omitted if the context is clear.
+The soundness and proof of each algorithm is given in the Appendices and the input $c$ will be omitted in the rest of the paper if the context is clear.
 
 In the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$ in Figure~\ref{fig:relatedNestedWhileOdd-overview},
 we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath_3, c) = n - m$
  for $\tpath_3$ in its innermost loop $L_4$ as a local \emph{path reachability-bound} by Section~\ref{sec:pathlocalrb}.
 Then we compute $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{sec:looprb}. In the second interleaving pattern $\rprog_1^2$, we compute $\outinB(4:\rprepeat(\tpath_3), \tpath, c) = n - m - 3$ and the same $\lpchB(\rprog_1^2, \tpath_3, c)$.
 So Section~\ref{sec:pathrb} computes $\inoutB(\rprog, \tpath_3, c) = \max\{ 1 \times (n - m), 1 \times (n - m - 3) \} = n - m$ globally.
-
+%
 Then for every program point $l$, we sum up all the $\inoutB(\rprog, \tpath)$ over $\tpath$ that contains $l$ and get $\psRB(l, c)$.
 Since point $5$ only shows up on $\tpath_3$, we compute \highlight{$\psRB(5, c) = n - m$}.
 The points $0$ and $\lex$ are not in any loop, so $\psRB(0, c) = \psRB(\lex, c) = 1$,

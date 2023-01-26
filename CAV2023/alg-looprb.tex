@@ -103,10 +103,10 @@ We illustrate Example~\ref{ex:threeNestedWhile} with three nested loops, which c
 \begin{example}[Three Nested Loop]
   \label{ex:threeNestedWhile}
 \input{examples/threeNestedWhile-overview}
-This example has 3 nested loops with related iterators. It is similar to the loop $L_4$ nested in the second branch in example~\ref{ex:relatedNestedWhileOdd-overview}.
-Similarly, in line 8, $i$ is reset by $w$ and $w$ is reset by $j$ at line 5,  $L_6$ is only executed in the first iteration of while loop $L_1$ and $L_3$.
+This example is similar to the loop $L_4$ nested in the second branch in example~\ref{ex:relatedNestedWhileOdd-overview}.
+$w$ is reset by $j$ in command 5 and $i$ is then reset by $w$, so $L_6$ is only executed in the first iteration of loops $L_1$ and $L_3$.
 % \\
-So the total iterations of all the three loops is
+Then the total iterations times are
 $n + m^2 - m \times N$,
 and the expected \emph{reachability-bound} for location $7$ inside the $L_6$ is $N$,
 for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - N)$,

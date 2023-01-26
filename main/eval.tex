@@ -1,28 +1,29 @@
-We implemented {\THESYSTEM} as a tool which takes a labeled command as input  
+\emph{Set up} We implemented a prototype {\THESYSTEM} that takes a labeled command as input 
 and outputs the reachability-bound on each program point.
 This implementation consists of the 
-program abstraction from Section~\ref{sec:progabs} in OCaml and the program refinement, ranking function estimation and the path-sensitive reachability-bound algorithm in Python.
-We evaluated it on our self-extracted programs from literatures, and 270 programs extracted from four benchmarks. 
-Including 75 {\tt .c} programs from different benchmarks\footnote{ABC: 15, C4B: 15, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37} and 37 challenging {\tt .c} programs 
-from the \hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}~\cite{SinnZV17},
-37 {\tt .java} programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{LuCT21}
-and 100 {\tt .c} programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{KincaidBCR19,CyphertBKR19}.
-We translated the programs from different benchmarks into our language model.
-As the comparison, we also evaluated four bound analysis tools, 
+program abstraction in OCaml and the program refinement, ranking function estimation, and the path-sensitive reachability-bound algorithm in Python.
+We evaluate it on 20 self-adopted programs from the literatures and 270 programs extracted from four benchmarks. 
+Including 75{\tt .c} programs from 7 benchmarks~\cite{BenchmarkLoops}\footnote{ABC: 15, C4B: 15, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37} and 37 challenging{\tt .c} programs 
+from the \hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}~\cite{BenchmarkLoops,SinnZV17},
+37{\tt .java} programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{BenchmarkTianhan,LuCT21}
+and 118{\tt .c} programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{BenchmarkIcra,KincaidBCR19,CyphertBKR19}.
+We translated these programs into our language model.
+As the comparison, we also report the results of four bound analysis tools, 
 \hyperlink{https://forsyte.at/software/loopus/}{LoopusJAR}~\cite{SinnZV17},
-\hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14}
-and \hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}~\cite{LuCT21}
-and self-implemented SPEEDi based on paper~\cite{GulwaniJK09}
-over the same benchmarks.
-
-
-Tab.~\ref{tb:accuracy-eval} shows the evaluation results including the theoretical bounds, and empirical bounds computed.
+\hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{ToolCofloco,Montoya17,Flores-Montoya16,Flores-MontoyaH14}
+and \hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}~\cite{BenchmarkTianhan}
+and self-implemented SPEED based on~\cite{GulwaniJK09}.
+\\
+\emph{Effectiveness} We aim to answer, is our prototype able to compute more precise reachability-bound for different program points when comparing with the worst-case program
+complexity analysis tools?
+Tab.~\ref{tb:accuracy-eval} shows the evaluation results including the theoretical bounds and empirical results.
 % on different path locations.
-We are the only one that computes different bounds on different path points,
-and we present only the computed numbers by other tools. In column $4$, for almost all the multipath loops, the bounds on different path location are significantly different, which never be computed be any of the existing tools.
+The $2^{nd}$ and $3^{rd}$ columns are the theoretical worst-case bound on the overall complexity and the number of programs that have this complexity. The column $5^{th}-9^{th}$ shows the empirical bounds computed by us and the other tools for comparison in terms of the overall complexity.
+To show the effectiveness, 
+we present in column $4^{th}$ our results for different locations in different loop paths. for almost all the multipath loops, our tool computes precise bounds on different path locations that have significantly different \emph{reachability-bound}s.
+Even for the unbounded loops, we can still compute finite \emph{reachability-bound}s on certain program points which are not involved with the unbounded loop paths.
+While none of the existing tools can compute reasonable bounds for these programs.
 For the challenging loops without multipath, we do slightly worse but still comparable to existing tools.
-% As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem because of the implementation and the possible non-terminating in REFINE algorithm and the ranking function estimating algorithm.
-
 Our tool suffers the efficiency problem because of the possible non-terminating in program refining and the ranking function estimating.
 As in Tab.~\ref{tb:performance-eval}, also the implementation based on Python downsides the efficiency.
 

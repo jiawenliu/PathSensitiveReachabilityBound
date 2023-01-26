@@ -1,6 +1,7 @@
 As in Tab.~\ref{tb:performance-eval}, our tool suffers the efficiency problem because of the possible non-terminating in REFINE algorithm and the ranking function estimating algorithm.
 Also, since the implementation consists of the 
-program abstraction from Section~\ref{sec:progabs} in OCaml and the program refinement, ranking function estimation and the path-sensitive reachability-bound algorithm in Python, the inter-procedures connection in the implementation also reduces the efficiency.
+program abstraction in OCaml and the program refinement, ranking function estimation and the path-sensitive reachability-bound algorithm in Python.
+The inter-procedures calls between the functions in different languages also reduce the efficiency to a large scale.
 
 
 \begin{table}[H]
