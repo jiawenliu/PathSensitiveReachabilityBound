@@ -1,53 +1,27 @@
 
 \subsubsection{Loop Bound}
 There are two methods for computing the loop bound, $BD(\rprog', c)$ for every sub program $\rprog'$ in $c$'s refined program $\rprog$.
-% , specifically loop program $\rprepeat(\rprog')$ in a program $c$'s refined program $\rprog$.
-% \begin{enumerate}
-%   \item Estimated by $BD(\rprepeat(\rprog'), c) = BOUND(\rprepeat(\rprog'))$ from paper~\cite{GulwaniJK09}, which is precise for simple loop without nested loops but not for nested loops. We are not giving the computation detail in this paper, which can be found in paper~\cite{GulwaniJK09}.
-%   \item Estimated by Equation~\ref{eq:absBD} path-insensitively, which is based only on the estimated ranking function from Section~\ref{sec:rank}. 
-%   This bound is precise when there is only one path in this loop but not for loops with multiple paths.
-%   \item We provide a new computation approach using both the variable invariant estimation idea and the progress invariant idea from~\cite{GulwaniJK09} presented in Definition~\ref{def:loopbound}.
-% \end{enumerate}
-%
-% \paragraph{Ranking Function Based Loop Bound Computation}
-% \label{sec:loopbound-rankbased}
 
 Based only on the estimated ranking function from Section~\ref{sec:rank}, we can compute a loose $BD(\rprog', c)$ for each $\rprog'$
 using the $\absclr(\absevent, c)$ as follows.
-%  and taking the
-% minimum value over all $\absevent \in \rprog$.
-% We use $\absevent \in \rprog$ to denote $\absevent$ is an edge on path $\rprog$.
 \begin{equation}
   \label{eq:absBD}
   BD(\rprog, c) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog \right\}.
 \end{equation}
-% \footnotetext{We use $\absevent \in \rprog$ to denote that $\absevent$ is an edge on a simple transition path in $\rprog$.}
-%
 It is accurate only for simple loop, but not for multipath loops and the nested loops.
-% \paragraph{Walk through Example.}
-% \todo{The walk through example}
 For example in Example~\ref{ex:relatedNestedWhileOdd-overview},
-% by using this ranking function-based approach, we 
-% this equation only computes for each subprogram,
-% $BD(\tpath_0) = 1$, $BD(\tpath_5) = 1$, $BD(\rprepeat(\tpath_3)) = n - m$, 
 it computes $BD(\rprog_1^1) = n$ and $BD(\rprog_1^2) = n $ for the two interleaving pattern of loop $L_1$.
 % The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while 
 But both of their iteration bounds are expected to be $\lfloor\frac{m}{4}\rfloor$.
 The inaccuracy is resulted by the nature of the path-insensitivity in the ranking function invariant estimation in Definition~\ref{def:ranking_bound}. 
 
-% \paragraph{New Approach} 
 We provide a new computation approach over the refined program.
-%  using
-%  both the variable invariant estimation idea and the progress invariant idea from~\cite{GulwaniJK09} presented in Definition~\ref{def:loopbound}.
-% This new approach uses 
 It uses the estimated ranking function invariant and combines with the idea of progress invariant from~\cite{GulwaniJK09}.
 We first compute three abstract states for each ranking function in different sub program of a refined program as below.
 % Then we these precise abstract state, and estimate the loop bound path sensitively.
 \begin{defn}[Rank Abstract States Computation]
   \label{def:alg-absstate}
   Given a program $c$ with its refined program $\rprog_c$ and a sub-program $\rprog$ in $\rprog_c$,
-  % where $\rprog \subseteq REFINE(\kw{Rewrite(c)})$, 
-  % let $c_r$ be the while program such that $\rprog = \algrewrite(c_r)$,
   we compute three abstract states, $\rfinit(\rprog, c)$, $\rffinal(\rprog, c)$ and $\rfnext(\rprog, c)$  for the ranking functions on this sub program as follows.
  \begin{itemize}
   \item 
