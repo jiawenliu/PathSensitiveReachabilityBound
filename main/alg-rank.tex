@@ -82,9 +82,9 @@ Three steps:
   \\
   \locbound(\absevent, c) \triangleq x
   & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
-  \locbound(\absevent, c) \triangleq x
-  & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \land \locbound(\absevent', c) = x \\
-  % \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
+  \locbound(\absevent, c) \triangleq \locbound(\absevent', c)
+  & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \\
+    % \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land  \absevent = (\_, \_ , x' \leq x - v) \\
   \locbound(\absevent, c) \triangleq x
   & \absevent \in SCC(\absG(c)) \land 
   \absevent  \notin \bigcup_{x \in \vardom} \dec(x, c)

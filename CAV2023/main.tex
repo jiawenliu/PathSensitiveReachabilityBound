@@ -58,7 +58,7 @@
     % The number of times a given control location 
     % inside a procedure is visited during the program execution.
     The upper bound on the number of times a given control location 
-    inside a procedure is visited during the program execution is referred as the reachability-bound.
+    inside a procedure is visited during program execution is referred to as the reachability-bound.
     %  by~\cite{GulwaniZ10} in the first place.
     % A tight reachability-bound
     % can help to improve the analysis result on other program features.
@@ -69,14 +69,14 @@
     % directly or path-sensitively.
     % To leverage these limitations,
     This paper presents a path-sensitive reachability-bound algorithm
-    aiming to find a precise symbolic reachability-bound on the program's every control location path-sensitively.
+    aiming to find a precise symbolic reachability-bound \todo{on the program's every control location path-sensitively}.
     %  in this paper.
     In comparison with previous methods, our algorithm brings together two lines of program complexity analysis techniques:
     1. amortized bound analysis through program abstraction and ranking function estimation, and
-    2. loop summarization based multiple loop paths refinement
-    and introduce two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound} over the combination.
+    2. loop summarization based multiple loop paths refinement.
+    Built on the combination, we introduce two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound}.
     % combines them effectively. 
-    The effective combination leverages the precision and efficiency trade-off comparing to adopt either one of them.
+    This effective combination leverages the precision and efficiency trade-off between the two lines of techniques.
     It allows us to compute precise reachability-bound on each program point path-sensitively.
     We implement a prototype and report on an experimental comparison with state-of-art tools over four different benchmarks.
 \keywords{Loop Bound Inference, program refinement, path-sensitive}

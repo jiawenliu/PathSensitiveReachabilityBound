@@ -120,20 +120,6 @@ We first compute three abstract states for each ranking function in different su
    \end{array}
  \]
   }
-% Here we only need to compute the $\rfnext(\tpath)$ for simple 
-% because that the recursion is exhausted into the base case, i.e. $\tpath$ when computing $\varGD(\rprog, c)$ as below.
-%  \item  The \emph{Variable Gradient Decent}, 
-%  $\varGD(\rprog, c)$
-%  is a set of equations $x = e$ for the same variables in the $\rfinit(\rprog, c)$.
-%  It computes the set of next states for every ranking function of the simple transition path $\tpath$ in $\rprog$,
-%  and recursively computes the loop bound, $BD(\rprog, c)$ in the meantime.
-%  \\
-%  {$\varGD(\rprepeat(\rprog), c) =  BD(\rprog, c)  \times
-% {\varGD(\rprog, c)}$}
-%  \\
-%  $\varGD(\rprog_1;\rprog_2, c) =  \varGD(\rprog_1, c) + \varGD(\rprog_2, c)$
-%  \\
-%  $\varGD(\tpath, c) =  \min\left\{v  ~|~ x = v \in \rfnext(\tpath, c) \right\}  $  
 \end{itemize}
 \end{defn}
 Now we compute $BD(\rprog, c)$ recursively by interactively computing another quantity, $\varGD(\rprog, c)$ as follows.
