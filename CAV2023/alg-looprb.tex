@@ -126,8 +126,8 @@ We first compute the $\outinB(\tpath_3, \rprepeat(\tpath_3)) = N $ for $\tpath_3
 Since $\tpath_3$ has two outer loops, $L_1$ and $L_3$.
 %  it is nested.
 To compute $\lpchB(3: \rprog_3, \tpath_3)$, where we use $\rprog_3$ denotes the body of the loop $L_3$,
-we first compute $\lpinit( \rprog_1, \tpath_3, c) = N$
+we first compute $\lpinit( \rprog_1, \tpath_3, c) = 0$,
 $\lpnext( \rprog_1, \tpath_3, c) =  N + 1 $, and
-$\rffinal(\rprog_1, c) = \{ i = 0, k = 0 \}$.
+$\rffinal(\rprog_1, c) = \{ i = n, k = N \}$.
 So we can know $\lpchB(1: \rprog_1, \tpath_3, c) = \max\{ \frac{n - 0}{n - N - 1}, \frac{N - 0}{N +  1}\} = 1$, as expected.
 \end{example}
