@@ -8,7 +8,7 @@ using the $\absclr(\absevent, c)$ as follows.
   \label{eq:absBD}
   BD(\rprog, c) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog \right\}.
 \end{equation}
-It is accurate only for simple loop, but not for multipath loops and the nested loops.
+It is accurate only for simple loops, but not for multipath or the nested loops.
 For example in Example~\ref{ex:relatedNestedWhileOdd-overview},
 it computes $BD(\rprog_1^1) = n$ and $BD(\rprog_1^2) = n $ for the two interleaving pattern of loop $L_1$.
 % The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while 
@@ -31,9 +31,8 @@ We first compute three abstract states for each ranking function in different su
   $\absfinal(\rprog)$ using standard control flow method.
   \item The \emph{Initial State}, 
   $\rfinit(\rprog, c)$ is a set of equations $x = e$, where $e \in \scexpr(c)$ is a
-  symbolic expression describing the initial value of $x$ before executing $\rprog$.
-  Each $x$ is the ranking function of a simple transition path $\tpath$ in this program. 
-  It contains the initial value for every ranking function of the simple transition path $\tpath$ in this program, 
+  symbolic expression bounding the initial value of $x$ before executing $\rprog$.
+  Each $x$ is a ranking function of a transition edge in this program, and $\rfinit(\rprog, c)$ contains the equations for every ranking function in $\rprog$,
   $\rfinit(\rprog, c) \triangleq $
   {\small
   \[
@@ -52,7 +51,7 @@ We first compute three abstract states for each ranking function in different su
  }
  $\rfinit(\tpath, c)$ can also be estimated by $\kw{INIT(c, 0, \absinit(\rprog))}$ in \cite{GulwaniJK09}. 
  %
- \item  The \emph{Final State}, $\rffinal(\rprog, c)$ is a conjunction of boolean expressions, which is the set of minimum values for the ranking functions
+ \item  The \emph{Final State}, $\rffinal(\rprog, c)$ computes the set of minimum values for every ranking functions
  after executing $\rprog$.
   % $\rffinal(\rprog, c) \triangleq $
  % \\
@@ -72,7 +71,7 @@ We first compute three abstract states for each ranking function in different su
     }
     $\kw{B}(\rprog, c)$ is the set of all the boolean constraints in $\rprog$.
  \item The \emph{Next State}, $\rfnext(\rprog, c) \in \scexpr(c)$ 
- computes for the ranking functions on $\rprog$ the amount that each of them is changed after the first execution of $\rprog$ and before the second execution. This quantity is only required for $\tpath$.
+ computes for the ranking functions on $\rprog$ the amount that each of them is changed after the first execution of $\rprog$ and before the second visit. This quantity is only required for $\tpath$.
  {\small
  \[
    \begin{array}{l}
@@ -148,7 +147,7 @@ For the first iteration pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhi
 $\rfinit = \{k = n - m, i = m - 1\}$, $\rffinal = \{k = 0, i = 0\}$, $\varGD(\rprog_1^1) = 4$, and get $BD(\rprog_1^1) = \lfloor \frac{m}{4} \rfloor $ as expected.
 
 Using the $BD$ computed by our new approach, we compute the local \emph{path reachability-bound} for
-each $\tpath$ w.r.t. its \textbf{the innermost loop} as below.
+each $\tpath$ w.r.t. \textbf{the innermost loop} as below.
 
 \begin{defn}[Local Path Reachability-bound Computation]
     \label{def:pathlocalrb}

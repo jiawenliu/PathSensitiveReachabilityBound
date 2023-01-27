@@ -5,16 +5,17 @@ for the program $c$.
 We first introduce some components of this graph.
 \begin{defn}[Symbolic Constant, Symbolic Expression]
  \label{def:symbolic_expr}
-The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$, in which a symbolic constant can be a natural number, $\infty$, or a program's input variable.
- The \emph{symbolic expression} of a program $\scexpr(c) \subseteq \mathcal{A}$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ for the program $c$.
+The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$, in which a symbolic constant can be either a natural number, or $\infty$, or a program's input variable.
+ The set of the \emph{symbolic expression} for a program $c$, $\scexpr(c) \subseteq \mathcal{A}$ is all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$.
 \end{defn}
 
 \begin{defn}[Difference Constraints]
- The difference constraints $DC(\vardom \cup \scvardom)$ is the set of all the inequality of
+ A difference constraint $d$ is an inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.
 An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus the symbolic constant $v$, and $x' \leq v$ describes that the value of $x$ in the current state is
 at most $v$.
+$DC(\vardom \cup \scvardom)$ denotes the set of all difference constraints over $\vardom \cup \scvardom$.
 \end{defn}
 
 \begin{defn}[Constraints]
@@ -68,15 +69,15 @@ describes the abstract execution of the command with label $l$.
 \end{defn}
 Again in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
 the edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 
-$\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the while loop with header at location $1$ , $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed right after.
+$\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the while loop with header at location $1$, $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed right after.
 
 \begin{defn}[Path]
  \label{def:abs_cfgpath} 
  A path on $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots $ with
  \begin{itemize}
- \item the vertices sequence $(l_0, \ldots)$, where $l_i \in \absV(c)$ for every $i = 0, 1, \ldots$ and
+ \item the vertices $(l_0, \ldots)$, where $l_i \in \absV(c)$ for every $i = 0, 1, \ldots$ and
  %
- \item the edge sequence $(e_0, \ldots)$, where $e_i = (l_{i}, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, 1, \ldots$.
+ \item the edges $(e_0, \ldots)$, where $e_i = (l_{i}, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, 1, \ldots$.
  \end{itemize}
  A path is cyclic if it has the same start- and end-point. A path is simple if it does not visit a location twice except for the start- and end-location. We use $\paths(\absG(c))$ to denote the set of all the paths on $\absG(c)$,
  and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,

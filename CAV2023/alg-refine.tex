@@ -27,15 +27,17 @@ is a \emph{simple transition path} if and only if it satisfies,
 \end{itemize}
 \end{defn}
 Each $\tpath$ 
-contains only the edges of atomic assignment or guard transitions without interleaving other paths and also corresponds to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
+contains only the edges of atomic assignment or guard transitions, which is loop-free and interleaving-free.
+It also corresponds to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
 For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), the $1 \to 2 \to 8 \to 1$ is a \emph{simple transition path}.
 However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple.
 Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it visits a loop header $4$ inside the path. $1 \to 2 \to 3$ isn't either because its end-point isn't a loop header.
 
 \paragraph{Rewrite the Program}
 The second sub-procedure rewrites the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics in Algorithm~\ref{alg:alg-refine_rewrite} in Appendices~\ref{apdx:alg-rewrite}.
-We first collect all the \emph{simple transition path}s as the algorithm input. 
-The algorithm initializes each candidate with a \emph{simple transition path} and generates a new candidate program by composing and deleting existing ones in each iteration and updating the candidate set until it has only one candidate as the output.
+% We first collect all the \emph{simple transition path}s as the algorithm input. 
+The algorithm takes  the set of all \emph{simple transition path}s as the input and initializes each candidate with a \emph{simple transition path}.
+Then in each iteration, we generate a new candidate program by composing and deleting existing ones and updating the candidate set until it has only one candidate, i.e., the output.
 %
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, the corresponding rewritten program is
 $ 

@@ -32,9 +32,6 @@ $n - m + \lfloor\frac{m}{2}\rfloor + 1$,
 and the tight \emph{reachability-bound} for location $5$ inside $L_4$ is $m$, which is the same as this innermost loop iteration bound.
 % \\
 \highlight{
-%     The tight \emph{reachability-bound}s for the locations inside the loop $L_4$ is 
-% the same as its innermost loop iteration bound.
-% , as well as our \emph{path reachability-bound}.
 However, for the locations between $L_1$ and $L_4$,
 the tight \emph{reachability-bound} s are the product of the inner and outer loop iteration bounds.}
 % \\
@@ -52,7 +49,7 @@ By multiplying the \emph{path reachability-bound} of $\tpath_3$ within $L_4$
 with its \emph{loop reachability-bound} w.r.t $L_1$, we can obtain an accurate
 \emph{reachability-bound} for location $5$.
 % This quantity isn't considered or computed in any of the previous works.
-\cite{GulwaniJK09} considers a similar quantity, the \emph{Progress Invariant}, but it bounds the iteration times of \highlight{inner loop $L_4$} w.r.t. one iteration of $L_1$, which is $m$. They still over-approximate the bound for locations inside $L_4$ as $m \times (n - m)$.
+\cite{GulwaniJK09} considers a similar quantity using the \emph{Progress Invariant}, but it bounds the iteration times of \highlight{inner loop $L_4$} w.r.t. one iteration of $L_1$, which is $m$. They still over-approximate the bound for locations inside $L_4$ as $m \times (n - m)$.
 % \end{itemize}
 With these two key quantities, our algorithm computes the reachability-bound for this example through the following steps.
 \input{alg-overview}
