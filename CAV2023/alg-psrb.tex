@@ -1,8 +1,7 @@
-Our path-sensitive reachability-bound algorithm relies on the \emph{Abstract Transition Graph}, $\absG(c)$, the \emph{Refined Program}, $\rprog$ and the upper bound invariant of the \emph{Ranking Function} computed previously for the program $c$.
-It first requires to compute the new quantities, \emph{Path Reachability-bound} and the \emph{Loop Reachability-bound}, and this section introduces the definition and the following sections describe how we compute them.
+Based on the \emph{Abstract Transition Graph}, $\absG(c)$, the \emph{Refined Program}, $\rprog$ and the upper bound invariant for the \emph{Ranking Function} computed previously for a program $c$, our algorithm first requires to compute the new quantities, \emph{Path Reachability-bound} and the \emph{Loop Reachability-bound}. This section introduces the algorithm and the following sections describe how we compute them.
 
 % As pre-procedures, we first need to compute the loop bound, $BD(\rprog', c) \in \scexpr(c)$ for every subprogram $\rprog'$ of $c$ in $\rprog$, and use it to estimate the \emph{path local reachability-bound}, $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$ for each $\tpath$ w.r.t. the sub loop program $\rprog_l$.
-As pre-procedures, we first introduce the loop bound, $BD(\rprog_l, c)$ for every loop program $\rprog_l$ of $c$ in $\rprog$ and the local \emph{path reachability-bound}.
+As pre-procedures, we first compute the loop bound, $BD(\rprog_l, c)$ for every loop program $\rprog_l$ of $c$ in $\rprog$ and the local \emph{path reachability-bound}.
 % and use it to estimate the \emph{path local reachability-bound}, $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$.
 %  for each $\tpath$ w.r.t. the sub loop program $\rprog_l$.
 \begin{defn}[Loop Bound]
@@ -49,29 +48,30 @@ we aim to compute $1$ for $\lpchB(\rprog_1^1, \tpath_3, c)$ in Section~\ref{sec:
 The \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ for each $\tpath$
 aims to bound the execution times of $\tpath$ globally
 % during the execution of $c$ 
-and Section~\ref{sec:pathrb} presents the estimating algorithm.
+and Section~\ref{sec:pathrb} presents the computation.
 %
 \begin{defn}[Path Reachability-bound]
 % \label{def:pathrb}
 For a program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
-$\tpath$'s reachability-bound, $\inoutB(\rprog, \tpath, c) \in \scexpr(c)$ is the upper bound on the
-execution times of $\tpath$ when executing the $\rprog$.
+the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c) \in \scexpr(c)$ is the upper bound on the
+times that $\tpath$ is executed when executing $c$.
 \end{defn}
 % Intuitively, $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ globally during the execution of $c$.
-
-For our running program in Example~\ref{ex:relatedNestedWhileOdd-overview}, since there isn't outer loop for $\tpath_1, \tpath_2$ and $\tpath_3$, we will compute $\frac{m}{4}$, which is the same as their local bound.
-While for $\tpath_3$ we compute  the $\inoutB(\rprog, \tpath_3) = \frac{m}{4} \times 1$ by multiplying its local $\inoutB(\rprepeat(\tpath_3), \tpath_3, c)$ with the loop reachability bound.
+%
+In Example~\ref{ex:relatedNestedWhileOdd-overview}, since there isn't outer loop for $\tpath_1$ and $\tpath_2$, we aim to compute $\frac{m}{4}$, which is the same as their local bound.
+While $\tpath_3$ is nested in two loops, but only visited once in the outer iteration, we still aim to compute $\frac{m}{4} \times 1$.
+% by multiplying its local $\inoutB(\rprepeat(\tpath_3), \tpath_3, c)$ with the loop reachability bound.
 % path is $\tpath_3 = \frac{m}{4} \times 1 = \frac{m}{4} $.
 
-For each program point in a program $c$, $l \in \lvar(c)$,
+Then we compute for each program point in a program $c$, $l \in \lvar(c)$,
 %  in a program $c$,
-its \emph{reachability-bound}, he \emph{reachability-bound}, $\psRB(l, c)$ during the execution of $c$ is computed as follows.
+its \emph{reachability-bound}, $\psRB(l, c)$ by summing up all the path reachability bounds over all simple transition paths that contains $l$.
 %
-\begin{defn}[Program Point Reachability-bound Computation]
+\begin{defn}[The Reachability-bound Computation]
 \label{def:point_psrb}
-Given a program $c$ with its \emph{Abstract Transition Graph}, $\absG(c)$ and refined program $\rprog$,
-the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(l, c)$ 
-sums up all the path reachability bounds, $\inoutB(\rprog, \tpath, c)$ over all simple transition paths $\tpath$ that contains the program point $l$.
+Given a program $c$ with its {abstract transition graph}, $\absG(c)$ and refined program $\rprog$,
+the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(l, c)$  is computed as follows,
+% sums up all the path reachability bounds, $\inoutB(\rprog, \tpath, c)$ over all simple transition paths $\tpath$ that contains the program point $l$.
 \[ 
   \psRB(l, c) = 
   \sum

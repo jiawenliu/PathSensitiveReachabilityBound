@@ -14,7 +14,7 @@ As the comparison, we also report the results of four bound analysis tools,
 and \hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}~\cite{BenchmarkTianhan}
 and self-implemented SPEED based on~\cite{GulwaniJK09}.
 \\
-\emph{Effectiveness} We aim to answer, is our prototype able to compute more precise reachability-bound for different program points when comparing with the worst-case program
+\emph{Accuracy} We aim to answer, is our prototype able to compute more precise reachability-bound for different program points when comparing with the worst-case program
 complexity analysis tools?
 Tab.~\ref{tb:accuracy-eval} shows the evaluation results including the theoretical bounds and empirical results.
 % on different path locations.
@@ -24,36 +24,25 @@ we present in column $4^{th}$ our results for different locations in different l
 Even for the unbounded loops, we can still compute finite \emph{reachability-bound}s on certain program points which are not involved with the unbounded loop paths.
 While none of the existing tools can compute reasonable bounds for these programs.
 For the challenging loops without multipath, we do slightly worse but still comparable to existing tools.
-Our tool suffers the efficiency problem because of the prototype implementation and the possible non-terminating in program refining and the ranking function estimating.
-The detail performance evaluation is in Appendices~\ref{apdx:eval-performance}.
-% Tab.~\ref{tb:performance-eval}.
-% \begin{table}[H]
-% \caption{The Performance Evaluation of {\THESYSTEM}}
-% \label{tb:performance-eval}
-% \centering
-% {\footnotesize
-% \begin{tabular}{ >{\small}c | c | c | c | c | c | c | c | c | c }
-% \multirow{2}{*}{Benchmark} & \multirow{2}{*}{\# P} & \multirow{2}{*}{M.P.L \#} & Nested & \multirow{2}{*}{Bounded} & {Success} & \multirow{2}{*}{Failed} & Time & Total\\
-% & & & Loop \# & & Rate & & Outs & Runtime \\
-% \hline
-% {Loopus} & {110} & 53 & 52 & 98 & 89.1\% & 11 & 7 & 7min42sec \\
-% \hline
-% Loopus-C & 23 & 20 & 20 & {20} & {86\%} & 2 & 3 & {12min39sec} \\
-% \hline
-% \todo{Icra} & 72 & 72 & 6 & {55} + \todo{-} & + \todo{-} & 0 & 0 & \todo{1min58sec} \\
-% \hline
-% Tianhan & 37 & 2 & 3 & 37 & 100.0\% & 1 & 0 & 1min03sec \\
-% \hline
-% \end{tabular}
-% }
-% \end{table}
+\\
+\emph{Effectiveness}
+\newcommand{\pointnum}{\kw{\# l}}
+Under the same overall complexity, different points have very different $\psRB$.
+We also show the number of points, $\pointnum$ that have the same $\psRB$ under the same worst complexity.
+The last column shows the summing of each $\psRB \times \pointnum$, V.S. summing of the worst complexity $\times \pointnum$.
+There is a significant improvement, which can be used to save resources allocation,
+precisely compute information leakage, e.t.c.
+\\
+\emph{Performance}
+Our tool suffers the efficiency problem because of the implementation and the possible non-terminating in program refining and the ranking function estimating.
+The performance detail is in Appendices~\ref{apdx:eval-performance}.
  \begin{table}[ht]
  \vspace{-1cm}
  \caption{The Accuracy Evaluation of {\THESYSTEM}}
  \label{tb:accuracy-eval}
  \centering
- {\footnotesize
- \begin{tabular}{ >{\scriptsize}c | >{\scriptsize}c | >{\footnotesize}c | >{\scriptsize}c | c | c | c | c | c | c }
+ {\scriptsize
+ \begin{tabular}{ >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\tiny}c | c | c | c | c | c | c }
  {Benchmark} & {Theory} & & {\THESYSTEM} & \multicolumn{5}{c}{Computed} & \\
  \cline{5-10}
  Suit & Worst & \# & on Loop Paths & {\tiny \THESYSTEM} & {\tiny Loopus} & {\tiny CoFloCo} & {\tiny SPEED} & {\tiny Tianhan} & \\
@@ -105,5 +94,3 @@ The detail performance evaluation is in Appendices~\ref{apdx:eval-performance}.
  }
  \vspace{-1cm}
  \end{table}
- 
- 

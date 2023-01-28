@@ -1,4 +1,4 @@
-This procedure has three sub-procedures in each paragraph below.
+% This procedure has three sub-procedures in each paragraph below.
 \paragraph{The Simple Transition Path}
 We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers.
 % in program $c$,
@@ -12,9 +12,7 @@ or a simple path having either different while loop headers, the program entranc
 without visiting any loop header inside the path.
 \\
 Formally, a path $l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots l_n \in \paths(\absG(c))$ with the
-vertices sequence $(l_0, \ldots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \ldots, n$ and
-%
-the edge sequence $(e_1, \ldots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \ldots, n$,
+vertices $(l_0, \ldots, l_n)$ and the edges $(e_1, \ldots, e_n)$, where $l_i \in \absV(c)$ and $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 0, \ldots, n$
 %
 is a \emph{simple transition path} if and only if it satisfies,
 \begin{itemize}
@@ -26,15 +24,14 @@ is a \emph{simple transition path} if and only if it satisfies,
  \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
 \end{itemize}
 \end{defn}
-Each $\tpath$ 
-contains only the edges of atomic assignment or guard transitions, which is loop-free and interleaving-free.
-It also corresponds to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
+Each $\tpath$ is loop-free and interleaving-free corresponding to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
+% contains only the edges of atomic assignment or guard transitions, which
 For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), the $1 \to 2 \to 8 \to 1$ is a \emph{simple transition path}.
 However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple.
 Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it visits a loop header $4$ inside the path. $1 \to 2 \to 3$ isn't either because its end-point isn't a loop header.
 
-\paragraph{Rewrite the Program}
-The second sub-procedure rewrites the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics in Algorithm~\ref{alg:alg-refine_rewrite} in Appendices~\ref{apdx:alg-rewrite}.
+\paragraph{Program Rewriting}
+Then we rewrite the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics in Algorithm~\ref{alg:alg-refine_rewrite} in Appendices~\ref{apdx:alg-rewrite}.
 % We first collect all the \emph{simple transition path}s as the algorithm input. 
 The algorithm takes  the set of all \emph{simple transition path}s as the input and initializes each candidate with a \emph{simple transition path}.
 Then in each iteration, we generate a new candidate program by composing and deleting existing ones and updating the candidate set until it has only one candidate, i.e., the output.

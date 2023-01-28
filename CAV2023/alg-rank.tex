@@ -1,19 +1,10 @@
-The approach in this step is inspired mainly from the Algorithm.2 in~\cite{SinnZV14},
-  % which assigns a variable to each edge on which this variable decrease as its ranking function.
-  the Algorithm.3 in~\cite{ZulegerGSV11},
-  and the Definition.25 in Section 4 from~\cite{SinnZV17}, and enriched with path-sensitivity.
-  % Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
-  % and estimates the maximum value each variable in this set.
-  % Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decrease as its ranking function
-  % and then estimates the maximum value for the ranking function.
-  % The Definition.25 in paper~\cite{SinnZV17}
-  % assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
-
-% The three sub-steps are standard and based on the Definition.25 in paper~\cite{SinnZV17}.
-
+% The approach in this step is inspired mainly from the Alg.~2 in~\cite{SinnZV14},
+%   % which assigns a variable to each edge on which this variable decrease as its ranking function.
+%   the Alg.~3 in~\cite{ZulegerGSV11},
+%   and the Def.~25 in Section 4 from~\cite{SinnZV17}, and enriched with path-sensitivity.
 \paragraph{Collecting Variable Modifications}
-  For each variable $x$ in a program $c$, this step computes three transition sets, $\inc(x, c)$, $\dec(x, c)$,
-  and $\reset(x, c)$ for $x$.
+  For each variable $x$ in a program $c$, we first compute three transition sets, $\inc(x, c)$, $\dec(x, c)$,
+  and $\reset(x, c)$ for $x$
   % Every edge in a set corresponds to a transition 
   in which $x$ is increased,
   %  $\inc(x, c)$,
@@ -37,7 +28,7 @@ The approach in this step is inspired mainly from the Algorithm.2 in~\cite{SinnZ
   %
     $\reset(x, c) = \left\{ \absevent| \absevent = (l,  x' \leq y - v, l') \land x \neq y \land \absevent \in \absE(c) \right\}$.  
   \end{defn}
-  We also compute the reset graph and the reset chain in Appendices~\ref{apdx:alg-resetgraph}. 
+  % We also compute the reset graph and the reset chain in Appendices~\ref{apdx:alg-resetgraph}. 
 %   \\
 %   $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
 %   is the set of the edges where the variable increase, 
@@ -80,7 +71,7 @@ The approach in this step is inspired mainly from the Algorithm.2 in~\cite{SinnZ
   \label{def:ranking_gen}
   For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
   its \emph{ranking function}, $\locbound(\absevent, c)$
-  is the symbol $x\in \scvar(c)$ that decreases on this edge as follows,
+  is the symbol $x\in \scvar(c)$ that decreases on this edge as follows where $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
 {\small
 \[ 
 \begin{array}{ll}
@@ -101,7 +92,6 @@ The approach in this step is inspired mainly from the Algorithm.2 in~\cite{SinnZ
 \end{array}
 \]
 }
-$SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
   \end{defn}
   %
   % \todo{Example of ranking function estimated}

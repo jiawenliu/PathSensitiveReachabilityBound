@@ -10,12 +10,12 @@ The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq 
 \end{defn}
 
 \begin{defn}[Difference Constraints]
- A difference constraint $d$ is an inequality of
+A difference constraint $d$ is an inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.
-An inequality $x' \leq y + v$ describes that the value of $x$ in the current state is
+$x' \leq y + v$ describes that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus the symbolic constant $v$, and $x' \leq v$ describes that the value of $x$ in the current state is
 at most $v$.
-$DC(\vardom \cup \scvardom)$ denotes the set of all difference constraints over $\vardom \cup \scvardom$.
+$DC(\vardom \cup \scvardom)$ denotes the universe of all difference constraints over $\vardom \cup \scvardom$.
 \end{defn}
 
 \begin{defn}[Constraints]
@@ -24,22 +24,15 @@ is either a
 difference constraint $d \in DC(\vardom \cup \scvardom)$, a boolean expression $\bexpr \in \booldom$
 or $\top$ denotes always true.
 \end{defn}
-When the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
-% Then $x'$ 
-it denotes that
-the value of variable $x$
-after executing the command at $l$ is at most
-% and the right-hand side describes 
-the value of variable $y$ plus $v$ before the execution,
-and $l \xrightarrow{x' \leq v} l'$ respectively denotes
-$x$ has at most
-% and the right-hand side describes 
-the value of the symbolic constant $v$.
-% before the execution.
-For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
-describes the execution of
- the command at line $7$, 
-$\clabel{\assign{i}{i - 1}}^{7}$, and value of $i$ is at most the previous $i$'s value minus $1$.
+% If the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$ (rsp. $l \xrightarrow{x' \leq v} l'$),
+% it denotes that
+% the value of variable $x$
+% after executing the command at $l$ is at most
+% the value of variable $y$ plus $v$ (rsp. $v$) before the execution.
+For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), the constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+describes after the execution of
+ the command
+$\clabel{\assign{i}{i - 1}}^{7}$, the value of $i$ is at most the previous $i$'s value minus $1$.
 %
 % For every expression in each of the label commands, it is computed in three steps via the program abstraction method adopted from Section~6 in~\cite{SinnZV17}. 
 %
@@ -83,4 +76,4 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
  and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
  where $\pathl: \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
  \end{defn}
- In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path}, but it is not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
+ In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path} but not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.

@@ -15,12 +15,12 @@ the expected \emph{reachability-bound}s for locations in outer loop $3, 6, 7$ an
 for location $2$ is $\lfloor\frac{m}{2}\rfloor$ and $\lfloor\frac{m}{2}\rfloor + 1$ for location $1$.
 \highlight{Though within the same loop $L_1$, the bounds for different locations are different.}
 Amortized analysis tools such as Loopus~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15}, etc. ignore path sensitivity and approximate the bound $n$ as the bound for loop $L_1$. 
-While some path-refinement-based methods such as \cite{GulwaniZ10,GulwaniJK09}, CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} and etc. only give the same bound for all the locations within the loop $L_1$. 
+While some path-refinement-based methods such as \cite{GulwaniZ10,GulwaniJK09}, CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} and etc. give the same bound for all the locations within the loop $L_1$. 
 Although we can reuse their results i.e., loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
 it is still unclear for locations $3, 6, 7$, and $8$.
 %
 This motivates our first key novelty -- the \emph{path reachability-bound} $\inoutB(\rprog, \tpath)$ for a loop-free and interleaving-free path $\tpath$.
-It bounds the number of times each path over a path-refined program is evaluated.
+It bounds the times that each path is evaluated in a path-refined program.
 % \item 
 
 \textbf{Challenge II} The second challenge occurs in the nested loop.

@@ -28,8 +28,8 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
  \end{defn}
 \footnotetext{In a refined program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$.}
 
-We also guarantee that \emph{path reachability-bound} for the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound on $\tpath$'s execution times when executing $\rprog$
+We also guarantee that $\inoutB(\rprog, \tpath, c)$ for $\tpath$ in a refined program $\rprog$ is a sound upper bound on the times that $\tpath$ is executed during executing $c$
 in \highlight{Appendix~\ref{apdx:pathrb-sound}}.
 %
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, with $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
-$\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ for $\tpath_3$ computed before, we obtain $\inoutB(\rprog, \tpath) = 1 \times (n - m)$ as tight as expected.
+$\outinB(4: \rprepeat(\tpath_3), \tpath_3, c) = n - m$ computed before, we obtain $\inoutB(\rprog, \tpath, c) = 1 \times (n - m)$ as tight as expected.
