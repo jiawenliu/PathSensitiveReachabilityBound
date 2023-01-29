@@ -55,22 +55,32 @@
 % typeset the header of the contribution
 %
 \begin{abstract}
-    % The number of times a given control location 
-    % inside a procedure is visited during the program execution.
+    % The upper bound on the number of times a given control location 
+    % inside a procedure is visited during program execution is referred to as the reachability-bound.
+    % This paper presents a path-sensitive reachability-bound algorithm
+    % aiming to find a precise symbolic reachability-bound {for every control location inside a program}.
+    % %  in this paper.
+    % In comparison with previous methods, our algorithm brings together two lines of program complexity analysis techniques:
+    % 1. amortized bound analysis through program abstraction and ranking function estimation, and
+    % 2. loop summarization-based multiple loop paths refinement.
+    % Built on this combination, we introduce two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound}.
+    % This effective combination leverages the precision and efficiency trade-off between the two lines of techniques.
+    % It allows us to compute precise reachability-bound on each program point path-sensitively.
+    % We implement a prototype and report on an experimental comparison with state-of-art tools over four different benchmarks.
     The upper bound on the number of times a given control location 
     inside a procedure is visited during program execution is referred to as the reachability-bound.
-    This paper presents a path-sensitive reachability-bound algorithm
-    aiming to find a precise symbolic reachability-bound {for every control location inside a program}.
-    %  in this paper.
-    In comparison with previous methods, our algorithm brings together two lines of program complexity analysis techniques:
+    This paper presents a path-sensitive reachability-bound algorithm.
+    In comparison with previous methods, 
+    our algorithm is the first one that computes precise reachability-bound for every control location
+    and takes care the path-sensitivity.
+    We bring together two lines of program complexity analysis techniques:
     1. amortized bound analysis through program abstraction and ranking function estimation, and
     2. loop summarization-based multiple loop paths refinement.
-    Built on the combination, we introduce two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound}.
-    % combines them effectively. 
-    This effective combination leverages the precision and efficiency trade-off between the two lines of techniques.
-    It allows us to compute precise reachability-bound on each program point path-sensitively.
+    Building on this combination, we introduce two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound}, which leverage the precision and efficiency trade-off between the two lines of techniques,
+    and allow us to compute precise reachability-bound on each program point path-sensitively.
     We implement a prototype and report on an experimental comparison with state-of-art tools over four different benchmarks.
-\keywords{Reachability-bound, Amortized Bound Analysis, Ranking Functions, Path Refinement, Difference Constraints}
+
+    \keywords{Reachability-bound, Amortized Bound Analysis, Ranking Functions, Path Refinement, Difference Constraints}
 \end{abstract}
 %
 %
