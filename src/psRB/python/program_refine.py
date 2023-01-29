@@ -24,6 +24,7 @@ class RefinedProg():
         self.start_point = start_point
         self.end_point = end_point
         self.prog_edges = self.build_edges()
+        print("The EDGES ARE:{}".format(self.prog_edges))
         self.prog_id = self.build_id()
         self.prog_signature = self.build_signature()
         self.transition_paths = self.collect_transition_paths()
@@ -31,8 +32,12 @@ class RefinedProg():
         self.edge_enclosed_loop = {edge: None for edge in self.prog_edges}
         self.compute_enclosed_loop()
         self.build_edge_enclosed_loop()
+        
 
-
+    def initialize(self):
+        return
+        self.compute_enclosed_loop()
+        self.build_edge_enclosed_loop()
 ######################################################################## Program Property/Data Intereface ########################################################################
 
 
@@ -102,7 +107,7 @@ class RefinedProg():
             return self.get_repeat().get_edges()
         elif self.type == RefinedProg.RType.SEQ:
             seq1, seq2 = self.get_seqs()
-            return seq1.get_edges() + seq2.get_edges()
+            # return seq1.get_edges() + seq2.get_edges()
             return seq1.get_edges() + ["{}->{}".format(seq1.end_point, seq2.start_point)] + seq2.get_edges()
         elif self.type == RefinedProg.RType.TP:
             return list(map(lambda edge: "{}->{}".format(edge[0], edge[1]),  zip(self.get_tp()[:-1], self.get_tp()[1:])))
@@ -144,19 +149,22 @@ class RefinedProg():
     def compute_enclosed_loop(self):
         def dfs(Loop, prog):
             L = prog.loop_label if prog.loop_label else Loop
-            if self.type == RefinedProg.RType.CHOICE:
-                return [dfs(L, choice_p) for choice_p in self.get_choices()]
-            elif self.type == RefinedProg.RType.REPEAT:
-                return dfs(L, prog.get_repeat())
-            elif self.type == RefinedProg.RType.SEQ:
-                return [dfs(L, seq_p) for seq_p in self.get_seqs()]
-            elif self.type == RefinedProg.RType.TP:
+            if prog.type == RefinedProg.RType.CHOICE:
+                for choice_p in prog.get_choices():
+                    dfs(L, choice_p)
+            elif prog.type == RefinedProg.RType.REPEAT:
+                dfs(L, prog.get_repeat())
+            elif prog.type == RefinedProg.RType.SEQ:
+                for seq_p in prog.get_seqs():
+                    dfs(L, seq_p)
+            elif prog.type == RefinedProg.RType.TP:
                 self.enclosed_loop[str(prog.get_tp())] = L
+        dfs(None, self)
 
     def build_edge_enclosed_loop(self):
         for path, loop in self.enclosed_loop.items():
             for i in range(len(path) - 1):
-                self.edge_enclosed_loop[ "{}->{}".format(path[i], path[i + 1])] = loop
+                self.edge_enclosed_loop["{}->{}".format(path[i], path[i + 1])] = loop
 
 
     def pretty_print(self):
@@ -239,14 +247,14 @@ class ProgramRefine():
                 if prog not in pop_set:
                     updated_working.append(prog)
             
-            # print("THE UPDATED WORKING LIST: {}".format(list(map(lambda prog: prog.get_signature(), updated_working))))
+            print("THE UPDATED WORKING LIST: {}".format(list(map(lambda prog: prog.get_signature(), updated_working))))
             if working == updated_working:
                 working = updated_working
+                working.sort(key=lambda prog: (prog.start_point, prog.end_point))
                 break
             working = updated_working
             working.sort(key=lambda prog: (prog.start_point, prog.end_point))
-        print("THE TRANSLATED PROGRAM: ", working[-1].get_signature())
-        return working[-1]
+        return working[0]
 
 
 
@@ -258,6 +266,7 @@ class ProgramRefine():
         self.translated_prog = self.build_program()
         self.refined_prog = self.optimal_program_refine(self.translated_prog)
         print("REFINED PROGRAM : {}".format(self.refined_prog.get_signature()))
+        self.refined_prog.initialize()
         return self.refined_prog
 
     def get_translated_prog(self):

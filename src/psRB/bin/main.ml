@@ -38,51 +38,75 @@ let parse_prog file =
         Parser.toplevel Lexer.main lb
 
 let _ =
-    (* Set up the start time* *)
-    let t = Caml_unix.gettimeofday () in
-    let (infile , outfile) = parseArgs () in 
-    let example_name = hd (rev (split_on_char '/' infile)) in
-        (******************** Create dcfg Output File  ********************)
-    let outfile_dcfg = 
-    if (String.equal outfile "") 
-    then "./dcfg/" ^ example_name
-    else outfile 
-    in
-    let oc = Out_channel.create outfile_dcfg in
-        (******************** run dcfg and parser code  ********************)
-      let result = parse_prog infile in
-      let cfg_result = Cfg.generate_cfg result in 
-      let blocks = cfg_result.nodes in
-      let _ =  Printf.fprintf oc "%d\n" (List.length blocks) in 
-      let _ = cfg_result.node_map in
-      List.fold_left ~f:( fun () block -> Printf.fprintf oc "%d," (Syntax.isQuery block) ) ~init:() blocks;
-      (* Printf.fprintf oc "\n"; *)
-      let string_result = print_lcommand result in
-      Printf.printf "The input program is : %s" string_result;
-      let _ = Df.kill result (List.nth_exn blocks 1) in
-      print_newline();
-      let cfg_result = Cfg.generate_cfg result in 
-      let _ =  Printf.printf  "%d\n" (List.length cfg_result.nodes ) in   
-      let (_, rd_in) = Df.kildall cfg_result in
-      Printf.printf "DCDG result:\n";
-      let dcdg_result =Dcdg.dcdg result cfg_result rd_in in
-      (******************** output dcfg result ********************)
-      Printf.printf "computation of the DCDG total time:%fs\n" (Caml_unix.gettimeofday () -. t) ;
-      Printf.fprintf oc "\n";
-      print_out_dcdg oc dcdg_result;    
-      Printf.fprintf oc "\n";
-      let weight_time = Caml_unix.gettimeofday () in
-      let weight_list  = Weight_infer.infer result  oc blocks in 
-      Weight_infer.print_weight_list  weight_list ;
-      Printf.printf "computation of the weight infer time:%fs\n" (Caml_unix.gettimeofday () -. weight_time) ;
-      (* Close Channel *)
-      Out_channel.close oc;  
+      (* Set up the start time* *)
+      let t = Caml_unix.gettimeofday () in
+      let (infile , outfile) = parseArgs () in 
+      let example_name = hd (rev (split_on_char '/' infile)) in
+      Printf.printf "The Input File is : %s\n" example_name;
+        (******************** run the parser code  ********************)
+        let result = parse_prog infile in
+        let string_result = print_lcommand result in
+        Printf.printf "The input program is : %s\n" string_result;
+
+        (******************** generate the regular cfg  ********************)
+
+        let cfg_result = Cfg.generate_cfg result in 
+        let blocks = cfg_result.nodes in
+        let _ =  Printf.printf "The Toal Lines is : %d\n" (List.length blocks) in 
+        
+        (******************** print the regular cfg  ********************)
+        (* let _ =  Printf.printf  "%d\n" (List.length cfg_result.nodes ) in   
+          print_newline(); *)
+
+        (******************** Create dcfg and light weight Output File  ********************)
+      
+        let outfile_dcfg = 
+          if (String.equal outfile "") 
+          then "./dcfg/" ^ example_name
+          else outfile 
+          in
+          let oc = Out_channel.create outfile_dcfg in
+      
+      (******************** run the dcfg code  ********************)
+      
+        let _ =  Printf.fprintf oc "%d\n" (List.length blocks) in 
+        let _ = cfg_result.node_map in
+        List.fold_left ~f:( fun () block -> Printf.fprintf oc "%d," (Syntax.isQuery block) ) ~init:() blocks;
+        let _ = Df.kill result (List.nth_exn blocks 1) in
+        print_newline();
+        let cfg_result = Cfg.generate_cfg result in 
+        let _ =  Printf.printf  "%d\n" (List.length cfg_result.nodes ) in   
+        let (_, rd_in) = Df.kildall cfg_result in
+        Printf.printf "DCDG result:\n";
+        let dcdg_result =Dcdg.dcdg result cfg_result rd_in in 
+      
+      (******************** print dcfg performance ********************)
+      
+        Printf.printf "computation of the DCDG total time:%fs\n" (Caml_unix.gettimeofday () -. t) ;
+        Printf.fprintf oc "\n";
+        print_out_dcdg oc dcdg_result;    
+
+      (******************** light weight inference ********************)  
+        Printf.fprintf oc "\n";
+        let weight_time = Caml_unix.gettimeofday () in
+        let weight_list  = Weight_infer.infer result  oc blocks in 
+
+      (******************** print light weight inference result ********************)
+        Weight_infer.print_weight_list  weight_list ;
+        Printf.printf "computation of the weight infer time:%fs\n" (Caml_unix.gettimeofday () -. weight_time) ;
+      
+      (******************** Close dcfg and light weight Output File  ********************)
+        Out_channel.close oc;  
 
       (******************** run abscfg code  ********************)
       let time_abscfg = Caml_unix.gettimeofday () in
+        
         (******************** Create abscfg Output File  ********************)
-      let outfile_abscfg = "./abscfg/" ^ example_name in 
-      let oc = Out_channel.create outfile_abscfg in
+        let outfile_abscfg = 
+          if (String.equal outfile "") 
+          then "./abscfg/" ^ example_name
+          else outfile  in 
+        let oc = Out_channel.create outfile_abscfg in
         (******************** run abscfg  ********************)
         Printf.printf "ABSCFG result:\n";
         let aflow = Abs.abs (Seq (result, (Skip (Label (-1))))) in
