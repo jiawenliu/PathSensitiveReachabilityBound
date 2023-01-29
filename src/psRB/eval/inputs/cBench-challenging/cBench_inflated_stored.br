@@ -1,0 +1,21 @@
+[ k <- inputk ];
+[ n <- inputn ];
+[ l <- limit ];
+[ k <- - ( k, n ) ];
+while [ < (k, (16))] 
+do {
+    [k <- + ( k, 8 )]
+}
+[k <- - ( k, 16 )];
+while [ < (k, (16))]  do {
+    [k <- + ( k, 8 )]
+};
+[k <- - ( k, 16 )];
+while [> (n, 0)] 
+do { 
+	while [ < (k, limit) ]
+	{ 
+	    [k <- + ( k, 8 )]
+	}
+    [k <- - ( k, 8 )]
+}

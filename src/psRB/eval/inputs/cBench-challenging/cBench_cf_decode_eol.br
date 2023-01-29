@@ -1,0 +1,45 @@
+[p <- pr_ptr] 0 ; 
+[rlimit <- pr_limit] 1; 
+[bits_left <- ss_bits_left] 2;
+[ zeros <- 12 ] 3;
+while [ > (zeros, 0) ] 4 do 
+{
+	if [ < ( bits_left, 1 ) ] 5 
+	then 
+		{ 	if [ < ( - (rlimit, p), 3 ) ] 6
+			then {
+				if [ > (rlimit, p) ] 7 
+				then {  [ p <- + ( p, 1 ) ] 8 }
+				else {  
+					[ zeros <- 0 ] 9 };
+					[ bits_left <- + ( bits_left, 8 ) ] 10
+				}
+			else {
+				[ bits_left <- + ( bits_left, 24 ) ] 11;
+				[ p <- + ( p, 3 ) ] 12
+			}
+		}
+	else { [ skip ] 13 };
+	[ bits_left <- - ( bits_left, 1 ) ] 14
+};
+if [ > (ss_K, 0) ] 15 
+then {  [ look_ahead <- 2 ] 16 }
+else {  [ look_ahead <- 1 ] 17   };
+while [ true ]  do {
+	if [ < (bits_left, look_ahead) ] 18
+	then {
+	    if [ < ( - (rlimit, p), 3 ) ] 19
+	    then {
+			if [ > (rlimit, p) ] 20 
+			then {  [ p <- + ( p, 1 ) ] 21C}
+			else {  [ zeros <- 0 ] 22   };
+			[ bits_left <- + ( bits_left, 8 ) ] 23
+	    } 
+	    else {
+			[ bits_left <- + ( bits_left, 24 ) ] 24 ;
+			[ p <- + ( p, 3 ) ] 25
+	    }
+	}
+	else {	[ skip ] 26 };
+	[ bits_left <- - ( bits_left, 1 ) ] 27
+} 

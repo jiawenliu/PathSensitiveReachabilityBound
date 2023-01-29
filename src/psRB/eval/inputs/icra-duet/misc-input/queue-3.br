@@ -1,0 +1,17 @@
+[ element <- itable_element ] 0;
+[ index_0 <- + (index_0, 1) ] 1;
+while [ == (element, 0) ] 2 do {
+	if [ >= (index_0, itable_length )] 3 
+	then {
+	  [ element <- 0 ] 4;
+	  [ status <- 28 ] 5;
+	  [ element <- 1] 6
+	}
+	else { [ skip ] 7 };
+	[ element <- itable_element ] 8;
+	[ index_0 <- + (index_0, 1) ] 9
+}
+
+
+
+

@@ -1,0 +1,24 @@
+[ j <- 0 ] 0;
+while [ <= (j, - (n, bmp_saved_m) ) ] 1 do {
+    [ i <- - (bmp_saved_m, 1) ] 2;
+	if [ && ( >= (i, 0) , == (bmp_saved_x , bmp_icase) ) ] 3
+    then { [i <- - (i, 1) ] 4 }
+	else { [ skip ] 5 };
+	
+	if [ < (i, 0) ] 6
+	then {
+	   if [ != (mfun, NULL) ] 7
+	   then { [ nm <- +(nm, 1)] 8;
+	          [ c <- mfun ] 9;
+			  if [ != (c, NULL) 10 ]
+			  then{ [ j <- +(- (n, bmp_saved_m),1 ) ] 11 }
+			  else{ [skip] 12 };
+			  [ j <- +(j, bmp_bmGs) ] 13 
+	        }
+	   else { [ j <- +(- (n, bmp_saved_m),1 ) ] 14 }
+	}
+	else { [ c <- bmp_icase ] 15;
+	       [ j <- +(j, MAX_bmp)] 16
+	}
+
+}

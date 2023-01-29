@@ -1,0 +1,16 @@
+[ pcounter <- p ] 0;
+[ r <- rlimit ] 1;
+[ m <- match ] 2;
+while [ > (r, pcounter) ] 3 do 
+{
+    [ pcounter <- + (pcounter, 1)] 4;
+    [ m <- + (m, 1) ] 5;
+    [ m <- 0 ] 6;
+	if [ > ( m, 0 ) ] 7 
+	then 
+		{ 	while [ > (m, 0) ] 8 do 
+			    { [ m <- - (m, 1) ] 9 };  
+	    		[ pcounter <- - (pcounter, 1)] 10
+		}
+	else { [ skip ] 11 }
+}

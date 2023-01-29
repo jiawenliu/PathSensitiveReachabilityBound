@@ -1,0 +1,17 @@
+[ i <- n ] 0 ;
+[ j <- m ] 1 ;
+[ k <- m ] 2 ;
+while [  > ( i , 0 ) ] 3 do { 
+  if [ rand ] 4     
+  then {  while [  > ( j , 0 ) ] 5 do 
+  			{
+  				[ j <- - ( j, 1 ) ] 6
+  			}
+  		}
+  else {  while [  > ( k , 0 ) ] 7 do 
+  			{
+  				[ k <- - ( k, 1 ) ] 8
+  			}
+  		 }
+  	[ i <- - ( i, 1 ) ] 9
+}

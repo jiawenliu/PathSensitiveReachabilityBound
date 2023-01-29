@@ -1,0 +1,19 @@
+[ p <- ptr ] 0;
+[ w <- word_num_ ] 1;
+[ b <- bit_num_ ] 2;
+while [ > (p, 0) ] 3 do {
+	[ w <- - (w, 2) ] 4;
+	while [ > (w, 0) ] 5 do {
+	if [ rand ] 6 
+	then { 
+			[ b <- (64, b) ] 7;
+			while [ > (b, 0) ] 8 do 
+			{ 	[ b <- - (b, 1) ] 9 }
+		 }
+	else { [skip] 10 };
+	[ b <- 0 ] 11;
+	[ w <- - (w, 1) ] 12
+	};
+	[ w <- 0 ] 13;
+	[ p <- - (p, 1) ] 14
+}

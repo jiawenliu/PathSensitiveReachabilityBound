@@ -1,0 +1,5 @@
+  [endTagLocation <- text] 0 ;
+  while [> ( endTagLocation, 0 ) ] 1 do 
+  {
+    [endTagLocation <- - ( endTagLocation, 1 )] 2
+  }

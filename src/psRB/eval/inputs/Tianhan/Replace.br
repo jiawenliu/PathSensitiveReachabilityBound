@@ -1,0 +1,7 @@
+[ end <- text ] 0;
+while [(> (end, 0)] 1
+do 
+{
+  [start <- end + replLength] 2;
+  [end <- max(start, text - 1)] 3
+}

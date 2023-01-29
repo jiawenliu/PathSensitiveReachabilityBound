@@ -1,0 +1,8 @@
+[ j <- 0 ] 0;
+while [ < (j, nworkers) ] 1 do {
+    [ j <- + (j, 1) ] 2;
+	if [ != (pthread_create, 0) ] 3
+	then { [ j <- nworkers] 4}
+	else { [ skip ] 5 }
+
+}

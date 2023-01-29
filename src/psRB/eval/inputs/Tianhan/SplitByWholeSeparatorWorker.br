@@ -1,0 +1,40 @@
+[substrings <- 0] 0 ;
+[numberOfStrings <- 0] 1;
+[beg <- 0] 2 ;
+[end <- 0] 3 ;
+while [ < (end , str) ] 4 do
+{
+  [end <- min(beg, str - 1)] 5;
+  if [ > (end, -1) ] 6
+  tne {
+    if [ > (end, beg) ] 7
+    tnen {
+      [ numberOfStrings <- + (numberOfStrings, 1 ) ] 8;
+      if [ == (numberOfStrings, max)] 9
+      then 
+      {
+        [end <- str] 10 ;
+        [substrings <- substrings, - (str, beg) ] 11
+      }
+      else {
+        [substrings <-  + ( substrings,  - (end, beg) )] 12;
+        [beg <-  + (end, separator) ] 13
+      }
+    }
+    else {
+        [numberOfStrings <- + (numberOfStrings, 1 )] 14 ;
+        if  [== (numberOfStrings, max)] 15
+        then 
+        {
+          [end <- str] 16 ;
+          [substrings <- substrings, - (str, beg)] 17
+        }
+        else { [ skip ] 18 };
+      [ beg <- + ( end, separator ) ] 19 
+    }
+  }
+  else {
+    [substrings <-  + ( substrings, - (str, beg))] 20;
+    [end <- str] 21
+  }
+}

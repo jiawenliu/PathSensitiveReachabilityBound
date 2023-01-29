@@ -1,0 +1,7 @@
+[ xx <- x ] 0 ;
+[ yy <- y ] 1 ;
+while [   && (> (xx , 0), > (yy , 0)) ] 2 do {
+	if [ < ( xx , yy ) ] 3     
+	then {  [ yy <- - (yy, xx) ] 4 }
+	else {  [ xx <- - (xx, yy) ] 5 }
+}

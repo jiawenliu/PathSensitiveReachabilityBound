@@ -1,0 +1,53 @@
+[ n <- 0 ] 0;
+[ max_count <- 7 ] 1;
+while [ >= (max_code, n) ] 2 do {
+	[ curlen <- nextlen ] 3;
+	[ nextlen <- dl_len ] 4;
+	[ count <- + (count, 1) ] 5;
+	if [ & ( == (curlen, nextlen), < (count, max_count) ) ] 6
+	then { [ max_code <- - (n, 1) ] 7 }
+	else { [ skip ] 8};
+	[ count <- 0 ] 9;
+	[ prevlen <- curlen ] 10;
+	if [ == (nextlen, 0) ] 11
+	then { [ max_count <- 138 ] 12;
+		   [ min_count <- 3 ] 13
+	}
+	else { 
+		if [ == (curlen, nextlen) ] 14
+		then {
+			[ max_count <- 6 ] 15;
+			[ min_count <- 3 ] 16
+		}
+		else {
+			[ max_count <- 7 ] 17;
+			[ min_count <- 4 ] 18
+		}
+	};
+
+	[ n <- + (n, 1) ] 19
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

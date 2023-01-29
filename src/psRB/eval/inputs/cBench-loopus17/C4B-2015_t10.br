@@ -1,0 +1,6 @@
+[ i <- - (x, y) ] 0 ;
+while [  > (i , 0) ] 1 do {
+	if [ > ( randa , randb) ] 2     
+	then {  [ i <- - (i, 1) ] 3 }
+	else {  [ i <- - (i, 1) ] 4 }
+}

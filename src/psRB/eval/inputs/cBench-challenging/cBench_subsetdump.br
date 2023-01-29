@@ -1,0 +1,14 @@
+[ cnum <- limit ] 0;
+while [ > (cnum, 0) ] 1 do {
+	if [ rand ] 2 
+	then { 
+		[ rangestart <- cnum ] 3;
+		while [ > (cnum, 0) ] 4 do 
+		{ [ cnum <- - (cnum, 1)] 5 };
+		[ cnum <- limit ] 6;
+		[ rangestart <- cnum ] 7;
+		while [ > (rangestart, 0) ] 8 do 
+		{ [ rangestart <- - (rangestart, 1)] 9 }
+	  }
+	else { [ cnum <- - (cnum, 1)] 10 }
+}

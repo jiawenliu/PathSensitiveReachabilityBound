@@ -1,0 +1,23 @@
+[ i <- 0 ] 0;
+while [ < (i, nSubjects) ] 1 do {
+	[ j <- 0 ] 2;
+	[ file <- fopen_tmp_restrict ] 3;
+	if [ == (file, 0) ] 4
+	then { [ i <- nSubjects ] 5 }
+	else { [ skip ] 6 };
+	while [ < (j, nSubjects) ] 7 do {
+		[ j <- + (j, 1) ] 8
+	};
+	[ i <- + (i, 1) ] 9
+}
+
+
+
+
+
+
+
+
+
+
+

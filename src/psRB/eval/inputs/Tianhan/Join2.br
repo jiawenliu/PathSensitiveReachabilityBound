@@ -1,0 +1,6 @@
+[ iterator <-  n ] 0 ;
+[iteratorn <-  - ( iterator, 1 )] 1;
+while  [> (iterator, 0)] 2 do 
+{
+      [ skip ] 3
+}

@@ -1,0 +1,23 @@
+[ c <- 0] 0;
+while [ < (c, nel_width) ] 1 do {
+	[ c <- + (c, width) ] 2;
+	if [ == (a_nel, 0) ] 3
+	then { [ c <- nel_width ] 4 }
+	else { 
+	   if [ == (b_nel, 0) ] 5
+	   then { [ c <- nel_width ] 6 }
+	   else {
+	      if [ <= (compar_a_b, 0) ]  7
+		  then {
+		    [ a <- +(a, width) ] 8;
+			[ a_nel <- -(a_nel, 1) ] 9
+		  }
+		  else{
+		     [ b <- +(b, width) ] 10;
+			 [ b_nel <- -(b_nel, 1) ] 11
+		  }
+	   
+	   }
+	}
+
+}

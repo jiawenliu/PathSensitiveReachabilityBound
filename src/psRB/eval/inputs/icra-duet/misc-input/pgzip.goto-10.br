@@ -1,0 +1,17 @@
+[ t <- 1] 0;
+while [ > (t, 0) ] 1 do {
+	[ return_value_queue_empty1 <- queue_empty_pending_job_requests ] 2;
+	if [ == (return_value_queue_empty1, 0) ] 3
+	then { [ t <- 0 ] 4}
+	else { [ skip ] 5};
+	
+	[ return_value_queue_empty2 <- queue_empty_ompleted_threads ] 6;
+	if [ == (return_value_queue_empty2, 0) ] 7
+	then { [ t <- 0 ] 8}
+	else { [ skip ] 9};
+	
+	if [ != (gc_pool_shutdown, 0 ) ] 10
+	then { [ t <- 0 ] 11}
+	else { [ skip ] 12};
+	
+}

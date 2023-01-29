@@ -1,0 +1,10 @@
+[ i <- 0 ] 0;
+while [ != (s, 0) ] 1 do {
+    [i <- + (i, 1) ] 2;
+	[s <- + (s, 1) ] 3;
+	if [ > (i, MAXURLSIZ) ] 4
+	then { [ s <- 0 ] 5 }
+	else { [ skip ] 6 };
+	
+	[ req_url_i <- s ] 7
+}

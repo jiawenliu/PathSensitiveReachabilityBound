@@ -1,0 +1,17 @@
+[ higher <- set_page_cnt ] 0;
+[ low <- 1 ] 1;
+[ good <- 0 ] 2;
+[ slot <- 0 ] 3;
+[ diff <- input_diff ] 4;
+if [ != (bt_getid_set_page_right, 0) ] 5
+then { [ higher <- + (higher, 1) ] 6 }
+else { [ good <- + (good, 1) ] 7};
+while [ == (diff, - (higher, low) ) ] 8 do {
+	[ slot <- + (low, (/ (diff, 2))) ] 9;
+	[ t <- keycmp_key_len ] 10;
+	if [ < (t, 0) ] 11
+	then { [ low <- + (slot, 1) ] 12 }
+	else { [ higher <- slot ] 13;
+		   [ good <- + (good, 1) ] 14
+		}
+}

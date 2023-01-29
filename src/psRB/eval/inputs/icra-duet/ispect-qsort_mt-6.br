@@ -1,0 +1,8 @@
+[ i <- 0 ] 0;
+while [ < (i, c_nthreads) ] 1 do {
+    [ i <- + (i, 1) ] 2;
+	[ qs2 <- c_pool_i ] 3;
+	if [ == (qs2, qs) ] 4
+	then { [ skip ] 5 }
+	else { [qs2_st <- ts_term ] 6 }
+}

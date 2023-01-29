@@ -1,0 +1,14 @@
+[ r <- text ] 0 ;
+[ i <- ts ] 1 ;
+while [  > (i, 0) ] 2 do {
+  [ p <- text ] 0 ;
+  [ l <- text ] 0 ;
+  [ r <- text ] 0 ;
+  while [> ( r, 0 ) ] 4 do 
+  {
+    [l <- rand(0, p) ] 5
+    [r <- rand(0, l) ] 5
+    [p <- r] 5
+  };
+  [ i <- - ( i , 1 )  ] 6
+}

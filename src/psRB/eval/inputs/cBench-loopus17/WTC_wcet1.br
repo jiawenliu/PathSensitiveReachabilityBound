@@ -1,0 +1,16 @@
+[ i <- n ] 0 ;
+[ j <- 0 ] 1 ;
+while [  > (i , 0) ] 2 do {
+  if [ rand ] 3     
+  then {  [ j <- + (j, 1) ] 4;
+          if [ >= ( j, n ) ] 5     
+            then {  [ j <- 0 ] 6 }
+            else {  [ skip ] 7 }
+        }
+  else {  [ j <- - (j, 1) ] 8;
+          if [ <= ( j, 0 ) ] 9     
+              then {  [ j <- 0 ] 10 }
+              else {  [ skip ] 11 } 
+        };
+  [ i <- - (i, 1) ] 12
+}

@@ -1,0 +1,14 @@
+[ i <- minFieldWidthnDigits ] 0 ;
+while [  > (i, 0) ] 1 do {
+[ i <- - ( i , 1 )  ] 2
+};
+[ v <- value ] 3 ;
+[ digit <- 0 ] 4 ;
+while [  > (v, 0) ] 5 do {
+[ v <- / ( v , 10 )  ] 6;
+[ digit <- + ( digit , 1 )  ] 7
+};
+[ i3 <- - (minFieldWidth, digit) ] 8 ;
+while [  > (i3, 0) ] 9 do {
+[ i3 <- - ( i3 , 1 )  ] 10
+}

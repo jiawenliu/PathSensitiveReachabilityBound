@@ -1,0 +1,11 @@
+[ i <- bytes ] 0;
+while [ > (i, 0) ] 1 do {
+	if [ < (i, 256) ] 2 
+	then { [len <- i] 3   }
+	else { [len <- 256] 4 };
+    [ k <- len ] 5;
+    while [ > (k, 0) ] 6 do {
+        [ k <- - (k, 1) ] 7;
+    	[ i <- - (i, len)] 8
+    }
+ }

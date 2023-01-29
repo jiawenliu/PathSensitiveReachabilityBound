@@ -1,0 +1,10 @@
+[ len <- l ] 0;
+while [ > (len, 0) ] 1 do {
+	if [ > (68, len) ] 2 
+	then { [ len1 <- len ] 3  }
+	else { [ len1 <- 64 ] 4 };
+	[ count <- len1 ] 5;
+	while [ > (count, 0) ] 6 do 
+	{ [ count <- - (count, 1)] 7};
+	[ len <- - (len, len1)] 8
+}

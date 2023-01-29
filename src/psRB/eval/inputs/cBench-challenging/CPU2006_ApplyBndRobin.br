@@ -1,0 +1,41 @@
+[ var <- first_var ] 0 ;
+while [ < ( var, + ( first_var, num_vars ) ) ] 1
+do 
+{	[ var <- + ( var, 1 ) ] 2;
+	[ k <- 0 ] 3;
+	while [ < ( k, GH_cctk_lsh_2 ) ] 4
+	do {
+	[ k <- + ( k, 1 ) ] 5 ;
+    [ dz <- 0 ] 6 ;
+    if [ == (k, 0 ) ] 7
+    then
+    { [ dz <- + ( dz, 1 ) ] 8 } 
+    else  
+    { [ dz <- - ( dz, 1 ) ] 9 };
+	[ j <- 0 ] 10 ;
+	while [ < ( j, GH_cctk_lsh_1 ) ] 11
+  	do {
+		[ j <- + ( j, 1 ) ] 12;
+		[dy <- 0] 13 ;
+		if [ == (j, 0 ) ] 14
+	    then
+	    {
+		    [ dy <- + ( dy, 1 ) ] 15
+		} 
+		else 
+		{
+		    [ dy <- - ( dy, 1 ) ] 16
+		};
+		if [ || (dy, dz) ] 17
+		then {
+			[ i <- 1 ] 18;
+			while [  < (i, GH_cctk_lsh_0 ) ] 19
+		    do 
+		    {  [ i <- + ( i, 1 ) ] 20 }
+		}
+		else { [ skip ] 21 }
+    }
+}
+}
+
+

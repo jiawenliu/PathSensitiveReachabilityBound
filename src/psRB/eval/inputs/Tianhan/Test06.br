@@ -1,0 +1,9 @@
+[ iterator <- n ] 0 ;
+while [  > (iterator, 0) ] 1 do {
+[ entry <- 1  ] 2 ;
+[ iterator <- - ( iterator , entry ) ] 3
+};
+[ i <- m ] 4 ;
+while [  > (i, 0) ] 5 do {
+[ i <- - ( i , 1 )  ] 6
+}

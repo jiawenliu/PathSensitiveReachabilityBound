@@ -1,0 +1,5 @@
+[ iterator <-  n ] 0 ;
+while  [> (iterator, 0)] 1 do 
+{
+      [iteratorn <-  - ( iterator, 1 )] 2
+}

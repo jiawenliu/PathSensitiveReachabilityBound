@@ -1,0 +1,26 @@
+[ Se <- cinfo_Se ] 0 ;
+[ k <- cinfo_Ss ] 1 ;
+while [ <= (k, Se) ] 2 do 
+{
+	[ k <- + (k, 1) ] 3
+};
+[ r <- 0 ] 4 ;
+[ k <- cinfo_Ss ] 5 ;
+while [ <= (k, Se) ] 6 do {
+	[ k <- + (k, 1) ] 7;
+	if [ rand ] 8
+	then
+	{ 
+	    [ r <- + (r, 1) ] 9
+	}
+	else
+	{
+		[ skip ] 10 
+	};
+    while [ > (r, 15) ] 11 do 
+    {
+    	[ r <- - (r, 16) ] 12
+    };
+	[ r <- 0 ] 13
+}
+

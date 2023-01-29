@@ -1,0 +1,26 @@
+[ index_0 <- 0 ] 0;
+[ curr_occur <- 0 ] 1;
+while [ < ( index_0 , str ) ] 2 do{
+   if [ == ( + (str, index_0), character)] 3
+   then { 
+		   [ curr_occur <- + (curr_occur, 1) ] 4;
+           if [ == (curr_occur, occurence) ] 5
+		   then { [ str <- index_0 ] 6 }  
+		   else { [ skip ] 7 }
+   }
+   else { [ skip ] 8 };
+   [ index_0 <- + (index_0, 1) ] 9
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

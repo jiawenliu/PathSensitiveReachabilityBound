@@ -1,0 +1,5 @@
+[ i <-  endIndexstartIndex1 ] 0 ;
+while  [> (i, 0)] 1 do 
+{
+      [i <-  - ( i, 1 )] 2
+}

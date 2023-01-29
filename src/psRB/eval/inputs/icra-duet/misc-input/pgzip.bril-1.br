@@ -1,0 +1,21 @@
+[ result <- 0 ] 0;
+[ i <- 1 ] 1;
+while [ > (i, 0) ] 2 do {
+	if [ != ( + (s, result), 0) ] 3
+	then {
+		if [ == ( + (s, result), reject) ] 4
+		then { [ i <- 0 ] 5}
+		else { [ skip ] 6}
+	}
+	else { [ i <- 0 ] 7};
+	[ result <- + (result, 1) ] 8
+}
+
+
+
+
+
+
+
+
+

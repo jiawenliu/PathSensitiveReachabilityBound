@@ -1,0 +1,8 @@
+[ tmp <- maxId ] 0 ;
+[ tmp <- - ( tmp, 1 ) ] 1 ;
+while [  > (i , 0) ] 2 do {
+if [ < ( tmp , maxId) ] 3     
+then {  [ tmp <- - (tmp, 1) ] 4;
+        [ i <- - (i, 1) ] 5 }
+else {  [ tmp <- - (tmp, 1) ] 6 }
+}

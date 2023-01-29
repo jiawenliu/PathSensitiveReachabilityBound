@@ -1,0 +1,65 @@
+[ restp <- 0 ] 0; 
+[ nrestp <- 0 ] 1;
+[ i <- atoms_nres ] 2 ;
+while [ > ( i , 0) ] 3
+do
+{
+[ i <- - ( i, 1 ) ] 4
+};
+
+[ k <- atoms_nr ] 5 ;
+while [ > ( k , 0) ] 6
+do
+{
+	[ l <- nrestp ] 7 ;
+	while [ > ( l , 0) ] 8
+	do { [ l <- - ( l, 1 ) ] 9 };
+	[ nrestp <- + ( nrestp, 1 ) ] 10;
+    [ k <- - ( k, 1 ) ] 11
+};
+
+[ i <- nrestp ] 12 ;
+while [ > ( i , 0) ] 13
+do
+{
+	[naid <- 0] 14;
+	[ j <- atoms_nr ] 15 ;
+	while [ > ( j , 0) ] 16
+	do
+	{
+		[ naid <- + ( naid, 1 ) ] 17;
+	    [ j <- - ( j, 1 ) ] 18
+	}
+
+  	[ natp <- 0 ] 19;
+  	[ k <- naid ] 20 ;
+	while [ > ( k , 0) ] 21
+	do
+	{
+		[ l <- natp ] 22 ;
+		while [ > ( l , 0) ] 23;
+		do { [ l <- - ( l, 1 ) ] 24 };
+		[ natp <- + ( natp, 1 ) ] 25;
+	    [ k <- - ( k, 1 ) ] 26
+	};
+	if [ > (natp, 1)] 27 
+	then 
+	{
+		[ l <- natp ] 28 ;
+		while [ > ( l , 0) ] 29
+		do { 
+			[ naaid <- 0 ] 30;
+		  	[ k <- naid ] 31 ;
+			while [ > ( k , 0) ] 32
+			do 
+			{	[ naaid <- + ( naaid, 1 ) ] 33
+				[ k <- - ( k, 1 ) ] 34
+			};
+				[ l <- - ( l, 1 ) ] 35 
+		}
+	}
+	else { [ skip ] 36 };
+	[ i <- - ( i, 1 ) ] 37
+}
+
+

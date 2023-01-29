@@ -1,0 +1,25 @@
+[ wp <- str ] 0;
+[ rp <- wp ] 1;
+while [ != (rp, 0) ] 2 do {
+     while [ && ( != (rp, 0), ( != isspace_rp, 0) ] 3 do {
+			[ rp <- - (rp, 1) ] 4
+	 };
+	 if [ == (isspace_rp, 0) ] 5
+	 then { [ rp <- 0 ] 6 }
+	 else { [ skip ] 7 };
+	 
+	 if [ == (isxdigit_rp, 0) ] 8
+	 then { [ rp <- 0 ] 9}
+	 else { [ skip ] 10 }
+}  
+
+
+
+
+
+
+
+
+
+
+

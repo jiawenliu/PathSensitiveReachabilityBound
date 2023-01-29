@@ -1,0 +1,20 @@
+[ i <- length ] 0 ;
+while [  > (i, 0) ] 1 do {
+  [ j <- i  ] 2;
+  [ test <- 0  ] 3;
+  while [ > (j, 0)] 4 do
+  {
+    [ j <- - ( j, 1 ) ] 5;
+    if [ > ( arrayj , arrayi ) ] 6     
+      then {  [ temp <- arrayj ] 7;
+              [ arrayj <- arrayjj ] 8;
+              [ arrayjj <- temp ] 9;
+              [ test <- 1 ] 10
+             }
+      else {  [ skip ] 11 } 
+  };
+  [ i <- - ( i, 1 )  ] 12;
+  if [ == ( test , 0 ) ] 13     
+  then {  [ skip ] 14 }
+  else {  [ skip ] 15 } 
+}

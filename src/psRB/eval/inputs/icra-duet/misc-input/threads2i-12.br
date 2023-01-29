@@ -1,0 +1,28 @@
+[ t <- 0 ] 0;
+while [ == ( t , 0 ) ] 1 do {
+	if [ == (slot, bt_loadpage) ] 2
+	then { [ ptr <- keyptr_set_page ] 3}
+	else {
+		if [ == (bt_err, 0) ] 4
+		then { [ bt_err <- BTERR_ovflw ] 5 }
+		else { [ skip ] 6};
+		[ t <- 1] 7
+	};
+	if [ == (keycmp_ptr_key_len, 0) ] 8
+	then {
+		if [ != (slotptr_dead, 0) ] 9
+		then { [ set_page_act <- + ( set_page_act, 1 ) ] 10 }
+		else { [ skip ] 11};
+		[ slotptr_dead <- 0 ] 12;
+		[ t <- 1 ] 13
+	}
+	else { [ skip ] 14 };
+	
+	if [ == (slot, bt_cleanpage) ] 15
+	then { [ t <- 1 ] 16}
+	else { [ skip ] 17 };
+	
+	if [ != (bt_splitpage_btset, 0) ] 18
+	then { [ t <- 1 ] 19 }
+	else { [ skip ] 20}
+}

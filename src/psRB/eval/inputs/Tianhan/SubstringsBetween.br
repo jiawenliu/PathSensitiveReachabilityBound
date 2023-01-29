@@ -1,0 +1,9 @@
+[ pos <-  strclose ] 0 ;
+while  [> (pos, 0)] 1 do 
+{
+      [start <- str] 2;
+      [ start <- + ( start, open )] 3 ;
+      [ end <- max ( str, start ) ] 4 ;
+      [pos <-  - ( end, close )] 5
+}
+

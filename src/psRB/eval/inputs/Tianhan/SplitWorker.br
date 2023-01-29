@@ -1,0 +1,18 @@
+[i <- str] 0 ;
+[start <- 0] 1 ;
+[match <- false] 2 ;
+[lastMatch <- false] 3 ; 
+while [  > (i, 0) ] 4 do {
+    if [ == (match, true) ] 5
+    then
+    {
+      [match <- false] 6 ;
+      [lastMatch <- true] 7
+    }
+    else { [ skip ] 8 }
+    [ i <- - ( i , 1 )  ] 9
+    [ start <- i ] 10 ;
+  [ lastMatch <- false ] 11;
+  [ match <- true ] 12;
+  [ i <- - ( i , 1 )  ] 13
+}
