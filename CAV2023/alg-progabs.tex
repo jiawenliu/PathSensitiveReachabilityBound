@@ -41,9 +41,9 @@ that after evaluating the guard with label $l$,
 $\bexpr$ holds to execute the command with label $l'$.
 In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
 represents the negation of the testing guard $\clabel{i > 0}^1$
-in the $\ewhile$ command, and $i \leq 0$ must hold in order to perform this transition from program point $1$ to
+in the $\ewhile$ command, and $i \leq 0$ must hold to perform this transition from program point $1$ to
 the program exit. 
-$\top$ is preserved for $\eskip$ command or the commands that don't interfere with any guard variable.
+$\top$ is preserved for the $\eskip$ command or the commands that don't interfere with any couter.
 
 \begin{defn}[Abstract Transition Graph]
  \label{def:abs_cfg}

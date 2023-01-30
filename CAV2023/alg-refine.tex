@@ -45,7 +45,7 @@ $.
 \paragraph{Program Refinement}
 We implement the algorithm REFINE from paper~\cite{GulwaniJK09} in this step which takes the rewritten program $c$ as input and returns the
 refined program $\rprog$. We denote by $\kw{enclosed}(\rprog, \tpath)$ the innermost loop where $\tpath$ is located in $\rprog$.
-The $\rprog$ for Example~\ref{ex:relatedNestedWhileOdd-overview} is in the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview} where we can find two interleaving patterns.
+The $\rprog$ for Example~\ref{ex:relatedNestedWhileOdd-overview} is at the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview} where we can find two interleaving patterns.
 The two loop paths are alternatively executing after each other in the two patterns and
  $4:\rprepeat(\tpath_3) = \kw{enclosed}(\rprog, \tpath_3)$.
 
@@ -71,6 +71,6 @@ transform the loop into the refined program $\rprog$ as the bottom part of Figur
 From this refined program, we can explicitly tell two possible path interleaving patterns.
 In the first one, $\tpath_2$ will be executed after all the iterations of $\tpath_1$ are done, and in the second one,
 only the first loop path $\tpath_1$ will iterate.
-Then the following computation based on this refined program can compute more accurate reachability-bounds.
+Then the following computation based on this refined program can compute more accurate \emph{reachability-bound}s.
 \end{example}
 

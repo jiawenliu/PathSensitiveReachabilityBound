@@ -1,97 +1,97 @@
 
-There are two methods for computing the loop bound, $BD(\rprog', c)$ for every sub program $\rprog'$ in $c$'s refined program $\rprog$.
+There are two methods for computing the loop bound, $BD(\rprog_l, c)$ for every loop program $\rprog_l$ in $c$'s refined program.
 %
 Based only on the estimated ranking function from Section~\ref{sec:rank}, we can compute a loose $BD(\rprog', c)$ for each $\rprog'$
 using the $\absclr(\absevent, c)$ as follows.
 \begin{equation}
-  \label{eq:absBD}
-  BD(\rprog, c) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog \right\}.
+ \label{eq:absBD}
+ BD(\rprog_l, c) = \min\left\{ \absclr(\absevent, c) \middle\vert \absevent \in \rprog_l \right\}.
 \end{equation}
-It is accurate only for simple loops, but not for multipath or the nested loops.
+It is accurate only for simple loops, but not for multipath or nested loops.
 For example in Example~\ref{ex:relatedNestedWhileOdd-overview},
 it computes $BD(\rprog_1^1) = n$ and $BD(\rprog_1^2) = n $ for the two interleaving pattern of loop $L_1$.
 % The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while 
 But both of their iteration bounds are expected to be $\lfloor\frac{m}{4}\rfloor$.
-The inaccuracy is resulted by the nature of the path-insensitivity in the ranking function invariant estimation in Definition~\ref{def:ranking_bound}. 
+The inaccuracy is caused by the nature of the path-insensitivity in the ranking function invariant estimation in Definition~\ref{def:ranking_bound}. 
 
 We provide a new computation approach over the refined program.
-It uses the estimated ranking function invariant and combines with the idea of progress invariant from~\cite{GulwaniJK09}.
-We first compute three abstract states for each ranking function in different sub program of a refined program as below.
-% Then we these precise abstract state, and estimate the loop bound path sensitively.
+It uses the estimated ranking function invariant and combines it with the idea of progress invariant from~\cite{GulwaniJK09}.
+We first compute three abstract states for each ranking function in different subprograms of a refined program as below.
+% Then we these precise abstract states, and estimate the loop bound path sensitively.
 \begin{defn}[Rank Abstract States Computation]
-  \label{def:alg-absstate}
-  Given a program $c$ with its refined program $\rprog_c$ and a sub-program $\rprog$ in $\rprog_c$,
-  we compute three abstract states, $\rfinit(\rprog, c)$, $\rffinal(\rprog, c)$ and $\rfnext(\rprog, c) \in \scexpr(c)$ w.r.t. the ranking functions in this sub program as follows.
+ \label{def:alg-absstate}
+ Given a program $c$ with its refined program $\rprog_c$ and a sub-program $\rprog$ in $\rprog_c$,
+ we compute three abstract states, $\rfinit(\rprog, c)$, $\rffinal(\rprog, c)$ and $\rfnext(\rprog, c) \in \scexpr(c)$ w.r.t. the ranking functions in this sub program as follows.
  \begin{itemize}
-  \item 
-  We first compute the initial execution point and continuation execution points of $\rprog$ denoted by
-  $\absinit(\rprog)$
-  and 
-  $\absfinal(\rprog)$ using standard control flow method.
-  \item The \emph{Initial State}, 
-  $\rfinit(\rprog, c)$ is a set of equations $x = e$, where $e \in \scexpr(c)$ is a
-  symbolic expression bounding the initial value of $x$ before executing $\rprog$.
-  Each $x$ is a ranking function of a transition edge in this program, and $\rfinit(\rprog, c)$ contains the equations for every ranking function in $\rprog$,
-  $\rfinit(\rprog, c) \triangleq $
-  {\small
-  \[
-   \bigcup_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\} }
-   \left \{ 
-   x = \arg\max_{l_1}\left\{
-     \varinvar(y, c) + v ~\middle\vert~ 
-     \begin{array}{l} 
-       (l_1, x' \leq y + v, l_2) \in \reset(x, c) 
-       \\
-     \land l_1 \leq \absinit(\rprog, c)
-   \end{array}
-   \right\}
-   \right\}
-   \]
+ \item 
+ We first compute the initial execution point and continuation execution points of $\rprog$ denoted by
+ $\absinit(\rprog)$
+ and 
+ $\absfinal(\rprog)$ using standard control flow method.
+ \item The \emph{Initial State}, 
+ $\rfinit(\rprog, c)$ is a set of equations $x = e$, where $e \in \scexpr(c)$ is a
+ symbolic expression bounding the initial value of $x$ before executing $\rprog$.
+ Each $x$ is a ranking function of a transition edge in this program, and $\rfinit(\rprog, c)$ contains the equations for every ranking function in $\rprog$,
+ $\rfinit(\rprog, c) \triangleq $
+ {\small
+ \[
+ \bigcup_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\} }
+ \left \{ 
+ x = \arg\max_{l_1}\left\{
+ \varinvar(y, c) + v ~\middle\vert~ 
+ \begin{array}{l} 
+ (l_1, x' \leq y + v, l_2) \in \reset(x, c) 
+ \\
+ \land l_1 \leq \absinit(\rprog, c)
+ \end{array}
+ \right\}
+ \right\}
+ \]
  }
  $\rfinit(\tpath, c)$ can also be estimated by $\kw{INIT(c, 0, \absinit(\rprog))}$ in \cite{GulwaniJK09}. 
  %
- \item  The \emph{Final State}, $\rffinal(\rprog, c)$ computes the set of minimum values for every ranking functions
+ \item The \emph{Final State}, $\rffinal(\rprog, c)$ computes the set of minimum values for every ranking functions
  after executing $\rprog$.
-  % $\rffinal(\rprog, c) \triangleq $
+ % $\rffinal(\rprog, c) \triangleq $
  % \\
  {\small
 \[
-  \begin{array}{l} 
-   \bigcup\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\} }
-   \left \{ 
-   x = \min\limits_{ \left\{ l_1 ~|~ l_1 \geq \absfinal(\rprog, c) \right\} }
-   \max\left\{
-     v ~\middle\vert~ 
-     \left( (x = v) \land \bigwedge\limits_{b \in \kw{B}(\rprog, c)} \neg b \right) \neq \efalse
-   \right\}
-   \right\}
-  \end{array}
-  \]
-    }
-    $\kw{B}(\rprog, c)$ is the set of all the boolean constraints in $\rprog$.
+ \begin{array}{l} 
+ \bigcup\limits_{x \in \left\{ \locbound(\absevent, c) | \tpath \in \rprog \land \absevent \in \tpath \right\} }
+ \left \{ 
+ x = \min\limits_{ \left\{ l_1 ~|~ l_1 \geq \absfinal(\rprog, c) \right\} }
+ \max\left\{
+ v ~\middle\vert~ 
+ \left( (x = v) \land \bigwedge\limits_{b \in \kw{B}(\rprog, c)} \neg b \right) \neq \efalse
+ \right\}
+ \right\}
+ \end{array}
+ \]
+ }
+ $\kw{B}(\rprog, c)$ is the set of all the boolean constraints in $\rprog$.
  \item The \emph{Next State}, $\rfnext(\rprog, c) \in \scexpr(c)$ 
  computes for the ranking functions on $\rprog$ the amount that each of them is changed after the first execution of $\rprog$ and before the second visit. This quantity is only required for $\tpath$.
  {\small
  \[
-   \begin{array}{l}
-   \rfnext(\tpath, c) \triangleq 
-   \\
-   \bigcup\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
-   \left\{ x = \begin{array}{l}
-  \sum\limits_{\absevent \in \inc(x, c) }
-   \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
-   \\ \qquad 
-   + \arg\max\limits_{l' }
-      \left\{ \varinvar(y, c) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x, c) \land l \in \tpath\right\}
-      \\ \qquad 
-     - \sum\limits_{ \absevent \in \dec(x, c) }\left\{ 
-       v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
-       \right\}
-     \end{array}
-   \right\} 
-   \end{array}
+ \begin{array}{l}
+ \rfnext(\tpath, c) \triangleq 
+ \\
+ \bigcup\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}}
+ \left\{ x = \begin{array}{l}
+ \sum\limits_{\absevent \in \inc(x, c) }
+ \left\{ v ~\middle\vert~ \absevent = (l, x' \leq x + v, \_) \land l \in \tpath\right\}
+ \\ \qquad 
+ + \arg\max\limits_{l' }
+ \left\{ \varinvar(y, c) + v ~\middle\vert~ (l, x' \leq y + v, l') \in \reset(x, c) \land l \in \tpath\right\}
+ \\ \qquad 
+ - \sum\limits_{ \absevent \in \dec(x, c) }\left\{ 
+ v ~\middle\vert~ \absevent = (l, x' \leq x - v, \_) \land l \in \tpath 
+ \right\}
+ \end{array}
+ \right\} 
+ \end{array}
  \]
-  }
+ }
 \end{itemize}
 \end{defn}
 Now we compute $BD(\rprog, c)$ recursively by interactively computing another quantity, the \emph{Variable Gradient Decent} as follows.
@@ -100,47 +100,47 @@ Now we compute $BD(\rprog, c)$ recursively by interactively computing another qu
 Given a program $c$ with its refined program $\rprog$ and a subprogram $\rprog' = \rprepeat(\rprog_l) \in \rprog$,
 the \emph{Variable Gradient Decent}, 
  $\varGD(\rprog', c)$ is an invariant of the minimum amount decreased in one execution of $\rprog_l$ for the ranking functions in $\rprog$,
-%  and recursively computes the loop bound, $BD(\rprog, c)$ in the meantime.
+% and recursively computes the loop bound, $BD(\rprog, c)$ in the meantime.
 {\small
 \[
-  \varGD(\rprog', c) \triangleq
-  \left\{
-   \begin{array}{ll}
-    BD(\rprog', c)  \times {\varGD(\rprog_l', c)} &  \rprog' = \rprepeat(\rprog_l') \\
-    \varGD(\rprog_1, c) + \varGD(\rprog_2, c) & \rprog' = \rprog_1;\rprog_2 \\
-    \min\left\{v  ~|~ x = v \in \rfnext(\tpath, c) \right\}   & \rprog' = \tpath, 
-    \end{array}
-  \right.
+ \varGD(\rprog', c) \triangleq
+ \left\{
+ \begin{array}{ll}
+ BD(\rprog', c) \times {\varGD(\rprog_l', c)} & \rprog' = \rprepeat(\rprog_l') \\
+ \varGD(\rprog_1, c) + \varGD(\rprog_2, c) & \rprog' = \rprog_1;\rprog_2 \\
+ \min\left\{v ~|~ x = v \in \rfnext(\tpath, c) \right\} & \rprog' = \tpath, 
+ \end{array}
+ \right.
  \]
  which is interactively computed together with $BD(\rprepeat(\rprog_l), c) \triangleq$
  \[
-  % BD(\rprepeat(\rprog_l), c) =
-  \left\{ 
-    \begin{array}{ll}
-      \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}} 
-      \Big\{ \highlight{\frac{a - b}{\varGD(\tpath, c)}}  &  \rprog_l = \tpath
-      \\ \qquad 
-      ~\vert~
-      x = a \in \rfinit(\tpath, c)
-      \land x = b \in \rffinal(\tpath, c)
-      \Big\} 
-      \\
-      \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}} 
-      \Big\{ \highlight{\frac{\min\{ a, a - \varGD(\rprog_1, c) \} - b}{\varGD(\rprog_1;\rprog_2, c)}}  
-      &  \rprog_l = \rprog_1;\rprog_2
-      \\ \qquad 
-      ~\vert~
-      x = a \in \rfinit(\rprog_1, c)
-      % \\ \qquad 
-      \land x = b \in \rffinal(\rprog_2;\rprog_2, c)
-      \Big\}   \\
-      0  &  o.w.
-    \end{array} 
-    \right.
+ % BD(\rprepeat(\rprog_l), c) =
+ \left\{ 
+ \begin{array}{ll}
+ \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}} 
+ \Big\{ \highlight{\frac{a - b}{\varGD(\tpath, c)}} & \rprog_l = \tpath
+ \\ \qquad 
+ ~\vert~
+ x = a \in \rfinit(\tpath, c)
+ \land x = b \in \rffinal(\tpath, c)
+ \Big\} 
+ \\
+ \max\limits_{x \in \left\{ \locbound(\absevent, c) | \absevent \in \tpath \right\}} 
+ \Big\{ \highlight{\frac{\min\{ a, a - \varGD(\rprog_1, c) \} - b}{\varGD(\rprog_1;\rprog_2, c)}} 
+ & \rprog_l = \rprog_1;\rprog_2
+ \\ \qquad 
+ ~\vert~
+ x = a \in \rfinit(\rprog_1, c)
+ % \\ \qquad 
+ \land x = b \in \rffinal(\rprog_2;\rprog_2, c)
+ \Big\} \\
+ 0 & o.w.
+ \end{array} 
+ \right.
 \]
 }
 \end{defn}
-% This approach computes a sound loop bound for subprogram in a refined program formally in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
+% This approach computes a sound loop bound for a subprogram in a refined program formally in \highlight{Appendix~\ref{apdx:loopbound-sound}}.
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, we first compute $\rfinit = \{k = n - m\}$, $\rffinal = \{k = 0\}$ and $\rfnext = 1$ for subprogram $\rprepeat(\tpath_3)$ and get $BD(\rprepeat(\tpath_3)) = n - m$ tighter than $n$ by Eq.~\ref{eq:absBD}.
 For the first iteration pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we compute 
 $\rfinit = \{k = n - m, i = m - 1\}$, $\rffinal = \{k = 0, i = 0\}$, $\varGD(\rprog_1^1) = 4$, and get $BD(\rprog_1^1) = \lfloor \frac{m}{4} \rfloor $ as expected.
@@ -149,47 +149,48 @@ Using the \emph{loop bound} computed by our new approach, we compute the local \
 each $\tpath$ w.r.t. its \textbf{innermost nested loop} as below.
 
 \begin{defn}[Local Path Reachability-bound Computation]
-    \label{def:pathlocalrb}
-    Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ and its innermost located loop program, $\rprog_l = \kw{enclosed}(\rprog, \tpath)$ in $\rprog$,
-    we compute $\tpath$'s \emph{local reachability-bound} $\outinB(\rprog_l, \tpath, c)$ w.r.t. $\rprog_l$ inductively as follows.
-    {\small
-    \[
-      \left\{
-    \begin{array}{ll}
-       1  & \rprog = \tpath\\
-      \highlight{0} & \rprog = \tpath' \neq \tpath\\
-      \outinB(\rprog_1, \tpath, c) + \outinB(\rprog_2, \tpath, c) & \rprog = \rprog_1;\rprog_2 \\
-      % \outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
-      % & 
-      \max\left\{ \outinB(\rprog_1, \tpath, c), \ldots, \outinB(\rprog_m, \tpath, c) \right\} 
-      & \rprog = \rpchoose{\rprog_1, \ldots, \rprog_m } \\
-      % \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
-      % & 
-      BD(\rprepeat(\rprog'), c) \times \outinB(\rprog', \tpath, c) & \rprog = \rprepeat(\rprog')
-    \end{array}
-    \right.
-    \]
-    }
-  \end{defn}
-  Soundness of $\outinB(\rprog_l, \tpath, c)$ is in \highlight{Appendix~\ref{apdx:pathlocalrb-sound}}.
+ \label{def:pathlocalrb}
+ Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ and its innermost located loop program, $\rprog_l = \kw{enclosed}(\rprog, \tpath)$ in $\rprog$,
+ we compute $\tpath$'s \emph{local reachability-bound} $\outinB(\rprog_l, \tpath, c)$ w.r.t. $\rprog_l$ inductively as follows.
+ {\small
+ \[
+ \left\{
+ \begin{array}{ll}
+ 1 & \rprog = \tpath\\
+ \highlight{0} & \rprog = \tpath' \neq \tpath\\
+ \outinB(\rprog_1, \tpath, c) + \outinB(\rprog_2, \tpath, c) & \rprog = \rprog_1;\rprog_2 \\
+ % \outinB(\rpchoose{\rprog_1, \ldots, \rprog_m }, \tpath) & \triangleq 
+ % & 
+ \max\left\{ \outinB(\rprog_1, \tpath, c), \ldots, \outinB(\rprog_m, \tpath, c) \right\} 
+ & \rprog = \rpchoose{\rprog_1, \ldots, \rprog_m } \\
+ % \outinB(\rprepeat(\rprog'), \tpath) & \triangleq 
+ % & 
+ BD(\rprepeat(\rprog'), c) \times \outinB(\rprog', \tpath, c) & \rprog = \rprepeat(\rprog')
+ \end{array}
+ \right.
+ \]
+ }
+ \end{defn}
+ Soundness of $\outinB(\rprog_l, \tpath, c)$ is in \highlight{Appendix~\ref{apdx:pathlocalrb-sound}}.
 
-  For the program in the first interleaving pattern $\rprog_1^1$ in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop for $\tpath_1$, $\tpath_2$ and $\tpath_4$, 
-  so compute $\outinB(\rprog_1^1, \tpath_1, c) = BD(\rprog_1^1, c) \times \outinB(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4, \tpath_1, c)
-  = BD(\rprog_1^1, c) \times (1 + 0) = \lfloor \frac{m}{4} \rfloor $ and the same for $\tpath_2$ and $\tpath_4$.
+ For the program in the first interleaving pattern $\rprog_1^1$ in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop for $\tpath_1$, $\tpath_2$ and $\tpath_4$, 
+ so compute $\outinB(\rprog_1^1, \tpath_1, c) = BD(\rprog_1^1, c) \times \outinB(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4, \tpath_1, c)
+ = BD(\rprog_1^1, c) \times (1 + 0) = \lfloor \frac{m}{4} \rfloor $ and the same for $\tpath_2$ and $\tpath_4$.
 
-  As discussed in Section~\ref{sec:psrb}, if there isn't nested loop, we will skip the Section~\ref{sec:looprb} and use this local bound directly as the global \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ as in Section~\ref{sec:pathrb}.  
-  So we already had the $\psRB$ for every program point $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
-  \begin{equation}
-    \label{eq:psrb-sub}
-    \psRB(l, c) = 
-    \sum
-    \left\{ \outinB(\rprog, \tpath, c) ~\vert~ \tpath \in \rprog \land 
-    l \in \tpath \right\}.
-  \end{equation}
-  However, if there is nested loop, 
-  by replacing the restriction, $\rprog_l$ in Definition~\ref{def:pathlocalrb} with the global program $\rprog$, $\outinB(\rprog, \tpath, c)$ is actually a loose global \emph{path reachability-bound} for $\tpath$. Though we can still compute a loose $\psRB$ just using $\outinB(\rprog, \tpath, c)$, but it is not tight enough. 
+ As discussed in Section~\ref{sec:psrb}, if there isn't a nested loop, we will skip the Section~\ref{sec:looprb} and use this local bound directly as the global \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ as in Section~\ref{sec:pathrb}. 
+ So we already had the $\psRB$ for every program point $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
+ \begin{equation}
+ \label{eq:psrb-sub}
+ \psRB(l, c) = 
+ \sum
+ \left\{ \outinB(\rprog, \tpath, c) ~\vert~ \tpath \in \rprog \land 
+ l \in \tpath \right\}.
+ \end{equation}
+ However, if there are nested loops, 
+ by replacing the restriction, $\rprog_l$ in Definition~\ref{def:pathlocalrb} with the global program $\rprog$, $\outinB(\rprog, \tpath, c)$ is actually a loose global \emph{path reachability-bound} for $\tpath$. Though we can still compute a loose $\psRB$ just using $\outinB(\rprog, \tpath, c)$, it is not tight enough. 
 It computes
 $\outinB(\rprog, \tpath_3, c) = \frac{m}{4} \times (n - m)$ in Example~\ref{ex:relatedNestedWhileOdd-overview}.
-It is loose because the Eq.~\ref{eq:psrb-sub} assumes the inner loop $L_4$ is reached in every iteration of the outer loop $L_1$. In this sense, $\psRB(4, c) = \frac{m}{4} \times (n - m)$ is loose as well.
-While the inner loop $L_4$ is only reached in the first iteration of outer loop,
+It is loose because Eq.~\ref{eq:psrb-sub} assumes the inner loop $L_4$ is reached in every iteration of the outer loop $L_1$. In this sense, $\psRB(4, c) = \frac{m}{4} \times (n - m)$ is loose as well.
+While the inner loop $L_4$ is only reached in the first iteration of the outer loop,
 so we will compute a more accurate quantity, the \emph{loop reachability-bound} in the next section.
+

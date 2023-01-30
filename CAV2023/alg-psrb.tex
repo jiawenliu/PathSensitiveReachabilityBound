@@ -1,37 +1,32 @@
 % Based on the \emph{Abstract Transition Graph}, $\absG(c)$, the \emph{Refined Program}, $\rprog$ and the upper bound invariant for the \emph{Ranking Function} computed previously for a program $c$, our algorithm first requires to compute the new quantities, \emph{Path Reachability-bound} and the \emph{Loop Reachability-bound}. This section introduces the algorithm and the following sections describe how we compute them.
 
-Now for a program $c$, we use $\absG(c)$, its refined program $\rprog$ and all the ranking functions to compute the \emph{reachability-bound} for each of its control location.
+Now for a program $c$, we use $\absG(c)$, its refined program $\rprog$, and all the ranking functions to compute the \emph{reachability-bound} for each of its control locations.
 We first introduce some quantities which are required to compute ahead.
-% As pre-procedures, we first need to compute the loop bound, $BD(\rprog', c) \in \scexpr(c)$ for every subprogram $\rprog'$ of $c$ in $\rprog$, and use it to estimate the \emph{path local reachability-bound}, $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$ for each $\tpath$ w.r.t. the sub loop program $\rprog_l$.
 
 As pre-procedures, we first introduce the \emph{loop bound} for every loop $\rprog_l$ in $\rprog$, and the local \emph{path reachability-bound} for each $\tpath$ w.r.t. its $\kw{enclosed}(\rprog, \tpath)$.
-% and use it to estimate the \emph{path local reachability-bound}, $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$.
-%  for each $\tpath$ w.r.t. the sub loop program $\rprog_l$.
 \begin{defn}[Loop Bound]
-  % \label{def:loopbound}
-  For any program $c$ with it refined program $\rprog$,
-  the \emph{loop bound}
-  % $BD(\rprog_l, c) \in \scexpr(c)$ 
-  for a subprogram $\rprog_l$ of $c$ in $\rprog$ is an upper bound on the executing times of $\rprog_l$ from its enter point to the exit point with arbitrary initial trace.
+ % \label{def:loopbound}
+ For any program $c$ with it refined program $\rprog$,
+ the \emph{loop bound}
+ % $BD(\rprog_l, c) \in \scexpr(c)$ 
+ for a subprogram, $\rprog_l$ of $c$ in $\rprog$ is an upper bound on the executing times of $\rprog_l$ from its entry to the exit point with arbitrary initial trace.
 \end{defn}
 % 
-% Then we compute the \emph{path local reachability-bound}, $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$ for every sub loop program $\rprog_l$ of $c$ in $\rprog$.
 \begin{defn}[Local Path Reachability-bound]
-  % \label{def:pathlocalrb}
-  Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
-  let $\rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the innermost loop program in $\rprog$ where $\tpath$ is located,
-  then $\tpath$'s \emph{path local reachability-bound} w.r.t. $\rprog_l$, 
-  % $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$
-  is an upper bound on the execution times of $\tpath$ when executing program $\rprog_l$ with any initial trace of $c$.
+ % \label{def:pathlocalrb}
+ Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
+ let $\rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the innermost loop program in $\rprog$ where $\tpath$ is located,
+ then $\tpath$'s \emph{path local reachability-bound} w.r.t. $\rprog_l$, 
+ % $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$
+ is an upper bound on the execution times of $\tpath$ when executing program $\rprog_l$ with any initial trace of $c$.
 \end{defn}
 Intuitively, it bounds the execution times of $\tpath$ when only its innermost loop program is executing.
 % and $\rprog$ is the closest loop where $\tpath$ is nested.
 For example in the first interleaving pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}, 
 $4:\rprepeat(\tpath_3)$ is the innermost loop program of $\tpath_3$.
 So we first will compute $m - n$ as its local \emph{path reachability-bound}.
-%  to bound its iteration times in its closest loop by Section~\ref{sec:pathlocalrb}.
 
-If there isn't nested loops in a program, we will jump to the Definition~\ref{def:pathrb}.
+If there isn't a nested loop in a program, we will jump to the Definition~\ref{def:pathrb}.
 Otherwise, we need to compute \emph{loop reachability-bound}
 % $\lpchB(l: \rprog_l, \tpath, c) \in \scexpr(c)$ 
 for each $\tpath$ w.r.t. every level of its outer nested loop.
@@ -40,31 +35,18 @@ for each $\tpath$ w.r.t. every level of its outer nested loop.
 % during these iterations, the innermost loop $\kw{enclosed(\tpath)}$ is executed, i.e., reached.
 \begin{defn}[Loop Reachability-bound]
 % \label{def:looprb}
-For the program with nested loops, given its refined program $\rprog$, a simple transition path $\tpath$ and an outer loop
+For the program with nested loops, given its refined program $\rprog$, a simple transition path $\tpath$, and an outer loop
 program $\rprog_l$ where $\tpath$ is nested in,
 $f(\rprog_l, \tpath, c)$ is a \emph{loop reachability-bound} for $\tpath$ w.r.t. $\rprog_l$ if and only if
-for every $\trace \in \ftdom_0(c)$, $f(\rprog_l, \tpath, c)(\trace)$  greater or equal to the
+for every $\trace \in \ftdom_0(c)$, $f(\rprog_l, \tpath, c)(\trace)$ greater or equal to the
 iteration numbers of $\rprog_l$,
 such that,
 during these iterations, the innermost loop $\kw{enclosed(\tpath)}$ is entered.
-% in the nested loops, the upper bound on iteration numbers of each level outer loop, such that,
-% during these iterations, the innermost loop is entered--is the \emph{loop reachability-bound} for $\tpath$ w.r.t. each outer loop.
-%  in this program, 
-% let $l: \rprog_l$ be a loop program in $\rprog$,
-% then $l: \rprog_l$'s \emph{loop reachability-bound} w.r.t. $\tpath$,  $\lpchB(l: \rprog_l, \tpath, c) \in \scexpr(c)$
-% is the upper bound on iteration numbers of the outer loop,
-% such that,
-% during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is entered.
 \end{defn}
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop $\rprog_1^1$. Since $L_4$ will be ``entered'' only in the first iteration of $\rprog_1^1$,
 we aim to compute $1$ as the \emph{loop reachability-bound} for $\tpath_3$ w.r.t. $\rprog_1^1$.
 
-Now we want to bound for each $\tpath$ the times it is executed  globally.
-%  by \emph{path reachability-bound}.
-%  for each $\tpath$
-% aims to bound the execution times of $\tpath$ globally.
-% Computation in Section~\ref{sec:pathrb} gives a sound \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$.
-%
+Now we want to bound for each $\tpath$ the times it is executed globally.
 \begin{defn}[Path Reachability-bound]
 % \label{def:pathrb}
 For a program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
@@ -75,27 +57,27 @@ times that $\tpath$ is executed when executing $c$ with arbitrary initial trace.
 \end{defn}
 % Intuitively, $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ globally during the execution of $c$.
 %
-In Example~\ref{ex:relatedNestedWhileOdd-overview}, since there isn't nested loop for $\tpath_1$ and $\tpath_2$, their local bound $\frac{m}{4}$ is indeed the global \emph{path reachability-bound}.
+In Example~\ref{ex:relatedNestedWhileOdd-overview}, since there isn't a nested loop for $\tpath_1$ and $\tpath_2$, their local bound $\frac{m}{4}$ is indeed the global \emph{path reachability-bound}.
 $\tpath_3$ is nested in two loops, but the inner loop $L_4$ is only entered in the first iteration of the outer loop, we aim to compute $\frac{m}{4}$ using the \emph{loop reachability-bound}.
 % by multiplying its local $\inoutB(\rprepeat(\tpath_3), \tpath_3, c)$ with the loop reachability bound.
 % path is $\tpath_3 = \frac{m}{4} \times 1 = \frac{m}{4} $.
 
 Section~\ref{sec:pathrb} computes a sound \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ for each $\tpath$ in $\rprog$.
 Then we use it to compute for each program point, $l \in \lvar(c)$ in a program $c$,
-%  in a program $c$,
+% in a program $c$,
 its \emph{reachability-bound}, $\psRB(l, c)$ by summing up all the path reachability bounds over all $\tpath$ that contains $l$.
 %
 \begin{defn}[The Reachability-bound Computation]
 \label{def:point_psrb}
 Given a program $c$ with its {abstract transition graph}, $\absG(c)$ and refined program $\rprog$,
-the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(l, c)$  is computed as follows,
+the \emph{reachability bound} of each program point $l \in \lvar(c)$, $\psRB(l, c)$ is computed as follows,
 % sums up all the path reachability bounds, $\inoutB(\rprog, \tpath, c)$ over all simple transition paths $\tpath$ that contains the program point $l$.
 \[ 
-  \psRB(l, c) = 
-  \sum
-  \left\{ \inoutB(\rprog, \tpath, c) ~\vert~ \tpath \in \rprog \land 
-  l \in \pathl(\tpath) \right\}
-  % \footnotemark
+ \psRB(l, c) = 
+ \sum
+ \left\{ \inoutB(\rprog, \tpath, c) ~\vert~ \tpath \in \rprog \land 
+ l \in \pathl(\tpath) \right\}
+ % \footnotemark
 \]
 $\tpath \in \rprog$ denotes $\tpath$ is a simple transition path in $\absG(c)$.
 % \footnotetext{$l \in \tpath$ and $\tpath \in \rprog$ denote $l$ is a vertex on $\tpath$, and $\tpath$ is a path on $\rprog$ respectively.}
@@ -108,22 +90,21 @@ $\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for $l$ in $c$.
 %
 {\small
 \[
-  \begin{array}{l}
-    \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c),  \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-    \\ \quad
-    \rprog = REFINE(\algrewrite(c))
-    \land 
-    \rprog = \algrewrite(c_r)
-    \land
-    \\ \quad
-    \land
-    \Big(
-    \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
-    \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
-    \Big)
-    % \\ \qquad
-    \implies \econfig{\psRB(l, c)}(\trace_0) \geq \counter(\trace, l)
-  \end{array}.
+ \begin{array}{l}
+ \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+ \\ \quad
+ \rprog = REFINE(\algrewrite(c))
+ \land 
+ \rprog = \algrewrite(c_r)
+ \land
+ \\ \quad
+ \land
+ \Big(
+ \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+ \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+ \Big)
+ \implies \econfig{\psRB(l, c)}(\trace_0) \geq \counter(\trace, l)
+ \end{array}.
 \]
 }
 \end{thm}
