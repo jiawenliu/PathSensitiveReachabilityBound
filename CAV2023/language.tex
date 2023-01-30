@@ -41,7 +41,7 @@ A trace can be finite, $\trace \in \ftdom$ or infinite $\trace \in \inftdom$ if 
 and $\tdom = \ftdom \cup \inftdom$.
 % The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in~\cite{Cousot19}.
 }
-We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$, and we use the operator $\env: {\ftdom} \to \vardom \to(\mathbb{N} \cup \{\bot\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
+We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$, and we use the operator $\env: {\ftdom} \to \vardom \to(\mathbb{N} \cup \{\bot, \infty\})$ to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
 % In the rest of the paper, We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 We use $\ftdom_0(c)$ to denote the set of all initial traces for the program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$.
 
@@ -57,4 +57,4 @@ The rules are standard and omitted here.
 We use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$ under an initial trace 
 $\trace_0 \in \ftdom_0(c)$,
-then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution that produces an infinite trace $\trace \in \inftdom$. The complete rules and definition can be found in Appendices~\ref{apdx:language}.
+then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution denoted by $\config{c, \trace_0} \uparrow^{\infty} \trace$ that produces an infinite trace $\trace \in \inftdom$. The complete rules and definition can be found in Appendices~\ref{apdx:language}.

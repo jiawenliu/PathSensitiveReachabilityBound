@@ -3,8 +3,8 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
 \begin{defn}[Path Reachability-bound Computation]
   \label{def:pathrb}
   Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
-  $\tpath$'s reachability-bound, $\inoutB(\rprog, \tpath, c)$
-  is computed recursively as follows. 
+  we compute for $\tpath$ its \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$
+  as follows. 
   % The input $c$ is omitted in the following equations for concise given the context is clear.
 {\small 
 \[
@@ -16,10 +16,10 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
     % & 
     \max\left\{ \inoutB(\rprog_1, \tpath, c), \ldots, \inoutB(\rprog_m, \tpath, c) \right\} 
     & \rprog = \rpchoose{\rprog_1, \ldots, \rprog_m } \\
-    \outinB(\rprog', \tpath, c), & l: \rprog_l \land l = \kw{closest}(\tpath) \\
+    \outinB(\rprog_l, \tpath, c), & l: \rprog_l = \kw{enclosed}(\tpath) \\
     \lpchB(\rprog_l, \tpath , c)
-    \times \max\limits_{l:\rprog_l = \kw{enclosed}(l':\rprog')}
-   \{\inoutB(l':\rprog', \tpath)\} \footnotemark, & l: \rprog_l \land l \neq \kw{enclosed}(\tpath) \\
+    \times \max\limits_{l:\rprog_l = \kw{enclosed}(\rprog')}
+   \{\inoutB(\rprog', \tpath)\} \footnotemark, & l: \rprog_l \neq \kw{enclosed}(\tpath) \\
   %  \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath) & \rprog = \rprepeat(\rprog')\\
   \end{array}
   \right.
@@ -28,8 +28,13 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
  \end{defn}
 \footnotetext{In a refined program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$.}
 
-We also guarantee that $\inoutB(\rprog, \tpath, c)$ for $\tpath$ in a refined program $\rprog$ is a sound upper bound on the times that $\tpath$ is executed during executing $c$
+We also guarantee that $\inoutB(\rprog, \tpath, c)$ is a sound \emph{path reachability-bound}
 in \highlight{Appendix~\ref{apdx:pathrb-sound}}.
 %
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, with $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
-$\outinB(4: \rprepeat(\tpath_3), \tpath_3, c) = n - m$ computed before, we obtain $\inoutB(\rprog, \tpath, c) = 1 \times (n - m)$ as tight as expected.
+$\outinB(\rprepeat(\tpath_3), \tpath_3, c) = n - m$ computed before,
+we obtain $\inoutB(\rprog, \tpath, c) = 1 \times  (n - m)$ as tight as expected.
+In Example~\ref{ex:threeNestedWhile}, with $\lpchB(\rprog_1, \tpath_3, c) = 1$,
+$\lpchB(\rprog_3, \tpath_3, c) = 1$
+$\outinB(\rprog_6, \tpath_3, c) = N$,
+we also obtain the tight bound $1 \times 1 \times  N$ as well.

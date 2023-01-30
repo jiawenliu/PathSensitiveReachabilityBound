@@ -33,7 +33,8 @@ Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition p
 \paragraph{Program Rewriting}
 Then we rewrite the program $c$ by rearranging all \emph{simple transition paths} as the syntax in \cite{GulwaniJK09} and preserves the same semantics in Algorithm~\ref{alg:alg-refine_rewrite} in Appendices~\ref{apdx:alg-rewrite}.
 % We first collect all the \emph{simple transition path}s as the algorithm input. 
-The algorithm takes  the set of all \emph{simple transition path}s as the input and initializes each candidate with a \emph{simple transition path}.
+The algorithm takes the set of all \emph{simple transition path}s as the input and initializes each candidate with a
+$\tpath$.
 Then in each iteration, we generate a new candidate program by composing and deleting existing ones and updating the candidate set until it has only one candidate, i.e., the output.
 %
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, the corresponding rewritten program is
@@ -43,14 +44,11 @@ $.
 
 \paragraph{Program Refinement}
 We implement the algorithm REFINE from paper~\cite{GulwaniJK09} in this step which takes the rewritten program $c$ as input and returns the
-refined program $\rprog$.
-The refined program for Example~\ref{ex:relatedNestedWhileOdd-overview} is shown in the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview} where we can find two interleaving patterns.
-The two loop paths are alternatively executing after each other in the two patterns.
-% In the first pattern, the second loop path $\tpath_4$ will execute after the first path containing the nested loop is done.
-%  $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$
-% $ 
-% \tpath_0; \rpchoose{\rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2),\rprepeat(\tpath_4) }; \tpath_5
-% $.
+refined program $\rprog$. We denote by $\kw{enclosed}(\rprog, \tpath)$ the innermost loop where $\tpath$ is located in $\rprog$.
+The $\rprog$ for Example~\ref{ex:relatedNestedWhileOdd-overview} is in the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview} where we can find two interleaving patterns.
+The two loop paths are alternatively executing after each other in the two patterns and
+ $4:\rprepeat(\tpath_3) = \kw{enclosed}(\rprog, \tpath_3)$.
+
 \begin{example}[Two Counter While]
 \label{ex:twoCounterWhile}
  We use another example from the .Net base-class library to show the necessity of the \emph{path refinement}. It has a two paths loop

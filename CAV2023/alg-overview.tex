@@ -28,15 +28,19 @@ If there are nested loops, we need to compute the \emph{loop reachability-bound}
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
 The soundness and proof of each algorithm is given in the Appendices and the input $c$ will be omitted in the rest of the paper if the context is clear.
 
-In the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$ in Figure~\ref{fig:relatedNestedWhileOdd-overview},
-we first compute $\outinB(4:\rprepeat(\tpath_3), \tpath_3, c) = n - m$
- for $\tpath_3$ in its innermost loop $L_4$ as a local \emph{path reachability-bound} by Section~\ref{sec:pathlocalrb}.
-Then we compute $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ w.r.t. its outer loop $L_1$ in Section~\ref{sec:looprb}. In the second interleaving pattern $\rprog_1^2$, we compute $\outinB(4:\rprepeat(\tpath_3), \tpath, c) = n - m - 3$ and the same $\lpchB(\rprog_1^2, \tpath_3, c)$.
-So Section~\ref{sec:pathrb} computes $\inoutB(\rprog, \tpath_3, c) = \max\{ 1 \times (n - m), 1 \times (n - m - 3) \} = n - m$ globally.
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, for $\tpath_3$ in the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$, 
+we first compute a local \emph{path reachability-bound}, $\outinB(4:\rprepeat(\tpath_3), \tpath_3, c) = n - m$
+w.r.t. its innermost loop $L_4$  by Section~\ref{sec:pathlocalrb}.
+Since $\tpath_3$ is nested in two level loops, we need to compute the \emph{loop reachability-bound} for it
+w.r.t. its outer loop $L_1$. The algorithm in Section~\ref{sec:looprb} computes a tight bound $\lpchB(\rprog_1^1, \tpath_3, c) = 1$. We also compute In the second interleaving pattern $\rprog_1^2$ the same number and
+then
+% $\outinB(4:\rprepeat(\tpath_3), \tpath, c) = n - m - 3$ and the same $\lpchB(\rprog_1^2, \tpath_3, c)$.
+% So 
+Section~\ref{sec:pathrb} computes $\inoutB(\rprog, \tpath_3, c) = \max\{ 1 \times (n - m), 1 \times (n - m - 3) \} = n - m$ globally for $\tpath_3$.
 %
-Then for every program point $l$, we sum up all the $\inoutB(\rprog, \tpath)$ over $\tpath$ that contains $l$ and get $\psRB(l, c)$.
+Now for every program point $l$, we sum up the $\inoutB(\rprog, \tpath)$ over all $\tpath$ that contains $l$ and get $\psRB(l, c)$.
 Since point $5$ only shows up on $\tpath_3$, we compute \highlight{$\psRB(5, c) = n - m$}.
 The points $0$ and $\lex$ are not in any loop, so $\psRB(0, c) = \psRB(\lex, c) = 1$,
-The points $3, 6, 7$ and $8$ which only show up once on $\tpath_2$ and $\tpath_4$ are all equal to $\lfloor\frac{m}{4}\rfloor$, which are same as their $\inoutB$.
+The points $3, 6, 7$ and $8$ which only show up once on $\tpath_2$ and $\tpath_4$ are all equal to $\lfloor\frac{m}{4}\rfloor$ the same as their $\inoutB$.
 For the loop headers $1$ and $4$, we only count the $\tpath$ where they show up as start-point.
 So $\psRB(4, c) =  \lfloor\frac{m}{4}\rfloor + n - m + 1$ and $\psRB(1,c) = 2 \times \lfloor\frac{m}{4}\rfloor + 1$ all as expected.
