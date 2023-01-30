@@ -1,7 +1,7 @@
 [ x <- 0 ] 0;
 while [ < (x, threadsCount) ] 1 do {
     [ x <- + (x, 1) ] 2;
-	if [ == (pthread_create, 0) ] 3
+	if [ <= (pthread_create, 0) ] 3
 	then { [x <- threadsCount ] 4 }
 	else { [ skip ] 5 }
 }

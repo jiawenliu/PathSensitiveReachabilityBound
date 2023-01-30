@@ -19,7 +19,7 @@ while [ == ( t , 0 ) ] 1 do {
 	else { [ skip ] 14 };
 	
 	if [ == (slot, bt_cleanpage) ] 15
-	then { [ t <- 1 ] 16}
+	then { [ t <- 1 ] 16 }
 	else { [ skip ] 17 };
 	
 	if [ != (bt_splitpage_btset, 0) ] 18

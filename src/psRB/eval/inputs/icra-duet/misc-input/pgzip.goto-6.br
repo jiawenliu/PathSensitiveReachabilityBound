@@ -7,7 +7,7 @@ while [ > (bits, 0) ] 1 do {
 	   if [ >= (max_code, m) ] 6
 	   then { [ n <- - (n, 1) ] 7 }
 	   else { [ skip ] 8 }
-	}
+	};
 	[ bits <- - (bits, 1) ] 9
 	
 }

@@ -8,15 +8,12 @@ while [ > (i, 0) ] 3 do {
     else { [skip] 7 };
     [ i <- - (i, 1)] 8;
     [ run <- limit ] 9;
-     while [ && (> (run, 0), is_small) ] 10 do 
+     while [ > (run, 0) ] 10 do 
      { 	[ run <- - (run, 1) ] 11;
         [ i <- - (i, 1)] 12; 
 	    [ is_small <- 0] 13;
 	    if [ rand ] 14 
         then { [end <- i] 15   }
         else { [skip] 16 }
-   	 };
-    [k <- run ] 17;
-    while [ > (k, 0) ] 18 do 
-    { [ k <- - (k, 3) ] 19 }
+   	 }
  }

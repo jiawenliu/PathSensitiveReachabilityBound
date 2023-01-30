@@ -10,10 +10,10 @@
     do
     {
       [ c <- + ( c, 1 ) ] 8
-    }
-    [ lineno <- + ( lineno, 1 ) ] 9
+    };
+    [ lineno <- + ( lineno, 1 ) ] 9;
     [ c <- + ( c, 1 ) ] 10
-  }
+  };
   if [ rand ] 11
   then 
   {
@@ -21,20 +21,22 @@
     then 
     {
   	  [ num_errors <- + (num_errors, 1)] 13;
-      [intoken <- 0] 14;
+      [intoken <- 0] 14
     }
-    [ lineno <- + ( lineno, 1 ) ] 15
+    else { [ lineno <- + ( lineno, 1 ) ] 15 }
   }
-  else { [ skip ] 16 }
-  if [== (intoken , true )] 17
+  else { [ skip ] 16 };
+
+  if [ == (intoken , true )] 17
   then
   {
     [ intoken <- + (intoken, 1) ] 18;
     if [ > (intoken, BUF_SZ) ] 19
-    then { return 20  }
+    then { [ skip ] 20  }
     else { [ skip ] 21 }
   }
-  else { [ skip ] 22 }
+  else { [ skip ] 22 };
+
   if [ rand ]
   then 
   {
@@ -42,6 +44,7 @@
     [ intoken <- + (intoken, 1) ] 24
   }
   else { [ skip ] 25 };
+
   if [ == (intoken , true )] 26
     then 
     {
@@ -66,7 +69,7 @@
       {
         [ c <- + ( c, 1 ) ] 40;
         [ lineno <- + ( lineno, 1 ) ] 41
-      }
+      };
 
       if [ rand ] 42
       then 
@@ -74,7 +77,7 @@
         [p <- 0] 43;
         if [ > (ntokens, 1) ] 44
         {
-          [ return ] 45
+          [ skip ] 45
         }
         else { [ skip ] 46 };
 
@@ -85,7 +88,7 @@
           if [ > (p, BUF_SZ) ] 51 
           then 
           {
-          [ return ] 52
+          [ skip ] 52
           }
           else { [ skip ] 53 }
         }
@@ -111,7 +114,7 @@
             {
               [ p <- + ( p, 1 ) ] 62 ;
               if [ > (p, BUF_SZ) ] 63
-              then { [ return ] 64 }
+              then { [ skip ] 64 }
               else { [ skip ] 65 } ;
               [ c <- + ( c, 1 ) ] 66
             };
@@ -128,7 +131,7 @@
           {
             [ pp <- + ( pp, 1 ) ] 73;
             if [ > (pp, BUF_SZ) ] 74
-            then { [ return ] 75 }
+            then { [ skip ] 75 }
             else { [ skip ] 76 };
             [ ncommas <- + (ncommas, 1) ] 77;
             [ c <- + ( c, 1 ) ] 78
@@ -141,14 +144,14 @@
           [ pp <- + ( pp, 1 ) ] 82
           
           if[ > (p, BUF_SZ) ] 83 then 
-            then { [ return ] 84 }
+            then { [ skip ] 84 }
             else { [ skip ] 85 };
           [ c <- + ( c, 1 ) ] 86;
           while [ < (c, FileSize) ] 87 do
           {
             [ pp <- + ( pp, 1 ) ] 88 ;
             if [ > ( pp, BUF_SZ ) ] 89
-            then { [ return ] 90 }
+            then { [ skip ] 90 }
             else { [ skip ] 91 };
             [ c <- + ( c, 1 ) ] 92
           }
@@ -164,7 +167,7 @@
               [ pp <- + ( pp, 1 ) ] 100; 
               [ pt <- + (pt, 1) ] 102;
               if [ > ( pp, BUF_SZ ) ] 103
-              then { [ return ] 104 }
+              then { [ skip ] 104 }
             else { [ skip ] 105 }
           };
             [pp <- 0] 106 ;
@@ -173,7 +176,7 @@
           	  [ pp <- + ( pp, 1 ) ] 108;
           	  [ pv <- + ( pv, 1 ) ] 109;
           	  if [ > ( pp, BUF_SZ ) ] 110
-              then { [ return ] 111 }
+              then { [ skip ] 111 }
               else { [ skip ] 112 }
             };
             [ pv <- + ( pv, 1 ) ] 113 ; 
@@ -185,7 +188,7 @@
             [ pp <- + ( pp, 1 ) ] 117;
             [ pt <- + ( pt, 1 ) ] 118;
           if [ > ( pp, BUF_SZ ) ] 119
-            then { [ return ] 120 }
+            then { [ skip ] 120 }
             else { [ skip ] 121 }
         };
         [pp <- 0] 122 ;
@@ -193,7 +196,7 @@
           {
             [ pp <- + ( pp, 1 ) ] 124 ;
             if [ > ( pp, BUF_SZ ) ] 125 ;
-            then { [ return ] 126 }
+            then { [ skip ] 126 }
             else { [ skip ] 127 };
             [ pv <- + ( pv, 1 ) ] 128
           }

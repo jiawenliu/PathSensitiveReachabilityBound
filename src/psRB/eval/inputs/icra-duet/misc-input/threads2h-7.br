@@ -20,7 +20,7 @@ while [ > (page_no, 0) ] 3 do {
 		   else { [ skip ] 14 };
 		   [ drill <- set_page_lvl ] 15;
 		   
-		   if [ & ( != (lock, BtLockRead), == (drill, lvl) ) ] 16
+		   if [ && ( != (lock, BtLockRead), == (drill, lvl) ) ] 16
 		   then { [ t <- 0 ] 17}
 		   else { [ skip ] 18 }
 	}
@@ -41,7 +41,7 @@ while [ > (page_no, 0) ] 3 do {
 					if [ < (slot, set_page_cnt) ] 28
 					then { [ skip ] 29 }
 					else { [ slotptr_dead <- 0 ] 30}
-				}
+				};
 				
 				[ page_no <- bt_getid_slotptr ] 31;
 				[ drill <- - (drill, 1) ] 32;

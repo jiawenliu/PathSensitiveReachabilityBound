@@ -1,4 +1,4 @@
-[ m <- / (n,2UL)] 0;
+[ m <- / (n, 2)] 0;
 while [ <= (k,  m ) ] 1 do {
 	[ j <- + (k, k) ] 2;
 	if [ < (j, n) ] 3
@@ -9,8 +9,8 @@ while [ <= (k,  m ) ] 1 do {
 		else { [ skip ] 7}
 	
 	}
-	else { [ skip ] 8};
-	[ tmp_0 <- comp_f__v ] 9;
+	else { [ skip ] 8 };
+	[ tmp_0 <- comp_f_v ] 9;
 	if [ <= (tmp_0, 0) ] 10
 	then { [ k <- + (m, 1) ] 11 }
 	else { [ skip ] 12};

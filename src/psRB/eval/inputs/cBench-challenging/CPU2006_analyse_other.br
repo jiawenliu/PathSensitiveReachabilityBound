@@ -29,15 +29,15 @@ do
 	{
 		[ naid <- + ( naid, 1 ) ] 17;
 	    [ j <- - ( j, 1 ) ] 18
-	}
+	};
 
   	[ natp <- 0 ] 19;
   	[ k <- naid ] 20 ;
-	while [ > ( k , 0) ] 21
+	while [ > (k , 0) ] 21
 	do
 	{
 		[ l <- natp ] 22 ;
-		while [ > ( l , 0) ] 23;
+		while [ > ( l , 0) ] 23
 		do { [ l <- - ( l, 1 ) ] 24 };
 		[ natp <- + ( natp, 1 ) ] 25;
 	    [ k <- - ( k, 1 ) ] 26
@@ -52,7 +52,7 @@ do
 		  	[ k <- naid ] 31 ;
 			while [ > ( k , 0) ] 32
 			do 
-			{	[ naaid <- + ( naaid, 1 ) ] 33
+			{	[ naaid <- + ( naaid, 1 ) ] 33;
 				[ k <- - ( k, 1 ) ] 34
 			};
 				[ l <- - ( l, 1 ) ] 35 

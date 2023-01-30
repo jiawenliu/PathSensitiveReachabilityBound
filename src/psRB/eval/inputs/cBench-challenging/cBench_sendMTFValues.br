@@ -3,11 +3,11 @@
 while [ > (nPart, 0) ] 2
 do {
 	[ ge <- - (gs, 1) ] 3;
-	while [ < ( ge, alphaSize - 1) ] 4
+	while [ < ( ge,  - (alphaSize, 1) ) ] 4
 	do { 
 		[ ge <- + (ge, 1) ] 5
 	};
-	if [ && ( > (ge, gs),  && (nPart != nGroups, && (nPart != 1, ( (nGroups - nPart) % 2 == 1)))) ] 6
+	if [ && ( > (ge, gs), rand ) ] 6
 	then 
 	{
 		[ gs <- - (ge, 1) ] 7

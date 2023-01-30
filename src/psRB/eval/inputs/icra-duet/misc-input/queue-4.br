@@ -4,7 +4,7 @@ while [ < (count, 255) ] 1 do {
 	[ qt <- tmp_0 ] 3;
 	if [ == (qt, 0) ] 4
 	then { [ count <- 255 ] 5 }
-	else { [ skip ] 6};
+	else { [ skip ] 6 };
 	
 	if [ != (qt_addr2, count) ] 7
 	then { [ count <- 255 ] 8 }

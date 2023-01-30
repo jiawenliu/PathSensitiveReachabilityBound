@@ -2,7 +2,7 @@
 [ next <- bt_mgr_latchmgr ] 1;
 while [ < (page_no, bt_getid_bt_mgr) ] 2 do {
 	
-	[ page_no <- / ( page_no, bt_mgr_page_bits ) ] 3
+	[ page_no <- / ( page_no, bt_mgr_page_bits ) ] 3;
 	if [ == (ReadFile, 0) ] 4
 	then { [ page_no <- bt_getid_bt_mgr ] 5 }
 	else { [ skip ] 6 };

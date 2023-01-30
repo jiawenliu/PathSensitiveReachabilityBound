@@ -3,7 +3,7 @@ while [ < (i, s_nblock) ] 1 do {
      [ i <- + (i, 1) ] 2;
    if [ == (ptr_i, 0) ] 3
    then { [ s_origPtr <- i ] 4;
-          [ i <- s_nblock ] 5;  
+          [ i <- s_nblock ] 5 
    }
    else { [ skip ] 6 }
 }

@@ -1,7 +1,7 @@
 [ b <- hctx_table_bucket ] 0 ;
 while [ > (b, 0) ] 1 do {
     [ t <- strcasecmp_string_b_key ] 2;
-	if [ & ( != (b_key, NULL), == (t, 0) ) ] 3
+	if [ && ( != (b_key, NULL), == (t, 0) ) ] 3
 	then { 
 		if [ != (data, NULL ) ] 4
 		then {

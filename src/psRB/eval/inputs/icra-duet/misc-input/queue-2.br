@@ -1,14 +1,14 @@
 [ count <- 0 ] 0;
-while [ < (count, * (q_count, 2UL ) ) ] 1 do {
+while [ < (count, * (q_count, 2 ) ) ] 1 do {
 	[ tmp_0 <- queue_get_next ] 2;
 	[ next_qt <- tmp_0 ] 3;
 	if [ == (next_qt, 0) ] 4
 	then { [ next_qt <- qt ] 5}
 	else { [ skip ] 6};
 	
-	if [ == (status, 16U) ] 7
+	if [ == (status, 16) ] 7
 	then { [ qt <- 0] 8;
-	       [ count <- * (q_count, 2UL ) ] 9
+	       [ count <- * (q_count, 2 ) ] 9
 	}
 	else { [ skip ] 10};
 	[ qt <- next_qt ] 11;

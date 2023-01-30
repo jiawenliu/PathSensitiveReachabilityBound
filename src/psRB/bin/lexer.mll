@@ -63,7 +63,9 @@ rule main =
   | "<="                { LEQ }
   | ">"                 { GREATER }
   | ">="                { GEQ }
-  
+  | "!="                { GREATER }
+  | "=="                { LEQ }
+  | "rand"              { TRUE }
   
   
  

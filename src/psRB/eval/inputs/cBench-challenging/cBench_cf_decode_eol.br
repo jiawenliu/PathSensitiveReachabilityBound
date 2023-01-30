@@ -25,21 +25,21 @@ while [ > (zeros, 0) ] 4 do
 if [ > (ss_K, 0) ] 15 
 then {  [ look_ahead <- 2 ] 16 }
 else {  [ look_ahead <- 1 ] 17   };
-while [ true ]  do {
-	if [ < (bits_left, look_ahead) ] 18
+while [ true ]  18 do {
+	if [ < (bits_left, look_ahead) ] 19
 	then {
-	    if [ < ( - (rlimit, p), 3 ) ] 19
+	    if [ < ( - (rlimit, p), 3 ) ] 20
 	    then {
-			if [ > (rlimit, p) ] 20 
-			then {  [ p <- + ( p, 1 ) ] 21C}
-			else {  [ zeros <- 0 ] 22   };
-			[ bits_left <- + ( bits_left, 8 ) ] 23
+			if [ > (rlimit, p) ] 21 
+			then {  [ p <- + ( p, 1 ) ] 22}
+			else {  [ zeros <- 0 ] 23   };
+			[ bits_left <- + ( bits_left, 8 ) ] 24
 	    } 
 	    else {
-			[ bits_left <- + ( bits_left, 24 ) ] 24 ;
-			[ p <- + ( p, 3 ) ] 25
+			[ bits_left <- + ( bits_left, 24 ) ] 25 ;
+			[ p <- + ( p, 3 ) ] 26
 	    }
 	}
-	else {	[ skip ] 26 };
-	[ bits_left <- - ( bits_left, 1 ) ] 27
+	else {	[ skip ] 27 };
+	[ bits_left <- - ( bits_left, 1 ) ] 28
 } 

@@ -1,5 +1,5 @@
 [ k <- nblock ] 0;
-while [ >= (k, 0) ] do 1 {
+while [ >= (k, 0) ] 1 do {
    [ c1 <- block_i1 ] 2;
    [ c2 <- block_i2 ] 3;
    if [ != (c1, c2) ] 4
@@ -18,19 +18,19 @@ while [ >= (k, 0) ] do 1 {
    [ c2 <- block_i2 ] 15;
    
    if [ != (c1, c2) ] 16
-   then { [ k <- -1] 17 }
+   then { [ k <- -1 ] 17 }
    else { [ skip ] 18 };
    
    [ s1 <- quadrant_i1 ] 19;
    [ s2 <- quadrant_i2 ] 20;
    
    if [ >= (i1, nblock) ] 21
-   then { [ i1 <- -(i1, nblock) ] 22 }
+   then { [ i1 <- - (i1, nblock) ] 22 }
    else { [ skip ] 23 };
    
    if [ >= (i2, nblock) ] 24 
    then { [ i1 <- -(i2, nblock) ] 25}
-   else { [ skip ] 26};
+   else { [ skip ] 26 };
    
    [ k <- - (k, 8) ] 27
 

@@ -2,7 +2,7 @@
     if [ >= (ac, 3) ] 1
     then
     { [CLcount <- 3] 2 }
-  	else { [ skip ] 3 }
+  	else { [ skip ] 3 };
     while [ < (CLcount, ac)]  4
     do
     {

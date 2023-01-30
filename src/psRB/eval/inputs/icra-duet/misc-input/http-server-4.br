@@ -1,8 +1,8 @@
 [ t <- 1] 0;
 while [ > ( t, 0 ) ] 1 do {
 	[ numByteRecv <- recv_cilentSockert ] 2;
-	if [ < (numByteRecv, 0L) ] 3
-	then { [ t <- 0 ]  4}
+	if [ < (numByteRecv, 0) ] 3
+	then { [ t <- 0 ]  4 }
 	else {
 		[ totalByte <- (totalByte, numByteRecv) ] 5;
 		if [ >= (totalByte, 2) ] 6
@@ -27,7 +27,7 @@ while [ > ( t, 0 ) ] 1 do {
 			[ curBuffer <- + (curBuffer, numByteRecv) ] 16;
 			[ curBufferLen <- - (curBufferLen, numByteRecv) ] 17		
 		}
-	}
+	};
 	if [ == (numByteRecv, 0) ] 18
 	then { [ t <- 0 ] 19 }
 	else { [ skip ] 20 }

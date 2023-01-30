@@ -4,9 +4,9 @@
 while [ > (p, 0) ] 3 do {
 	[ w <- - (w, 2) ] 4;
 	while [ > (w, 0) ] 5 do {
-	if [ rand ] 6 
+	if [ > (w, 0) ] 6 
 	then { 
-			[ b <- (64, b) ] 7;
+			[ b <- + (64, b) ] 7;
 			while [ > (b, 0) ] 8 do 
 			{ 	[ b <- - (b, 1) ] 9 }
 		 }

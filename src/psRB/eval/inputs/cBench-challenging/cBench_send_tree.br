@@ -13,7 +13,7 @@ while [ > (n, 0) ] 2 do
 		        { [ count <- - (count, 1) ] 9 };
 		        [ count <- - (count, 1) ] 10
 	         }
-       	else { [ count <- - (count, 1) ] 11 }
+       	else { [ count <- - (count, 1) ] 11 };
       	[ count <- 0 ] 12
       }
 }

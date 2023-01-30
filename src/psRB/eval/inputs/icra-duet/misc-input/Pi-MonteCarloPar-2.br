@@ -5,7 +5,7 @@ while [ != (data_numPoints, MAX_POINTS) ] 3 do {
 	
 	[ x <- rand_radius_1 ] 4;
 	[ y <- rand_radius_2 ] 5;
-	[ t <- + (*(x, x),*(y, y)) ] 6;
+	[ t <- + ( *(x, x), *(y, y)) ] 6;
 	
 	if [ < (t, SQR_RADIUS) ] 7
 	then { [ data_numHits <- +(data_numHits, 1) ] 8}

@@ -1,21 +1,21 @@
-[ k <- inputk ];
-[ n <- inputn ];
-[ l <- limit ];
-[ k <- - ( k, n ) ];
-while [ < (k, (16))] 
+[ k <- inputk ] 0 ;
+[ n <- inputn ] 1 ;
+[ l <- limit ] 2 ;
+[ k <- - ( k, n ) ] 3 ;
+while [ < (k, 16)]  4
 do {
-    [k <- + ( k, 8 )]
-}
-[k <- - ( k, 16 )];
-while [ < (k, (16))]  do {
-    [k <- + ( k, 8 )]
+    [k <- + ( k	, 8 )] 5
 };
-[k <- - ( k, 16 )];
-while [> (n, 0)] 
+[k <- - ( k, 16 )] 6;
+while [ < (k, 16)] 7  do {
+    [k <- + ( k, 8 )] 8
+};
+[k <- - ( k, 16 )] 9 ;
+while [ > (n, 0) ] 10
 do { 
-	while [ < (k, limit) ]
+	while [ < (k, limit) ] 11 do
 	{ 
-	    [k <- + ( k, 8 )]
-	}
-    [k <- - ( k, 8 )]
+	    [k <- + ( k, 8 )] 12
+	};
+    [k <- - ( k, 8 )] 13
 }

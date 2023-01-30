@@ -1,12 +1,12 @@
 [ t <- 1 ] 0 ;
-[ result <- 0 ];
-while [ > (t, 0) ] 1do {
-	if [ != ( + (s, result), 0) ]
+[ result <- 0 ] 1;
+while [ > (t, 0) ] 2 do {
+	if [ != ( + (s, result), 0) ] 3
 	then { 
-		if [ == ( + (s, result), reject) ]
-		then { [ t <- 0 ] }
-		else { [ skip ] }
+		if [ == ( + (s, result), reject) ] 4
+		then { [ t <- 0 ] 5}
+		else { [ skip ] 6 }
 	}
-	else { [ t <- 0 ] };
-	[ result <- + (result, 1) ]
+	else { [ t <- 0 ] 7 };
+	[ result <- + (result, 1) ] 8
 }

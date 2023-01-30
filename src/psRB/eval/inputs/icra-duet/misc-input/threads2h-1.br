@@ -1,11 +1,11 @@
-while [ & ( > (root_page_lvl, 1) , == (root_page_act, 1)  ) ] 0 do {
+while [ && ( > (root_page_lvl, 1) , == (root_page_act, 1)  ) ] 0 do {
 	[ idx <- 0 ] 1;
 	while [ < ( + (idx, 1), root_page_cnt) ] 2 do {
 	    [ idx <- + (idx, 2) ] 3;
 		if [ == (slotptr_dead, 0) ] 4
 		then { [ idx <- - (root_page_cnt, 1) ] 5 }
 		else { [ skip ] 6 }
-	}
+	};
 	if [ == (child_pool, bt_pinpool) ] 7
 	then { [ child_page <- bt_page ] 8 }
 	else { [ root_page_lvl <- 1 ] 9}

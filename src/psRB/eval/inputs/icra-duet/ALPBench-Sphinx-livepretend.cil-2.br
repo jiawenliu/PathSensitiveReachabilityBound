@@ -16,7 +16,7 @@ while [ < (i, h_size) ] 3 do {
 		}		
 		
 	}
-	else [ skip ] 13;
+	else { [ skip ] 13};
 	[ i <- + (i, 1) ] 14
 
 } 

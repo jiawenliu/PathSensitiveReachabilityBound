@@ -1,7 +1,7 @@
 [ ii <- first ] 0;
 [ jj <- - (last, 1) ] 1;
 [ done <- 0 ] 2;
-while [ == (done, 0) ] 3 do {
+while [ <= (done, 0) ] 3 do {
     [ii <- + (ii, 1) ] 4;
 	
 	while [ < (ii, 0) ] 5 do {
@@ -10,7 +10,7 @@ while [ == (done, 0) ] 3 do {
 	
 	  [jj <- - (jj, 1) ] 7;
 	
-	while [ > (jj, 0) 8 ] do {
+	while [ > (jj, 0) ] 8 do {
 	  [jj <- - (jj, 1) ] 9
 	};
 	

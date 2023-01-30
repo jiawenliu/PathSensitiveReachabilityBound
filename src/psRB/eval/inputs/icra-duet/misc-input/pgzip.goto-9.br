@@ -4,7 +4,7 @@ while [ >= (max_code, n) ] 2 do {
 	[ curlen <- nextlen ] 3;
 	[ nextlen <- dl_len ] 4;
 	[ count <- + (count, 1) ] 5;
-	if [ & ( == (curlen, nextlen), < (count, max_count) ) ] 6
+	if [ && ( == (curlen, nextlen), < (count, max_count) ) ] 6
 	then { [ max_code <- - (n, 1) ] 7 }
 	else { [ skip ] 8};
 	[ count <- 0 ] 9;

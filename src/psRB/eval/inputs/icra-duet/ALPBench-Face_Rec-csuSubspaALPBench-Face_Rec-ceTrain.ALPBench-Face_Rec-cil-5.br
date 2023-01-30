@@ -2,11 +2,11 @@
 [ i <- 0 ] 1;
 while [ < (i, size) ] 2 do {
 	[ tmp_1 <- rand ] 3;
-	[ place <- / (*(bound, tmp_1), 2147483648) ] 4;
+	[ place <- / (* (bound, tmp_1), 2147483648) ] 4;
 	[ j <- place ] 5;
 	while [ < (j, - (bound, 1) ) ] 6 do {
 		[ j <- + (j, 1) ] 7
-	}
+	};
 	[ bound <- - (bound, 1) ] 8;
 	[ i <- + (i, 1) ] 9
 }
