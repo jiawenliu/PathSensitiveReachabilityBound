@@ -10,9 +10,9 @@ Each edge $l \xrightarrow{dc} l'$ is an abstract transition $\absevent = (l, dc,
 computes the \emph{Refined Program}, $\rprog$ for a program $c$ based on 
 its abstraction transition graph and transforms the multiple-paths loops
 into multiple loops where
-the interleaving of paths is explicit as in bottom part of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
+the interleaving of paths is explicit as in the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
 It has two interleaving patterns in the loop $L_1$.
-%  denoted as $\rprog_1^1$ and $\rprog_1^2$.
+% denoted as $\rprog_1^1$ and $\rprog_1^2$.
 
 % \textbf{Step 3: Ranking Function Estimation}
 \textbf{Step 3} computes the \emph{Ranking Function}, $\locbound(\absevent, c)$ 
@@ -26,12 +26,12 @@ computes the \emph{Reachability-bound}, $\psRB(l, c)$ for every program point $l
 \todo{It requires computing the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ for every $\tpath$.
 If there are nested loops, we need to compute the \emph{loop reachability-bound}, $\lpchB(l: \rprog, \tpath, c)$ w.r.t. every level of $\tpath$'s outer loop. }
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
-The soundness and proof of each algorithm is given in the Appendices and the input $c$ will be omitted in the rest of the paper if the context is clear.
+The soundness and proof of each algorithm are given in the Appendices and the input $c$ will be omitted in the rest of the paper if the context is clear.
 
 In Figure~\ref{fig:relatedNestedWhileOdd-overview}, for $\tpath_3$ in the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$, 
 we first compute a local \emph{path reachability-bound}, $\outinB(4:\rprepeat(\tpath_3), \tpath_3, c) = n - m$
-w.r.t. its innermost loop $L_4$  by Section~\ref{sec:pathlocalrb}.
-Since $\tpath_3$ is nested in two level loops, we need to compute the \emph{loop reachability-bound} for it
+w.r.t. its innermost loop $L_4$ by Section~\ref{sec:pathlocalrb}.
+Since $\tpath_3$ is nested in two loops, we need to compute the \emph{loop reachability-bound} for it
 w.r.t. its outer loop $L_1$. The algorithm in Section~\ref{sec:looprb} computes a tight bound $\lpchB(\rprog_1^1, \tpath_3, c) = 1$. We also compute In the second interleaving pattern $\rprog_1^2$ the same number and
 then
 % $\outinB(4:\rprepeat(\tpath_3), \tpath, c) = n - m - 3$ and the same $\lpchB(\rprog_1^2, \tpath_3, c)$.
@@ -42,5 +42,5 @@ Now for every program point $l$, we sum up the $\inoutB(\rprog, \tpath)$ over al
 Since point $5$ only shows up on $\tpath_3$, we compute \highlight{$\psRB(5, c) = n - m$}.
 The points $0$ and $\lex$ are not in any loop, so $\psRB(0, c) = \psRB(\lex, c) = 1$,
 The points $3, 6, 7$ and $8$ which only show up once on $\tpath_2$ and $\tpath_4$ are all equal to $\lfloor\frac{m}{4}\rfloor$ the same as their $\inoutB$.
-For the loop headers $1$ and $4$, we only count the $\tpath$ where they show up as start-point.
-So $\psRB(4, c) =  \lfloor\frac{m}{4}\rfloor + n - m + 1$ and $\psRB(1,c) = 2 \times \lfloor\frac{m}{4}\rfloor + 1$ all as expected.
+For the loop headers $1$ and $4$, we only count the $\tpath$ where they show up as a start-point.
+So $\psRB(4, c) = \lfloor\frac{m}{4}\rfloor + n - m + 1$ and $\psRB(1,c) = 2 \times \lfloor\frac{m}{4}\rfloor + 1$ all as expected.
