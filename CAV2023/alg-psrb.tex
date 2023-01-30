@@ -7,7 +7,9 @@ As pre-procedures, we first compute the loop bound, $BD(\rprog_l, c)$ for every 
 \begin{defn}[Loop Bound]
   % \label{def:loopbound}
   For any program $c$ with it refined program $\rprog$,
-  the loop bound $BD(\rprog_l, c) \in \scexpr(c)$ for a subprogram $\rprog_l$ of $c$ in $\rprog$ is an upper bound on the iterating times of this program from its enter point to the exit point.
+  the \emph{loop bound}
+  % $BD(\rprog_l, c) \in \scexpr(c)$ 
+  for a subprogram $\rprog_l$ of $c$ in $\rprog$ is an upper bound on the executing times of $\rprog_l$ from its enter point to the exit point with arbitrary initial trace.
 \end{defn}
 % 
 % Then we compute the \emph{path local reachability-bound}, $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$ for every sub loop program $\rprog_l$ of $c$ in $\rprog$.
@@ -15,20 +17,21 @@ As pre-procedures, we first compute the loop bound, $BD(\rprog_l, c)$ for every 
   % \label{def:pathlocalrb}
   Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
   let $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ be a sub loop program in $\rprog$,
-  then $\tpath$'s \emph{path local reachability-bound} w.r.t. $l: \rprog_l$,  $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$
-  is an upper bound on the execution times of $\tpath$ when executing program $\rprog$.
+  then $\tpath$'s \emph{path local reachability-bound} w.r.t. $l: \rprog_l$, 
+  % $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$
+  is an upper bound on the execution times of $\tpath$ when executing program $\rprog$ under arbitrary initial trace.
 \end{defn}
-Intuitively,
-$\outinB(\rprog_l, \tpath, c)$ bounds the execution times of $\tpath$ when only its innermost loop program $\rprog_l$ is executing.
+Intuitively, it bounds the execution times of $\tpath$ when only its innermost loop program is executing.
 % and $\rprog$ is the closest loop where $\tpath$ is nested.
-For example in the first interleaving pattern $\rprog_1^1$ in Example~\ref{ex:relatedNestedWhileOdd-overview}, 
+For example in the first interleaving pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}, 
 $4:\rprepeat(\tpath_3)$ is the innermost loop program of $\tpath_3$.
 So we first will compute $m - n$ as its local \emph{path reachability-bound}.
 %  to bound its iteration times in its closest loop by Section~\ref{sec:pathlocalrb}.
 
 If there isn't nested loops in a program, we will jump to the Definition~\ref{def:pathrb}.
-Otherwise, we need to compute \emph{loop reachability-bound},
-$\lpchB(l: \rprog_l, \tpath, c) \in \scexpr(c)$ for each $\tpath$ w.r.t. every level of its outer nested loop.
+Otherwise, we need to compute \emph{loop reachability-bound}
+% $\lpchB(l: \rprog_l, \tpath, c) \in \scexpr(c)$ 
+for each $\tpath$ w.r.t. every level of its outer nested loop.
 % This quantity aims to precisely bound the iteration numbers of the outer loop $l$,
 % such that,
 % during these iterations, the innermost loop $\kw{enclosed(\tpath)}$ is executed, i.e., reached.
@@ -36,11 +39,11 @@ $\lpchB(l: \rprog_l, \tpath, c) \in \scexpr(c)$ for each $\tpath$ w.r.t. every l
 % \label{def:looprb}
 For the program with nested loops, given its refined program $\rprog$, a simple transition path $\tpath$ and an outer loop
 program $l: \rprog_l$ where $\tpath$ is nested in,
-$f(l: \rprog_l, \tpath, c)$ is a \emph{loop reachability-bound} for $\tpath$ w.r.t. $\l:prog$ if and only if
-for every $\trace \in \ftdom_0(c)$, $f(l: \rprog_l, \tpath, c)(\trace)$  greater or equal to the
+$f(l: \rprog_l, \tpath, c)$ is a \emph{loop reachability-bound} for $\tpath$ w.r.t. $\rprog_l$ if and only if
+for every $\trace \in \ftdom_0(c)$, $f(\rprog_l, \tpath, c)(\trace)$  greater or equal to the
 iteration numbers of $l: \rprog_l$,
 such that,
-during these iterations, the innermost loop $l' = \kw{enclosed(\tpath)}$ is entered.
+during these iterations, the innermost loop $\kw{enclosed(\tpath)}$ is entered.
 % in the nested loops, the upper bound on iteration numbers of each level outer loop, such that,
 % during these iterations, the innermost loop is entered--is the \emph{loop reachability-bound} for $\tpath$ w.r.t. each outer loop.
 %  in this program, 
@@ -51,35 +54,30 @@ during these iterations, the innermost loop $l' = \kw{enclosed(\tpath)}$ is ente
 % during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is entered.
 \end{defn}
 In Example~\ref{ex:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop $\rprog_1^1$. Since $L_4$ will be ``entered'' only in the first iteration of $\rprog_1^1$,
-we aim to compute $1$ for $\lpchB(\rprog_1^1, \tpath_3, c)$ in Section~\ref{sec:looprb}.
-% If there isn't outer loop for a path such as $\tpath_1$,  we will use the local bound directly as global \emph{path reachability-bound}
-% and skip computing the \emph{loop reachability-bound}.
+we aim to compute $1$ as the \emph{loop reachability-bound} for $\tpath_3$ w.r.t. $\rprog_1^1$.
 
-% and we compute $\lpchB(\rprog_1^1, \tpath_3, c) = 1$. It is tight because the innermost loop of $\tpath_3$ will be ``entered'' only in the first iteration of $\rprog_1^1$.
-
-% Intuitively $\lpchB(l: \rprog_l, \tpath, c) \in \scexpr(c)$
-% is the bound on iteration numbers of the outside loop $l$,
-% such that,
-% during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is executed, i.e., reached.
-The \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ for each $\tpath$
-aims to bound the execution times of $\tpath$ globally
-% during the execution of $c$ 
-and Section~\ref{sec:pathrb} presents the computation.
+Now we want to bound for each $\tpath$ the times it is executed  globally.
+%  by \emph{path reachability-bound}.
+%  for each $\tpath$
+% aims to bound the execution times of $\tpath$ globally.
+% Computation in Section~\ref{sec:pathrb} gives a sound \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$.
 %
 \begin{defn}[Path Reachability-bound]
 % \label{def:pathrb}
 For a program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
-the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c) \in \scexpr(c)$ is the upper bound on the
-times that $\tpath$ is executed when executing $c$.
+the \emph{path reachability-bound},
+% $\inoutB(\rprog, \tpath, c) \in \scexpr(c)$ 
+is the upper bound on the
+times that $\tpath$ is executed when executing $c$ with arbitrary initial trace.
 \end{defn}
 % Intuitively, $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ globally during the execution of $c$.
 %
-In Example~\ref{ex:relatedNestedWhileOdd-overview}, since there isn't outer loop for $\tpath_1$ and $\tpath_2$, we aim to compute $\frac{m}{4}$, which is the same as their local bound.
-While $\tpath_3$ is nested in two loops, but only visited once in the outer iteration, we still aim to compute $\frac{m}{4} \times 1$.
+In Example~\ref{ex:relatedNestedWhileOdd-overview}, since there isn't nested loop for $\tpath_1$ and $\tpath_2$, we will use their local bound $\frac{m}{4}$ directly as global \emph{path reachability-bound}.
+$\tpath_3$ is nested in two loops, but only visited once in the outer iteration, we aim to compute $\frac{m}{4}$ using the \emph{loop reachability-bound}.
 % by multiplying its local $\inoutB(\rprepeat(\tpath_3), \tpath_3, c)$ with the loop reachability bound.
 % path is $\tpath_3 = \frac{m}{4} \times 1 = \frac{m}{4} $.
 
-Then we compute for each program point in a program $c$, $l \in \lvar(c)$,
+Then we compute for each program point, $l \in \lvar(c)$ in a program $c$,
 %  in a program $c$,
 its \emph{reachability-bound}, $\psRB(l, c)$ by summing up all the path reachability bounds over all simple transition paths that contains $l$.
 %
@@ -102,7 +100,7 @@ $\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for every program point $
 \begin{thm}[Soundness]
 \label{thm:pathsensitive_rb_soundness}
 For every program ${c}$ and every label $l$ in this program,
-$\econfig{\psRB(l, c)}$ is a \emph{Reachability-bound} for $l$ in $c$.
+$\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for $l$ in $c$.
 %
 {\small
 \[
