@@ -18,16 +18,18 @@ and self-implemented SPEED based on~\cite{GulwaniJK09}.
 We aim to answer, is our prototype able to compute more precise reachability-bound for different program points when comparing with the worst-case program
 complexity analysis tools? If so, can we also have better overall complexity estimation?
 %  based on the precise reachability-bound?
-Tab.~\ref{tb:accuracy-eval} shows the evaluation results including the theoretical bounds and empirical results.
+Tab.~\ref{tb:accuracy-eval} shows our evaluation results.
+%  including the theoretical bounds and empirical results.
 \\
 \emph{Effectiveness}
 \newcommand{\pointnum}{\kw{\# l}}
 The $2^{nd}$ and $3^{rd}$ columns are the theoretical worst-case bound on the overall complexity and the number of programs that have this complexity.
 To show the effectiveness, 
 we present in column $4^{th}$ our results for different locations in different loop paths. 
-Under the same overall complexity, different points have very different $\psRB$.
-In each sub-column, we show the number of points, $\pointnum$ that have the same $\psRB$ under the same worst complexity.
-For almost all the multipath loops, our tool computes precise bounds on locations in different paths that have significantly different \emph{reachability-bound}s.
+Though having the same overall complexity, the results shows that different point points have significantly different $\psRB$.
+In each sub-column, we additionally show the number of points, $\pointnum$ that have the same $\psRB$ under the same worst complexity.
+For almost all the multipath loops, our tool computes precise \emph{reachability-bound}s on locations in different paths.
+%  that have significantly different \emph{reachability-bound}s.
 Even for the unbounded loops, we can still compute finite \emph{reachability-bound}s on certain program points which are not involved with the unbounded loop paths.
 While none of the existing tools can compute reasonable bounds for these programs.
 \\
