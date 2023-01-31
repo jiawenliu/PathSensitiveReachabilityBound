@@ -1,0 +1,16 @@
+[ increment <- array_size ] 0 ;
+while [  > (increment , 0) ] 1 do {
+  [ i <- array_size  ] 2;
+  while [ > ( i , 0 ) ] 3 do {
+    [ j <- i  ] 4;
+    [ temp <- numbersi  ] 5;
+    while [ > (j, increment)] 6 do
+    {
+      [ j <- - ( j, increment ) ] 7;
+      [ numbersj <- numbersjincrement ] 8
+    };
+    [ numbersj <- temp  ] 9;
+    [ i <- - ( i , 1 )  ] 10
+  };
+  [ increment <- / ( increment, 2 ) ] 11
+}
