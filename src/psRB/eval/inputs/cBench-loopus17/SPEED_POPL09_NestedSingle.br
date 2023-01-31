@@ -1,4 +1,4 @@
- x <- n ] 0 ;
+[ x <- n ] 0 ;
 while [ > ( x , 0 ) ] 1 do {
 	[ y <- m ] 2 ;
 	while [ > ( x , 0) ] 3 do 

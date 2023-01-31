@@ -3,13 +3,14 @@
 [ xy <- - ( xx , yy ) ] 2 ;
 while [  >= ( xy , 0 ) ] 3 do {
   if [ rand ] 4     
-  then {  [ xx <- - ( (- ( xx , 1 )) , tx ) ] 5 ;
+  then {  [ xx <- - ( - ( xx , 1 ) , tx ) ] 5 ;
           [ xy <- - ( xy , 1 ) ] 6 ;
           [ xy <- - ( xy , tx ) ] 7 
         }
-  else {  [ yy <- + ( (+ ( yy , 1 )) , tx ) ] 8 ;
+  else {  [ yy <- + ( + ( yy , 1 ) , tx ) ] 8 ;
           [ xy <- - ( xy , 1 ) ] 9 ;
           [ xy <- - ( xy , tx ) ] 10 
         }
 }
+
 

@@ -1,6 +1,6 @@
 [ i <- x ] 0 ;
 [ j <- y ] 1 ;
-while [  (> (i , 0) ] 2 do {
+while [  > (i , 0) ] 2 do {
 	[ i <- - (i, 1) ] 3 ;
 	if [ > ( randa, randb) ] 4     
 	then {  [ j <- + (j, 1) ] 5 }
