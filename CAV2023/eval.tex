@@ -3,16 +3,16 @@ and outputs the reachability-bound on each program point.
 This implementation consists of the 
 program abstraction in OCaml and the program refinement, ranking function estimation, and the path-sensitive reachability-bound algorithm in Python.
 We evaluate it on 20 self-adopted programs from the literatures and 270 programs extracted from four benchmarks. 
-Including 110{\tt .c} programs from 7 benchmarks~\cite{BenchmarkLoops}\footnote{ABC: 15, C4B: 15, KoAT: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37} and 37 challenging{\tt .c} programs 
+Including 110{\tt .c} programs from 7 benchmarks\footnote{ABC: 15, C4B: 15, KoAT: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37} and 37 challenging{\tt .c} programs 
 from the \hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}~\cite{BenchmarkLoops,SinnZV17},
 37{\tt .java} programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{BenchmarkTianhan,LuCT21}
 and 118{\tt .c} programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{BenchmarkIcra,KincaidBCR19,CyphertBKR19}.
 We translated these programs into our language model.
-As the comparison, we also report the results of four bound analysis tools, 
+For comparison, we also report the results of four bound analysis tools, 
 \hyperlink{https://forsyte.at/software/loopus/}{LoopusJAR}~\cite{SinnZV17},
 \hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{ToolCofloco,Montoya17,Flores-Montoya16,Flores-MontoyaH14}
 and \hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}~\cite{BenchmarkTianhan}
-and self-implemented SPEED based on~\cite{GulwaniJK09}.
+and self-implemented SPEED~\cite{GulwaniJK09}.
 % \\
 
 We aim to answer, is our prototype able to compute more precise reachability-bound for different program points when comparing with the worst-case program
@@ -43,8 +43,8 @@ For example in the Icra benchmark with $O(n)$ worst complexity,
 there are almost $\frac{1}{3}$ of the program points inside the loop is visited only $O(1)$ times.
 This gives us the significant improvement in estimating the overall complexity comparing to the worst case analysis, which simply multiplying the worst bound with $\sum\pointnum$.
 % V.S. sum of the worst complexity $\times \pointnum$  by other tools.
-This improvement can be applied to many places, such as saving the resources allocation,
-precisely compute information leakage, e.t.c.
+It can be applied to many places, such as saving the resources allocation,
+computing precise information leakage, e.t.c.
 \\
 \emph{Performance}
 Our tool suffers the efficiency problem because of the implementation and the possible non-terminating in program refining and the ranking function estimating.
