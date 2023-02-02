@@ -1,0 +1,43 @@
+[ c <- 4 ] 0 ;
+[ f <- 0 ] 1 ;
+[ d <- 0 ] 2 ;
+[ r <- inr ] 3 ;
+while [ == ( break, 0) ] 4 do {
+    [ n <- randn ] 5 ;
+    if [ == ( c , 1 ) ] 6     
+      then {  [ break <- 1 ] 7 }
+      else {  [ skip ] 8 };
+    if [ == ( f , 1 ) ] 9     
+      then {  [ c <- / (c, 2) ] 10 }
+      else {  [ skip ] 11 };
+    if [ > ( n , r ) ] 12     
+      then {  
+            if [ && ( == (d, 1) , == (f, 0)) ] 13
+            then {
+                [f <- 1] 14; 
+                [ c <- / (c, 2) ] 15
+                }
+            else {  [ break <- 1 ] 16 };
+            [d <- 2] 17; 
+            [ s <- + (s, c) ] 18;
+            if [> (255, s)] 19
+            then { [break <- 1] 20 }
+            else { [skip] 21 }
+           }
+      else {  if [ < ( n , r ) ] 22   
+              then {
+                    if [ && ( == (d, 2) , == (f, 0)) ] 23 
+                    then {
+                        [f <- 1] 24; 
+                        [ c <- / (c, 2) ] 25
+                        }
+                    else {  [ break <- 1 ] 26 };
+                    [d <- 1] 27; 
+                    [ s <- - (s, c) ] 28;
+                    if [< ( s, 0 )] 29
+                    then { [break <- 1] 30 }
+                    else { [skip] 31 }
+                  }
+              else {  [ break <- 1 ] 32 }
+            }
+}
