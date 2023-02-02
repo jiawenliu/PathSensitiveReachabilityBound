@@ -17,7 +17,7 @@
 			do {
 				[NumberParams <- + (NumberParams, 1)] 10
 				};
-			while [ <(CLcount, NumberParams) ] 11
+			while [ < (CLcount, NumberParams) ] 11
 			do 
 			{
 		    	[CLcount <- + (CLcount, 1)] 12

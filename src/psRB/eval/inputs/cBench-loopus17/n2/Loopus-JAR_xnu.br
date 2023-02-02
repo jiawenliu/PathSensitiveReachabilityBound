@@ -11,7 +11,7 @@ while [  > ( i, 0 ) ] 3 do {
              while [ > (k, 0)] 10 do
             { 
                 [ k <- - ( k, 1 ) ] 11 
-            }
+            };
               [ end <- i ] 12 ;
               [ beg <- end ] 13 
            }
