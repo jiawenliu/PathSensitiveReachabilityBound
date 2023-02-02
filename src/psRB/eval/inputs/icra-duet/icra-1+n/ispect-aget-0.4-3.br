@@ -1,0 +1,10 @@
+[ i <- 0 ] 0;
+while [ != (s, 47) ] 1 do {
+    [i <- + (i, 1) ] 2;
+	[s <- - (s, 1) ] 3;
+	if [ > (i, MAXBUFSIZ) ] 4
+	then { [ s <- 47 ] 5 }
+	else { [ skip ] 6 };
+	
+	[ req_file_i <- s ] 7
+}

@@ -1,0 +1,11 @@
+[ total_bytes_read <- 0 ] 0;
+[ total_bytes_left <- size ] 1;
+while [ > (total_bytes_left, 0) ] 2 do {
+	[ return_value_read1 <- read_gc_ifd ] 3;
+	[ len <- return_value_readl ] 4;
+	if [ == (len, 4294967295) ] 5
+	then { [ total_bytes_left <- 0 ] 6 }
+	else { [ skip ] 7 };
+	[ total_bytes_left <- - (total_bytes_left, len) ] 8;
+	[ total_bytes_read <- + (total_bytes_read, len) ] 9
+} 

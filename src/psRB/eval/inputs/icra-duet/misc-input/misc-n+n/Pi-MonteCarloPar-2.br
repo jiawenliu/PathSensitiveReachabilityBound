@@ -1,0 +1,15 @@
+[ data <- threadData ] 0;
+[ MAX_POINTS <- 10000000 ] 1;
+[ SQR_RADIUS <- 250000 ] 2;
+while [ != (data_numPoints, MAX_POINTS) ] 3 do {
+	
+	[ x <- rand_radius_1 ] 4;
+	[ y <- rand_radius_2 ] 5;
+	[ t <- + ( *(x, x), *(y, y)) ] 6;
+	
+	if [ < (t, SQR_RADIUS) ] 7
+	then { [ data_numHits <- +(data_numHits, 1) ] 8}
+	else { [ skip ] 9};
+	
+	[ data_numPoints <- + (data_numPoints, 1) ] 10
+}

@@ -1,0 +1,10 @@
+[ i <- 0 ] 0;
+while [ < (i, CPUS) ] 1 do {
+	[ i <- + (i, 1) ] 2;
+	[ st <- pthread_create_threads ] 3;
+	if [ != (st, 0) ] 4
+	then { [ i <- CPUS ] 5 }
+	else { [ skip ] 6}
+}
+
+

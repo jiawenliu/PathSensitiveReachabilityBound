@@ -1,0 +1,11 @@
+[ i <- 0 ] 0;
+while [ < (i, f_id_table_size) ] 1 do {
+	[ node_0 <- + (f_id_table_array, i) ] 2;
+	while [ > (node_0, 0) ] 3 do {
+		[ next <- node_0_id_next ] 4;
+		[ node_0 <- - (node_0, 1) ] 5
+	};
+	
+	[ i <- + (i, 1) ] 6
+
+}

@@ -1,0 +1,22 @@
+[ next <- bt_mgr_latchmgr ] 0;
+[ page_no <- LEAF_page ] 1;
+while [ == (page_no, next) ] 2 do {
+	if [ == (set_pool, bt_pinpool) ] 3
+	then { [ set_page <- bt_page] 4 }
+	else { [ page_no <- + (next, 1) ] 5};
+	
+	[ next <- + (next, 1) ] 6;
+	
+	[ slot <- 0 ] 7;
+	while [ < ( + (slot, 1), set_page_cnt) ] 8 do {
+		[ slot <- + (slot, 2) ] 9;
+		if [ || ( != (next, 0), < (slot, set_page_cnt) ) ] 10
+		then {
+			if [ == (slotptr_dead, 0) ] 11
+			then { [ ptr <- keyptr ] 12}
+			else { [ skip ] 13 }
+		}
+		else { [ skip ] 14}
+	
+	}
+}

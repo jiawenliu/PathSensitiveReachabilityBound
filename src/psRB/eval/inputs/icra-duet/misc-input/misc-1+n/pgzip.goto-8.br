@@ -1,0 +1,37 @@
+[ cur <- list_to_insert_into_head ] 0;
+[ data <- NULL ] 1;
+while [ > (cur, 0) ] 2 do {
+	if [ == (cur_index, index) ] 3
+	then { 
+			[ data <- cur_data ] 4;
+			[ cur <- 0 ] 5
+		}
+	else { [ skip ] 6};
+	[ prev <- cur ] 7;
+	[ cur <- - (cur, 1) ] 8
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+[ bits <- max_length ] 0;
+while [ > (bits, 0) ] 1 do {
+    [ n <- tc_bl_count ] 2;
+	while [ > (n, 0) ] 3 do {
+	   [ h <- - (h, 1) ] 4;
+	   [ m <- tc_heap ] 5;
+	   if [ >= (max_code, m) ] 6
+	   then { [ n <- - (n, 1) ] 7 }
+	   else { [ skip ] 8 }
+	};
+	[ bits <- - (bits, 1) ] 9
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+[ result <- 0 ] 0;
+[ i <- 1 ] 1;
+while [ > (i, 0) ] 2 do {
+	[ tmp_0 <- builtin_va_arg ] 3;
+	[ key <- tmp_0 ] 4;
+	if [ == (key, 0) ] 5
+	then { [ i <- 0 ] 6}
+	else { [ skip ] 7 };
+	[ tmp_1 <- builtin_va_arg ] 8;
+	[ val <- tmp_1 ] 9;
+	
+	if [ == (val, 0) ] 10
+	then { 
+		if [ != (headers, 0) ] 11
+		then { [ result <- - (result, 1) ] 12}
+		else { [ skip ] 13 };
+		[ i <- 0 ] 14
+	}
+	else { [ skip ] 15};
+	
+	if [ == (headers, 0) ] 16
+	then { [ headers <- treeCreate ] 17}
+	else { [ skip ] 18}
+	
+}

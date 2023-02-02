@@ -1,0 +1,54 @@
+while [ < (t, 0) ] 0 do {
+	if [ > (sizeof_t, 1) ] 1
+	then { [ res <- 0 ] 2}
+	else {  [ tmp_0 <- ctype_tolower_loc ] 3;
+			[ res <- + (tmp_0, t) ] 4	
+		};
+	[ t <- res ] 5
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

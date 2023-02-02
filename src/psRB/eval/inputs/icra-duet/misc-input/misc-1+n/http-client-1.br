@@ -1,0 +1,9 @@
+[ index <- 0 ] 0;
+while [ < ( index, numThread ) ] 1 do {
+	[ pthread_id_index <- index ] 2;
+	[ rtnValue <- pthread_create ] 3;
+	if [ != (rtnValue, 0) ] 4
+	then { [ index <- numThread ] 5 }
+	else { [ skip ] 6 };
+	[ index <- + (index, 1) ] 7
+}

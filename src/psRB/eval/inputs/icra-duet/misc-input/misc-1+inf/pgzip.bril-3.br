@@ -1,0 +1,81 @@
+[ j <- / (k, 2) ] 0;
+while [ <= (j, tc_heap_len) ] 1 do {
+	if [ < (j, tc_heap_len) ] 2
+	then {
+		[ m <- tree_tc_heap_j_1_fc_freq ] 3;
+		[ n <- tree_tc_heap_j_fc_freq ] 4;
+		if [ < (m, n) ] 5
+		then { [ j <- + (j, 1) ] 6 }
+		else {
+			if [ == (m, n) ] 7
+			then {
+				[ p <- tc_depth_heap_j_1 ] 8;
+				[ q <- tc_depth_heap_j ] 9;
+				if [ <= (p, q) ] 10
+				then { [ j <- + (j, 1) ] 11}
+				else { [ skip ] 12 }
+			}
+			else { [ skip ] 13 }
+		}
+	}
+	else { [ skip ] 14 };
+	[ w <- tree_v_fc_freq ] 15;
+	[ v <- tree_tc_heap_freq ] 16;
+	if [ < (w, v) ] 17
+	then { [ j <- + (tc_heap_len, 1) ] 18 }
+	else {
+		if [ == (w, v)] 19
+		then {
+		   if [ <= (tc_depth_v, tc_depth_tc_heap) ] 20
+		   then { [ j <- + (tc_heap_len, 1) ] 21}
+		   else { [ skip ] 22}
+		}
+		else { [ skip ] 23}
+	};
+	[ k <- j ] 24;
+	[ j <- / (j, 2) ] 25
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

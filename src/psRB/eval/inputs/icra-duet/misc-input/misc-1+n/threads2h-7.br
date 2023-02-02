@@ -1,0 +1,74 @@
+[ page_no <- bt_mgr_poolmask ] 0;
+[ m <- 1 ] 1;
+[ t <- 1 ] 2;
+while [ > (page_no, 0) ] 3 do {
+	
+	[ set_page_no <- page_no ] 4;
+	
+	if [ == (set_pool, bt_pinpool) ] 5
+	then { [ set_page <- bt_page ] 6}
+	else { [ page_no <- 0 ] 7};
+	
+	if [ != (set_page_free, 0) ] 8
+	then { [ page_no <- 0 ] 9}
+	else { [ skip ] 10};
+	
+	if [ != (set_page_lvl, drill) ] 11
+	then { 
+           if [ != (set_page_no, ROOT_page) ] 12
+		   then { [ page_no <- 0 ] 13 }
+		   else { [ skip ] 14 };
+		   [ drill <- set_page_lvl ] 15;
+		   
+		   if [ && ( != (lock, BtLockRead), == (drill, lvl) ) ] 16
+		   then { [ t <- 0 ] 17}
+		   else { [ skip ] 18 }
+	}
+	else { [ skip ] 19 };
+    
+	if [ > (t, 0) ] 20
+	then {
+		if [ == (set_page_kill, NULL) ] 21
+		then { 
+		   if [ == (slot, bt_findslot) ] 22
+		   then {
+				if [ == (drill, lvl) ] 23
+				then { [ page_no <- 0 ] 24}
+				else { [ skip ] 25 };
+				
+				while [ > (slotptr_dead, 0) ] 26 do {
+					[ slot <- + (slot, 1) ] 27;
+					if [ < (slot, set_page_cnt) ] 28
+					then { [ skip ] 29 }
+					else { [ slotptr_dead <- 0 ] 30}
+				};
+				
+				[ page_no <- bt_getid_slotptr ] 31;
+				[ drill <- - (drill, 1) ] 32;
+				[ m <- 0 ] 33
+		   }
+		   else { [ skip ] 34 }
+			
+		}
+		else { [ skip ] 35 };
+		if [ > (m, 0) ] 36
+		then { [ page_no <- bt_getid_set_page_right ] 37 }
+		else { [ skip ] 38 }
+	
+	}
+	else { [ skip ] 39}
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+

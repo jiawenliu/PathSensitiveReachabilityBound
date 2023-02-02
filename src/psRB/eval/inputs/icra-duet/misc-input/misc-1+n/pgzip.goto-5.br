@@ -1,0 +1,42 @@
+while [ > (cnt, 0) ] 0 do {
+	if [ >= (stream_io_read_ptr, stream_io_read_end) ] 1
+	then {
+		[ return_value_uflow <- uflow_stream ] 2;
+		[ tmp_if_expr <- return_value_uflow ] 3
+	}
+	else {
+		[ tmp_post <- stream_io_read_ptr ] 4;
+		[ stream_io_read_ptr <- + (stream_io_read_ptr, l1) ] 5;
+		[ tmp_if_expr <- tmp_post ] 6
+	};
+	[ c <- tmp_if_expr ] 7;
+	if [ != (c, -1) ] 8
+	then { [ cnt <- 0 ] 9 }
+	else { [ skip] 10 };
+	
+	[ cnt <- - (cnt, 1) ] 11
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

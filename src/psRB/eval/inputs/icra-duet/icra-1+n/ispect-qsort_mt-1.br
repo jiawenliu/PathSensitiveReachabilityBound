@@ -1,0 +1,19 @@
+[ islot <- 0 ] 0;
+while [ < (islot, maxthreads) ] 1 do {
+    [ islot <- + (islot, 1) ] 2;
+	[ qs <- c_pool ] 3;
+	if [ || (< (pthread_mutex_init, 0), > (pthread_mutex_init, 0)) ] 4
+	then { [ islot <- maxthreads ] 5 }
+	else { [ skip ] 6 };
+	
+	if [ || (< (pthread_cond_init, 0), > (pthread_cond_init, 0)) ] 7
+	then { [ islot <- maxthreads ] 8 }
+	else { [ skip ] 9 };
+	
+	[ qs_st <- ts_idle ] 10;
+	[ qs_common <- c ] 11;
+	if [ || (< (pthread_create, 0), > (pthread_create, 0)) ] 12
+	then { [ islot <- maxthreads ] 13 }
+	else { [ skip ] 14 }
+
+}

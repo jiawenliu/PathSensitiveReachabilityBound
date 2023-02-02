@@ -1,0 +1,18 @@
+[ page_no <- 0 ] 0;
+[ next <- bt_mgr_latchmgr ] 1;
+while [ < (page_no, bt_getid_bt_mgr) ] 2 do {
+	
+	[ page_no <- / ( page_no, bt_mgr_page_bits ) ] 3;
+	if [ == (ReadFile, 0) ] 4
+	then { [ page_no <- bt_getid_bt_mgr ] 5 }
+	else { [ skip ] 6 };
+	
+	if [ < (amt, bt_mgr_page_size) ] 7
+	then { [ page_no <- bt_getid_bt_mgr ] 8 }
+	else { [ skip ] 9 };
+	
+	if [ > (page_no, LEAF_page) ] 10
+	then { [ next <- + (page_no, 1) ] 11 }
+	else { [ skip ] 12 };
+	[ page_no <- next ] 13
+}

@@ -1,0 +1,20 @@
+while [ > (es, 0) ] 0 do  {
+	if [ >= (nblock, nblockMAX ) ] 1
+	then { [ es <- -1] 2}
+	else { [ skip ] 3};
+	[ es <- -(es, 1) ] 4
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
