@@ -1,7 +1,0 @@
-[ i <- 0 ] 0;
-while [ < (i, nelem) ] 1 do {
-	[ i <- + (i, 1) ] 2;
-	if [ <= (asprintf, 1) ] 3
-	then { [ i <- nelem ] 4 }
-	else { [ skip ] 5}
-}

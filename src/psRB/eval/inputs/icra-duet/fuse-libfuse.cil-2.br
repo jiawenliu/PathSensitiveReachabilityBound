@@ -1,7 +1,0 @@
-[ minsize <- input_minsize ] 0;
-[ newsize <- dh_size ] 1;
-while [ < (newsize, minsize) ] 2 do {
-	if [ >= (newsize, 2147483648) ] 3
-	then { [ newsize <-  4294967295 ] 4}
-	else { [ newsize <- * (newsize, 2) ] 5}
-}

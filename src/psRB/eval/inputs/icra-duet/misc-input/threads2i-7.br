@@ -1,7 +1,0 @@
-[ page_no <- bt_mgr_poolmask ] 0;
-while [ != (pool, page_no) ] 1 do {
-	[ pool <- + ( pool, 1 )] 2;
-	if [ == ( pool, pool_hashnext) ] 3
-	then { [ skip ] 4 }
-	else { [ pool <- page_no ] 5}
-}

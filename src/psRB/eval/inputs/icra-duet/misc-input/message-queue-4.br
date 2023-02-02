@@ -1,8 +1,0 @@
-[ t <- 0 ] 0;
-[ now <- time ] 1;
-while [ > ( t, 0 ) ] 2 do {
-	[ tmp <- time_now ] 3;
-	if [ != (tmp, now) ] 4
-	then { [ t <- 0 ] 5 }
-	else { [ skip] 6 }
-}

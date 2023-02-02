@@ -75,7 +75,7 @@ while [ < (c, FileSize) ] 4 do
       {
         [p <- 0] 43;
         if [ > (ntokens, 1) ] 44
-        {
+        then {
           [ skip ] 45
         }
         else { [ skip ] 46 };
@@ -125,83 +125,84 @@ while [ < (c, FileSize) ] 4 do
           [ pp <- 0 ] 69 ;
           [ pp <- + ( pp, 1 ) ] 70;
           [ c <- + ( c, 1 ) ] 71 ;
-          while [ && ( < (ncommas, ntokens-1),  <  (c, FileSize))] 72
-          do 
-          {
-            [ pp <- + ( pp, 1 ) ] 73;
-            if [ > (pp, BUF_SZ) ] 74
-            then { [ skip ] 75 }
-            else { [ skip ] 76 };
-            [ ncommas <- + (ncommas, 1) ] 77;
-            [ c <- + ( c, 1 ) ] 78
-          };
+            while [ && ( < (ncommas, ntokens),  <  (c, FileSize))] 72
+            do 
+            {
+              [ pp <- + ( pp, 1 ) ] 73;
+              if [ > (pp, BUF_SZ) ] 74
+              then { [ skip ] 75 }
+              else { [ skip ] 76 };
+              [ ncommas <- + (ncommas, 1) ] 77;
+              [ c <- + ( c, 1 ) ] 78
+            };
             while [ < (c, FileSize) ] 79 do
             {
               [ c <- + ( c, 1 ) ] 80 ;
               [ lineno <- + ( lineno, 1 ) ] 81
             };
-          [ pp <- + ( pp, 1 ) ] 82;
+            [ pp <- + ( pp, 1 ) ] 82;
           
-          if[ > (p, BUF_SZ) ] 83 
-            then { [ skip ] 84 }
-            else { [ skip ] 85 };
-          [ c <- + ( c, 1 ) ] 86;
-          while [ < (c, FileSize) ] 87 do
-          {
-            [ pp <- + ( pp, 1 ) ] 88 ;
-            if [ > ( pp, BUF_SZ ) ] 89
-            then { [ skip ] 90 }
-            else { [ skip ] 91 };
-            [ c <- + ( c, 1 ) ] 92
-          };
-          [pt <- 0] 93;
-          [pv <- 0] 94;
-          [i <- ncommas] 95;
-        while [ > (i, 0) ] 96 do
-      {
-          [ i <- - ( i, 1 ) ] 97;          
-          [ pp <- 0 ] 98;
-          while [ rand ] 99 do
-          {
-              [ pp <- + ( pp, 1 ) ] 100; 
-              [ pp <- pp ] 101; 
-              [ pt <- + (pt, 1) ] 102;
-              if [ > ( pp, BUF_SZ ) ] 103
-              then { [ skip ] 104 }
-            else { [ skip ] 105 }
-          };
-            [pp <- 0] 106 ;
-            while [ rand ] 107 do
+            if[ > (p, BUF_SZ) ] 83 
+              then { [ skip ] 84 }
+              else { [ skip ] 85 };
+            [ c <- + ( c, 1 ) ] 86;
+            while [ < (c, FileSize) ] 87 do
             {
-          	  [ pp <- + ( pp, 1 ) ] 108;
-          	  [ pv <- + ( pv, 1 ) ] 109;
-          	  if [ > ( pp, BUF_SZ ) ] 110
-              then { [ skip ] 111 }
-              else { [ skip ] 112 }
-            };
-            [ pv <- + ( pv, 1 ) ] 113 ; 
-            [ pt <- + ( pt, 1 ) ] 114 
-        };
-        [pp <- 0] 115 ;
-        while [ rand ] 116 do
-        {
-            [ pp <- + ( pp, 1 ) ] 117;
-            [ pt <- + ( pt, 1 ) ] 118;
-          if [ > ( pp, BUF_SZ ) ] 119
-            then { [ skip ] 120 }
-            else { [ skip ] 121 }
-        };
-        [pp <- 0] 122 ;
-          while [ rand ] 123 do
-          {
-            [ pp <- + ( pp, 1 ) ] 124 ;
-            if [ > ( pp, BUF_SZ ) ] 125 ;
-            then { [ skip ] 126 }
-            else { [ skip ] 127 };
-            [ pv <- + ( pv, 1 ) ] 128
-          }
+              [ pp <- + ( pp, 1 ) ] 88 ;
+              if [ > ( pp, BUF_SZ ) ] 89
+              then { [ skip ] 90 }
+              else { [ skip ] 91 };
+              [ c <- + ( c, 1 ) ] 92
+                    };
+                    [pt <- 0] 93;
+                    [pv <- 0] 94;
+                    [i <- ncommas] 95;
+                while [ > (i, 0) ] 96 do
+              {
+                  [ i <- - ( i, 1 ) ] 97;          
+                  [ pp <- 0 ] 98;
+                  while [ rand ] 99 do
+                  {
+                      [ pp <- + ( pp, 1 ) ] 100; 
+                      [ pp <- pp ] 101; 
+                      [ pt <- + (pt, 1) ] 102;
+                      if [ > ( pp, BUF_SZ ) ] 103
+                      then { [ skip ] 104 }
+                    else { [ skip ] 105 }
+                  };
+                    [pp <- 0] 106 ;
+                    while [ rand ] 107 do
+                    {
+                      [ pp <- + ( pp, 1 ) ] 108;
+                      [ pv <- + ( pv, 1 ) ] 109;
+                      if [ > ( pp, BUF_SZ ) ] 110
+                      then { [ skip ] 111 }
+                      else { [ skip ] 112 }
+                    };
+                    [ pv <- + ( pv, 1 ) ] 113 ; 
+                    [ pt <- + ( pt, 1 ) ] 114 
+                };
+                [pp <- 0] 115 ;
+                while [ rand ] 116 do
+                {
+                    [ pp <- + ( pp, 1 ) ] 117;
+                    [ pt <- + ( pt, 1 ) ] 118;
+                  if [ > ( pp, BUF_SZ ) ] 119
+                    then { [ skip ] 120 }
+                    else { [ skip ] 121 }
+                };
+                [pp <- 0] 122 ;
+                while [ rand ] 123 do
+                {
+                  [ pp <- + ( pp, 1 ) ] 124 ;
+                  if [ > ( pp, BUF_SZ ) ] 125 
+                  then { [ skip ] 126 }
+                  else { [ skip ] 127 };
+                  [ pv <- + ( pv, 1 ) ] 128
+                }
         }
       }
     }
   }
   else { [ skip ] 129 }
+

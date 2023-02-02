@@ -1,8 +1,0 @@
-[ max_blindex <- 18 ] 0;
-while [ >= (max_blindex, 3) ] 1 do {
-	if [ != (tc_bl_tree, 0) ] 2
-	then { [ max_blindex <- 2 ] 3 }
-	else { [ skip ] 4 };
-	
-	[ max_blindex <- - (max_blindex, 1) ] 5
-}

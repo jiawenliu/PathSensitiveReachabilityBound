@@ -26,6 +26,7 @@ class RefinedProg():
         self.prog_edges = self.build_edges()
         print("The EDGES ARE:{}".format(self.prog_edges))
         self.prog_id = self.build_id()
+        print(self.prog_id)
         self.prog_signature = self.build_signature()
         self.transition_paths = self.collect_transition_paths()
         self.enclosed_loop = {str(path): None for path in self.transition_paths}
@@ -221,27 +222,41 @@ class ProgramRefine():
             loop_paths_map = DefaultDict(list)
             for curr_prog in working:
                 curr_start, curr_end = curr_prog.start_point, curr_prog.end_point
-                if curr_start == curr_end:
+                if curr_start == curr_end and curr_prog.type != RefinedProg().RType.REPEAT and len(curr_prog.get_id()) > 1:
                     loop_paths_map[curr_start].append(curr_prog)
                     pop_set.add(curr_prog)
             ############## Creating New Loops Paths Above  #################### 
             
+
             ############## Updating Sequences to Connecting the New Created Loops  #################### 
             for loop_point, loop_paths in  loop_paths_map.items():
-                new_loop = RefinedProg(RefinedProg.RType.REPEAT, loop_paths[0], loop_point, loop_point, loop_point) if len(loop_paths) == 1 else RefinedProg(RefinedProg.RType.REPEAT, RefinedProg(RefinedProg.RType.CHOICE, loop_paths, None, loop_point, loop_point), loop_point, loop_point, loop_point) 
+                new_loop = RefinedProg(RefinedProg.RType.REPEAT, loop_paths[0], loop_point, loop_point, loop_point) if len(loop_paths) == 1 else RefinedProg(RefinedProg.RType.REPEAT, RefinedProg(RefinedProg.RType.CHOICE, loop_paths, None, loop_point, loop_point), loop_point, loop_point, loop_point)
+                new_seqs = []
                 for prefix_prog in working:
                     if prefix_prog in pop_set:
                         continue
                     if prefix_prog.end_point == loop_point:
+                        print(prefix_prog.get_id())
+
                         new_prefix_prog = RefinedProg(RefinedProg.RType.SEQ, [prefix_prog, new_loop], None, prefix_prog.start_point, loop_point)
                         pop_set.add(prefix_prog)
                         for postfix_prog in working:
+                            print(postfix_prog.get_id())
                             if postfix_prog.start_point == loop_point:
                                 new_seq = RefinedProg(RefinedProg.RType.SEQ, [new_prefix_prog, postfix_prog], None, prefix_prog.start_point, postfix_prog.end_point)
                                 if new_seq.get_id() not in list(map(lambda prog: prog.get_id(), updated_working)):
                                     # print("THE NEW CREATED SEQ: ", new_seq.get_signature())
-                                    updated_working.append(new_seq)
+                                    new_seqs.append(new_seq)
                                     pop_set.add(postfix_prog)
+                if new_seqs == []:
+                    print(new_loop.get_id())
+                    updated_working.append(new_loop)
+                else:
+                    for seq in new_seqs:
+                        print(seq.get_id())
+                        updated_working.append(seq)
+                
+
             ############## Add The Unchanged Programs From Old Working List Into The New Working List #################### 
             for prog in working:
                 if prog not in pop_set:

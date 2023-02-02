@@ -77,7 +77,7 @@ let _ =
         let cfg_result = Cfg.generate_cfg result in 
         let _ =  Printf.printf  "%d\n" (List.length cfg_result.nodes ) in   
         let (_, rd_in) = Df.kildall cfg_result in
-        Printf.printf "DCDG result:\n";
+        (* Printf.printf "DCDG result:\n"; *)
         let dcdg_result =Dcdg.dcdg result cfg_result rd_in in 
       
       (******************** print dcfg performance ********************)
@@ -108,7 +108,7 @@ let _ =
           else outfile  in 
         let oc = Out_channel.create outfile_abscfg in
         (******************** run abscfg  ********************)
-        Printf.printf "ABSCFG result:\n";
+        (* Printf.printf "ABSCFG result:\n"; *)
         let aflow = Abs.abs (Seq (result, (Skip (Label (-1))))) in
         (* let blocks = Cfg.blocks result in *)
         (******************** output abscfg result ********************)

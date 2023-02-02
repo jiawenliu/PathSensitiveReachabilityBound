@@ -1,5 +1,0 @@
-while [ <= (thread_finished, 0) ] 0 do {
-   if [ || (< (pthread_cond_wait, 0), > (pthread_cond_wait, 0) ) ] 1
-   then { [ thread_finished <- 1] 2 }   
-   else { [ skip ] 3 }
-}

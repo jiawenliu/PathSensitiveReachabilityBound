@@ -1,9 +1,0 @@
-[ i <- 0 ] 0;
-[ NUM_THREADS <- 4 ] 1;
-[ MASTER_ID <- 0 ] 2;
-while [ < (i, NUM_THREADS) ] 3 do {
-	if [ != (i, MASTER_ID) ] 4
-	then { [ i <- NUM_THREADS ] 5 }
-	else { [ skip ] 6};
-	[ i <- + (i, 1) ] 7
-}
