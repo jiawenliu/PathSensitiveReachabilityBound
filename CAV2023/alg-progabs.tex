@@ -60,8 +60,7 @@ the command with label $l'$ can execute right after the execution of the command
 The constraint $dc \in \dcdom$ on each edge
 describes the abstract execution of the command with label $l$.
 \end{defn}
-Again in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
-the edge $(0 \xrightarrow{i' \leq n} 1)$ on the top tells us the command 
+The edge $(0 \xrightarrow{i' \leq n} 1)$ on the top of Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) tells us the command 
 $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the while loop with header at location $1$, $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed right after.
 
 \begin{defn}[Path]

@@ -86,24 +86,20 @@ Then we compute the
  \]
 \end{defn}
 %
-Again in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop program $\rprog_1^1$.
-We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
+We also guarantee the soundness of \emph{loop reachability-bound} in \highlight{Appendix~\ref{apdx:looprb-sound}}.
+% In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop program $\rprog_1^1$.
+% We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
 %
 
-We also guarantee the soundness of \emph{loop reachability-bound} in \highlight{Appendix~\ref{apdx:looprb-sound}}.
-The $\lpchB(\rprog, \tpath)$ 
-can also be over-approximated by
-$I(l, l')$ through the progress invariant in paper\cite{GulwaniJK09}.
-While $I(l, l')$ over-approximates this value largely
-by estimating the bound on iteration numbers of $l'$ in one iteration of $l$.
+% The algorithm based on the progress invariant in paper\cite{GulwaniJK09} computes similar quantity, but it estimates the iteration numbers of $l'$ in one iteration of $l$.
 
-Example~\ref{ex:relatedNestedWhileOdd-overview} has only one nested loop, so
+Figure~\ref{fig:relatedNestedWhileOdd-overview} has only one nested loop, so
 the only interesting \emph{loop reachability-bound} is $\lpchB(\rprog_1^1, \tpath_3)$.
-We illustrate Example~\ref{ex:threeNestedWhile} with three nested loops, which can better show the improvement of the \emph{loop reachability-bound}.
-\begin{example}[Three Nested Loop]
- \label{ex:threeNestedWhile}
+We compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $, $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as expected.
+
+We illustrate Figure~\ref{fig:threeWhile-overview} with three nested loops to better show the improvement of the \emph{loop reachability-bound}.
 \input{examples/threeNestedWhile-overview}
-This example is similar to the loop $L_4$ nested in the second branch in example~\ref{ex:relatedNestedWhileOdd-overview}.
+This example is similar to the loop $L_4$ nested in the second branch in Figure~\ref{fig:relatedNestedWhileOdd-overview}.
 $w$ is reset by $j$ in command 5 and $i$ is then reset by $w$, so $L_6$ is only executed in the first iteration of loops $L_1$ and $L_3$.
 % \\
 Then the total iterations times are
@@ -119,7 +115,6 @@ While for the locations between $L_3$ and $L_6$, their bounds are the product of
 To compute the precise bound, it is critical to know
 the numbers of iterations of the outer loops $L_3$ and $L_1$ such that,
 during these iterations, the loop $L_6$ is ``entered'', which is exactly our \emph{loop reachability-bound}.
-
 Figure~\ref{fig:threeWhile-overview}(a) shows its abstract transition graph,
 and we compute its refined program in the bottom. 
 $\rprog_1$, $\rprog_3$ and $\rprog_6$ denote the body of the loop $L_1$, $L_3$ and $L_6$ respectively.
@@ -131,5 +126,4 @@ $\lpnext( \rprog_1, \tpath_3, c) = N + 1 $, and
 $\rffinal(\rprog_1, c) = \{ i = n, k = N \}$ and obtain
 $\lpchB(\rprog_1, \tpath_3, c) = \max\{ \frac{n - 0}{n - N - 1}, \frac{N - 0}{N + 1}\} = 1$, as expected.
 In the same way, we also compute $\lpchB(\rprog_3, \tpath_3, c) = 1$.
-\end{example}
 

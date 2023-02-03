@@ -1,10 +1,11 @@
 We presented a path-sensitive reachability-bound computation algorithm.
-This algorithm can compute accurately the times that each program point is executed.
-We also implemented this algorithm as a prototype and evaluated it over 4 different benchmarks.
-The results show that we can compute tight bounds on the evaluation times of each program point in a program, especially for the points on different loop paths.
-
-Given the significant improvement in total execution estimation, there are some potential applications.
-We plan to apply this technique into resource cost and privacy protection area.
-On the other hand, efficiency is our main concern, we will improve the efficiency of the path-refinement algorithm and ranking functions estimation, and also extend the language syntax
-% and the prototype implementation 
-to be more scalable.
+This algorithm can compute accurately the number of times that each program point is executed.
+We also implemented this algorithm as a prototype and evaluated it over 4 different benchmark sets including 200+ programs.
+The results show both the effectiveness of our approach in estimating the reachability-bound of each program point and improvements in terms of estimation of the the overall program complexity. 
+In the future, we plan to further apply this technique into other areas such as data analysis, security and privacy.
+%In the meanwhile, 
+% efficiency is our main concern, 
+%we will improve the efficiency of the path-refinement algorithm, the ranking functions estimation, and extend the scalability of the implementation.
+% language
+% % and the prototype implementation 
+% to be more scalable.

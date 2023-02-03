@@ -1,15 +1,16 @@
 
-Gulwani et. al~\cite{GulwaniZ10} first introduce \emph{reachability-bound} as the upper bound on the number of times a given control location 
-inside a procedure is visited during program execution.
-A tight reachability-bound has many applications.
+Gulwani et. al~\cite{GulwaniZ10} first introduced \emph{reachability-bound analysis} as a way to provide upper bounds on the number of times a given program location 
+is visited during program execution.
+Obtaining tight reachability-bounds is useful in many applications.
 For example from a privacy and security perspective,
-how much secret information is leaked by a program depends on the number of times a certain operation that leaks the data
+how much secret information is leaked by a program may depend on the number of times a certain operation that leaks the data
 is executed~\cite{Malacaria07};
-from an efficiency perspective, when different program locations consume different resources, a precise reachability-bound of each location can help to estimate the resource cost more accurately than just computing the overall complexity.
-While existing works all have different limitations when inferring the \emph{reachability-bound}.
+from an efficiency perspective, when different program locations consume different resources, a precise reachability-bound for each location can help to estimate the resource cost more accurately than just computing the overall complexity.
+
+Existing works all have different limitations when inferring the \emph{reachability-bound}.
 For example, Gulwani et. al~\cite{GulwaniZ10}
 give a two-step solution by combining program abstract and proof-rules-based bound computation.
-But it does not compute the \emph{reachability-bound} precisely for every control location.
+But it does not compute the \emph{reachability-bound} precisely for every location.
 Instead, they only compute the complexity bounds for the overall loop and over-approximate for different locations using this bound,
 which is loose especially when there are multipath loops.
 Techniques in program complexity analysis~\cite{GustafssonEL05,HumenbergerJK18} 
@@ -27,6 +28,7 @@ It is built over an abstract transition graph which effectively combines amortiz
 This combination mitigates the limitations faced by either technique individually. 
 Before diving into the algorithm, below are some related works and their limitations.
 
+\paragraph{Related Work.}
 % \begin{itemize}
 % \item 
 \emph{Program Abstraction.}
@@ -35,13 +37,15 @@ and generates transition systems for loop counters.
 \cite{KincaidCBR18} abstracts the program into the wedge domain and computes the non-linear loop invariant.
 % While it only works well for the specific targeting problem.
 Efficiency is the main bottleneck when generating and solving the constraint.
-We choose to use the difference constraint-based program abstraction model~\cite{SinnZV17,SinnZV14} combined with boolean expression to generate our abstract transition graph.
+We choose to use the difference constraint-based program abstraction model~\cite{SinnZV17,SinnZV14} combined with boolean expressions to generate our abstract transition graph.
 It is more accurate in the sense of representing the program loops path-sensitively. This representation is also comparatively lightweight.
 
 % \item 
 \emph{Amortized Complexity Analysis.}
-One line of complexity analysis follows the idea of the \emph{amortized complexity analysis}
-originated from Tarjan's influential paper~\cite{PotechinP17}. It is usually combined with ranking functions~\cite{BradleyMS05,CookSZ13,Zuleger18} or counter increments~\cite{ZulegerGSV11,SinnZV14,SinnZV17,LuCT21,AliasDFG10}.
+This line of complexity analysis follows the idea of the
+% \emph{amortized complexity analysis}
+% originated 
+from Tarjan's influential paper~\cite{PotechinP17}. It is usually combined with ranking functions~\cite{BradleyMS05,CookSZ13,Zuleger18} or counter increments~\cite{ZulegerGSV11,SinnZV14,SinnZV17,LuCT21,AliasDFG10}.
 They do well in nested loops by alternating the loop bound computation with the ranking or counter estimation. This alternation is efficient without recursively unrolling the nested loops when composing the bound of different paths.
  % \\
  But estimating the counter or ranking function invariant ignores the interleaving between multiple paths in the same loop,
