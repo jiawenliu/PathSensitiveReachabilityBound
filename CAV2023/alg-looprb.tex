@@ -1,12 +1,11 @@
 Similar to the \emph{loop bound} computation,
-we first compute two abstract states for each loop w.r.t. a simple transition path nested inside,
-$\lpinit(\rprog, \tpath, c)$, and $\lpnext(\rprog, \tpath, c)$ based on the refined program
-as in Definition~\ref{def:alg-absstate}.
+we first compute two abstract states for each simple transition path w.r.t. every level of its outer loops,
+$\lpinit(\rprog, \tpath, c)$, and $\lpnext(\rprog, \tpath, c)$ based on the refined program below.
 \begin{defn}[Loop Abstract States]
 \label{def:alg-loopabsstate}
-Given a program $c$ with its refined program $\rprog_c$, for a $\tpath$ and an outer loop program $\rprog$ where $\tpath$ is nested in $\rprog_c$,
-$\lpinit(\rprog, \tpath, c), \lpnext(\rprog, \tpath, c) \in \scexpr(c)$
-w.r.t. the ranking functions are computed as follows.
+For a program $c$ with its refined program $\rprog_c$, a $\tpath$ and a loop $\rprog$ in $\rprog_c$ where $\tpath$ is located, we compute 
+$\lpinit(\rprog, \tpath, c)$ and $\lpnext(\rprog, \tpath, c)$
+w.r.t. the ranking functions as follows.
  \begin{itemize}%
  \item 
 The loop initial state 
@@ -86,7 +85,7 @@ Then we compute the
  \]
 \end{defn}
 %
-We also guarantee the soundness of \emph{loop reachability-bound} in \highlight{Appendix~\ref{apdx:looprb-sound}}.
+Definition~\ref{def:looprb} computes a sound \emph{loop reachability-bound} as in \highlight{Appendix~\ref{apdx:looprb-sound}}.
 % In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop program $\rprog_1^1$.
 % We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
 %

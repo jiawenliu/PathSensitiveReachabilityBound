@@ -118,10 +118,10 @@ is computed as follows,
 %
 where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(x, c)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
 The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$ on the execution times of the transition $\absevent$, is interactively computed as well as below,
-\footnote{We only give the computation based on the variable reset set ($\reset$) for easier understanding
-% instead of the reset chain ($\resetchain$), 
-and the approach based on the reset graph is in Appendices~\ref{apdx:alg-resetgraph}.
-}
+% \footnote{We only give the computation based on the variable reset set ($\reset$) for easier understanding
+% % instead of the reset chain ($\resetchain$), 
+% and the approach based on the reset graph is in Appendices~\ref{apdx:alg-resetgraph}.
+% }
 {\small
 % \[ 
 % \begin{array}{lll}
@@ -156,7 +156,7 @@ and the approach based on the reset graph is in Appendices~\ref{apdx:alg-resetgr
 % where $in(ch)$ is the first vertex of the reset chain $ch$.
 \end{defn}
 % \todo{Example of computed invariant for ranking function and the transition bound}
-In Example~\ref{ex:relatedNestedWhileOdd-overview}, the ranking $i$ is reset by $n$ at edge $0 \to 1$ and 
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}(a), the ranking $i$ is reset by $n$ at edge $0 \to 1$ and 
 $k + m$ at edge $6 \to 7$ and $k$ is assigned value $i - m$ at edge $3 \to 4$. Through reset graph, 
 % (which we do not fully present but can be found in the Definition~20 in~\cite{SinnZV17}), 
 we estimate a symbolic value $n$ for both ranking variables $i$ and $k$.

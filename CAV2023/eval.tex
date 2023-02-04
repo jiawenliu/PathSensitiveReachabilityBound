@@ -1,9 +1,9 @@
-\emph{Set up} We implemented a prototype {\THESYSTEM} that takes a labeled command as input 
+\emph{Set up} We implemented a prototype {\THESYSTEM} that takes a program as input 
 and outputs the reachability-bound on each program point.
-This implementation consists of the 
-program abstraction in OCaml and the program refinement, ranking function estimation, and the path-sensitive reachability-bound algorithm in Python.
-We evaluate it on 20 self-adopted programs from the literature and 270 programs extracted from different set of benchmarks. 
-It includes 110 representative{\tt .c} programs from the example sets of 7 tools\footnote{ABC: 15, C4B: 15, KoAT: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37}, 37 challenging{\tt .c} programs 
+The 
+program abstraction is implemented in OCaml and the program refinement, ranking function estimation, and the path-sensitive reachability-bound algorithm is in Python.
+..We evaluate it on 20 hand-crafted programs and 270 programs extracted from different set of benchmarks. 
+It includes 110 representative{\tt .c} programs from the testing sets of 7 tools\footnote{ABC: 15, C4B: 15, KoAT: 3, Loopus: 10, Rank10: 3, SPEED: 27, WTC: 37}, 37 challenging{\tt .c} programs 
 from the \hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}~\cite{BenchmarkLoops,SinnZV17},
 37{\tt .java} programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{BenchmarkTianhan,LuCT21}
 and 118{\tt .c} programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{BenchmarkIcra,KincaidBCR19,CyphertBKR19}.
@@ -13,34 +13,38 @@ For comparison, we also report the results of four bound analysis tools,
 \hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{ToolCofloco,Montoya17,Flores-Montoya16,Flores-MontoyaH14},
 % and \hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}
 ~\cite{BenchmarkTianhan}
-and self-implemented SPEED~\cite{GulwaniJK09}.
+and our own SPEED~\cite{GulwaniJK09} implementation.
 % \\
 
 When comparing with the worst-case program
 complexity analysis tools, we aim to answer, is our prototype able to compute precise reachability-bound for different program points (\emph{Effectiveness})? If so, can we also have better overall complexity estimation (\emph{Accuracy})?
 %  based on the precise reachability-bound?
 Tab.~\ref{tb:accuracy-eval} shows the results.
-%  including the theoretical bounds and empirical results.
 \\
 \emph{Effectiveness}
 \newcommand{\pointnum}{\kw{\# l}}
-The $2^{nd}$ and $3^{rd}$ columns are the theoretical worst-case complexity and the number of programs that have this complexity.
-To show the effectiveness, 
-we present in column $4^{th}$ our estimated ``{reachability-bound ($\pointnum$)}'' for different program points. 
-Though having the same worst-case complexity, the results show that different points have significantly different reachability-bounds.
-In each sub-column, we additionally show the number of points, $\pointnum$ with certain reachability-bound under the same worst complexity.
+On each row, a theoretical worst-case complexity is listed in the $2^{nd}$ column and the number of programs ($\# p$) with this particular complexity is given in the $3^{rd}$ column.
+% The  and $3^{rd}$ columns are the theoretical worst-case complexity and the number of programs that have this complexity.
+In the ``worst bound ($\# p$)'' column, each row of the $1^{st}$ sub-column is the number of programs that are computed by us to have the corresponding ``theory worst'' complexity.
+To show \textit{effectiveness}, 
+we present in the ``{reachability-bound ($\pointnum$)}'' column our results w.r.t. the program locations. 
+Each sub-column is the number of locations ($\pointnum$) with certain reachability-bound.
+% Though having the same worst-case complexity, the results show that different points have significantly different reachability-bounds.
+These locations in the same row are from the programs of the same worst-case complexity.
+The results show that although these locations are from the programs of the same worst-case complexity, they have significantly different reachability-bounds.
+% under the same worst complexity.
 For almost all the multipath loops, our tool computes precise \emph{reachability-bound}s on locations in different paths.
 %  that have significantly different \emph{reachability-bound}s.
-Even for the unbounded loops, we can still compute finite \emph{reachability-bound}s on certain program points which are not involved with the unbounded loop paths.
-While none of the existing tools can compute reasonable bounds for these programs.
+Even for the unbounded loops, we can still compute finite \emph{reachability-bound}s on certain program points that are not involved with the unbounded loop paths.
+None of the existing tools can compute reasonable bounds for these programs.
 We also identify a number of loop patterns with large worst-case complexity but only reachability-bounds of $O(1)$ on points inside the loop.
 For example in the programs  with $O(n)$ worst complexity from Icra benchmark,
 almost $\frac{1}{3}$ of the program points inside the loops are evaluated only $1$ time.
 \\
 \emph{Accuracy} Since the existing tools can only compute the worst-case bounds,
-we show in column $5^{th}$ the ``worst bound ($\# p$)'' computed by us and the other tools for comparison. Each sub-column shows the $\#$ of programs that are computed to have this worst complexity.
-Although we are not aiming to compute the worst complexity, our results are still comparable to existing tools.
-The last column shows the ``overall complexity'' estimation.
+we show in the ``worst bound ($\# p$)'' the number of programs that are computed to have this worst complexity by other tools for comparison. 
+% Each sub-column shows the $\#$ of programs that are computed to have this worst complexity.
+Based on the estimated worst-case bound and reachability-bound, we show in the last column ``overall complexity bound'' estimation.
 The $1^{st}$ sub-column is the sum of product reachability-bound and $\pointnum$ by {\THESYSTEM}.
 For comparison, we show the best worst bound by other tools $\times \sum\pointnum$ in the $2^{nd}$ sub-column. It shows that we can compute tighter overall complexity than the best.
 % It can be applied to many places, such as saving the resources' allocation,
@@ -53,9 +57,9 @@ For comparison, we show the best worst bound by other tools $\times \sum\pointnu
  \centering
  {\scriptsize
  \begin{tabular}{ >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
- {Bench-} & {Theory} &  \# & \multicolumn{6}{c|}{reachability-bound ($\pointnum$)} & \multicolumn{5}{c|}{worst bound ($\# p$)} & \multicolumn{2}{c|}{overall complexity}\\
+ {Bench-} & {theory} &  \# & \multicolumn{6}{c|}{reachability-bound ($\pointnum$)} & \multicolumn{5}{c|}{worst bound ($\# p$)} & \multicolumn{2}{c|}{overall complexity bound}\\
  \cline{4-16}
- -marks & Worst & p & $1$ & $n$ & $n^2$ & $n^3$ & $n^4$ & $\infty$ & {\tiny \THESYSTEM} & {\tiny \cite{BenchmarkLoops}} & {\tiny \cite{ToolCofloco}} & {\tiny \cite{GulwaniJK09}} & {\tiny \cite{BenchmarkTianhan}} & {\THESYSTEM} & worst \\
+ -marks & worst & p & $1$ & $n$ & $n^2$ & $n^3$ & $n^4$ & $\infty$ & {\tiny \THESYSTEM} & {\tiny \cite{BenchmarkLoops}} & {\tiny \cite{ToolCofloco}} & {\tiny \cite{GulwaniJK09}} & {\tiny \cite{BenchmarkTianhan}} & {\THESYSTEM} & worst \\
  \hline
  & $O(1)$ & 4 &  32 & 0 & 0 & 0 & 0 & 0 & 1 & 2 & 3 & 2 & 1 & 32 & -\\
  \cline{2-2}
@@ -108,11 +112,10 @@ For comparison, we show the best worst bound by other tools $\times \sum\pointnu
 \\
 \emph{Performance}
 The performance evaluation is in Table~\ref{tb:performance-eval}.
-The columns from $2$ to $5$ are $\# $ of the programs, with multipath loops, nested loops, and bounded loops respectively.
-The $6$ to $8$ columns are our success rate, the \# of programs we failed, and time outs. The last column is the total runtime w.r.t. the programs that we successfully computed bounds.
-We are not doing well in terms of efficiency because of the possible non-terminating in program refining and the ranking function estimating.
-Our prototype consists of the implementations in OCaml and Python.
-The inter-procedures calls also reduce the efficiency.
+The columns from $2$ to $5$ are the numbers of the programs, program with multipath loops, program with nested loops, and program with bounded loops in each benchmark set respectively.
+The $6$ to $8$ columns are our success rate, the numnber of programs we failed and time outs. The last column is the total runtime w.r.t. the programs that we successfully computed bounds.
+We are not doing well in terms of efficiency. Because of the possible non-terminating in program refining and the ranking function estimating, our time outs are higher than other tools.
+Since our prototype consists of the implementations in OCaml and Python, the inter-procedures calls also reduce the efficiency.
 %
 %
 \begin{table}[H]
