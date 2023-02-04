@@ -2,7 +2,7 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
 %
 \begin{defn}[Path Reachability-bound Computation]
  \label{def:pathrb}
- Given a refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
+ For a program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in $\rprog$, 
  we compute for $\tpath$ its \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$
  as follows. 
  % The input $c$ is omitted in the following equations for concise given the context is clear.
@@ -19,23 +19,23 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
  \outinB(\rprog_l, \tpath, c), & l: \rprog_l = \kw{enclosed}(\tpath) \\
  \lpchB(\rprog_l, \tpath , c)
  \times \max\limits_{l:\rprog_l = \kw{enclosed}(\rprog')}
- \{\inoutB(\rprog', \tpath)\} \footnotemark, & l: \rprog_l \neq \kw{enclosed}(\tpath) \\
+ \{\inoutB(\rprog', \tpath, c)\} , & l: \rprog_l \neq \kw{enclosed}(\tpath) \\
  % \outinB(\rprepeat(\rprog'), \rprog) \times \inoutB(\rprog', \tpath) & \rprog = \rprepeat(\rprog')\\
  \end{array}
  \right.
  \]
  }
  \end{defn}
-\footnotetext{In a refined program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$.}
+% \footnotetext{In a refined program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$.}
 
-We also guarantee that $\inoutB(\rprog, \tpath, c)$ is a sound \emph{path reachability-bound}
+$\inoutB(\rprog, \tpath, c)$ is a sound \emph{path reachability-bound}
 in \highlight{Appendix~\ref{apdx:pathrb-sound}}.
 %
-In Example~\ref{ex:relatedNestedWhileOdd-overview}, with $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, with $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
 $\outinB(\rprepeat(\tpath_3), \tpath_3, c) = n - m$ computed before,
 we obtain $\inoutB(\rprog, \tpath, c) = 1 \times (n - m)$ as tight as expected.
-In Example~\ref{ex:threeNestedWhile}, with $\lpchB(\rprog_1, \tpath_3, c) = 1$,
-$\lpchB(\rprog_3, \tpath_3, c) = 1$
+In Figure~\ref{fig:threeWhile-overview}, with $\lpchB(\rprog_1, \tpath_3, c) = 1$,
+$\lpchB(\rprog_3, \tpath_3, c) = 1$ and
 $\outinB(\rprog_6, \tpath_3, c) = N$,
-we also obtain the tight bound $1 \times 1 \times N$ as well.
+we also obtain a tight reachability-bound $1 \times 1 \times N$.
 

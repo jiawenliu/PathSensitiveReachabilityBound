@@ -7,7 +7,7 @@ It includes 110 representative{\tt .c} programs from the example sets of 7 tools
 from the \hyperlink{https://forsyte.at/static/people/sinn/loopusJAR/index.html}{LoopusJAR}~\cite{BenchmarkLoops,SinnZV17},
 37{\tt .java} programs from~\hyperlink{https://zenodo.org/record/5140586\#.Y5pBoC-B1QI}{Tianhan}\cite{BenchmarkTianhan,LuCT21}
 and 118{\tt .c} programs from~\hyperlink{https://github.com/icra-team/icra}{Icra}~\cite{BenchmarkIcra,KincaidBCR19,CyphertBKR19}.
-We translate these programs into our language model.
+We translate these programs into our syntax.
 For comparison, we also report the results of four bound analysis tools, 
 \hyperlink{https://forsyte.at/software/loopus/}{LoopusJAR}~\cite{SinnZV17},
 \hyperlink{https://github.com/aeflores/CoFloCo/tree/master/src}{CoFloCo}~\cite{ToolCofloco,Montoya17,Flores-Montoya16,Flores-MontoyaH14},
@@ -19,7 +19,7 @@ and self-implemented SPEED~\cite{GulwaniJK09}.
 When comparing with the worst-case program
 complexity analysis tools, we aim to answer, is our prototype able to compute precise reachability-bound for different program points (\emph{Effectiveness})? If so, can we also have better overall complexity estimation (\emph{Accuracy})?
 %  based on the precise reachability-bound?
-Tab.~\ref{tb:accuracy-eval} shows our evaluation results.
+Tab.~\ref{tb:accuracy-eval} shows the results.
 %  including the theoretical bounds and empirical results.
 \\
 \emph{Effectiveness}
@@ -47,7 +47,7 @@ For comparison, we show the best worst bound by other tools $\times \sum\pointnu
 % computing precise information leakage, etc.
 %
  \begin{table}[ht]
- \vspace{-1cm}
+ \vspace{-0.5cm}
  \caption{The Effectiveness And Accuracy Evaluation of {\THESYSTEM}}
  \label{tb:accuracy-eval}
  \centering
@@ -102,7 +102,7 @@ For comparison, we show the best worst bound by other tools $\times \sum\pointnu
  \hline
  \end{tabular}
  }
- \vspace{-0.8cm}
+ \vspace{-0.5cm}
  \end{table}
 %
 \\
@@ -120,7 +120,7 @@ The inter-procedures calls also reduce the efficiency.
     \caption{The Performance Evaluation of {\THESYSTEM}}
     \label{tb:performance-eval}
     \centering
-        {\footnotesize
+        {\scriptsize
         \begin{tabular}{ >{\small}c | c | c | c | c | c | c | c | c | c }
             \multirow{2}{*}{Benchmarks} & \multirow{2}{*}{\# P}  & {M.P.L} & Nested  & {Bounded} & {Success} & \multirow{2}{*}{Failed} & Time  & Total\\
              &  & \# & Loop \# & \# & Rate &  & Outs &   Runtime \\
@@ -135,5 +135,5 @@ The inter-procedures calls also reduce the efficiency.
                 \hline
             \end{tabular}    
         }
- \vspace{-0.5cm}
+ \vspace{-0.2cm}
     \end{table}
