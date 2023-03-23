@@ -1,15 +1,3 @@
-% Plan:
-% \textbf{Two Examples + Algorithm Overview}
-% \begin{itemize}
-% \item {Multiple-Path While Loop}
-% \\
-% \textbf{The First Challenge/Problem from The Example, 
-% and the Overview of the New Techniques Targeting This Problem}
-% \item {Nested While Loop}
-% \\
-% \textbf{The Second Challenge/Problem from The Example,
-% and the Overview of the New Techniques Targeting This Problem}
-% \end{itemize}
 In this section, we discuss two representative examples illustrating the
 challenges of analyzing the symbolic
 \emph{reachability-bound} on
@@ -182,35 +170,52 @@ we compute $N$ as the \emph{reachability-bound} of location $7$, which is tight.
 \input{examples/threeNestedWhile-overview}
 
 \subsection{Running Example}
+In this section, we discuss a running example we took from
+the benchmark set of~\cite{GulwaniZ10} with
+challenges of computing the symbolic
+\emph{reachability-bound} on
+every control location. Then we illustrate how our algorithm leverages the challenges through the \emph{path reachability-bound} and the \emph{loop reachability-bound}.
+
 \input{examples/relatedNestedWhileOdd-overview}
-This running example program in Figure~\ref{ex:relatedNestedWhileOdd-overview}(a) has two level nested loops, outer loop $L_1$ and nested loop $L_4$, and $L_4$ is in the first path of $L_1$. It has both of the two challenges from the two examples.
-The first one comes with the if condition in the outer loop.
-The bounds for different locations in the same loop $L_1$ are different.
-Given $n \geq m \geq 0$,
+
+\textbf{Challenge I}
+The example program in Figure~\ref{fig:relatedNestedWhileOdd-overview}(a) has two level nested loops, outer loop $L_1$ and nested loop $L_4$ which is in the first path of $L_1$. Given $n \geq m \geq 0$,
 the expected \emph{reachability-bound}s for locations in outer loop $3, 6, 7$ and $8$ are all $\lfloor\frac{m}{4}\rfloor$,
-%  for $8$ is $\lfloor\frac{m}{4}\rfloor + 1$,
+% for $8$ is $\lfloor\frac{m}{4}\rfloor + 1$,
 for location $2$ is $\lfloor\frac{m}{2}\rfloor$ and $\lfloor\frac{m}{2}\rfloor + 1$ for location $1$.
+\highlight{Though within the same loop $L_1$, the bounds for different locations are different.}
+Amortized analysis tools such as Loopus~\cite{SinnZV17}, KoAT~\cite{BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, C4B~\cite{CarbonneauxHS15}, etc. ignore path sensitivity and approximate the bound $n$ as the bound for loop $L_1$. 
+While some path-refinement-based methods such as \cite{GulwaniZ10,GulwaniJK09}, CoFloCo~\cite{Montoya17,Flores-Montoya16,Flores-MontoyaH14} and etc. give the same bound for all the locations within the loop $L_1$. 
+Although we can reuse their results i.e., loop bounds as the \emph{reachability-bound} for location $1$ and $2$,
+it is still unclear for locations $3, 6, 7$, and $8$.
+%
+This motivates our first key novelty -- the \emph{path reachability-bound}
+for a loop-free and interleaving-free path $\tpath$.
+It bounds the times that each path is evaluated in a path-refined program.
 
-The second one comes in the nested loop.
-In line 6, $i$ is reset by $k + m$ and $k$ is reset by $i - m$ at line 3. So the
-loop $L_4$ is only executed in the first iteration of while loop $L_1$.
+\textbf{Challenge II} The second challenge occurs in the nested loop.
+In the command of label 3, $k$ is reset by $i - m$, and $i$ is reset by $k + m$ after the
+loop $L_4$, so $L_4$ is only executed in the first iteration of while loop $L_1$.
 % \\
-% The while loop $L_1$ at line 3 is executed only in 
-% the first $m - N$ iterations of the 
-% $L_1$ because $j$ is reset by $i$ in line 2.
-% \\
-So the total iterations of all the two loops are
+The total number of iterations is
 $n - m + \lfloor\frac{m}{2}\rfloor + 1$,
-and the precise \emph{reachability-bound} for location $5$ inside the $L_4$ is $m$.
-% for locations $4, 5$ and $8$ between the $L_3$ and $L_6$ are $(n-N) \times (m - N)$,
-% and $n - N$ for locations $2$ and $9$.
+and the tight \emph{reachability-bound} for location $5$ inside $L_4$ is $m$, which is the same as this innermost loop iteration bound.
 % \\
-\highlight{Notice here the \emph{reachability-bounds} for the locations inside the loop $L_4$ is 
-the same as its innermost loop iteration bound.
-% , as well as our \emph{path reachability-bound}.
+\highlight{
 However, for the locations between $L_1$ and $L_4$,
-the \emph{reachability-bounds} are the multiplication of the inner and outer loop iteration bounds.}
-
-Our algorithm computes the reachability-bound for this example through the following steps.
-
+the tight \emph{reachability-bound} s are the product of the inner and outer loop iteration bounds.}
+Existing approaches either ignore path sensitivity or compute the same bound for all the locations in a loop.
+None of them can give the precise \emph{reachability-bound}s for different locations in the loop.
+Even if the loop bound is known, they are non-trivial to compute.
+This motivates us to consider our second novel quantity --
+the numbers of iterations of the \highlight{outer loop $L_1$} such that,
+during these iterations, the loop $L_4$ is ``entered'', which is expected to be $1$. 
+We refer to this quantity as the \emph{loop reachability} of the inner loop $L_4$ w.r.t the outer loop $L_1$.
+% of the location within loop $L_6$ w.r.t the loops $L_3$ and $L_1$.
+By multiplying the \emph{path reachability-bound} of $\tpath_3$ within $L_4$
+with its \emph{loop reachability-bound} w.r.t $L_1$, we can obtain an accurate
+\emph{reachability-bound} for location $5$.
+% This quantity isn't considered or computed in any of the previous works.
+\cite{GulwaniJK09} considers a similar quantity using the \emph{Progress Invariant}, but it bounds the iteration times of \highlight{inner loop $L_4$} w.r.t. one iteration of $L_1$, which is $m$. They still over-approximate the bound for locations inside $L_4$ as $m \times (n - m)$.
+With these two key quantities, our algorithm computes the reachability-bound for this example through the following steps.
 \input{alg-overview}

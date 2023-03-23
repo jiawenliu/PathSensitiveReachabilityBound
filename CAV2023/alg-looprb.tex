@@ -6,9 +6,10 @@ $\lpinit(\rprog, \tpath, c)$, and $\lpnext(\rprog, \tpath, c)$ based on the refi
 For a program $c$ with its refined program $\rprog_c$, a $\tpath$ and a loop $\rprog$ in $\rprog_c$ where $\tpath$ is located, we compute 
 $\lpinit(\rprog, \tpath, c)$ and $\lpnext(\rprog, \tpath, c)$
 w.r.t. the ranking functions as follows.
- \begin{itemize}%
- \item 
-The loop initial state 
+ % \begin{itemize}%
+ % \item 
+ 
+1. The loop initial state 
 $\lpinit(\rprog, \tpath, c) \in \scexpr(c)$ computes a symbolic expression, which is an upper bound for the initial value of $\tpath$'s ranking function before
 any visit of $\tpath$ and during the first execution of $\rprog$.
 \[
@@ -28,7 +29,8 @@ any visit of $\tpath$ and during the first execution of $\rprog$.
  \right\}
  \end{array}
  \]
-\item
+% \item
+2.
 The loop next state 
 $\lpnext(\rprog, \tpath, c) \in \scexpr(c)$ 
 estimates the amount for $\tpath$'s ranking function
@@ -66,7 +68,7 @@ $
  \end{array}
  \]
  }
- \end{itemize}
+%  \end{itemize}
 \end{defn}
 %
 Then we compute the
@@ -92,9 +94,10 @@ Definition~\ref{def:looprb} computes a sound \emph{loop reachability-bound} as i
 
 % The algorithm based on the progress invariant in paper\cite{GulwaniJK09} computes similar quantity, but it estimates the iteration numbers of $l'$ in one iteration of $l$.
 
-Figure~\ref{fig:relatedNestedWhileOdd-overview} has only one nested loop, so
-the only interesting \emph{loop reachability-bound} is $\lpchB(\rprog_1^1, \tpath_3)$.
-We compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $, $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as expected.
+Figure~\ref{fig:relatedNestedWhileOdd-overview} has only one nested loop, so $\lpchB(\rprog_1^1, \tpath_3, c)$ is the 
+the only interesting case.
+We compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $,
+$\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as expected.
 
 We illustrate Figure~\ref{fig:threeWhile-overview} with three nested loops to better show the improvement of the \emph{loop reachability-bound}.
 \input{examples/threeNestedWhile-overview}

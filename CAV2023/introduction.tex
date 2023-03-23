@@ -1,5 +1,5 @@
 
-Gulwani et. al~\cite{GulwaniZ10} first introduced \emph{reachability-bound analysis} as a way to provide upper bounds on the number of times a given program location 
+Gulwani et al.~\cite{GulwaniZ10} first introduced \emph{reachability-bound analysis} as a way to provide upper bounds on the number of times a given program location 
 is visited during program execution.
 Obtaining tight reachability-bounds is useful in many applications.
 For example from a privacy and security perspective,
@@ -12,7 +12,7 @@ Gulwani et. al~\cite{GulwaniZ10}
 give a two-step solution combining program abstraction with a set of proof-rules that are used to compute the actual reachability-bounds. This combination is effective at computing reachability-bounds for a rich class of programs, however, it also has limitations. This method 
 computes complexity bounds for loops and over-approximate the reachability-bounds of the different locations inside the loop by using this bound. This result in an over-approximation of the reachability-bounds of several locations, especially when there are loops with multiple paths.
 
-A similar approach to reachability-bounds can be also computed, in principle, using techniques from \emph{amortized program complexity analysis}~\cite{BradleyMS05,CookSZ13,Zuleger18,ZulegerGSV11,SinnZV14,SinnZV17,LuCT21,AliasDFG10}. Indeed, using techniques like ranking functions,  counter increments, difference constraints, etc.
+A similar approach to reachability-bounds can be also computed, in principle, using techniques from \emph{amortized program complexity analysis}~\cite{BradleyMS05,CookSZ13,Zuleger18,SinnZV14,SinnZV17,LuCT21,AliasDFG10}. Indeed, using techniques like ranking functions, counter increments, difference constraints, etc.
 one can estimate 
 precise bounds on loop iterations and execution time, and in turn obtain reachability bounds for complex programs. However, these techniques are designed to capture the worst-case or overall complexity, and again they may over-approximate the reachability-bounds of certain locations. This is again particularly evident when a loop contains multiple paths, since in this situation one usually obtains an overall complexity bound which is greater than the reachability-bounds on some locations of some of the paths. 
 
@@ -20,7 +20,7 @@ To overcome these limitations,
 we introduce a new path-sensitive reachability-bound analysis that combines ideas from amortized complexity analysis with ideas from 
 \emph{path refinement complexity analysis}~\cite{GustafssonEL05,ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19,GulwaniJK09,ZulegerGSV11}.
 % can help to summarize the loop paths and compute the program complexity path-sensitively. However, they still do not compute the  reachability-bound for every program location.
-Specifically, we propose a new algorithm which is built over a program abstract transition graph, and by combining amortized  analysis with loop summarization-based multipath refinement mitigates the limitations faced by either technique individually. 
+Specifically, we propose a new algorithm which by combining amortized  analysis with loop summarization-based multipath refinement mitigates the limitations faced by each technique individually. 
 % \end{itemize}
 %
 
@@ -33,8 +33,8 @@ By computing the ranking function, we effectively alternate computation for the 
 % and estimating its bound invariant in Section~\ref{sec:rank}.
 We also leverage the path-insensitivity of ranking function estimation through a lightweight path refinement algorithm adopted from~\cite{GulwaniJK09}.
 Building on this combination, we then focus on two useful quantities which we call \emph{path reachability-bound} and \emph{loop reachability-bound}.
-The first one bounds the evaluation times of each loop-free and interleave-free path in a refined program, and the second one bounds the iterations of an outer loop w.r.t. the inner loop such that in these iterations of the outer loop, the inner loop is ``entered''. 
-We present algorithms for estimating these two quantities and using them we can then 
+The first one bounds the evaluation times of each loop-free and interleave-free path in a refined program, and the second one bounds the number of iterations of an outer loop w.r.t. an inner loop, counting only the iterations when the inner loop is ``entered''. 
+We present algorithms for estimating these two quantities. By using them we can then 
 %Section~\ref{sec:looprb} and~\ref{sec:pathrb} 
 compute the \emph{reachability-bound} for each program point in a path-sensitive way.
 %in Section~\ref{sec:psrb}.
@@ -63,39 +63,40 @@ combining \emph{amortized bound analysis}  and \emph{path refinement}. The algor
 % \begin{itemize}
 % \item 
 \emph{Program Abstraction.}
-Program abstraction is commonly used in program analysis as a preprocessing step to abstract program features and generates transition graphs or systems. For example, Gulwani et. al~\cite{GulwaniZ10} summarizes programs into some underlying abstract domains (the unified lattice~\cite{CousotH78}, polyhedra~\cite{CousotC77} or octagonal~\cite{Mine06})
-and generates transition systems for loop counters.
-\cite{KincaidCBR18} abstracts the program into the wedge domain and computes the non-linear loop invariant.
+Program abstraction is commonly used in program analysis as a preprocessing step to abstract program features and generates transition graphs or systems. For example, Gulwani et al.~\cite{GulwaniZ10} summarizes programs into some underlying abstract domains (the unified lattice~\cite{CousotH78}, polyhedra~\cite{CousotC77} or octagonal~\cite{Mine06})
+and generates transition systems for loop counters. Kincaid et al.~\cite{KincaidCBR18} abstract  programs into the wedge domain and compute non-linear loop invariant.
 % While it only works well for the specific targeting problem.
-Efficiency is the main bottleneck when generating and solving the constraint.
-We choose to use the difference constraint-based program abstraction model~\cite{SinnZV17,SinnZV14} combined with boolean expressions to generate our abstract transition graph.
-It is more accurate in the sense of representing the program loops path-sensitively. This representation is also comparatively lightweight.
+%Efficiency is the main bottleneck when generating and solving the constraint.
+Sinn et al.~\cite{SinnZV17,SinnZV14}
+introduce a program abstraction model based on difference constraints, which we also use in this paper. 
+It is more accurate in the sense that it allow to represent program loops in a path-sensitive way.
+ This representation is also comparatively lightweight.
 
 % \item 
 \emph{Amortized Complexity Analysis.}
-This line of complexity analysis follows the idea of the
+This line of work follows 
 % \emph{amortized complexity analysis}
 % originated 
-from Tarjan's influential paper~\cite{PotechinP17}. It is usually combined with ranking functions~\cite{BradleyMS05,CookSZ13,Zuleger18} or counter increments~\cite{ZulegerGSV11,SinnZV14,SinnZV17,LuCT21,AliasDFG10}.
+from Tarjan's seminal paper~\cite{Tarjan85}. It is usually combined with ranking functions~\cite{BradleyMS05,CookSZ13,Zuleger18} or counter increments~\cite{GulwaniMC09,ZulegerGSV11,AliasDFG10}.
 % They do well in nested loops by alternating the loop bound computation with the ranking or counter estimation. This alternation is efficient without recursively unrolling the nested loops when composing the bound of different paths.
  % \\
- But estimating the counter or ranking function invariant ignores the interleaving between multiple paths in the same loop,
+ Techniques that estimate the counter increments or the ranking function invariants, such as the tools CofloCo~\cite{Montoya17,Flores-MontoyaH14,Flores-Montoya16} and KoAT~\cite{BrockschmidtEFFG16,BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, or the algorithm in~\cite{LuCT21}, often ignore the interleaving between multiple paths in the same loop, on which we focus in this paper.
 % Most of them 
-such as the tools CofloCo~\cite{Montoya17,Flores-MontoyaH14,Flores-Montoya16}, KoAT~\cite{BrockschmidtEFFG16,BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, the algorithm in~\cite{LuCT21}, and etc.
+%and etc.
 % over-approximate the loop bound when the path interleaving affects loop execution.
-It is hard to repurpose their result as the reachability-bound on different points.
+%It is hard to repurpose their result as the reachability-bound on different points.
 % loop bound path-insensitively as the reachability-bound on different points.
-Another kind of \emph{amortized complexity analysis} based on type refinement or annotation~\cite{CraryW00,JostHLH10,CicekBG0H17,RajaniG0021,CarbonneauxHS15} has the same weakness in the multipath loops, resulting in the over-approximation of the resource cost on different program points.
-We choose to use difference-constraints based approach and enrich it with boolean expressions and path-sensitivity according to the Alg.~2 in~\cite{SinnZV14},
+Several works have studied \emph{amortized complexity analysis} using type refinement and annotations~\cite{CraryW00,JostHLH10,CicekBG0H17,RajaniG0021,CarbonneauxHS15}. Most of these work also do not distinguish different paths in loops, resulting in over-approximation of the resource cost for different program points.
+% We choose to use difference-constraints based approach and enrich it with boolean expressions and path-sensitivity according to the Alg.~2 in~\cite{SinnZV14},
 % which assigns a variable to each edge on which this variable decrease as its ranking function.
-the Alg.~3 in~\cite{ZulegerGSV11},
-and the Def.~25 in Section 4 from~\cite{SinnZV17}.
+% the Alg.~3 in~\cite{ZulegerGSV11},
+% and the Def.~25 in Section 4 from~\cite{SinnZV17}.
 
 \emph{Path Refinement Based Complexity Analysis}.
-Another line of loop bound analysis through loop summarization and path refinement seeks precise loop path representation~\cite{ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19}, and explicating the interleaving between paths~\cite{GulwaniJK09,ZulegerGSV11}.
-\cite{KincaidBCR19,KincaidCBR18,BreckCKR20} introduce some loop summarization techniques which can help to improve the accuracy of the path refinement but specifically for non-linear loops, program recurrence, etc.
+Another line of related works aims at analyzing loop bounds through loop summarization and path refinements~\cite{ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19}, and some of them also analyze the interleaving between different paths~\cite{GulwaniJK09,ZulegerGSV11}.
+Kincaid et al.\cite{KincaidBCR19,KincaidCBR18,BreckCKR20} introduce some loop summarization techniques which can help to improve the accuracy of the path refinement algorithm for non-linear loops and with program recurrence.
 % summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. 
-However, when composing the bound between nested loops, recursively unrolling the nested loops is heavy and non-terminating in most cases.
+However, when composing the bound in nested loops, recursively unrolling the nested loops is heavy and in most cases non-terminating.
 %
-Our method simplifies the path refinement algorithm in~\cite{GulwaniJK09} using contextualization techniques based on~\cite{ZulegerGSV11,SinnZV14,ManoliosV06}.
+In contrast, our method simplifies the path refinement algorithm in~\cite{GulwaniJK09} using contextualization techniques based on~\cite{ZulegerGSV11,SinnZV14,ManoliosV06}.
 We also limit the iterations of the refinement algorithm to a constant in our bound analysis algorithm.

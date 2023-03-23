@@ -222,7 +222,7 @@ class ProgramRefine():
             loop_paths_map = DefaultDict(list)
             for curr_prog in working:
                 curr_start, curr_end = curr_prog.start_point, curr_prog.end_point
-                if curr_start == curr_end and curr_prog.type != RefinedProg().RType.REPEAT and len(curr_prog.get_id()) > 1:
+                if curr_start == curr_end and curr_prog.type != RefinedProg.RType.REPEAT and len(curr_prog.get_id()) > 1:
                     loop_paths_map[curr_start].append(curr_prog)
                     pop_set.add(curr_prog)
             ############## Creating New Loops Paths Above  #################### 

@@ -36,15 +36,15 @@ $
 {\small
 \begin{center}
  $
- \begin{array}{ll}
+ \begin{array}{lll}
  \lcounter(\trace'' \tracecat \trace', L ) 
- \triangleq \lcounter(\trace', L) + 1 & \text{if}~ \pi_2(\trace''[i]) = l_i, \forall i = 1, \ldots, n
+ & \triangleq \lcounter(\trace', L) + 1 & \text{if}~ \pi_2(\trace''[i]) = l_i, \forall i = 1, \ldots, n
  \\ 
  \lcounter([(\_, l, \_)] \tracecat \trace', L ) 
- \triangleq \lcounter(\trace', L) & \text{if}~ l \neq l_1
+ & \triangleq \lcounter(\trace', L) & \text{if}~ l \neq l_1
  \\ 
  \lcounter(\trace, L ) 
- \triangleq \bot & \text{if }~ \trace \in \inftdom.
+ & \triangleq \bot & \text{if }~ \trace \in \inftdom.
  \end{array}
  $
  \end{center}
@@ -58,12 +58,12 @@ When the input trace is infinite, both $\counter(\trace, l)$ and $\lcounter(\tra
 
 \begin{defn}[Reachability-bound]
  \label{def:rb}
- For a program ${c}$ and a location $l \in \lvar(c)$ in $c$,
+ For a program ${c}$ and a location $l$ in $c$,
 a function $f(c, l) : \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{reachability-bound} for $l$ if and only if
 {\small
 \begin{center}
  $
-\begin{array}{l}
+\begin{array}{ll}
  \forall \trace_0 \in \ftdom_0(c), c' \in \cdom, l, l' \in \lvar(c), \trace \in \tdom \st 
  \\ \qquad
  \Big(

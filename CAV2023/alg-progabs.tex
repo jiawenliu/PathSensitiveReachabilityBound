@@ -1,20 +1,19 @@
-This path-sensitive reachability-bound algorithm
+Our algorithm
 is performed on basis of an \emph{Abstract Transition Graph}, $\absG(c)$
 % $ =(\absV(c), \absE(c))$ 
 for the program $c$.
 We first introduce some components of this graph.
 \begin{defn}[Symbolic Constant, Symbolic Expression]
  \label{def:symbolic_expr}
-The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$, in which a symbolic constant can be either a natural number, or $\infty$, or a program's input variable.
+A symbolic constant is either a natural number, $\infty$, or a program's input variable. We denote by denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$ the universe of the \emph{symbolic constant}.
  The set of the \emph{symbolic expression} for a program $c$, $\scexpr(c) \subseteq \mathcal{A}$ is all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$.
 \end{defn}
 
 \begin{defn}[Difference Constraints]
 A difference constraint $d$ is an inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.
-$x' \leq y + v$ describes that the value of $x$ in the current state is
-at most the value of $y$ in the previous state plus the symbolic constant $v$, and $x' \leq v$ describes that the value of $x$ in the current state is
-at most $v$.
+$x' \leq y + v$ (rsp. $x' \leq v$) describes that the value of $x$ in the current state is
+at most the value of $y$ in the previous state plus the symbolic constant $v$ (rsp. the value of $v$).
 $DC(\vardom \cup \scvardom)$ denotes the universe of all difference constraints over $\vardom \cup \scvardom$.
 \end{defn}
 
@@ -36,10 +35,12 @@ $\clabel{\assign{i}{i - 1}}^{7}$, the value of $i$ is at most the previous $i$'s
 %
 % For every expression in each of the label commands, it is computed in three steps via the program abstraction method adopted from Section~6 in~\cite{SinnZV17}. 
 %
-The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
-that after evaluating the guard with label $l$,
-$\bexpr$ holds to execute the command with label $l'$.
-In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$ 
+The boolean constraint
+% $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
+% that after evaluating the guard with label $l$,
+% $\bexpr$ holds to execute the command with label $l'$.
+% For example 
+$i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$ 
 represents the negation of the testing guard $\clabel{i > 0}^1$
 in the $\ewhile$ command, and $i \leq 0$ must hold to perform the transition from location $1$ to
 the exit $\lex$. 

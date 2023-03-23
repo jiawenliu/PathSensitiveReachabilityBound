@@ -1,6 +1,6 @@
 % Based on the \emph{Abstract Transition Graph}, $\absG(c)$, the \emph{Refined Program}, $\rprog$ and the upper bound invariant for the \emph{Ranking Function} computed previously for a program $c$, our algorithm first requires to compute the new quantities, \emph{Path Reachability-bound} and the \emph{Loop Reachability-bound}. This section introduces the algorithm and the following sections describe how we compute them.
 
-Now for a program $c$, we use $\absG(c)$, its refined program $\rprog$, and all the ranking functions to compute the \emph{reachability-bound} for each of its control locations.
+Now for a program $c$, we use $\absG(c)$, its refined program $\rprog$, and all the ranking functions to compute a \emph{reachability-bound} for each of its locations.
 We first introduce some quantities which are required to compute ahead.
 
 As pre-procedures, we first introduce the \emph{loop bound} for every loop $\rprog_l$ in $\rprog$, and the local \emph{path reachability-bound} for each $\tpath$ w.r.t. its $\kw{enclosed}(\rprog, \tpath)$.

@@ -57,18 +57,6 @@
 % typeset the header of the contribution
 %
 \begin{abstract}
-    % The upper bound on the number of times a given control location 
-    % inside a procedure is visited during program execution is referred to as the reachability-bound.
-    % This paper presents a path-sensitive reachability-bound algorithm
-    % aiming to find a precise symbolic reachability-bound {for every control location inside a program}.
-    % %  in this paper.
-    % In comparison with previous methods, our algorithm brings together two lines of program complexity analysis techniques:
-    % 1. amortized bound analysis through program abstraction and ranking function estimation, and
-    % 2. loop summarization-based multiple loop paths refinement.
-    % Built on this combination, we introduce two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound}.
-    % This effective combination leverages the precision and efficiency trade-off between the two lines of techniques.
-    % It allows us to compute precise reachability-bound on each program point path-sensitively.
-    % We implement a prototype and report on an experimental comparison with state-of-art tools over four different benchmarks.
     Reachability-bound analysis aims at providing upper bounds on the number of times a given program location is visited during program execution.
     This paper presents a path-sensitive reachability-bound algorithm.
     In comparison with previous works, 
@@ -79,8 +67,6 @@
     Building on this combination, we focus on two new quantities, \emph{path reachability-bound} and \emph{loop reachability-bound}, which allow us to leverage the precision and efficiency of the two techniques,
     and allow us to compute precise reachability-bounds for each program point in a path-sensitive way.
     We implemented our algorithm in a prototype and we report on an experimental comparison with state-of-art tools over four different sets of benchmarks.
-
-    \keywords{Reachability-bound, Amortized Bound Analysis, Ranking Functions, Path Refinement, Difference Constraints}
 \end{abstract}
 %
 %

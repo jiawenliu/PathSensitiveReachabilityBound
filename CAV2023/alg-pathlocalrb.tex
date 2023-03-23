@@ -23,7 +23,7 @@ We first compute three abstract states for each ranking function in different su
  % \begin{itemize}
  % \item 
  
- 1. We first compute the initial execution point and continuation execution points of $\rprog$ denoted by
+ 1. We compute the initial execution point and continuation execution points of $\rprog$ denoted by
  $\absinit(\rprog)$
  and 
  $\absfinal(\rprog)$ using standard control flow method.
@@ -172,7 +172,7 @@ each $\tpath$ w.r.t. its \textbf{innermost nested loop} as below.
  \]
  }
  \end{defn}
- Soundness of $\outinB(\rprog_l, \tpath, c)$ is in \highlight{Appendix~\ref{apdx:pathlocalrb-sound}}.
+ % Soundness of $\outinB(\rprog_l, \tpath, c)$ is in \highlight{Appendix~\ref{apdx:pathlocalrb-sound}}.
 
  For the program in the first interleaving pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop for $\tpath_1$, $\tpath_2$ and $\tpath_4$, 
  so compute $\outinB(\rprog_1^1, \tpath_1, c) = BD(\rprog_1^1, c) \times \outinB(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4, \tpath_1, c)
