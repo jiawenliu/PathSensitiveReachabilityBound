@@ -46,10 +46,6 @@ class BoundEstimate():
 
 
     @staticmethod
-    def bound_estimate(dcf_graph, abs_transition_graph):
+    def bound_estimate(dcf_graph = None, abs_transition_graph = None):
         start_time = time.time()
-        if dcf_graph.weights is None:
-            BoundEstimate.ProgramBasedDependencyGraphWeightsEstimation(dcf_graph, abs_transition_graph).psRB_estimation()
-            print("--- REACHABILITY BOUND COMPUTATION TIME: %s seconds ---" % (time.time() - start_time))
-        else:
-            print("--- REACHABILITY BOUNDS ARE PARSED FROM FILE: %s seconds ---" % (time.time() - start_time))
+        BoundEstimate.ProgramBasedDependencyGraphWeightsEstimation(dcf_graph, abs_transition_graph).psRB_estimation()
