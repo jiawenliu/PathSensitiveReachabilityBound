@@ -112,9 +112,10 @@ let rec abs_flow (lcom : lcommand) avars : abs_transition list =
   | If ( b , lc_1 , lc_2 , l ) -> [ ( l, abs_init lc_1, (Asum (b, If)) ) ; (l, abs_init lc_2, (Asum ((BNeg b), If))) ] @ (abs_flow lc_1 avars) @ (abs_flow lc_2 avars) 
   
 
-  let abs (lcom : lcommand) : abs_transition list = 
-    let assigned_vars = extract_para lcom in 
-    abs_flow lcom assigned_vars
+let abs (lcom : lcommand) : abs_transition list = 
+  let annotated_program = (Seq (lcom, (Skip (Label (-1))))) in
+  let assigned_vars = extract_para annotated_program in 
+  abs_flow annotated_program assigned_vars
 
 
 let print_const const = 
