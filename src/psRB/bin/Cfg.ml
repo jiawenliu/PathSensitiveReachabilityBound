@@ -32,27 +32,27 @@ let rec init lcom =
    | Seq ( _ ,  lc_2 ) -> final lc_2 
    | If ( _ , lc_1 , lc_2 , _ ) -> (final lc_1) @ (final lc_2)
 
-   let rec blocks lcom =
-     match lcom with
+let rec blocks lcom =
+  match lcom with
   |  Skip l  -> [Skipblock l ]
   | Assign ( var , e , l) -> [ Assignblock (var, e, l ) ]
   | Query ( var ,  q , l ) -> [ Queryblock (var, q ,l ) ]
   | While ( b , lc , l ) -> [ Testblock (b,l) ] @ (blocks lc)
   | Seq ( lc_1,  lc_2 ) -> (blocks lc_1) @ (blocks lc_2) 
   | If ( b , lc_1 , lc_2 , l ) -> [Testblock (b, l)] @ (blocks lc_1) @ (blocks lc_2)
-
+      
 
 (*get the int label from a block**)
-  let getLabelFromBlock = function
+  let get_label_from_block = function
    | Skipblock l -> print_label l
    | Assignblock (_ , _, l ) -> print_label l
    | Queryblock (_, _,l ) -> print_label l
    | Testblock (_ , l) -> print_label l
 
  (*transalte a list of blocks to a map from int(label) to block**)  
-  let blocks2map blocks: block Int.Map.t =
+  let blocks_to_map blocks: block Int.Map.t =
     let add_node blockmap node =
-      let keylabel = getLabelFromBlock node in
+      let keylabel = get_label_from_block node in
       Int.Map.set blockmap ~key:keylabel ~data:node in
     List.fold_left blocks ~init:Int.Map.empty ~f:add_node
 
@@ -61,13 +61,13 @@ let rec init lcom =
     List.fold_left edges  ~init:[] 
     ~f:(fun acc_list edge ->
         match edge with
-        | ( pre , b ) when (print_label b) = (getLabelFromBlock block) -> pre::acc_list
+        | ( pre , b ) when (print_label b) = (get_label_from_block block) -> pre::acc_list
         | _ -> acc_list
       )
 
   let precessor_map nodes edges : (label list) Int.Map.t =
     let add_node pre_map node =
-      let keylabel = getLabelFromBlock node in
+      let keylabel = get_label_from_block node in
       let value = precessor node edges in
       Int.Map.set pre_map ~key:keylabel ~data:value in
     List.fold_left nodes ~init:Int.Map.empty ~f:add_node
@@ -77,13 +77,13 @@ let rec init lcom =
     List.fold_left edges  ~init:[] 
     ~f:(fun acc_list edge ->
         match edge with
-        | (  b, suc ) when (print_label b) = (getLabelFromBlock block) -> suc::acc_list
+        | (  b, suc ) when (print_label b) = (get_label_from_block block) -> suc::acc_list
         | _ -> acc_list
       )
 
   let successor_map nodes edges : (label list) Int.Map.t =
     let add_node suc_map node =
-      let keylabel = getLabelFromBlock node in
+      let keylabel = get_label_from_block node in
       let value = successor node edges in
       Int.Map.set suc_map ~key:keylabel ~data:value in
     List.fold_left nodes ~init:Int.Map.empty ~f:add_node
@@ -116,21 +116,14 @@ let rec init lcom =
   | Bcop  (_ , a_1 , a_2) -> (vars_a a_1 ) @ (vars_a a_2) 
 
    (* vars return the variables from expression e **)
-   let vars e : var_info list=
-     match e with
-     | Eaexpr a -> vars_a a
-     | Ebexpr b -> vars_b b
-
-  let rec qvars q : var_info list = 
-    match q with
-  | Qalpha  -> []
-  | Qaexpr a -> vars_a a 
-  | Qaop (_, q_1 , q_2) -> (qvars q_1) @ (qvars q_2)
-  | Qchi a -> vars_a a
+let vars e : var_info list=
+  match e with
+  | Eaexpr a -> vars_a a
+  | Ebexpr b -> vars_b b
 
    (*  label of x in program p, input x, output : a list of labels of x in program p**)  
 
-   let rec defs x = function
+let rec defs x = function
    | Skip _ -> []
    | Assign ( var , _ , l) -> if (String.equal var.v_name x) then [l] else []
    | Query ( var ,  _ , l ) -> if (String.equal var.v_name x) then [l] else []
@@ -158,7 +151,7 @@ let rec init lcom =
    
    let generate_cfg program =
      let nodes = blocks program in
-     let nodesmap = blocks2map nodes in
+     let nodesmap = blocks_to_map nodes in
      let edges = flow program in
      let pre_map = precessor_map nodes edges in
      let suc_map = successor_map nodes edges in
@@ -173,3 +166,11 @@ let rec init lcom =
 
    
   
+
+  
+let print_cfg_edges flow =
+  List.fold_left ~f:(fun () (x,  y) -> Printf.printf "edge %d->%d \n" (print_label x) (print_label y)  ) ~init:() flow 
+  
+    
+let print_out_cfg_edges oc flow =
+  List.fold_left ~f:(fun () (x,  y) -> Printf.fprintf oc "%d,%d;" (print_label x) (print_label y)) ~init:() flow   

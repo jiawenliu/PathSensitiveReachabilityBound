@@ -135,10 +135,6 @@ let print_block b =
   | Queryblock (var, q, l) -> sprintf "QueryBlock: [ %s = query( %s) ]^{%d}" var.v_name (print_qexpr q) (print_label l)
   | Testblock (b, l) ->     sprintf "TestBlock:[%s]^{%d}" (print_bexpr b) (print_label l)
 
-  let isQuery b =
-    match b with
-    | Queryblock (_, _, _) -> 1
-    | _ ->     0
   
 
 let rec print_lcommand lcom = 
@@ -151,19 +147,3 @@ let rec print_lcommand lcom =
   | If ( b, lc_1 , lc_2,  l) -> sprintf " If [ %s ]^{%d} \n then {%s} else { %s }"  (print_bexpr b) (print_label l) (print_lcommand lc_1)  (print_lcommand lc_2)
 
 
-  let get_label_from_block block =
-    match block with
-    | Skipblock l ->  (print_label l)
-    | Assignblock (_, _, l) -> (print_label l)
-    | Queryblock (_, _, l) -> (print_label l)
-    | Testblock (_, l) ->  (print_label l)
-
-  let print_flow flow =
-    List.fold_left (fun () (x,  y) -> Printf.printf "edge from %d to %d \n" (print_label x) (print_label y)  ) () flow 
-
-  
-    let print_out_flow oc flow =
-      List.fold_left (fun () (x,  y) -> Printf.fprintf oc "%d,%d;" (print_label x) (print_label y)  ) () flow   
-
-    let print_out_dcdg oc edges =
-        List.fold_left (fun () (lx,  ly) -> Printf.fprintf oc "%d,%d;" (get_label_from_lvar lx) (get_label_from_lvar ly)  ) () edges   

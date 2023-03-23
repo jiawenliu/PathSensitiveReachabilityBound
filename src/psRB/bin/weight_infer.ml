@@ -1,6 +1,6 @@
 open Syntax
 open Printf
-
+open Cfg
 
 let check_nested_while program = 
   let rec contains_while lcom = 
