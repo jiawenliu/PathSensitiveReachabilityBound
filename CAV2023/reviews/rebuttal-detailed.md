@@ -11,9 +11,9 @@ In order to do this, this steps will compute two quantities: first, it will recu
 If a ranking function is increased in an edge of its nested loop, then this mutual recursion is non-terminating. In this case, we identify a cycle and produce infinity as the bound.
 
 
-In the running example, $i$ is reset by $k+m$ and $k$ is reset by $i - m$.
+In the walk through example, $i$ is reset by $k+m$ and $k$ is reset by $i - m$.
 We use the method in Definition 30 in appendix to compute a variable reset graph.
-Then we use a variable renaming method to unify the variable name of $k$ and $i$ into a same new variable $z$.
+Then we use the variable renaming method to unify the variable name of $k$ and $i$ into a same new variable $z$.
 Then this new variable $z$ is the ranking function of all edges where $k$ and $i$ were, and $z$ is only reset on the edge $0 \to 1$ by input variable $n$. $VB(n) = n$ because it is input variable.
 So we compute the upper bound invariant for $z$ is $n$, and
 the upper bound invariant for both $i$ and $k$ is $n$ as well.
@@ -22,12 +22,11 @@ the upper bound invariant for both $i$ and $k$ is $n$ as well.
 -------------------------------
 When there are multiple nested loops, we compute for a simple transition path its loop reachability-bound w.r.t. every level of outer loop.
 
-Considering an example, $tp$ is in a loop $l_0$, and it has two outer loops $l_1$ and $l_2$, $l_1$ is nested in $l_2$.
-Then we compute two loop reachability-bounds,
-$loopRB(tp, l_1)$ and $loopRB(tp, l_2)$ for $tp$.
-We do this by computing $lpinit(l_2, tp)$, $lpnext(l_2, tp)$ and $rFinal(tp)$ for $loopRB(tp, l_2)$ and
+For example, if $tp$ is in the loop $l_0$ and it has two outer loops $l_1$ and $l_2$,
+we compute two loop reachability-bounds.
+$loopRB(tp, l_1)$ and $loopRB(tp, l_2)$.
+We compute $lpinit(l_2, tp)$, $lpnext(l_2, tp)$ and $rFinal(tp)$ for $loopRB(tp, l_2)$ and
 $lpinit(l_1, tp)$, $lpnext(l_1, tp)$ and $rFinal(tp)$ for $loopRB(tp, l_1)$ respectively.
-
 
 
 
@@ -36,13 +35,17 @@ $lpinit(l_1, tp)$, $lpnext(l_1, tp)$ and $rFinal(tp)$ for $loopRB(tp, l_1)$ resp
 
 There are some situations where reasoning the path-sensitivity is important.
 For example,
-in the smart contract context, precisely estimating the gas consumption is crucial to deploy the contract, send transition and identify the DoS attack. 
-By the paper ``Demystifying Loops in Smart Contracts. ASE 2020``, there are 30% of the smart contracts have if-control in the loop. Some papers 
+in the smart contract context, precisely estimate the gas consumption is crucial to deploy the contract, send transition and identify the DoS attack. 
+By the paper ``Demystifying Loops in Smart Contracts. ASE 2020``, there are 30% of the smart contract have if-control in the loop. Some research papers 
 also identified program patterns where the if-control in the loop can cause gas wasting and paper ``MadMax: Surviving Out-of-Gas Conditions in Ethereum Smart Contracts`` shows that the existence of the gas wasting can cause the DoS attack.
-In these programs, since every operation consumes different amount of gas (or generally in any context where operations on different branches consumes different type of resources).
-A complexity analysis without reasoning the path-sensitivity could
-over-approximate the gas consumption largely and causes many gas-related vulnerabilities.
-We also identified the loop pattern in some unbounded programs where the visiting times of the locations in certain branches are still bounded.
+In these programs, we find some loop patterns where the reachability of one branch in an if-control is only 1 while the other branch is significantly large. 
+Since every operation consumes different amount of gas (or generally in any context where operations on different branches consumes different type of resources).
+A resource cost analysis without reasoning the path-sensitivity could
+over-approximate the gas consumption largely.
+In this sense, the sender must pay a lot of money in order to execute a transition, or even prefer not to deploy a contract.
+An adversary could manipulate the input data that iterating only the branch that consume bigger gas and trigger a DoS attack.
+We also identified the loop pattern in the unbounded programs, 
+such that the visiting times of the points in one branch of an if-control are still bounded. 
 This pattern is common in the concurrency system where an operation is locked and waiting for the signal of the other operation. 
 
 
