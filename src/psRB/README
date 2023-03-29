@@ -2,3 +2,8 @@ cd psRB
 $sh psRB.sh ./examples/xxx.br
 
 $sh psRB.sh ./eval/xxx.br
+
+
+## Batch Evaluation
+
+$sh psRB-batch.sh ./eval/inputs/xxx/

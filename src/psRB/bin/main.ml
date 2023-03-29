@@ -44,49 +44,46 @@ let _ =
 (* PARSE PROGRAM NAME *)
   let (infile , outfile) = parseArgs () in 
   let prog_name = parse_program_name infile in
-      Printf.printf "The Input File is : %s\n" prog_name;
-      (******************** run the parser code  ********************)
-        let t = Caml_unix.gettimeofday () in
-        let parsed_program = parse_prog infile in
-        let string_result = print_lcommand parsed_program in
-        Printf.printf "The input program is : %s\n" string_result;
-        Printf.printf "computation of the program parsing time:%fs\n" (Caml_unix.gettimeofday () -. t) ;
+  Printf.printf "The Input File is : %s\n" prog_name;
+  (******************** run the parser code  ********************)
+    let t = Caml_unix.gettimeofday () in
+    let parsed_program = parse_prog infile in
+    let string_result = print_lcommand parsed_program in
+    Printf.printf "The input program is : %s\n" string_result;
+    Printf.printf "computation of the program parsing time:%fs\n" (Caml_unix.gettimeofday () -. t) ;
 
-        (******************** generate the control flow graph  ********************)
+  (******************** generate the control flow graph  ********************)
+    let cfg_result = Cfg.generate_cfg parsed_program in 
+    let blocks = cfg_result.nodes in
+    Printf.printf "The Toal Line number is : %d\n" (List.length blocks);
+    Printf.printf "computation of the control flow graph generation time:%fs\n" (Caml_unix.gettimeofday () -. t) ;      
+  (******************** save the control flow graph into file  ********************)
+    let outfile_cfg = 
+      if (String.equal outfile "")  then "./cfg/" ^ prog_name else outfile in
+    let cfg_oc = Out_channel.create outfile_cfg in
+    Printf.fprintf cfg_oc "%d\n" (List.length blocks);
+    Cfg.print_out_cfg_edges cfg_oc cfg_result.edges;
+    Printf.fprintf cfg_oc "\n";
 
-        let cfg_result = Cfg.generate_cfg parsed_program in 
-        let blocks = cfg_result.nodes in
-        let _ =  Printf.printf "The Toal Lines is : %d\n" (List.length blocks) in 
-        Printf.printf "computation of the control flow graph generation time:%fs\n" (Caml_unix.gettimeofday () -. t) ;      
-      
-        (******************** save the control flow graph into file  ********************)
-        let outfile_cfg = 
-          if (String.equal outfile "")  then "./cfg/" ^ prog_name else outfile in
-        let cfg_oc = Out_channel.create outfile_cfg in
-        Printf.fprintf cfg_oc "%d\n" (List.length blocks);
-        Cfg.print_out_cfg_edges cfg_oc cfg_result.edges;
-        Printf.fprintf cfg_oc "\n";
-      (******************** light weight inference ********************)  
-        let weight_time = Caml_unix.gettimeofday () in
-        let weight_list  = Weight_infer.infer parsed_program cfg_oc blocks in 
-      (******************** print light weight inference result ********************)
-        Weight_infer.print_weight_list  weight_list ;
-        Printf.printf "computation of the weight infer time:%fs\n" (Caml_unix.gettimeofday () -. weight_time) ;
-      
-      (******************** Close dcfg and light weight Output File  ********************)
-        Out_channel.close cfg_oc;  
+  (******************** light weight inference ********************)  
+    let weight_time = Caml_unix.gettimeofday () in
+    let weight_list  = Weight_infer.infer parsed_program cfg_oc blocks in 
+    Weight_infer.print_weight_list  weight_list ;
+    Printf.printf "computation of the naive weight infer time:%fs\n" (Caml_unix.gettimeofday () -. weight_time) ;
 
-      (******************** run abscfg code  ********************)
-      let time_abscfg = Caml_unix.gettimeofday () in
-      let outfile_abscfg = if (String.equal outfile "")  then "./abscfg/" ^ prog_name else outfile  in 
-      let oc = Out_channel.create outfile_abscfg in
-      (******************** run abscfg  ********************)
-      Printf.printf "The abstract transition graph result:\n";
-      let aflow = Abs.abs parsed_program in
-      let _ =  Printf.fprintf oc "%d\n" (List.length blocks + 1)  in 
-      Abs.print_out_abs_flow_edges oc aflow;
-      Printf.fprintf oc "\n";
-      Abs.print_out_abs_flow oc aflow;
-      Printf.printf "computation of the abscfg total time:%fs\n" (Caml_unix.gettimeofday () -. time_abscfg) ;
-      (* Close Channel *)
-      Out_channel.close oc                    
+  (******************** print light weight inference result ********************)
+    Out_channel.close cfg_oc;  
+    
+  (******************** run abscfg code  ********************)
+    let time_abscfg = Caml_unix.gettimeofday () in
+    let outfile_abscfg = if (String.equal outfile "")  then "./abscfg/" ^ prog_name else outfile  in 
+    let oc = Out_channel.create outfile_abscfg in
+  (******************** run abscfg  ********************)
+    Printf.printf "The abstract transition graph result:\n";
+    let aflow = Abs.abs parsed_program in
+    let _ =  Printf.fprintf oc "%d\n" (List.length blocks + 1)  in 
+    Abs.print_out_abs_flow_edges oc aflow;
+    Printf.fprintf oc "\n";
+    Abs.print_out_abs_flow oc aflow;
+    Printf.printf "computation of the abscfg total time:%fs\n" (Caml_unix.gettimeofday () -. time_abscfg) ;
+    Out_channel.close oc                    

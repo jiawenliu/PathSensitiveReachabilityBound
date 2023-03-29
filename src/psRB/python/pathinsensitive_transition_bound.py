@@ -169,19 +169,6 @@ class TransitionBound:
         pass
 
 
-    # def collect_reset_chains(self, v):
-    #     for (transition_index, dc_var, dc_const) in self.reset_transitions[v]:
-    #         if dc_var and (dc_var not in self.reset_vars[v]) and (not (dc_var == v)):
-    #             self.reset_vars[v].add(dc_var)
-    #             if (not self.var_reset_chains[dc_var]):
-    #                 self.collect_reset_chains(dc_var)
-    #             for dc_var_rchain in self.var_reset_chains[dc_var]:
-    #                 self.var_reset_chains[v].append(list(filter(lambda x: (x[0] != transition_index and x[1] != v), dc_var_rchain))+[(transition_index, dc_var, dc_const)])
-    #             for rv in self.reset_vars[dc_var]:
-    #                 self.reset_vars[v].add(rv)
-    #         else:
-    #             self.var_reset_chains[v].append([(transition_index, dc_var, dc_const)])
-    #     return
 
 
 ######################################################################## The Optimized Computation for The Variable Max Value Bound ########################################################################
@@ -240,6 +227,7 @@ class TransitionBound:
             If it is not yet computed: Recusive Call
             Else: Terminate if there is a Loop Detected
             '''
+
             '''
             Compute the Increased Value For All the Local Bound's Reset Variables:
             '''
@@ -306,6 +294,7 @@ class TransitionBound:
             self.transition_bounds[t_index] = self.transition_bounds[t_index] if c == "1" else "{}/{}".format(self.transition_bounds[t_index], c)
         
         return self.transition_bounds[t_index]
+
 
 
 ######################################################################## Computation Intereface ########################################################################
