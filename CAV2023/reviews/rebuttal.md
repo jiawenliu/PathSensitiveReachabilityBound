@@ -39,7 +39,7 @@ For example,
 in the smart contract context, precisely estimating the gas consumption is crucial to deploy the contract, send transition and identify the DoS attack. 
 By the paper ``Demystifying Loops in Smart Contracts. ASE 2020``, there are 30% of the smart contracts have if-control in the loop. Some papers 
 also identified program patterns where the if-control in the loop can cause gas wasting and paper ``MadMax: Surviving Out-of-Gas Conditions in Ethereum Smart Contracts`` shows that the existence of the gas wasting can cause the DoS attack.
-In these programs, since every operation consumes different amount of gas (or generally in any context where operations on different branches consumes different type of resources).
+In these programs, since every operation consumes different amount of gas (or generally in any context where different operations consume different type of resources).
 A complexity analysis without reasoning the path-sensitivity could
 over-approximate the gas consumption largely and causes many gas-related vulnerabilities.
 We also identified the loop pattern in some unbounded programs where the visiting times of the locations in certain branches are still bounded.
