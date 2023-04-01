@@ -42,8 +42,7 @@ also identified program patterns where the if-control in the loop can cause gas 
 In these programs, since every operation consumes different amount of gas (or generally in any context where different operations consume different type of resources).
 A complexity analysis without reasoning the path-sensitivity could
 over-approximate the gas consumption largely and causes many gas-related vulnerabilities.
-We also identified the loop pattern in some unbounded programs where the visiting times of the locations in certain branches are still bounded.
-This pattern is common in the concurrency system where an operation is locked and waiting for the signal of the other operation. 
+We also identified the loop pattern in some unbounded programs in the concurrency system where the visiting times of the locations in certain branches are still bounded.
 
 
 ## The advance in this paper compared to Gulwani et al.[29]
