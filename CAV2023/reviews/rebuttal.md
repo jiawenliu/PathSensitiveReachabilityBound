@@ -14,7 +14,7 @@ If a ranking function is increased in an edge of its nested loop, then this mutu
 In the running example, $i$ is reset by $k+m$, and $k$ is reset by $i - m$.
 We use the method in Definition 30 in the appendix to compute a variable reset graph.
 Then we use a variable renaming method to unify the variable name of $k$ and $i$ into the same new variable $z$.
-Then this new variable $z$ is the ranking function of all edges where $k$ and $i$ were, and $z$ is only reset on the edge $0 \to 1$ by input variable $n$. $VB(n) = n$ because it is input variable.
+Then this new variable $z$ is the ranking function of all edges where $k$ and $i$ were, and $z$ is only reset on the edge $0 \to 1$ by input variable $n$. $VB(n) = n$ because $n$ is an input variable.
 So we compute the upper bound invariant for $z$ is $n$, and
 the upper bound invariant for both $i$ and $k$ is $n$ as well.
 
@@ -36,12 +36,12 @@ $lpinit(l_1, tp)$, $lpnext(l_1, tp)$ and $rFinal(tp)$ for $loopRB(tp, l_1)$ resp
 
 There are some situations where path-sensitivity is important.
 For example,
-in the smart contract context, precisely estimating the gas consumption is crucial to deploy the contract, sending transition, and identifying the DoS attack.
-In the paper ``Demystifying Loops in Smart Contracts``, there are 30% of the smart contracts have if-control in the loop. Some papers 
+in the smart contract context, precise gas consumption estimation is crucial to deploy the contract, send transition, and identify the DoS attack.
+According to the paper ``Demystifying Loops in Smart Contracts``, 30% of smart contracts have if-control in the loop. Some papers 
 also identified program patterns where the if-control in the loop can cause gas wasting and the paper ``MadMax: Surviving Out-of-Gas Conditions in Ethereum Smart Contracts`` shows that the existence of the gas wasting can cause the DoS attack.
-In these programs, every operation consumes a different amount of gas (or generally in any context where different operations consume different types of resources).
+In these programs, every operation consumes different amounts of gas (or generally in any context where different operations consume different types of resources).
 A complexity analysis without reasoning the path-sensitivity could
-over-approximate the gas consumption largely and causes many gas-related vulnerabilities.
+over-approximate the gas consumption largely and cause many gas-related vulnerabilities.
 We also identified the loop pattern in some unbounded programs where the visiting times of the locations in certain branches are still bounded.
 
 
@@ -49,18 +49,17 @@ We also identified the loop pattern in some unbounded programs where the visitin
 -----------------------------------
 We decompose the computation of reachability-bound into the path reachability-bound and the loop reachability-bound.
 The loop reachability-bound precisely computes w.r.t. the outer loop the times that the inner loop is ``reached''.
-While the progress invariant method in Gulwani et al.[29] only compute the iteration of the inner loop w.r.t. one iteration of the outer loop.
+While the progress invariant method in Gulwani et al.[29]  computes the iteration times of the inner loop w.r.t. the outer loop.
 
 In the running example, loop $L_4$ is nested in $L_1$.
-By Section 6 in Gulwani et al.[29], progress invariant method computes $I(L_4, L_1)$,
-the total iterations of $L_4$ in each iteration of $L_1$, which is $n - m$.
-
+By Section 6 in Gulwani et al.[29], progress invariant method computes $I(L_4, L_1)$ which is
+the total iterations of $L_4$ in each iteration of $L_1$, i.e., $n - m$.
 Then by the computation in Figure 5,
 the $BOUND(L_1) = T(L_1) \times c$
 and $c = a_1 + a_4 \times I(L_4, L_1)$.
-$a_1$ and $a_4$ are the numbers of statements in loop $L_1$ and $L_4$ respectively to equation (1) in Figure 5.
-$T(L_1)$ is computed by function BOUNDFINDERD in Section 6.1, which is $\frac{m}{4}$.
-So it produces the over-approximation for the complexity of $L_1$, $BOUND(L_1) = \frac{m}{4} \times (a_1 + a_2 \times (n - m))$.
+$a_1$ and $a_4$ are the numbers of statements in loop $L_1$ and $L_4$ respectively by equation (1) in Figure 5.
+$T(L_1)$ is computed by BOUNDFINDERD in Section 6.1, which is $\frac{m}{4}$.
+So $BOUND(L_1) = \frac{m}{4} \times (a_1 + a_2 \times (n - m))$, and this result over-approximates the complexity of $L_1$.
 We would expect it to be $\frac{m}{4} \times a_1 + 1 \times a_2 \times (n - m)$
 
 
