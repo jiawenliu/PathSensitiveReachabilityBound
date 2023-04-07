@@ -78,8 +78,9 @@ However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simp
 Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it visits a loop header $4$ inside the path. $1 \to 2 \to 3$ isn't either because its end-point isn't a loop header.
 In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
 
-\subsection{Program Refinement}
-\paragraph{Rewrite the Program.}
+\subsection{Program Rewrite}
+\paragraph{Rewritten syntax}
+
 \begin{algorithm}
   \caption{Program Rewriting $\kw{Rewrite}$}
   \label{alg:alg-refine_rewrite}
@@ -117,9 +118,120 @@ while and sequence statement in paper~\cite{GulwaniJK09} respectively.
   Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
 \end{itemize}
 % \todo{soundness of the program write}
-\paragraph{Refined Program}
-We implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
-refined program $\rprog$ for a rewritten program $c$.
+\subsection{Program Refinement}
+% We implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
+% refined program $\rprog$ for a rewritten program $c$.
+
+\paragraph{Contextualization}
+
+\[
+  cxlG(c) = (cxlV, cxlE)
+  \]
+  \[cxlV = \tpath \in \paths(\absG(c))
+  \]
+  \[
+    cxlE = (\tpath_1, \tpath_2)\]
+
+$cxlV$ is the set contains all program $c$'s simple transition paths.
+$cxlE$ is a set of edges between two simple transition paths of program $c$. There is an edge from $\tpath_1$ to $\tpath_2$
+if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
+% We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~10 and build the edge.
+
+\paragraph{Path Interleaving Refinement}
+\begin{algorithm}
+  \caption{
+  {Interleaving Refinement}
+  \label{alg:prog-refine}
+  }
+  \begin{algorithmic}[1]
+  \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
+  % the target while loop with label $l$.
+  \STATE  \textbf{Init} 
+  % $W(c) = \{\tpath_1, \cdots, \tpath_m\}$ is initialized as a set of all the simple transition paths in $\absG(c)$.
+  % \\
+  % \qquad Finding all simple transition paths $\tpath_1, \cdots, \tpath_m \in \absG(c)$.
+  % \STATE  
+  % \textbf{For} every simple transition paths $\tpath_1, \cdots, \tpath_m$:
+  % %  having the same starting and ending label:
+  % \\
+  % \quad Generating
+  % $\rpattern_{i} = \tpath_i$ and add into $R(c)$.
+  %  otherwise $\rpattern_i = \tpath_i$.
+  % \\
+  % \quad Adding $\rpattern_{i}$ into $R(c)$.
+  % \\
+  $R_l = \{\}$ initial set for each loop with header at program point $l$, (i.e., set of the transition sequences from interleaving-refinement) .
+  % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
+  \STATE Define algorithm \highlight{$\kw{dfs(w, I_0, Q)}$:}
+  \STATE \quad {$\kw{I = Q.top}$:}
+  \STATE \quad \textbf{For} each simple transition path $\tpath'$ that can execute right after $\tpath$,
+  $(\tpath, \tpath') \in cxlE(c)$ and $\tpath \neq \tpath'$;
+  \\
+  % \quad \quad \todo{and can execute under the precondition $FS$ (the final state of executing last simple transition path in $w$), 
+  % i.e., $FS \implies IS'$ ==>:}
+  % \\
+  \STATE \quad \quad $\kw{w' = w.append(\tpath')}$
+  \\
+  \quad \quad \highlight{Compute Invariant $\kw{I' = API(\tpath', I)}$}
+  \STATE  \quad \quad Compute the exiting condition of $\tpath'$ (/ or Invariant by  API) $I'$ and the 
+  post condition (or final state) of executing $\tpath'$, $FS'$.
+  % \STATE \quad \quad \todo{\textbf{If} $\kw{I' \implies I_l}$}
+  \STATE \quad \quad \textbf{If} \highlight{$\kw{I' \in Q}$}
+  \STATE \quad \quad \textbf{then}
+  % let $i$ be the index such that 
+  Let $w = [\tpath_1, \cdots; \tpath_n]$, $Q = [I_1, \cdots, I_n]$, and $i$ be the index such that $I_i = I'$
+  \\ \quad \quad \quad \quad \quad
+  $\kw{R_l.append(\tpath_1; \cdots; \tpath_{i - 1}; (\tpath_i; \cdots; \tpath')^*)}$
+  % \STATE \quad \quad \todo{\textbf{else} $\kw{dfs(w', I_l, FS')}$}
+  \STATE \quad \quad  \highlight{\textbf{else If} 
+  $\kw{I' \neq \bot}$ \textbf{then} ${\kw{dfs(w', I_0, Q.push(I'))}}$}
+  %  \\ \quad \quad if $\rpattern_i$ ending at $l$ and $\rpattern_j$ starting at $l$.
+  % \STATE  \quad \textbf{For} every repeat pattern $\rpattern_1, \cdots, \rpattern_m \in R(c)$
+  % \STATE \quad \quad  Generate $\rpattern' = \rpattern_{i}; \rpattern_{j} $ 
+  % if the execution condition of $\rpattern_{j}$
+  % is true after $\rpattern_{j}$'s executing condition is false.
+    \STATE \textbf{For} each loop $c_{l}$ with header at program point $l$, 
+    \STATE \quad \todo{compute the exiting condition (or invariant by API) $I_l$,
+    and the final state (i.e., post condition) of executing this loop $FS_l$:}
+    \STATE \quad \highlight{Compute Invariant $\kw{I_0 = API(c_{l}, \etrue)}$}
+    \STATE \quad computing $\kw{dfs([], I_0, [I_0] )}$
+  \RETURN $R_l$ for every while loop with its header at $l$.
+  \end{algorithmic}
+  \end{algorithm}
+
+  % \begin{lem}[\todo{possible unsoundness}]
+  %   There doesn't exist nested loop patterns inside one loop.
+  % \end{lem}
+  For example, the loop pattern as this,
+  $(\tpath_1;(\tpath_2;\tpath_{3})^*;\tpath_4)^*$ is impossible 
+  and will not be generated by both our algorithm and the REFINE algorithm in \cite{GulwaniJK09}.
+\begin{proof}
+\textbf{Soundness Informal}
+
+The program execution will never reach $\tpath_4$ after the executions of
+$(\tpath_1;(\tpath_2;\tpath_{3})$.
+
+Let $Q = [I_1, I_2, I_3]$ be the program state after executing
+$\tpath_1$, $\tpath_2$ and $\tpath_3$ consecutively.
+
+Then after executing $\tpath_1$,
+every time when program executes $\tpath_{3}$ after $\tpath_2$,
+the program state will go back to $I_2$ and start the local loop $\tpath_2; \tpath_3$.
+
+In this way, program execution will terminate until local loop $\tpath_2;\tpath_3$.
+\end{proof}
+
+The accuracy improvement comes from the line:4 and Line:8.
+    In comparison to the traditional multiple-paths refinement methods,
+    \\
+    the contextualization method in~\cite{ZulegerGSV11} only build the relations between pairs of
+    simple transition paths if they can execute after each other, which is imprecise if there are multiple paths
+    can execute after a same path.
+    \\
+    The program refinement algorithm in~\cite{GulwaniJK09} has the same annotations on some transition paths,
+    but they only has the guarantee that
+    the annotated path can execute multiple times.
+    In this sense, their method is imprecise in the same case as the contextualization method.
 
 \paragraph[example]{Walk through Example.}
 Look again the walk through example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
