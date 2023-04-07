@@ -4,19 +4,20 @@
 \mbox{Arithmetic Operators} 
 & \oplus_a & ::= & + ~|~ - ~|~ \times 
 %
-~|~ \div ~|~ \emax ~|~ \emin
+~|~ \div
 \\  
 \mbox{Arithmetic Expression} 
 & \aexpr & ::= & 
-n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  
- ~|~ \elog \aexpr  ~|~ \esign \aexpr
+n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  ~|~ \emax (a, a) ~|~ \emin(a, a)
 \\
 \mbox{Boolean Expression} & \bexpr & ::= & 
 %
 \etrue ~|~ \efalse  ~|~ \neg \bexpr
  ~|~ \bexpr \land \bexpr
 %
-~|~ \bexpr \lor \bexpr
+~|~ \bexpr \lor \bexpr 
+\\
+& & &
 ~|~ \aexpr \leq \aexpr 
 ~|~ \aexpr < \aexpr 
 ~|~ \aexpr = \aexpr 
@@ -35,7 +36,9 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr
 \mbox{Labeled Command} 
 & {c} & ::= &  
 \clabel{\assign{x}{\expr}}^l 
-~|~  \clabel{\eskip}^l
+~|~  \clabel{\eskip}^l 
+\\
+& & &
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c}  
@@ -197,64 +200,86 @@ We also define for $\infty$ the following mathematic computation with arbitrary 
  \aconfig{\min(\aexpr, \infty)} (\trace) = \aexpr
  &
  \aconfig{\max(\aexpr, \infty)} (\trace) = \infty
- &
- \aconfig{\elog(\infty)} (\trace) = \infty
- &
- \aconfig{\esign(\infty)} (\trace) = 1
   \end{array}
  \]
 % and
 % $\aconfig{\aexpr + \bot} (\trace) = \bot$, $\aconfig{\max(\aexpr, \bot)} (\trace) = \aexpr$, etc. respectively 
 \begin{figure}
-\begin{mathpar}
-  \boxed{ \aconfig{} \, : \, \mbox{Arithmetic Expression $\to$ Trace $\to$ Arithmetic Value}}
-  \\
-  \inferrule{ 
-    \empty
-  }{
-   \aconfig{n} (\trace)
-   = n
-  }
-  \and
-  \inferrule{ 
-    \env(\trace) x = v
-  }{
-   \aconfig{x} (\trace)
-   = v
-  }
-  \and
-  \inferrule{ 
-    \aconfig{\aexpr_1}(\trace) = v_1
-    \and 
-    \aconfig{\aexpr_2}(\trace) = v_2
-    \and 
-     v_1 \oplus_a v_2 = v
-  }{
-   \aconfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
-   = v
-  }
-  \and
-  \inferrule{ 
-    \aconfig{\aexpr}(\trace) = v'
-    \and 
-    \elog v' = v
-  }{
-   \aconfig{\elog \aexpr}(\trace) 
-   = v
-  }
-  \and
-  \inferrule{ 
-    \aconfig{\aexpr}(\trace) = v'
-    \and 
-    \esign v' = v
-  }{
-   \aconfig{\esign \aexpr} (\trace)
-   = v
-  }
-   \end{mathpar}
-   \caption{Evaluation Rules of Arithmetic Expression}
-   \label{fig:aexpr-eval}
-   \end{figure}
+  \begin{mathpar}
+    \boxed{ \aconfig{} \, : \, \mbox{Arithmetic Expression $\to$ Trace $\to$ Value}}
+    \\
+    \inferrule{ 
+      \empty
+    }{
+     \aconfig{n} (\trace)
+     = n
+    }
+    \and
+    \inferrule{ 
+      \env(\trace) x = v
+    }{
+     \aconfig{x} (\trace)
+     = v
+    }
+    \and
+    \inferrule{ 
+      \aconfig{\aexpr_1}(\trace) = v_1
+      \and 
+      \aconfig{\aexpr_2}(\trace) = v_2
+      \and 
+       v_1 \oplus_a v_2 = v
+    }{
+     \aconfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
+     = v
+    }
+    \and
+    \inferrule{ 
+      \aconfig{\aexpr_1}(\trace) = v_1
+      \and 
+      \aconfig{\aexpr_2}(\trace) = v_2
+      \and 
+       v_1 < v_2
+    }{
+     \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
+     = v_2
+    }
+    \and
+    \inferrule{ 
+      \aconfig{\aexpr_1}(\trace) = v_1
+      \and 
+      \aconfig{\aexpr_2}(\trace) = v_2
+      \and 
+       v_1 \geq v_2
+    }{
+     \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
+     = v_1
+    }
+    \and
+    \inferrule{ 
+      \aconfig{\aexpr_1}(\trace) = v_1
+      \and 
+      \aconfig{\aexpr_2}(\trace) = v_2
+      \and 
+       v_1 < v_2
+    }{
+     \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
+     = v_1
+    }
+    \and
+    \inferrule{ 
+      \aconfig{\aexpr_1}(\trace) = v_1
+      \and 
+      \aconfig{\aexpr_2}(\trace) = v_2
+      \and 
+       v_1 \geq v_2
+    }{
+     \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
+     = v_2
+    }
+     \end{mathpar}
+     \caption{Evaluation rules of arithmetic expression}
+     \label{fig:aexpr-eval}
+     \end{figure}
 
  The evaluation rules for boolean expression, $\bconfig{} : \booldom \to \tdom \to \mathcal{V}$ and
  standard expression, $\econfig{} : (\mathcal{A} \cup \booldom) \to \tdom \to \mathcal{V}$ are in Figure~\ref{fig:bexpr-eval} and Figure~\ref{fig:expr-eval} respectively.
@@ -307,7 +332,7 @@ We also define for $\infty$ the following mathematic computation with arbitrary 
    = v
   }
   \end{mathpar}
-  \caption{Evaluation Rules of Boolean Expression}
+  \caption{Evaluation rules of boolean expression}
   \label{fig:bexpr-eval}
   \end{figure}
   
@@ -347,7 +372,7 @@ We also define for $\infty$ the following mathematic computation with arbitrary 
    = v
   }
    \end{mathpar}
-   \caption{Evaluation Rules of Standard Expression}
+   \caption{Evaluation rules of standard expression}
    \label{fig:expr-eval}
    \end{figure}
 
@@ -593,3 +618,4 @@ specifically the trace has the property that its length never decreases during t
     \end{array}
     \]
   \end{lem}
+  Specifically the trace has the property that its length never decreases during the program execution.

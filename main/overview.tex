@@ -48,7 +48,7 @@ each $\tpath_i$ is a \emph{simple transition path} we computed in a pre-procedur
 The interleaving patterns of these \emph{simple transition path}s are explicated in the refined program.
 % Every path will not interleave with the others. 
 Then we compute the \emph{path reachability-bound} for every $\tpath_i$,
-$\inoutB(\rprog, \tpath_i)$ during the execution of $\rprog$ through the ranking function estimation in Section~\ref{sec:psRB-rank} and the algorithm in Section~\ref{sec:psRB-pathlocalrb} to compute the result as
+$\inoutB(\rprog, \tpath_i)$ during the execution of $\rprog$ through the ranking function estimation in Section~\ref{sec:rank} and the algorithm in Section~\ref{sec:pathlocalrb} to compute the result as
 % which is a bound on the reachability time of $\tpath$ during the execution of $\rprog$.
 % The \emph{path reachability-bound}s for the four simple transition paths in this example are
 $\inoutB(\rprog, \tpath_1) = \max\{m, m \times \frac{n}{m} \}$,
@@ -147,7 +147,7 @@ We use $\rprog_1$ and $\rprog_3$ denote the body of the loop $L_1$ and $L_3$ res
 % and $\rprog_3 = {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}$
 In the first step, we still compute the \emph{path reachability-bound} locally for each $\tpath_i$ but only w.r.t. the innermost loop in which $\tpath_i$ is nested.
 Then differently from $\kw{twoPathsWhile}$,
-we compute \emph{loop reachability-bound}, $\lpchB(\rprog_j, \tpath_i)$ for each $\tpath_i$ w.r.t. each of its outer loop by the algorithm in Section~\ref{sec:psRB-looprb}.
+we compute \emph{loop reachability-bound}, $\lpchB(\rprog_j, \tpath_i)$ for each $\tpath_i$ w.r.t. each of its outer loop by the algorithm in Section~\ref{sec:looprb}.
 For $\tpath_3$ we compute
 $\lpchB(1: \rprog_1, \tpath_3) = 1$ and
 $\lpchB(3: \rprog_3, \tpath_3) = 1$.

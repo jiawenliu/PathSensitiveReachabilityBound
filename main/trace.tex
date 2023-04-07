@@ -21,7 +21,7 @@ The trace-based semantics with non-terminating execution is defined below follow
 
 We use list notation for traces, where $[]$ is the empty trace, the operator $\traceadd$ combines an event and a trace in a new event, 
 and the operator $\tracecat$ concatenates two traces formally defined as follows. 
-\highlight{
+
 \begin{defn}[Trace Concatenation, $\tracecat: \tdom \to \tdom\to \tdom $]
   \label{def:trace_concate}
 Given two traces $\trace_1 \in \tdom, \trace_2 \in \tdom$, the trace concatenation operator 
@@ -31,13 +31,14 @@ $\tracecat$ is defined as:
 \left\{
 \begin{array}{ll} 
   \trace_1 & \trace_2 = [] \lor \trace_1 \in \inftdom \\
-  ((\trace_1 :: \event)  \tracecat \trace_2') & \trace_1 \in \ftdom \land \trace_2 = [\event] \tracecat \trace_2'
+  \trace_2 & \trace_1 = [] \lor \trace_2 \in \inftdom \\
+  (\trace_1   \tracecat \trace_2'):: \event & \trace_1 \in \ftdom \land \trace_2 = \trace_2' :: \event
   % \trace_2 &  \trace_2 \in \inftdom \\
 \end{array}
 \right.
 \]
 \end{defn}
-}
+
 \begin{defn}(An Event Belongs to A Trace)
   An event $\event \in \eventset$ belongs to a trace $\trace \in \tdom$, i.e., $\event \in \trace$ are defined as follows:
 %
@@ -59,7 +60,7 @@ As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't be
 In the rest of the paper, we denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 \begin{defn}[Counter Notation for Program Point]
   \label{def:counter}
-The counting operator $\counter : \tdom \to \ldom \to (\mathbb{N} \cup \{\bot\})$
+The counting operator $\counter : \tdom \to \ldom \to (\mathbb{N} \cup \{\bot, \infty\})$
 counts the appearance of a label in a trace.
 \[
 \begin{array}{llll}
