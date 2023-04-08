@@ -79,30 +79,30 @@ Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition p
 In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is not a \emph{simple transition path} on $\absG(\kw{threeNestedWhile}(n, m, N))$ because it visits a loop header $3$ inside the path.
 
 \subsection{Program Rewrite}
-\paragraph{Rewritten syntax}
+\paragraph{Syntax.}
 
+\paragraph{Rewrite Algorithm.}
 \begin{algorithm}
   \caption{Program Rewriting $\kw{Rewrite}$}
   \label{alg:alg-refine_rewrite}
   \begin{algorithmic}[1]
-    \REQUIRE program $c$
-    \STATE collects all $c$'s \emph{simple transition path}s from $\absG(c)$, $\tpath_1, \ldots, \tpath_n \in \paths(\absG(c))$.
+    \REQUIRE program $c$ and all \emph{simple transition path}s, $\tpath_1, \ldots, \tpath_n \in \paths(\absG(c))$.
+    % \STATE collects all $c$'s \emph{simple transition path}s from $\absG(c)$, $\tpath_1, \ldots, \tpath_n \in \paths(\absG(c))$.
     \STATE \textbf{init}: candidate set $W = \{c_1, \ldots, c_n\}$, where $c_i = \tpath_i$ and $i = 1, \ldots, n$
     \STATE \textbf{while} $W.size()> 1$:
-    \STATE \quad create $c' = \rpchoose{c_1, \ldots, c_m}$ 
-    s.t. $c_i \in W \land c_i[0] = c_j[0] \land c_i[-1] = c_j[-1], i, j = 1, \ldots, m$.
-    \\ \quad $W.add(c')$ \qquad $W.remove(c_1, \ldots, c_m)$
+    \STATE \quad 
+    for all $c_i \in W \land c_i.start = c_j.start \land c_i.end = c_j.end, i, j = 1, \ldots, n$.
+    \\ \quad create $c' = \rpchoose{c_1, \ldots, c_m}$, \qquad  $W.add(c')$ \qquad $W.remove(c_1, \ldots, c_m)$
     \STATE
-    \quad create $c' = \rprepeat(c)$ s.t. $c_i \in W \land c[0] = c[-1] \land c[0] \in \loopl(c)$
-    \\ \quad $W.add(c')$, \qquad $W.remove(c)$
-    \STATE \quad create $c' = c_1; c_2$ s.t. $c_1, c_2 \in W \land c_1[-1] = c_2[0]$
+    \quad for all $c_i \in W \land c.start = c.end \land c.start \in \loopl(c)$
+    \\ \quad create $c' = \rprepeat(c)$, \qquad $W.add(c')$, \qquad $W.remove(c)$
+    \STATE \quad for all $c_1, c_2 \in W \land c_1.end = c_2.start$
     \\
-    \quad $W.add(c')$ \qquad $W.remove(c_1, c_2)$
-    \STATE \textbf{Endwhile}
-    \\ $c^T = W[0]$
-    \RETURN $c^T$.
-\end{algorithmic}
-\end{algorithm}
+    \quad create $c' = c_1; c_2$, \quad $W.add(c')$ \qquad $W.remove(c_1, c_2)$
+    % \STATE \textbf{Endwhile}
+    \RETURN $W[0]$.
+  \end{algorithmic}
+  \end{algorithm}
 %
 Algorithm~\ref{alg:alg-refine_rewrite} transformation the syntax of program following~\cite{GulwaniJK09} and preserving the semantics.
 We first use simple depth first search strategy collects all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath}. It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
@@ -124,15 +124,6 @@ while and sequence statement in paper~\cite{GulwaniJK09} respectively.
 
 \paragraph{Contextualization}
 
-\[
-  cxlG(c) = (cxlV, cxlE)
-  \]
-  \[cxlV = \tpath \in \paths(\absG(c))
-  \]
-  \[
-    cxlE = (\tpath_1, \tpath_2)\]
-
-$cxlV$ is the set contains all program $c$'s simple transition paths.
 $cxlE$ is a set of edges between two simple transition paths of program $c$. There is an edge from $\tpath_1$ to $\tpath_2$
 if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
 % We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~10 and build the edge.
@@ -147,18 +138,6 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
   \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
   % the target while loop with label $l$.
   \STATE  \textbf{Init} 
-  % $W(c) = \{\tpath_1, \cdots, \tpath_m\}$ is initialized as a set of all the simple transition paths in $\absG(c)$.
-  % \\
-  % \qquad Finding all simple transition paths $\tpath_1, \cdots, \tpath_m \in \absG(c)$.
-  % \STATE  
-  % \textbf{For} every simple transition paths $\tpath_1, \cdots, \tpath_m$:
-  % %  having the same starting and ending label:
-  % \\
-  % \quad Generating
-  % $\rpattern_{i} = \tpath_i$ and add into $R(c)$.
-  %  otherwise $\rpattern_i = \tpath_i$.
-  % \\
-  % \quad Adding $\rpattern_{i}$ into $R(c)$.
   % \\
   $R_l = \{\}$ initial set for each loop with header at program point $l$, (i.e., set of the transition sequences from interleaving-refinement) .
   % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
@@ -167,32 +146,22 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
   \STATE \quad \textbf{For} each simple transition path $\tpath'$ that can execute right after $\tpath$,
   $(\tpath, \tpath') \in cxlE(c)$ and $\tpath \neq \tpath'$;
   \\
-  % \quad \quad \todo{and can execute under the precondition $FS$ (the final state of executing last simple transition path in $w$), 
-  % i.e., $FS \implies IS'$ ==>:}
   % \\
   \STATE \quad \quad $\kw{w' = w.append(\tpath')}$
   \\
   \quad \quad \highlight{Compute Invariant $\kw{I' = API(\tpath', I)}$}
   \STATE  \quad \quad Compute the exiting condition of $\tpath'$ (/ or Invariant by  API) $I'$ and the 
   post condition (or final state) of executing $\tpath'$, $FS'$.
-  % \STATE \quad \quad \todo{\textbf{If} $\kw{I' \implies I_l}$}
   \STATE \quad \quad \textbf{If} \highlight{$\kw{I' \in Q}$}
   \STATE \quad \quad \textbf{then}
   % let $i$ be the index such that 
-  Let $w = [\tpath_1, \cdots; \tpath_n]$, $Q = [I_1, \cdots, I_n]$, and $i$ be the index such that $I_i = I'$
+  Let $w = [\tpath_1, \ldots; \tpath_n]$, $Q = [I_1, \ldots, I_n]$, and $i$ be the index such that $I_i = I'$
   \\ \quad \quad \quad \quad \quad
-  $\kw{R_l.append(\tpath_1; \cdots; \tpath_{i - 1}; (\tpath_i; \cdots; \tpath')^*)}$
+  $\kw{R_l.append(\tpath_1; \ldots; \tpath_{i - 1}; (\tpath_i; \ldots; \tpath')^*)}$
   % \STATE \quad \quad \todo{\textbf{else} $\kw{dfs(w', I_l, FS')}$}
   \STATE \quad \quad  \highlight{\textbf{else If} 
   $\kw{I' \neq \bot}$ \textbf{then} ${\kw{dfs(w', I_0, Q.push(I'))}}$}
-  %  \\ \quad \quad if $\rpattern_i$ ending at $l$ and $\rpattern_j$ starting at $l$.
-  % \STATE  \quad \textbf{For} every repeat pattern $\rpattern_1, \cdots, \rpattern_m \in R(c)$
-  % \STATE \quad \quad  Generate $\rpattern' = \rpattern_{i}; \rpattern_{j} $ 
-  % if the execution condition of $\rpattern_{j}$
-  % is true after $\rpattern_{j}$'s executing condition is false.
-    \STATE \textbf{For} each loop $c_{l}$ with header at program point $l$, 
-    \STATE \quad \todo{compute the exiting condition (or invariant by API) $I_l$,
-    and the final state (i.e., post condition) of executing this loop $FS_l$:}
+    \STATE \textbf{For} each loop program $c_{l}$ with header at program point $l$, 
     \STATE \quad \highlight{Compute Invariant $\kw{I_0 = API(c_{l}, \etrue)}$}
     \STATE \quad computing $\kw{dfs([], I_0, [I_0] )}$
   \RETURN $R_l$ for every while loop with its header at $l$.
