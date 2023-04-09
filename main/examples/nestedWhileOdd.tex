@@ -1,6 +1,11 @@
 \begin{example}
   [Example with Two Paths Iterating Alternatively and Nested Loop in One Path]
   \label{ex:nestedWhileOdd}
+  This example program is similar to our running example in the Figure~\ref{fig:relatedNestedWhileOdd-overview}.
+  It has two level nested loops, and the outer level loop has two paths and the nested loop is in one path.
+  Different from the running example, the iterator of the inner loop
+  does not interface with the outer loop iterator.
+  In this sense, the reachability-bound of the program point $6$ in the inner loop is $\frac{k^2}{4}$.
   { \small
   \begin{figure}
   \centering
@@ -16,8 +21,8 @@
             \eif(\clabel{i \% 2 = 0 }^{2},\\
             \qquad \clabel{\assign{i}{i - 1}}^{3};
             \clabel{\assign{j}{k}}^{4}; \\
-            \qquad \ewhile ~ \clabel{j > 0}^{5} ~ \edo ~
-            \Big( \clabel{\assign{j}{j - 1}}^{6} \Big),\\
+            \qquad \ewhile ~ \clabel{j > 0}^{5} ~ \edo ~\\
+            \qquad \Big( \clabel{\assign{j}{j - 1}}^{6} \Big),\\
             \qquad \clabel{\assign{i}{i - 3}}^{7});
             \Big)
       \end{array}
@@ -26,7 +31,7 @@
     \caption{}
     \end{centering}
     \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
+  \begin{subfigure}{.55\textwidth}
     \begin{centering}
   \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
   \draw[] (-7, 10) circle (0pt) node{{ $0$}};
@@ -35,7 +40,7 @@
   \draw[] (0, 4) circle (0pt) node{{ $3$}};
   \draw[] (-4, 4) circle (0pt) node{{ $4$}};
   \draw[] (-8, 4) circle (0pt) node{{ $5$}};
-  \draw[] (-8, 1) circle (0pt) node{{ $6$}};
+  \draw[] (-8, 0) circle (0pt) node{{ $6$}};
   \draw[] (4, 4) circle (0pt) node{{ $7$}};
   % Counter Variables
   \draw[] (6, 10) circle (0pt) node {\textbf{$\lex$}};
@@ -51,8 +56,8 @@
   \draw[ thick, -latex]  (-0.5, 4) -- node [below] {$i' \leq i - 1$ }  (-3.5, 4) ;
   \draw[ thick, -latex]  (-4.5, 4) -- node [above] {$j' \leq k$ }  (-7.5, 4);
   \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (5.5, 10);
-  \draw[ thick, -latex] (-8, 3.5)  -- node [left] {$j > 0$}  (-8, 1.5);
-  \draw[ thick, -latex] (-7, 1.5)  to  [out=0,in=0] node [right] {$j' \leq j - 1$}  (-7, 3.5);
+  \draw[ thick, -latex] (-8, 3.5)  -- node [left] {$j > 0$}  (-8, 0.5);
+  \draw[ thick, -latex] (-7, 0.5)  to  [out=0,in=0] node [right] {$j' \leq j - 1$}  (-7, 3.5);
   \draw[ thick, -latex] (0.5, 10)  -- node [above] {$i \leq 0$}  (5.5, 10);
   % \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
   \end{tikzpicture}
@@ -60,15 +65,15 @@
     \end{centering}
     \end{subfigure}
   \caption{
-  (a) The program of the two paths loop with a nested Loop in one path
-    (b) The Abstract Execution Control Flow Graph}
+  (a) The program of the two paths loop with a nested loop in one path.
+    (b) The corresponding abstract transition graph}
       \label{fig:nestedWhileOdd}
   \end{figure}
   }
   %
   \end{example}    
   \begin{enumerate}
-    \item  \textbf{The Abstract Execution Control Flow Graph} is generated in Figure~\ref{fig:nestedWhileOdd}(b).
+    \item  \textbf{The Abstract Transition Graph} is generated in Figure~\ref{fig:nestedWhileOdd}(b).
     \item \textbf{Program Refinement}
     \\
     The loop free simple transition paths are computed as follows,
@@ -86,24 +91,31 @@
       $\tpath_5 = (5 \to 1)$
 
   \textbf{Refined Program}:
-  \[
-    \tpath_0 ; \rpchoose{1: \rprepeat(\tpath_1; 5:\rprepeat(\tpath_2); \tpath_3) , 
-    1: \rprepeat(\tpath_3; \tpath_1; 5:\rprepeat(\tpath_2); \tpath_5 )}; \tpath_4
-    \]
-    Let $\rprog_1^1 = \rprepeat(\tpath_1; 5:\rprepeat(\tpath_2); \tpath_3)$
+
+
+    $ \tpath_0 ; \rpchoose{
+      \begin{array}{l}
+        1: \rprepeat(\tpath_1; 5:\rprepeat(\tpath_2); \tpath_3) ,  \\
+        1: \rprepeat(\tpath_3; \tpath_1; 5:\rprepeat(\tpath_2); \tpath_5 )
+      \end{array}
+      }; \tpath_4$
+
+      Define the sub-loop program as follows,
+
+      $\rprog_1^1 = \rprepeat(\tpath_1; 5:\rprepeat(\tpath_2); \tpath_3)$
     \\
     $\rprog_1^2 = \rprepeat(\tpath_3; \tpath_1; 5:\rprepeat(\tpath_2) ; \tpath_5 )$
     \item {Path Local Reachability-bound}:
     \\
     $\outinB(\rprog, \tpath_0) = 1$ \\
     $\outinB(\rprog, \tpath_4) = 1$ \\
-    $\outinB(1: \rprog_1^1, \tpath_1) = \frac{n}{4}$ \\
-    $\outinB(1: \rprog_1^1, \tpath_3) = \frac{n}{4}$ \\
-    $\outinB(1: \rprog_1^1, \tpath_5) = \frac{n}{4}$ \\
-    $\outinB(1: \rprog_1^2, \tpath_1) = \frac{n}{4}$ \\
-    $\outinB(1: \rprog_1^2, \tpath_3) = \frac{n}{4}$ \\
-    $\outinB(1: \rprog_1^2, \tpath_5) = \frac{n}{4}$ \\
-    $\outinB(5: \rprepeat(\tpath_2), \tpath_2) = n$ 
+    $\outinB(1: \rprog_1^1, \tpath_1) = \frac{k}{4}$ \\
+    $\outinB(1: \rprog_1^1, \tpath_3) = \frac{k}{4}$ \\
+    $\outinB(1: \rprog_1^1, \tpath_5) = \frac{k}{4}$ \\
+    $\outinB(1: \rprog_1^2, \tpath_1) = \frac{k}{4}$ \\
+    $\outinB(1: \rprog_1^2, \tpath_3) = \frac{k}{4}$ \\
+    $\outinB(1: \rprog_1^2, \tpath_5) = \frac{k}{4}$ \\
+    $\outinB(5: \rprepeat(\tpath_2), \tpath_2) = k$ 
     \\
     Loop Bounds:
     \\
@@ -111,44 +123,41 @@
     \quad
     $BD(\tpath_4) = 1$
     \quad
-    $BD(\rprepeat(\tpath_2)) = n $
+    $BD(\rprepeat(\tpath_2)) = k $
+    \\
+    $BD(\rprog_1^1) = \frac{k}{4} $
     \quad
-    $BD(\rprog_1^1) = \frac{n}{4} $
-    \quad
-    $BD(\rprog_1^2) = \frac{n}{4} $
+    $BD(\rprog_1^2) = \frac{k}{4} $
 
     %
     \item Loop Reachability-bound:
     \\
-    {\small
-    \highlight{
-    $\lpchB(1: \rprog_1^1, \tpath_1) = \frac{n}{4}$ \quad
-    $\lpchB(1: \rprog_1^1, \tpath_3) = \frac{n}{4}$ \quad 
-    $\lpchB(1: \rprog_1^1, \tpath_5) = \frac{n}{4}$ \quad 
-    \highlight{$\lpchB(1: \rprog_1^1, \tpath_2) = \frac{n}{4}$} \\ 
-    $\lpchB(1: \rprog_1^2, \tpath_1) = \frac{n}{4}$ \quad
-    $\lpchB(1: \rprog_1^2, \tpath_3) = \frac{n}{4}$ \quad 
-    $\lpchB(1: \rprog_1^2, \tpath_5) = \frac{n}{4}$ \quad 
-    \highlight{$\lpchB(1: \rprog_1^2, \tpath_2) = \frac{n}{4}$} \\
-    $\lpchB(5: \rprepeat(\tpath_2), \tpath_2) = n$ \quad
-    }}
+    % $\lpchB(1: \rprog_1^1, \tpath_1) = \frac{k}{4}$ \quad
+    % $\lpchB(1: \rprog_1^1, \tpath_3) = \frac{k}{4}$ \quad 
+    % $\lpchB(1: \rprog_1^1, \tpath_5) = \frac{k}{4}$ \\ 
+    $\lpchB(1: \rprog_1^1, \tpath_2) = \frac{k}{4}$ \quad
+    % $\lpchB(1: \rprog_1^2, \tpath_1) = \frac{k}{4}$ \quad
+    % $\lpchB(1: \rprog_1^2, \tpath_3) = \frac{k}{4}$ \\ 
+    % $\lpchB(1: \rprog_1^2, \tpath_5) = \frac{k}{4}$ \quad 
+    \highlight{$\lpchB(1: \rprog_1^2, \tpath_2) = \frac{k}{4}$} 
+    % $\lpchB(5: \rprepeat(\tpath_2), \tpath_2) = n$ 
     %
     %
     \item Path Global Reachability-bound:
     \\
     $\inoutB(\rprog, \tpath_0) = 1$ \quad
-    $\inoutB(\rprog, \tpath_1) = \frac{n}{4}$ \quad
-    $\inoutB(\rprog, \tpath_2) = \frac{n}{4} \times n$ \\
-    $\inoutB(\rprog, \tpath_3) = \frac{n}{4}$ \quad
-    $\inoutB(\rprog, \tpath_5) = \frac{n}{4}$ \quad
+    $\inoutB(\rprog, \tpath_1) = \frac{k}{4}$ \quad
+    $\inoutB(\rprog, \tpath_2) = \frac{k}{4} \times k$ \\
+    $\inoutB(\rprog, \tpath_3) = \frac{k}{4}$ \quad
+    $\inoutB(\rprog, \tpath_5) = \frac{k}{4}$ \quad
     $\inoutB(\rprog, \tpath_4) = 1$
     %
     \item The Reachability-bound:
     \\
     $\psRB(0) = \psRB(\lex) = 1$ \quad
-    $\psRB(1) = \frac{n}{2} + 1$ \quad
-    $\psRB(2) = \frac{n}{2} $ \\
-    $\psRB(3) = \psRB(4) = \psRB(7) = \frac{n}{4} $ \\
-    \highlight{$\psRB(6) = \frac{n}{4} \times n$} \\
-    $\psRB(5) =  \frac{n}{4} \times (n + 1)$
+    $\psRB(1) = \frac{k}{2} + 1$ \quad
+    $\psRB(2) = \frac{k}{2} $ \\
+    $\psRB(3) = \psRB(4) = \psRB(7) = \frac{k}{4} $ \quad
+    \highlight{$\psRB(6) = \frac{k}{4} \times k$} \quad
+    $\psRB(5) =  \frac{k}{4} \times (k + 1)$
   \end{enumerate}

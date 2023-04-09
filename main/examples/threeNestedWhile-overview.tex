@@ -2,7 +2,7 @@
     \begin{figure}
         \centering
         %
-        \begin{subfigure}{.45\textwidth}
+        \begin{subfigure}{.38\textwidth}
             $
             \begin{array}{l}
                 N < m < n\\
@@ -21,10 +21,9 @@
                           \quad \clabel{\assign{i}{i+1}}^{9})
                 \end{array}
                 $
-                \vspace{-0.2cm}
                 \caption{}
             \end{subfigure}
-        \begin{subfigure}{.48\textwidth}
+        \begin{subfigure}{.55\textwidth}
             \begin{centering}
                 \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
                     \draw[] (-5, 10) circle (0pt) node{{ $0$}};
@@ -55,11 +54,6 @@
                     \draw[ thick, -latex] (13, 1.5)  to  [out=120,in=60] node [above] {$w \leq w + 1$}  (8, 1.5);
                     \draw[ thick, -latex] (5, 6.5)  to  [out=120,in=0]  node [right] {$i \leq i - 1$ }(0.5, 9.5);
                     \end{tikzpicture}
-    %     \caption{}
-    %     \end{centering}
-    %     \end{subfigure}
-    % \begin{subfigure}{.2\textwidth}    
-    % \begin{centering}
         {\small
     $
         \begin{array}{ll}
@@ -79,10 +73,11 @@
         \end{array}
     $
     }
-    \vspace{-0.2cm}
     \caption{}
     \end{centering}
     \end{subfigure}
+    \begin{subfigure}{.9\textwidth}    
+    \begin{centering}
     % $
     %     \begin{array}{l}
     %         \rprog_1 = {\rprepeat(\tpath_1; 3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5)}
@@ -91,8 +86,12 @@
     %     \end{array}
     % $
     $\rprog = \tpath_0; 1: \rprepeat(\tpath_1; 3: {\rprepeat(\tpath_2; 6 : {\rprepeat(\tpath_3)}; \tpath_4)}; \tpath_5);\tpath_6$
-    \caption{
+    \caption{}
+    \end{centering}
+    \end{subfigure}
+\caption{
         (a) An example of three nested loops with related iterator variables.
-        (b) The abstract transition graph, the simple transition paths and loop body.}
-            \label{fig:threeWhile-overview}
-        \end{figure}
+        (b) The abstract transition graph, the simple transition paths and loop body.
+        (c) The refined program.}
+\label{fig:threeWhile-overview}
+\end{figure}

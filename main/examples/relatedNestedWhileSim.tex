@@ -1,5 +1,14 @@
 \begin{example}[Nested Loop with Related Iterator]
   \label{ex:relatedNestedWhileSim}
+This is an example with two nested loops, and the counters of the two loops are
+modified by each other. It is the simplified version of Example~\ref{ex:threeNestedWhile}.
+The iterator of the outer loop is reset at the $5^{th}$ command, $\clabel{\assign{i}{k + N}}^{5}$ by the inner loop iterator $k$ and $k$ is reset by $i$ at the second command, $\clabel{\assign{k}{i - N}}^{2}$.
+The expected reachability-bound for
+program point $4$ in the inner loop is $n - N$.
+For program points $2, 5$ and $6$ in the outer loop, their reachability-bounds are expected to be $N$.
+
+% nested loop with related iterator.
+%  Example
   %
   %
   { \small
@@ -16,9 +25,10 @@
           \qquad \Big(
             \clabel{\assign{k}{i - N}}^{2};\\
             \qquad \ewhile ~ \clabel{k > 0}^{3} ~ \edo ~
-            \Big(
-              \clabel{\assign{k}{k - 1}}^{4}
-                \Big); \\
+                \Big(
+                \clabel{\assign{k}{k - 1}}^{4}
+                \Big); 
+                \\
                 \qquad \clabel{\assign{i}{k + N}}^{5};
                 \clabel{\assign{i}{i-1}}^{6}
             \Big)
@@ -28,10 +38,10 @@
   \caption{}
   \end{centering}
   \end{subfigure}
-\begin{subfigure}{.5\textwidth}
+\begin{subfigure}{.55\textwidth}
   \begin{centering}
 %   \todo{abstract-cfg for two round}
-\begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
+\begin{tikzpicture}[scale=\textwidth/15cm,samples=200]
 \draw[] (-7, 10) circle (0pt) node{{ $0$}};
 \draw[] (0, 10) circle (0pt) node{{ $1$}};
 \draw[] (6, 10) circle (0pt) node {{$\lex$}};
@@ -57,38 +67,43 @@
   \end{centering}
   \end{subfigure}
 \caption{
-(a) The Simplified Example of Nested Loop with Related Iterator
-  (b) The Abstract Execution Control Flow Graph}
+(a) The simplified example with nested loop and related iterator.
+  (b) The corresponding abstract transition graph}
     \label{fig:relatedNestedWhileSim}
 \end{figure}
 }
 \end{example}
 
 \begin{enumerate}
-  \item  \textbf{Abstract Control Flow Graph} is generated in Figure~\ref{fig:relatedNestedWhileSim}(b).
+  \item  \textbf{Abstract Transition Graph} is generated in Figure~\ref{fig:relatedNestedWhileSim}(b).
 
   \item \textbf{Program Refinement}
   \\
   The loop free simple transition paths:
-  \[
-      % \begin{array}{lllll}
-          \tpath_0 = (0 \to 1)
+  % \[
+  %     \begin{array}{lllll}
+          $\tpath_0 = (0 \to 1)$
           \quad
-          \tpath_1 = (1 \to 2 \to 3)
+          $\tpath_1 = (1 \to 2 \to 3)$
           \quad           
-          \tpath_2 = (3 \to 4 \to 3)
+          $\tpath_2 = (3 \to 4 \to 3)$
+          \\
+          $\tpath_3 = (3 \to 5 \to 6 \to 1)$
           \quad
-          \tpath_3 = (3 \to 5 \to 6 \to 1)
-          \quad
-          \tpath_4 = (1 \to \lex)
+          $\tpath_4 = (1 \to \lex)$
       % \end{array}
-      \]
+      % \]
+
   \textbf{Refined Program}:
-  \[
-  \rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3); \tpath_4
-  \]
+
+  % \[
+  $\rprog = \tpath_0 ; 1: \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3); \tpath_4$
+  % \]
   %
- Let $\rprog_1 = \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)$
+  
+  Define sub loop programs as follows,
+
+  $\rprog_1 = \rprepeat(\tpath_1; 3: \rprepeat(\tpath_2); \tpath_3)$
 \item {Path Local Reachability-bound}:
 \\
 $\outinB(\rprog, \tpath_0) = 1$ \quad

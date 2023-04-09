@@ -2,6 +2,18 @@
   \label{ex:nestedWhileResetChain}
   %
   %
+This is an example program with two level nested loops. For the inner loop $L_6$, 
+% similar to
+% Example~\ref{ex:relatedNestedWhileSim},
+the loop iterator $k$ is reset by variable $r$ through variable reset chain.
+Variable $r$ is reset by the inner loop iterator $k$ after the loop in the command
+$\clabel{\assign{r}{k}}^{7}$ and $k$ is reset by $r$ before going to the loop in the command 
+$\clabel{\assign{k}{r}}^{4}$.
+The expected reachability-bound for
+program point $6$ in the inner loop is $2 \times n$.
+% For program points $2, 5$ and $6$ in the outer loop, their reachability-bounds are expected to be $N$.
+
+
   { \small
 \begin{figure}
 \centering
@@ -63,37 +75,39 @@
   \end{centering}
   \end{subfigure}
 \caption{
-(a) The Simplified Example of Nested Loop with Related Iterator
-  (b) The Abstract Execution Control Flow Graph}
+(a) The simplified example of nested loop with related iterator.
+  (b) The corresponding abstract transition graph}
     \label{fig:nestedWhileResetChain}
 \end{figure}
 }
 \end{example}
 
 \begin{enumerate}
-  \item  \textbf{Abstract Control Flow Graph} is generated in Figure~\ref{fig:nestedWhileResetChain}(b).
+  \item  \textbf{Abstract Transition Graph} is generated in Figure~\ref{fig:nestedWhileResetChain}(b).
 
   \item \textbf{Program Refinement}
-  \\
   The loop free simple transition paths:
-  \[
-      % \begin{array}{lllll}
-          \tpath_0 = (0 \to 1 \to 2)
+  \\
+          $\tpath_0 = (0 \to 1 \to 2)
           \quad
           \tpath_1 = (2 \to 3 \to 4 \to 5)
           \quad           
           \tpath_2 = (5 \to 6 \to 5)
-          \quad
+          $
+          \\
+          $
           \tpath_3 = (5 \to 7 \to 8 \to 2)
           \quad
           \tpath_4 = (2 \to \lex)
-      % \end{array}
-      \]
+          $
+          \\
   \textbf{Refined Program}:
-  \[
-  \rprog = \tpath_0 ; 2: \rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3); \tpath_4
-  \]
-Let $\rprog_2 = \rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3)$
+
+  $\rprog = \tpath_0 ; 2: \rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3); \tpath_4$
+
+Define the sub-loop program as follows,
+
+$\rprog_2 = \rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3)$
 \item {Path Local Reachability-bound}:
 \\
 $\outinB(\rprog, \tpath_0) = 1$ \quad
@@ -115,16 +129,14 @@ $BD(\rprepeat(\tpath_1; 5: \rprepeat(\tpath_2); \tpath_3)) = n $
 %
 \item Loop Reachability-bound:
 \\
-\highlight{
-$\lpchB(2: \rprog_2, \tpath_1) = n$ \quad
-$\lpchB(2: \rprog_2, \tpath_3) = n$ \quad 
-$\lpchB(2: \rprog_2, \tpath_2) = \frac{(n + 1) - 0}{n}$ 
-\\
-$\lpchB(5: \rprepeat(\tpath_2), \tpath_2) = n + 1$ \\
-$\lpchB(2: \rprog_2, \tpath_4) = 0$ \quad
-$\lpchB(2: \rprog_2, \tpath_0) = 0$ \quad
-$\lpchB(2: \rprog_2, \tpath_0) = 0$ \quad
-}
+% $\lpchB(2: \rprog_2, \tpath_1) = n$ \quad
+% $\lpchB(2: \rprog_2, \tpath_3) = n$ \quad 
+$\lpchB(2: \rprog_2, \tpath_2) = \frac{(n + 1)}{n}$ 
+% \\
+% $\lpchB(5: \rprepeat(\tpath_2), \tpath_2) = n + 1$ \\
+% $\lpchB(2: \rprog_2, \tpath_4) = 0$ \quad
+% $\lpchB(2: \rprog_2, \tpath_0) = 0$ \quad
+% $\lpchB(2: \rprog_2, \tpath_0) = 0$ \quad
 %
 %
 \item Path Global Reachability-bound:
