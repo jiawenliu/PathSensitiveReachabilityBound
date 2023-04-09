@@ -80,8 +80,28 @@ In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is
 
 \subsection{Program Rewrite}
 \paragraph{Syntax.}
+\[
+    \rprog := \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} 
+\]
+where $l\in \loopl(c)$ is a loop header.
 
-\paragraph{Rewrite Algorithm.}
+In the new syntax, $\rprepeat(\rprog)$ is a loop statement iterating over the transitions in $\rprog$.
+$l: \rprepeat(\rprog)$ represents that the loop $ \rprepeat(\rprog)$
+corresponds to a loop of the source program with loop header $l$.
+The multiple-paths statement $\rpchoose{\rprog, \ldots} $ contains all the execution paths of a loop from the source program.
+
+
+\paragraph{Algorithm.}
+Algorithm~\ref{alg:alg-refine_rewrite} transforms the syntax of the while language program 
+into the new syntax defined above.
+% following~\cite{GulwaniJK09} and preserves the semantics.
+
+In this algorithm, we first use a simple depth-first search strategy to collect all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath}. 
+% It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
+In line:2, we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. 
+New candidates generated in line:4, 5, and 6 correspond to the multiple-paths statement $\rpchoose{\ldots}$,
+loop $\rprepeat(c_i)$, or sequence statements $c_i; c_j$ respectively.
+
 \begin{algorithm}
   \caption{Program Rewriting $\kw{Rewrite}$}
   \label{alg:alg-refine_rewrite}
@@ -104,19 +124,22 @@ In Figure~\ref{fig:threeWhile-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 6$ is
   \end{algorithmic}
   \end{algorithm}
 %
-Algorithm~\ref{alg:alg-refine_rewrite} transformation the syntax of program following~\cite{GulwaniJK09} and preserving the semantics.
-We first use simple depth first search strategy collects all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath}. It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
-Then
-in Line-2, we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. New candidates generated in Line-4, 5 and 6 correspond to the if,
-while and sequence statement in paper~\cite{GulwaniJK09} respectively.
+
 \begin{itemize}
   \item
-  Line-4: for all the candidates $c_1, \ldots, c_m$ having the same starting and ending vertices, rewrite them into if statement as~\cite{GulwaniJK09}.
+  Line:5 for every candidate $c'$, if it starts and ends with the same vertex, 
+      then it is a loop path, and we rewrite it into a loop statement
+      $\rprepeat(c)$.
   \item
-  Line-5: for every candidate $c'$, if it starts and ends with the same vertex, rewrite it into while loop statement as~\cite{GulwaniJK09}.
-  \item
-  Line-6: for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement as~\cite{GulwaniJK09}.
-\end{itemize}
+  Line:4 for all the candidates $c_1, \ldots, c_m$ having the same starting and ending vertices, 
+   then they are multiple paths of a loop, and we rewrite them into 
+   $\rpchoose{c_1, \ldots, c_m}$.
+  %  if statement as~\cite{GulwaniJK09}.
+   \item
+   Line:6 for every two candidates $c_1, c_2$, if $c_1$ ends with the same vertex as $c_2$'s starting label, rewrite them into sequence statement
+   $c_1; c_2$.
+  \end{itemize}
+
 % \todo{soundness of the program write}
 \subsection{Program Refinement}
 % We implement the algorithm REFINE from paper~\cite{GulwaniJK09} and compute the 
@@ -170,22 +193,25 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
 
 
 
-The interleaving refinement method compute the execution order of each simple transition paths explicitly.
+The interleaving refinement algorithm computes the execution order of each simple transition paths explicitly.
+This algorithm is inspired from the algorithm REFINE in paper~\cite{GulwaniJK09}. 
 
+It first computes the execution orders of
+the simple transition paths that come from the same loop.
 For example, two simple transition paths $\tpath_1 = (1 \to 2 \to 3 \to 4)$ and 
 $\tpath_4 = (1 \to 2 \to 8 \to 1)$ in the same loop Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) have two possible execution orders:
-either $\tpath_1$ executes immediately after the execution of $\tpath_4$, or vice verse.
+either $\tpath_1$ executes after the execution of $\tpath_4$, or vice verse.
 % and compute the 
 
 Then we construct the refined program by explicating the execution orders of simple transition paths.
 % refined program $\rprog$ for a rewritten program $c$.
 Simple transition paths can iterate on themselves, so an execution order could
 contain iterations of simple transition paths, and sequence of iterations.
-
 For example, the simple transition path $\tpath_3 = (4 \to 5 \to 4)$
 the loop $L_4$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) has only one possible execution order,
 which is the iteration on itself, $\rprepeat(\tpath_3)$.
-Each loop in a refined program contains several execution orders over its original simple transition paths.
+
+Each loop in a refined program contains several execution orders over simple transition paths.
 For example, the loop $L_1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b)
 has two execution orders. In the first one,
 $\rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2)$ 
@@ -194,8 +220,9 @@ Then following the execution of $\tpath_1$, loop $L_4$ finishes full iterations 
 In the second execution order,
 $\rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
 $\tpath_4$ is executed after the execution of $\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2$.
-Iteration of one execution order is equivalent to one possible full iterations of the original loop program.
-So the reconstructed loop for $L_1$ is 
+Iteration of one execution order is equivalent to one possible full iterations of the source loop program.
+In this sense, we construct $1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$ as an execution path of the loop $L_1$ in the source program with loop header $1$.
+The refined loop program for $L_1$ is 
 \[
 \rpchoose{ 
  \begin{array}{l}
@@ -204,6 +231,17 @@ So the reconstructed loop for $L_1$ is
  \end{array}
  }.
 \]
+
+Then we construct the refined program for program $\kw{nestedOdd}(n, m)$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(a) as follows, which is also presented in Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
+\[
+ \tpath_0 ; \rpchoose{ 
+ \begin{array}{l}
+    1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), \\
+    1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) 
+ \end{array}
+ }; \tpath_5.
+\]
+
 
 \paragraph{Running Example.}
 For the walk-through an example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
