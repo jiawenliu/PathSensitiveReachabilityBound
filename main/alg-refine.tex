@@ -197,11 +197,15 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
     \label{alg:prog-refine}
     }
     \begin{algorithmic}[1]
-    \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
+    \REQUIRE a loop program $c$ with multiple paths;
+    \\
+    set of all the paths in this program:
+    $\{\tpath_0, \ldots, \tpath_m\}$,
+    \\
+    the contextualization graph $cxlG(c)$ over paths.
     % the target while loop with label $l$.
     \STATE  \textbf{Init} 
     % \\
-    $R_l = \{\}$ initial set for each loop with header at program point $l$, (i.e., set of the transition sequences from interleaving-refinement) .
     % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
     \STATE \textbf{Define} \highlight{$\kw{dfs(wking-path, inv-list, done-set)}$:}
     \STATE \quad {$\kw{unfinished-set = \{\}}$:}
@@ -223,7 +227,7 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
     $\kw{(dfs(w[:j]++[\rprepeat(w[j:i])]', inv-list[:j], done-set)}$.
     \STATE \quad \quad $\kw{visited[\tpath_i]} = \efalse$.
     \STATE \quad \textbf{Return} $\kw{unfinished-set}$
-    \STATE Take $\tpath_0$ from a multiple-path loop program 
+    \STATE Take $\tpath_0$ from a multiple-path loop 
     \STATE initialize $\kw{visited} = [\efalse]*$
     \STATE computing $\kw{dfs([\tpath_0], I_0, [I_0], \{\} )}$
     \RETURN $R_l$ for every while loop with its header at $l$.
