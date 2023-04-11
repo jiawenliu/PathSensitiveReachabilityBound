@@ -1,4 +1,5 @@
-\subsection{Labeled Language}
+\section{Labeled Language}
+\label{sec:language-syntax}
 \[
 \begin{array}{llll}
 \mbox{Arithmetic Operators} 
@@ -55,7 +56,7 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  ~|~ \emax (a, a) ~|~ \emin(a, a)
 \\
 \end{array}
 \]
-We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$, and we use the following notations to represent the sets of corresponding terms:
+Likewise, we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$, and we use the following notations to represent the sets of corresponding terms:
 \[
 \begin{array}{lll}
 \vardom & : & \mbox{Set of Variables}  
@@ -90,17 +91,24 @@ We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$, and
 \\
 %
 \ftdom_0(c) & : & \mbox{Set of Program $c$'s Well-formed Initial Traces.}
-\\ & & \mbox{Each well formed initial trace $\trace_0 \in \ftdom_0(c)$ is finite and every input variable}
-\\ & & \mbox{of the program $c$ has an initial value in $\trace_0$.}
+\\ & & \mbox{Each well formed initial trace $\trace_0 \in \ftdom_0(c)$ is finite}
+\\ & & \mbox{and every input variableof the program $c$ has an initial value in $\trace_0$.}
 \end{array}
 \]
 %
 \paragraph{Expression}
 Expressions include
-standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
-An arithmetic expression can be a constant $n$ denoting integer, a variable $x$ from some countable set $\vardom$, binary operation $\oplus_a$ such as addition, product, subtraction, etc., over arithmetic expressions, with also $\elog$ and $\esign$. 
+standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$.
+We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
+
+An arithmetic expression can be a constant $n$ denoting integer, a variable $x$ from some countable set $\vardom$, arithmetic binary operation $\oplus_a$ including addition, product, subtraction, division, over arithmetic expressions, or
+$\emax$, $\emin$ of two arithmetic expressions.
+
 %
-A boolean expression can be either {\tt true} or {\tt false}, basic boolean connectives such as logical negation, logical and or denoted by $\oplus_b$, and basic comparison $\sim$ between arithmetic expressions, e.g., $\leq, =, <$, etc.
+A boolean expression can be either {\tt true} or {\tt false}, basic boolean connectives including logical negation,  $\neg \bexpr$, logical and, $\bexpr \land \bexpr$ and logic or
+$\bexpr \lor \bexpr$ and basic comparison between arithmetic expressions, 
+including $\aexpr \leq \aexpr$, $\aexpr < \aexpr$ and
+$\aexpr = \aexpr$.
 Additionally, we also have list in expression.
 
 \paragraph{Labeled Command}
@@ -121,15 +129,15 @@ We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all la
   We denote by $\kw{FV}$ the operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$, which computes the set of free variables in an expression. For example,
   $\kw{FV}(\aexpr)$ and $\kw{FV}(\bexpr)$ represent the set of free variables in arithmetic
   expression $\aexpr$ and boolean expression $\bexpr$ respectively.
-  All the free variables
-  showing up in $c$ such that they are never defined before using, are actually the input variables of this program.
-  We denote by $\mathcal{V}_{\lin}$ the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
+  The union of all the free variables
+  showing up in $c$ that are never defined before using, are actually the input variables of this program.
+  We use the same notation as \redd{PART \romannum{1}}, where $\mathcal{V}_{\lin}$ denotes the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
 
-\subsection{{Trace-based Operational Semantics}}
-\label{sec:operational_semantics}
+\section{{Trace-based Operational Semantics}}
+\label{sec:language-semantics}
 \paragraph{Event}
 An event is a triple.
-Its first element is the variable name $x$,
+Its first element is the variable name $x$
 or a boolean expression (from the guard of if or while command), 
 following by 
  the label, $l$ associated to this command and the value assigned to the variable.
@@ -154,19 +162,21 @@ Event projection operators $\pi_i$ projects the $i^{th}$ element from an event:
 $\pi_i : \eventset \to \vardom \cup \booldom \cup \ldom $
 
 \paragraph{Trace.}
-\input{trace}
+\input{chapters/reachability/trace}
 %
-\paragraph{Environment.} $\env : {\ftdom}  \to \vardom \to(\mathbb{N} \cup \{\bot, \infty\})$.  
-We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
+\paragraph{Environment.} $\env : {\tdom}  \to \vardom \to(\mathbb{N} \cup \{\bot, \infty\})$.  
+Similar to \redd{PART \romannum{1}}, we don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
 \[
-\begin{array}{llll}
+\begin{array}{lll}
 \env(\trace  \traceadd (x, l, v)) x \triangleq v
 &
 \env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x, y \neq x
 &
 \env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
-&
+\\
 \env({[]} ) x \triangleq \bot
+&
+\env(\trace ) x \triangleq \bot ~ \text{if}~ \trace \in \inftdom
 \end{array}
 \]
 %
@@ -179,13 +189,13 @@ We don't use separate data structure as the environment to record each variable'
     \]
 \end{defn}
 %
-In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
-when $\trace \in \ftdom_0(c)$, and $\ftdom_0(c)$ is used as the set of well-formed initial traces for program $c$.
+% In the rest part of the paper, we implicitly consider $\trace$ as a well-formed initial trace of $c$ 
+% when $\trace \in \ftdom_0(c)$, and
+Again, $\ftdom_0(c)$ denotes the set of all well-formed initial traces for program $c$.
 %
 \paragraph{Expression Semantics}
 The evaluation notation for arithmetic expression is $\aconfig{} : \mathcal{A} \to \tdom \to \mathcal{V}$.
 The $\aconfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under trace $\trace$ following the arithmetic expression evaluation rules in Figure~\ref{fig:aexpr-eval}.
-
 We also define for $\infty$ the following mathematic computation with arbitrary $\trace \in \tdom$.
  \[
   \begin{array}{llll}
@@ -197,92 +207,97 @@ We also define for $\infty$ the following mathematic computation with arbitrary 
   &
  \aconfig{\aexpr \div \infty} (\trace) = 0
  \\
- \aconfig{\min(\aexpr, \infty)} (\trace) = \aexpr
+ \aconfig{\emin(\aexpr, \infty)} (\trace) = \aexpr
  &
- \aconfig{\max(\aexpr, \infty)} (\trace) = \infty
+ \aconfig{\emax(\aexpr, \infty)} (\trace) = \infty
+%  &
+%  \aconfig{\elog(\infty)} (\trace) = \infty
+%  &
+%  \aconfig{\esign(\infty)} (\trace) = 1
   \end{array}
  \]
 % and
-% $\aconfig{\aexpr + \bot} (\trace) = \bot$, $\aconfig{\max(\aexpr, \bot)} (\trace) = \aexpr$, etc. respectively 
 \begin{figure}
-  \begin{mathpar}
-    \boxed{ \aconfig{} \, : \, \mbox{Arithmetic Expression $\to$ Trace $\to$ Value}}
-    \\
-    \inferrule{ 
-      \empty
-    }{
-     \aconfig{n} (\trace)
-     = n
-    }
-    \and
-    \inferrule{ 
-      \env(\trace) x = v
-    }{
-     \aconfig{x} (\trace)
-     = v
-    }
-    \and
-    \inferrule{ 
-      \aconfig{\aexpr_1}(\trace) = v_1
-      \and 
-      \aconfig{\aexpr_2}(\trace) = v_2
-      \and 
-       v_1 \oplus_a v_2 = v
-    }{
-     \aconfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
-     = v
-    }
-    \and
-    \inferrule{ 
-      \aconfig{\aexpr_1}(\trace) = v_1
-      \and 
-      \aconfig{\aexpr_2}(\trace) = v_2
-      \and 
-       v_1 < v_2
-    }{
-     \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
-     = v_2
-    }
-    \and
-    \inferrule{ 
-      \aconfig{\aexpr_1}(\trace) = v_1
-      \and 
-      \aconfig{\aexpr_2}(\trace) = v_2
-      \and 
-       v_1 \geq v_2
-    }{
-     \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
-     = v_1
-    }
-    \and
-    \inferrule{ 
-      \aconfig{\aexpr_1}(\trace) = v_1
-      \and 
-      \aconfig{\aexpr_2}(\trace) = v_2
-      \and 
-       v_1 < v_2
-    }{
-     \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
-     = v_1
-    }
-    \and
-    \inferrule{ 
-      \aconfig{\aexpr_1}(\trace) = v_1
-      \and 
-      \aconfig{\aexpr_2}(\trace) = v_2
-      \and 
-       v_1 \geq v_2
-    }{
-     \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
-     = v_2
-    }
-     \end{mathpar}
-     \caption{Evaluation rules of arithmetic expression}
-     \label{fig:aexpr-eval}
-     \end{figure}
+\begin{mathpar}
+  \boxed{ \aconfig{} \, : \, \mbox{Arithmetic Expression $\to$ Trace $\to$ Value}}
+  \\
+  \inferrule{ 
+    \empty
+  }{
+   \aconfig{n} (\trace)
+   = n
+  }
+  \and
+  \inferrule{ 
+    \env(\trace) x = v
+  }{
+   \aconfig{x} (\trace)
+   = v
+  }
+  \and
+  \inferrule{ 
+    \aconfig{\aexpr_1}(\trace) = v_1
+    \and 
+    \aconfig{\aexpr_2}(\trace) = v_2
+    \and 
+     v_1 \oplus_a v_2 = v
+  }{
+   \aconfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
+   = v
+  }
+  \and
+  \inferrule{ 
+    \aconfig{\aexpr_1}(\trace) = v_1
+    \and 
+    \aconfig{\aexpr_2}(\trace) = v_2
+    \and 
+     v_1 < v_2
+  }{
+   \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
+   = v_2
+  }
+  \and
+  \inferrule{ 
+    \aconfig{\aexpr_1}(\trace) = v_1
+    \and 
+    \aconfig{\aexpr_2}(\trace) = v_2
+    \and 
+     v_1 \geq v_2
+  }{
+   \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
+   = v_1
+  }
+  \and
+  \inferrule{ 
+    \aconfig{\aexpr_1}(\trace) = v_1
+    \and 
+    \aconfig{\aexpr_2}(\trace) = v_2
+    \and 
+     v_1 < v_2
+  }{
+   \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
+   = v_1
+  }
+  \and
+  \inferrule{ 
+    \aconfig{\aexpr_1}(\trace) = v_1
+    \and 
+    \aconfig{\aexpr_2}(\trace) = v_2
+    \and 
+     v_1 \geq v_2
+  }{
+   \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
+   = v_2
+  }
+   \end{mathpar}
+   \caption{Evaluation rules of arithmetic expression}
+   \label{fig:aexpr-eval}
+   \end{figure}
 
- The evaluation rules for boolean expression, $\bconfig{} : \booldom \to \tdom \to \mathcal{V}$ and
- standard expression, $\econfig{} : (\mathcal{A} \cup \booldom) \to \tdom \to \mathcal{V}$ are in Figure~\ref{fig:bexpr-eval} and Figure~\ref{fig:expr-eval} respectively.
+ The evaluation rules for boolean expression, $\bconfig{} : \booldom \to \tdom \to \mathcal{V}$ are in Figure~\ref{fig:bexpr-eval}.
+ Figure~\ref{fig:expr-eval} shows the
+ standard expression evaluation, $\econfig{} : (\mathcal{A} \cup \booldom) \to \tdom \to \mathcal{V}$, which includes the evaluation rules of both the boolean and arithmetic expressions.
+%  respectively.
  \begin{figure}
   \begin{mathpar}
   \boxed{ \bconfig{} \, : \, \mbox{ Boolean Expression $\times$ Trace $\rightarrow$ Boolean Value} }
@@ -505,7 +520,7 @@ c; \ewhile \clabel{\bexpr}^{l} \edo (c),
 ~\rname{if-f}
 %
 \end{mathpar}
-\caption{Operational Semantics Rules}
+\caption{Operational semantics rules}
 \label{fig:command-os}
 \end{figure}
 
@@ -535,6 +550,8 @@ then the program's execution terminates and produces a finite execution trace $\
       \config{c, \trace} \to \config{c_0, \trace_0}
       \\ \qquad \qquad \qquad 
       \land \forall i \in \mathbb{N}, \exists \trace_i, \trace_{i + 1} \in \ftdom, \trace'' \in \inftdom, c_i, c_{i + 1} \in \cdom \st 
+      \\ \qquad \qquad \qquad 
+      \qquad \qquad \qquad 
       \config{c_i, \trace_i} \to \config{c_{i + 1}, \trace_{i + 1}} 
       \land  \trace' = \trace_{i + 1} \tracecat \trace''
     \Big\}
@@ -597,12 +614,13 @@ then the program's execution terminates and produces a finite execution trace $\
 %
 This definition has the similar intuition as the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the semantics of the program model in~\cite{SinnZV17}.
 \\
-If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
-So we have the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lem_language}, 
-specifically the trace has the property that its length never decreases during the program execution.
+% If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
+% So we 
+We also have the trace non-decreasing property in this language model as below.
+It is similar to the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lem_language}. 
 \begin{lem}
   [Trace Non-Decreasing]
-  \label{lem:tracenondec}
+  \label{lem:psRB-tracenondec}
   For any program $c \in \cdom$ and initial trace $\trace_0 \in \ftdom_0(c)$,
   if there exists $\trace \in \tdom$ and $c' \in \cdom $ such that $\config{c, \trace_0} \rightarrow^{*} \config{c', \trace} $ or 
   $\config{c, \trace_0} \uparrow^{\infty} \trace$  
