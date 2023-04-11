@@ -131,7 +131,7 @@ We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all la
   expression $\aexpr$ and boolean expression $\bexpr$ respectively.
   The union of all the free variables
   showing up in $c$ that are never defined before using, are actually the input variables of this program.
-  We use the same notation as \redd{PART \romannum{1}}, where $\mathcal{V}_{\lin}$ denotes the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
+  We use $\mathcal{V}_{\lin}$ to denote the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
 
 \section{{Trace-based Operational Semantics}}
 \label{sec:language-semantics}
@@ -162,10 +162,50 @@ Event projection operators $\pi_i$ projects the $i^{th}$ element from an event:
 $\pi_i : \eventset \to \vardom \cup \booldom \cup \ldom $
 
 \paragraph{Trace.}
-\input{chapters/reachability/trace}
+%
+A trace $\trace \in \tdom$ is a list of events, 
+collecting the events generated during a specific program execution. 
+\[
+\begin{array}{llll}
+\mbox{Trace} & \trace
+& ::= & [] ~|~ \trace :: \event 
+% ~|~ []^{\infty}
+\end{array}
+\]
+A trace can be regarded as the program history, 
+which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
+\\
+{
+A trace can be finite ($\trace \in \ftdom$) or infinite $\trace \in \inftdom$.
+If a program doesn't terminate when executing under some initial trace,
+it produces the infinite trace 
+from $\inftdom$, which records a non-terminating computation.
+So we denote by $\tdom$ the set of all traces, and $\tdom = \ftdom \cup \inftdom$.
+The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in \cite{Cousot19}.}
+
+We use list notation for traces, where $[]$ is the empty trace, the operator $\traceadd$ combines an event and a trace in a new event, 
+and the operator $\tracecat$ concatenates two traces formally defined as follows. 
+\begin{defn}[Trace Concatenation, $\tracecat: \tdom \to \tdom\to \tdom $]
+  \label{def:trace_concate}
+Given two traces $\trace_1 \in \tdom, \trace_2 \in \tdom$, the trace concatenation operator 
+$\tracecat$ is defined as:
+\[
+\trace_1 \tracecat \trace_2 \triangleq
+\left\{
+\begin{array}{ll} 
+  \trace_1 & \trace_2 = [] \lor \trace_1 \in \inftdom \\
+  \trace_2 & \trace_1 = [] \lor \trace_2 \in \inftdom \\
+  (\trace_1   \tracecat \trace_2'):: \event & \trace_1 \in \ftdom \land \trace_2 = \trace_2' :: \event
+  % \trace_2 &  \trace_2 \in \inftdom \\
+\end{array}
+\right.
+\]
+\end{defn}
+
+
 %
 \paragraph{Environment.} $\env : {\tdom}  \to \vardom \to(\mathbb{N} \cup \{\bot, \infty\})$.  
-Similar to \redd{PART \romannum{1}}, we don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
+We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
 \[
 \begin{array}{lll}
 \env(\trace  \traceadd (x, l, v)) x \triangleq v
@@ -210,10 +250,6 @@ We also define for $\infty$ the following mathematic computation with arbitrary 
  \aconfig{\emin(\aexpr, \infty)} (\trace) = \aexpr
  &
  \aconfig{\emax(\aexpr, \infty)} (\trace) = \infty
-%  &
-%  \aconfig{\elog(\infty)} (\trace) = \infty
-%  &
-%  \aconfig{\esign(\infty)} (\trace) = 1
   \end{array}
  \]
 % and
