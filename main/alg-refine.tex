@@ -184,12 +184,51 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
   % \STATE \quad \quad \todo{\textbf{else} $\kw{dfs(w', I_l, FS')}$}
   \STATE \quad \quad  \highlight{\textbf{else If} 
   $\kw{I' \neq \bot}$ \textbf{then} ${\kw{dfs(w', I_0, Q.push(I'))}}$}
-    \STATE \textbf{For} each loop program $c_{l}$ with header at program point $l$, 
-    \STATE \quad \highlight{Compute Invariant $\kw{I_0 = API(c_{l}, \etrue)}$}
-    \STATE \quad computing $\kw{dfs([], I_0, [I_0] )}$
+  \STATE \textbf{For} each loop program $c_{l}$ with header at program point $l$, 
+  \STATE \quad \highlight{Compute Invariant $\kw{I_0 = API(c_{l}, \etrue)}$}
+  \STATE \quad computing $\kw{dfs([], I_0, [I_0] )}$
   \RETURN $R_l$ for every while loop with its header at $l$.
   \end{algorithmic}
   \end{algorithm}
+
+  \begin{algorithm}
+    \caption{
+    {Interleaving Refinement - II}
+    \label{alg:prog-refine}
+    }
+    \begin{algorithmic}[1]
+    \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
+    % the target while loop with label $l$.
+    \STATE  \textbf{Init} 
+    % \\
+    $R_l = \{\}$ initial set for each loop with header at program point $l$, (i.e., set of the transition sequences from interleaving-refinement) .
+    % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
+    \STATE \textbf{Define} \highlight{$\kw{dfs(wking-path, inv-list, done-set)}$:}
+    \STATE \quad {$\kw{unfinished-set = \{\}}$:}
+    \STATE \quad {$\kw{inv0 = inv-list[-1]}$:}
+    \STATE \quad \textbf{For} $(\tpath, \tpath_i) \in cxlE(c)$ and $\tpath \neq \tpath'$:
+    \\
+    \STATE \quad \quad \textbf{If} \highlight{$\kw{visited[\tpath_i]}$} skip the loop
+    \STATE \quad \quad $\kw{visited[\tpath_i]} = \etrue$
+    \STATE \quad \quad $\kw{w_i = wking-path.append(\tpath')}$
+    \\
+    \quad \quad \highlight{Compute Invariant $\kw{inv_i = merge(w_i, inv-list[-1])}$}
+    \STATE \quad \quad \textbf{If} \highlight{$\kw{inv_i = \bot}$} $\eskip$
+    \STATE \quad \quad \textbf{Elif} \highlight{$\kw{inv_i = inv-list[0]}$} $\kw{done-set.add(\rprepeat(w_i))}$.
+    \STATE \quad \quad \textbf{Elif} \highlight{$\kw{inv_i \notin inv-list}$} 
+    $\kw{unfinished-set \cup (dfs(w', inv-list++[inv_i], done-set)}$
+    \STATE \quad \quad \textbf{Else} 
+    Find the index $j$, such that $\kw{inv_i = inv-list[j] }$,
+    \STATE \quad \quad \quad
+    $\kw{(dfs(w[:j]++[\rprepeat(w[j:i])]', inv-list[:j], done-set)}$.
+    \STATE \quad \quad $\kw{visited[\tpath_i]} = \efalse$.
+    \STATE \quad \textbf{Return} $\kw{unfinished-set}$
+    \STATE Take $\tpath_0$ from a multiple-path loop program 
+    \STATE initialize $\kw{visited} = [\efalse]*$
+    \STATE computing $\kw{dfs([\tpath_0], I_0, [I_0], \{\} )}$
+    \RETURN $R_l$ for every while loop with its header at $l$.
+    \end{algorithmic}
+    \end{algorithm}
 
 
 
