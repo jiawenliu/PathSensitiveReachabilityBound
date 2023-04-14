@@ -1,7 +1,7 @@
 from collections import defaultdict
 import time
 from abstract_transition_graph import TransitionGraph
-from pathinsensitive_transition_bound import TransitionBound
+from ranking_and_transition_bound import TransitionBound
 from pathsensitive_rechability_bound import PathSensitiveReachabilityBound
 from symbolic_expression import SymbolicExpression, SymbolicConst
 from data_controlflow_graph import DCFGraph

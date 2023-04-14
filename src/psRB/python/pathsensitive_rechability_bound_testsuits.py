@@ -1,6 +1,6 @@
 from pathsensitive_rechability_bound import PathSensitiveReachabilityBound
 from program_refine import RefinedProg
-from pathinsensitive_transition_bound import TransitionBound
+from ranking_and_transition_bound import TransitionBound
 from graph_parse import GraphParser
 
 class TestUnits:

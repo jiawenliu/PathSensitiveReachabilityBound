@@ -2,7 +2,7 @@ from collections import defaultdict
 from re import L
 from abstract_transition_graph import TransitionGraph
 from symbolic_expression import SymbolicExpression, SymbolicConst
-from pathinsensitive_transition_bound import TransitionBound
+from ranking_and_transition_bound import TransitionBound
 
 class PathSensitiveReachabilityBound():
 

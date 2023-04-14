@@ -19,7 +19,6 @@ between two program points $l, l'$.
 The edge is constructed by the standard control flow analysis satisfying
 there is an edge from $l$ to $l'$ if and only if
 the command with label $l'$ can execute right after the execution of the command with label $l$.
-We use the same algorithm as in Section~\ref{sec:alg_abscfg-edge} to compute the constraint and edges.
 Specifically we compute the \emph{constraint}, the \emph{initial and continuation state} for each command
 and then generate the set of edges for the program, $\absflow(c)$ in which each edge is an
 \emph{abstract event}.
@@ -27,7 +26,7 @@ and then generate the set of edges for the program, $\absflow(c)$ in which each 
 A constraint describes the abstract execution of the assignment command with the label $l$,
 or abstract evaluation of the boolean expression in the guard with label $l$.
 
-Again we first introduce some components of the constraint. Most of them are the same as the definitions in Section~\ref{sec:alg_abscfg-edge}. We present them in detail in our simplified program model.
+Again we first introduce some components of the constraint.
 
 \begin{defn}[Symbolic Constant, Symbolic Expression]
  \label{def:symbolic_expr}
@@ -237,9 +236,9 @@ Then, we compute the $\absflow(c) = \absflow'(c')$ for $c'$ as follows,
  Notice $\absflow'(\clabel{\assign{x}{\expr}}^{l})$ and $\absflow'(\clabel{\eskip}^{l})$ are both empty set. 
  For every event $\event$ with label $l$ in an execution trace $\trace$ of program $c$, 
  there is an abstract event in the program's abstract execution trace of the form $(l, \_, \_)$. 
- We also show the soundness of the \emph{abstract event computation} as Theorem~\ref{lem:abscfg_sound} below with proof in Appendix~\ref{apdx:abs_sound}.
+ We show the soundness of the \emph{abstract event computation} as below with proof in Appendix~\ref{apdx:abs_sound}.
 \begin{lem}[Soundness of the Abstract Execution Trace]
-\label{lem:psRB-abscfg_sound}
+\label{lem:abscfg_sound}
 For any program $c$ with 
  % its abstract control flow graph $\absG(c) = (\absV(c), \absE(c))$,
  an arbitrary initial trace $\vtrace_0 \in \ftdom_0(c)$ and
@@ -310,7 +309,7 @@ With the vertices $\absV(c)$ and edges $\absE(c)$ ready, we construct the abstra
 Definition~\ref{def:abs_cfg}.
 %
 \begin{defn}[Abstract Transition Graph]
- \label{def:psRB-abs_cfg}
+ \label{def:abs_cfg}
  The \emph{abstract transition graph} of a program $c$ is $\absG(c) \triangleq (\absV(c), \absE(c))$, where
  $\absV(c) \triangleq \progl(c)\cup\{\lex\}$
  and each edge $(l, dc, l') \in \absE(c)$ is an abstract transition

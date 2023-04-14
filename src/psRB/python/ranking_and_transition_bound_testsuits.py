@@ -1,4 +1,4 @@
-from pathinsensitive_transition_bound import TransitionGraph, TransitionBound, DifferenceConstraint
+from ranking_and_transition_bound import TransitionGraph, TransitionBound, DifferenceConstraint
 
 class TestUnits:
 
