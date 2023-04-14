@@ -292,6 +292,12 @@ Then we construct the refined program for program $\kw{nestedOdd}(n, m)$ in Figu
 \]
 
 
+\paragraph{Termination Analysis.}
+The visiting array guarantees that every simple transition path is visited at most once.
+In this sense, the algorithm will not fall into infinite loop.
+
+
+
 \paragraph{Running Example.}
 For the walk-through an example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
 We first collect all its simple transition paths from $\absG(\kw{relatedNestedWhileOdd}(n, m))$ as
