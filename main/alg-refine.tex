@@ -158,85 +158,86 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
 % We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~10 and build the edge.
 
 \paragraph{Path Interleaving Refinement}
-\begin{algorithm}
-  \caption{
-  {Interleaving Refinement}
-  \label{alg:prog-refine}
-  }
-  \begin{algorithmic}[1]
-  \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
-  % the target while loop with label $l$.
-  \STATE  \textbf{Init} 
-  % \\
-  $R_l = \{\}$ initial set for each loop with header at program point $l$, (i.e., set of the transition sequences from interleaving-refinement) .
-  % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
-  \STATE Define algorithm \highlight{$\kw{dfs(w, I_0, Q)}$:}
-  \STATE \quad {$\kw{I = Q.top}$:}
-  \STATE \quad \textbf{For} each simple transition path $\tpath'$ that can execute right after $\tpath$,
-  $(\tpath, \tpath') \in cxlE(c)$ and $\tpath \neq \tpath'$;
-  \\
-  % \\
-  \STATE \quad \quad $\kw{w' = w.append(\tpath')}$
-  \\
-  \quad \quad \highlight{Compute Invariant $\kw{I' = API(\tpath', I)}$}
-  \STATE  \quad \quad Compute the exiting condition of $\tpath'$ (/ or Invariant by  API) $I'$ and the 
-  post condition (or final state) of executing $\tpath'$, $FS'$.
-  \STATE \quad \quad \textbf{If} \highlight{$\kw{I' \in Q}$}
-  \STATE \quad \quad \textbf{then}
-  % let $i$ be the index such that 
-  Let $w = [\tpath_1, \ldots; \tpath_n]$, $Q = [I_1, \ldots, I_n]$, and $i$ be the index such that $I_i = I'$
-  \\ \quad \quad \quad \quad \quad
-  $\kw{R_l.append(\tpath_1; \ldots; \tpath_{i - 1}; (\tpath_i; \ldots; \tpath')^*)}$
-  % \STATE \quad \quad \todo{\textbf{else} $\kw{dfs(w', I_l, FS')}$}
-  \STATE \quad \quad  \highlight{\textbf{else If} 
-  $\kw{I' \neq \bot}$ \textbf{then} ${\kw{dfs(w', I_0, Q.push(I'))}}$}
-  \STATE \textbf{For} each loop program $c_{l}$ with header at program point $l$, 
-  \STATE \quad \highlight{Compute Invariant $\kw{I_0 = API(c_{l}, \etrue)}$}
-  \STATE \quad computing $\kw{dfs([], I_0, [I_0] )}$
-  \RETURN $R_l$ for every while loop with its header at $l$.
-  \end{algorithmic}
-  \end{algorithm}
+% \begin{algorithm}
+%   \caption{
+%   {Interleaving Refinement}
+%   \label{alg:prog-refine}
+%   }
+%   \begin{algorithmic}[1]
+%   \REQUIRE $\absG(c)$, the contextualization $cxlG(c)$.
+%   % the target while loop with label $l$.
+%   \STATE  \textbf{Init} 
+%   % \\
+%   $R_l = \{\}$ initial set for each loop with header at program point $l$, (i.e., set of the transition sequences from interleaving-refinement) .
+%   % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
+%   \STATE Define algorithm \highlight{$\kw{dfs(w, I_0, Q)}$:}
+%   \STATE \quad {$\kw{I = Q.top}$:}
+%   \STATE \quad \textbf{For} each simple transition path $\tpath'$ that can execute right after $\tpath$,
+%   $(\tpath, \tpath') \in cxlE(c)$ and $\tpath \neq \tpath'$;
+%   \\
+%   % \\
+%   \STATE \quad \quad $\kw{w' = w.append(\tpath')}$
+%   \\
+%   \quad \quad \highlight{Compute Invariant $\kw{I' = API(\tpath', I)}$}
+%   \STATE  \quad \quad Compute the exiting condition of $\tpath'$ (/ or Invariant by  API) $I'$ and the 
+%   post condition (or final state) of executing $\tpath'$, $FS'$.
+%   \STATE \quad \quad \textbf{If} \highlight{$\kw{I' \in Q}$}
+%   \STATE \quad \quad \textbf{then}
+%   % let $i$ be the index such that 
+%   Let $w = [\tpath_1, \ldots; \tpath_n]$, $Q = [I_1, \ldots, I_n]$, and $i$ be the index such that $I_i = I'$
+%   \\ \quad \quad \quad \quad \quad
+%   $\kw{R_l.append(\tpath_1; \ldots; \tpath_{i - 1}; (\tpath_i; \ldots; \tpath')^*)}$
+%   % \STATE \quad \quad \todo{\textbf{else} $\kw{dfs(w', I_l, FS')}$}
+%   \STATE \quad \quad  \highlight{\textbf{else If} 
+%   $\kw{I' \neq \bot}$ \textbf{then} ${\kw{dfs(w', I_0, Q.push(I'))}}$}
+%   \STATE \textbf{For} each loop program $c_{l}$ with header at program point $l$, 
+%   \STATE \quad \highlight{Compute Invariant $\kw{I_0 = API(c_{l}, \etrue)}$}
+%   \STATE \quad computing $\kw{dfs([], I_0, [I_0] )}$
+%   \RETURN $R_l$ for every while loop with its header at $l$.
+%   \end{algorithmic}
+%   \end{algorithm}
 
   \begin{algorithm}
     \caption{
-    {Interleaving Refinement - II}
+    {Interleaving Refinement}
     \label{alg:prog-refine}
     }
     \begin{algorithmic}[1]
     \REQUIRE a loop program $c$ with multiple paths;
     \\
-    set of all the paths in this program:
-    $\{\tpath_0, \ldots, \tpath_m\}$,
+    set of all the paths in this loop program:
+    $P = \{\tpath_0, \ldots, \tpath_m\}$,
     \\
     the contextualization graph $cxlG(c)$ over paths.
     % the target while loop with label $l$.
     \STATE  \textbf{Init} 
     % \\
     % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
-    \STATE \textbf{Define} \highlight{$\kw{dfs(wking-path, inv-list, done-set)}$:}
-    \STATE \quad {$\kw{unfinished-set = \{\}}$:}
-    \STATE \quad {$\kw{inv0 = inv-list[-1]}$:}
+    \STATE \textbf{Define} \highlight{$\kw{dfs(wking\_path, inv\_list, done\_set)}$:}
+    \STATE \quad {$\kw{unfinished\_set = \{\}}$:}
+    \STATE \quad {$\kw{inv0 = inv\_list[-1]}$:}
     \STATE \quad \textbf{For} $(\tpath, \tpath_i) \in cxlE(c)$ and $\tpath \neq \tpath'$:
     \\
     \STATE \quad \quad \textbf{If} \highlight{$\kw{visited[\tpath_i]}$} skip the loop
     \STATE \quad \quad $\kw{visited[\tpath_i]} = \etrue$
-    \STATE \quad \quad $\kw{w_i = wking-path.append(\tpath')}$
+    \STATE \quad \quad $\kw{w_i = wking\_path.append(\tpath')}$
     \\
-    \quad \quad \highlight{Compute Invariant $\kw{inv_i = merge(w_i, inv-list[-1])}$}
+    \quad \quad \highlight{Compute Invariant $\kw{inv_i = merge(w_i, inv\_list[-1])}$}
     \STATE \quad \quad \textbf{If} \highlight{$\kw{inv_i = \bot}$} $\eskip$
-    \STATE \quad \quad \textbf{Elif} \highlight{$\kw{inv_i = inv-list[0]}$} $\kw{done-set.add(\rprepeat(w_i))}$.
-    \STATE \quad \quad \textbf{Elif} \highlight{$\kw{inv_i \notin inv-list}$} 
-    $\kw{unfinished-set \cup (dfs(w', inv-list++[inv_i], done-set)}$
+    \STATE \quad \quad \textbf{Elif} \highlight{$\kw{inv_i = inv\_list[0]}$} $\kw{done\_set.add(\rprepeat(w_i))}$.
+    \STATE \quad \quad \textbf{Elif} \highlight{$\kw{inv_i \notin inv\_list}$} 
+    $\kw{unfinished\_set \cup (dfs(w', inv\_list++[inv_i], done\_set)}$
     \STATE \quad \quad \textbf{Else} 
-    Find the index $j$, such that $\kw{inv_i = inv-list[j] }$,
+    Find the index $j$, such that $\kw{inv_i = inv\_list[j] }$,
     \STATE \quad \quad \quad
-    $\kw{(dfs(w[:j]++[\rprepeat(w[j:i])]', inv-list[:j], done-set)}$.
+    $\kw{(dfs(w[:j]++[\rprepeat(w[j:i])]', inv\_list[:j], done\_set)}$.
     \STATE \quad \quad $\kw{visited[\tpath_i]} = \efalse$.
-    \STATE \quad \textbf{Return} $\kw{unfinished-set}$
-    \STATE Take $\tpath_0$ from a multiple-path loop 
-    \STATE initialize $\kw{visited} = [\efalse]*$
-    \STATE computing $\kw{dfs([\tpath_0], I_0, [I_0], \{\} )}$
-    \RETURN $R_l$ for every while loop with its header at $l$.
+    \STATE \quad \textbf{return} $\kw{unfinished\_set}$
+    \STATE Take $\tpath_0$ from $P$ 
+    \STATE initialize $\kw{visited} = [\efalse]*m$ and $\kw{done\_set = \{\}}$
+    \STATE compute the invariant of the loop program $\kw{I_0}$
+    \STATE $\kw{dfs([\tpath_0], I_0, [I_0], done\_set )}$
+    \RETURN $\kw{done\_set}$
     \end{algorithmic}
     \end{algorithm}
 
@@ -297,29 +298,8 @@ The visiting array guarantees that every simple transition path is visited at mo
 In this sense, the algorithm will not fall into infinite loop.
 
 
-
-\paragraph{Running Example.}
-For the walk-through an example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b),
-We first collect all its simple transition paths from $\absG(\kw{relatedNestedWhileOdd}(n, m))$ as
-$\tpath_0 = (0 \to 1)$,
-$\tpath_1 = (1 \to 2 \to 3 \to 4)$,
-$\tpath_2 = (4 \to 6 \to 7 \to 1)$,
-$\tpath_3 = (4 \to 5 \to 4)$, $\tpath_4 = (1 \to 2 \to 8 \to 1)$, and $\tpath_5 = (1 \to \lex)$.
-Using these simple transition paths, we first rewrite this program by Algorithm~\ref{alg:alg-refine_rewrite} and get the rewritten program
-%  corresponding to the syntax in~\cite{GulwaniJK09} as
-$ \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2), 
-1: \rprepeat(\tpath_4) }; \tpath_5$.
-Then we construct the refined program as,
-\[
- \tpath_0 ; \rpchoose{ 
- \begin{array}{l}
- 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), \\
- 1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) 
- \end{array}
- }; \tpath_5.
-\]
-
-\paragraph{Example II.}
+\paragraph{Example.}
+\input{examples/whileTwoCounters-refine}
 We present again the motivating example program from Figure~\ref{fig:whileTwoCounters-overview}(a)
 below in Figure~\ref{fig:whileTwoCounters-refine}(a)
 %   another example from the .Net base-class library 
@@ -328,12 +308,10 @@ to show the necessity of the \emph{path refinement}.
 It has a two paths loop
 with different \emph{reachability-bound}s on the locations of different paths.
 %
-%
-\input{examples/whileTwoCounters-refine}
-%
+
 %  To know the bounds for locations on different branches of a loop, 
 %  it is necessary to know the alternating patterns of the two paths.
-Over its abstract transition graph in Figure~\ref{fig:whileTwoCounters-refine}(b), we first collect all its simple transition path as in Figure~\ref{fig:whileTwoCounters-refine-overview}(c).
+Over its abstract transition graph in Figure~\ref{fig:whileTwoCounters-refine}(b), we first collect all its simple transition path as in Figure~\ref{fig:whileTwoCounters-refine}(c).
 Then we transform the multiple-path loop by computing the interleaving between paths explicitly and
 generates a refined program $\rprog$ as the bottom part of Figure~\ref{fig:whileTwoCounters-refine}.
 
@@ -348,7 +326,7 @@ After execution of $\tpath_2$, we compute that $\tpath_1$ iterates on itself aga
 and goes back to the same execution sub-order. 
 The refinement algorithm finds this repetition and generate a complete execution order
 $\rprepeat(\rprepeat(\tpath_1); \tpath_2)$.
-Then the algorithm finish the refinement process since there is no more sub-orders. 
+Then the algorithm finish the refinement process since all the paths are visited and there is no more sub-orders. 
 %  In the first one, $\tpath_2$ will be executed after all the iterations of $\tpath_1$ are done, and in the second one,
 %  the entire loop is done after $\tpath_1$ finishes the iteration.
 The refined program then is constructed below as in Figure~\ref{fig:whileTwoCounters-refine}(e).
