@@ -4,17 +4,18 @@ Our static program analysis algorithm computes
 a \emph{reachability-bound} for every program point $l$ in a program $c$ in a path-sensitive manner.
 The algorithm is summarized into the following three steps,
 \begin{enumerate}
-\item The Section~\ref{sec:progabs} first 
-computes the \emph{Abstract Transition Graph}, $\absG(c)$ for a program $c$ through program abstraction.
-It computes the abstract transition 
-for every labeled command in $c$ and each abstract transition is an edge in $\absG(c)$.
+\item In Section~\ref{sec:progabs}, we 
+compute the \emph{Abstract Transition Graph}, $\absG(c)$ for a program $c$ through program abstraction.
+This step first computes the abstract transition 
+for every labeled command in $c$ and each abstract transition corresponds to an edge in $\absG(c)$.
 \item The second step in Section~\ref{sec:refine}
 computes the \emph{Refined Program}, $\rprog$ for a program $c$ based on 
 its abstraction transition graph by the program refinement algorithm in~\cite{GulwaniJK09}.
 This algorithm transforms the multiple-path loops
 into multiple loops where
 the interleaving of paths is explicit.
-\item At the same time, we also compute the \emph{Ranking Function} in Section~\ref{sec:rank}\footnote{\textbf{ranking function} is the name used in \cite{SinnZV14}
+
+\item At the same time, we compute the \emph{Ranking Function} in Section~\ref{sec:rank}\footnote{\textbf{ranking function} is the name used in \cite{SinnZV14}
 and \textbf{local bound} is the name used in \cite{ZulegerGSV11, SinnZV17}.
 We refer to the two names as having the same meaning in this paper.} for every transition edge 
 and estimate the upper bound invariant w.r.t, the input variables on every ranking function's maximum value.

@@ -119,31 +119,37 @@ during these iterations, the nested loop $l' = \kw{enclosed(\tpath)}$ is execute
   \]
 \end{lem}
 %
-The $\lpchB(l:\rprog, \tpath)$ 
-can also be over-approximated by
-$I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in paper\cite{GulwaniJK09}.
-$I(l, l')$ over-approximates this value to a large extend 
-by estimating the bound on iteration numbers of $l'$ in one iteration of $l$.
+% The $\lpchB(l:\rprog, \tpath)$ 
+% can also be over-approximated by
+% the function 
+% $I(l, l') = \kw{BOUNDFINDERD(INIT(c, i, \absinit(\tpath)), NEXT(c, i, \absinit(\tpath)), V_{\ln})}$ in 
+% paper\cite{GulwaniJK09}.
+% $I(l, l')$ over-approximates this value to a large extend 
+% by estimating the bound on iteration numbers of $l'$ in one iteration of $l$.
 
 \paragraph{Example.}
 % \todo{Walk through example}
-Since there is only two level nested loop in Example~\ref{ex:relatedNestedWhileOdd-overview},
+Since there is only one nested loop in Example~\ref{ex:relatedNestedWhileOdd-overview},
 the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^1, \tpath_3)$ 
-w.r.t. $\tpath_3$ and its outside loop $1$.
-We compute $1$ for both $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^2, \tpath_3)$. It is tight and indicating there is only $1$ iteration of $\rprog_1^1$, also $\rprog_1^2$ such that the inner loop $4$ will be entered.
-
-$\tpath_3$ has an outer loop program $\rprog_1^1$.
+w.r.t. $\tpath_3$ and its outside loop $L_1$.
+The outer loop program of $\tpath_3$ is $\rprog_1^1$.
 We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
+
+% We compute $1$ for both $\lpchB(\rprog_1^1, \tpath_3)$ and $\lpchB(1: \rprog_1^2, \tpath_3)$. It is tight and indicating there is only $1$ iteration of $\rprog_1^1$, also $\rprog_1^2$ such that the inner loop $4$ will be entered.
+
+% $\tpath_3$ has an outer loop program $\rprog_1^1$.
+% We first compute $\lpinit(\rprog_1^1, \tpath_3, c) = n - m $ and $\lpnext(\rprog_1^1, \tpath_3, c) = n - m - 1$ and then derive $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ as tight as expected.
 %
 
-Example~\ref{ex:relatedNestedWhileOdd-overview} has only two level nested loop, and
-the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$.
-We illustrate Example~\ref{ex:threeNestedWhile} with three nested loops, which can better show the improvement of the \emph{loop reachability-bound}.
-We show again here the motivating example from
+% Example~\ref{ex:relatedNestedWhileOdd-overview} has only two level nested loop, and
+% the only interesting \emph{loop reachability-bound} are $\lpchB(\rprog_1^1, \tpath_3)$.
+% We use another example in Example~\ref{ex:threeNestedWhile} with three nested loops to better show the improvement of the \emph{loop reachability-bound}.
+To illustrate clearer the improvement of the \emph{loop reachability-bound},
+we show again here the motivating example from
 Figure~\ref{fig:threeWhile-overview}(a) with three nested loops to show the importance of the \emph{loop reachability-bound} as in Figure~\ref{fig:threeWhile-looprb}(a).
 \input{examples/threeNestedWhile-looprb}
-This example is similar to the loop $L_4$ nested in the second branch in Figure~\ref{fig:relatedNestedWhileOdd-overview}.
-$w$ is reset by $j$ in command 5 and $i$ is then reset by $w$, so $L_6$ is only executed in the first iteration of loops $L_1$ and $L_3$.
+This example is similar to the loop $L_4$ nested in the second branch in Figure~\ref{fig:relatedNestedWhileOdd-overview}(a).
+$w$ is reset by $j$ in command of label $5$ and $i$ is then reset by $w$, so $L_6$ is only executed in the first iteration of loops $L_1$ and $L_3$.
 % \\
 Then the total iterations times are
 $n + m^2 - m \times N$,
