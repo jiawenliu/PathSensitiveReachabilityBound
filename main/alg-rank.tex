@@ -1,11 +1,12 @@
-This section is summarized into three steps as follows,
+We compute the ranking function and estimate its upper bound invariant in three steps as follows.
+
 \begin{enumerate}
- \item It first collects three edge sets for each variable,
+ \item For each variable, we collect three sets 
  in which the variable increases, decreases, and is reset respectively.
  \item
- Then, it assigns a variable (or a normalized counter expression that is viewed as variable) $x$ to the edge on which this symbol decreases as this edge's ranking function.
+ Then, we assign a symbol (a variable or a normalized counter expression that is viewed as variable)  as the ranking function to the edge on which this symbol decreases.
  \item
- In the last step, it estimates the upper bound invariant on the maximum value of each ranking function recursively.
+ In the last step, we compute the upper bound invariant on the maximum value of each ranking function recursively.
  In the meantime, it also computes an upper bound on the iteration times of each loop in a path-insensitive manner.
  \end{enumerate}
 
@@ -18,9 +19,8 @@ This section is summarized into three steps as follows,
  decreased
  % $\dec(x, c)$ and 
  or reset
- % $\reset(x, c)$, 
  respectively.
- The computation follows the same way as the Definition~\ref{def:var_modification}, we present them again as follows.
+
  \begin{itemize}
  \item
  $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
