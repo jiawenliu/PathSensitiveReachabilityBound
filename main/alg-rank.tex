@@ -9,16 +9,7 @@ This section is summarized into three steps as follows,
  In the meantime, it also computes an upper bound on the iteration times of each loop in a path-insensitive manner.
  \end{enumerate}
 
- The algorithm in this step is inspired by the Algorithm.2 in paper~\cite{SinnZV14},
- the Algorithm.3 in paper~\cite{ZulegerGSV11},
- and the Definition.25 in Section 4 of paper~\cite{SinnZV17}.
- Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
- and estimates the maximum value of each variable in this set.
- Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decreases as its ranking function
- and then estimates the maximum value for the ranking function.
- The Definition.25 in paper~\cite{SinnZV17}
- assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
- %
+  %
  \subsection{Collecting Variable Modifications}
  For each variable $x$ in a program $c$, this step computes three edge sets, $\inc(x, c)$, $\dec(x, c)$,
  and $\reset(x, c)$ for $x$.
@@ -114,6 +105,19 @@ This section is summarized into three steps as follows,
  The second and third cases are guaranteed by the \emph{Discussion on Soundness} in Section 4 in~\cite{SinnZV17}.
  The soundness is formalized in Lemma~\ref{lem:local_bound_sound} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
  %
+
+The calculation in Definition~\ref{def:ranking_gen} is inspired by the Algorithm.2 in paper~\cite{SinnZV14},
+ the Algorithm.3 in paper~\cite{ZulegerGSV11},
+ and the Definition.25 in Section 4 of paper~\cite{SinnZV17}.
+ Algorithm.3 in paper~\cite{ZulegerGSV11} assigns a set of variables to each transition in which these variables decrease as the local bound
+ and estimates the maximum value of each variable in this set.
+ Algorithm.2 in paper~\cite{SinnZV14} assigns a variable to each edge on which this variable decreases as its ranking function
+ and then estimates the maximum value for the ranking function.
+ The Definition.25 in paper~\cite{SinnZV17}
+ assigns each transition with a variable that decreases in this transition, as the local bound and computes the bound similarly.
+
+ 
+
  \paragraph{Example}
  In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we assign variable $i$ to edge $7 \xrightarrow{i' \leq i - 1} 1$ as ranking.
  If we remove this edge, the edges on $\tpath_2$ and $\tpath_1$ are not in any SCC, so they also have the same ranking.

@@ -129,22 +129,12 @@ we will check if $\expr$ is a norm or contains norms, and extend the $\grdvar(c)
 The constraint computation over the \emph{norm} follows the computation steps 1, 2, and 3 in Section 6.1 in paper~\cite{SinnZV17}. 
 %
 \paragraph{Initial and Continuation State Computation}
-This step computes two sets for each command. 
-The initial state is a set that contains the
-program points before executing this command, which is computed by the standard initial state generation method from control flow analysis.
-The continuation state is a set
-that contains the constraint of this command and the program points after the execution of this command.
-This set is enriched 
-by the standard control flow analysis.
-
 %
 \begin{itemize}
- \item The \emph{initial state}, $\absinit(c) \in \ldom$
- for a command $c$.
- $\absinit(c)$ is a unique program label that corresponds to the command before executing this command. 
-\\
-Given a program $c$, its abstract initial state, $\absinit(c)$ is computed as follows,
-%
+ \item The \emph{initial state}, $\absinit(c) \in \mathcal{P}(\ldom)$
+ for a command $c$ is the label of the first command that will be executed in $c$,
+ which is computed as follows.
+
 \[
  \begin{array}{ll}
  \absinit(\clabel{\assign{x}{\expr}}{}^l) & = l \\
@@ -161,11 +151,15 @@ $\absfinal(c) \in \mathcal{P}(\ldom \times \dcdom^{\top})$
 is a set of pairs, $(l, dc)$ with a
 program point (i.e., a label), $l$ as the first component and a constraint, 
 $dc$ as the second component.
-The program point $l$ corresponds to the labeled command after the execution of $c$,
-and the constraint $dc$ in this pair is computed by $\absexpr$ for the expression in $c$.
-\\
+% Every pair in $\absfinal(c)$ 
+The program point $l$ is the label of the command that is evaluated at last during the execution of $c$,
+and the constraint $dc$ in this pair is generated from this last command of label $l$.
+%  by $\absexpr$ for the expression in $c$.
+% in the first step.
+
 Given a program $c$, its continuation state, $\absfinal(c)$ is computed as follows,
- \[
+
+\[
  \begin{array}{ll}
  \absfinal(\clabel{\assign{x}{\expr}}{}^l) & = \{(l, \absexpr(\expr, x, c))\} \\
  \absfinal(\clabel{\eskip}^{l}) 
