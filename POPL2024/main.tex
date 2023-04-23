@@ -115,9 +115,12 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% INPUTTING SELF DEFINED COMMANDS, SELF IMPORTED PACKAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{ldefs}
-\newcommand{\THESYSTEM}{\textsf{AdaptFun}}
+\input{prelude}
+\newcommand{\THESYSTEM}{$\psRB$}
+\newcommand{\PSRB}{$\psRB$}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% FINISHING INPUTTING SELF DEFINED COMMANDS, SELF IMPORTED PACKAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
+
 
 %% end of the preamble, start of the body of the document source.
 \begin{document}
@@ -182,21 +185,7 @@
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-Data analyses are usually designed to identify some property of the population from which the data are drawn, generalizing beyond the specific data sample. For this reason, data analyses are often designed in a way that guarantees that they produce a low generalization error.
- That is, they are designed so that the result of a data analysis run on a sample data does not differ too much from the result one would achieve by running the analysis over the entire population. 
 
-An adaptive data analysis can be seen as a process composed by multiple queries interrogating some data, where the choice of which query to run next may rely on the results of previous queries. 
-The generalization error of each individual query/analysis can be controlled by using an array of well-established statistical techniques.
-However, when queries are arbitrarily composed, the different errors can propagate through the chain of different queries and bring to high generalization error. 
-To address this issue, data analysts are designing several techniques that not only guarantee bounds on the generalization errors of single queries, but that also guarantee bounds on the generalization error of the composed analyses. 
-The choice of which of these techniques to use, often depends on the chain of queries that an adaptive data analysis can generate.
-
-In this work, we consider adaptive data analyses implemented as while-like programs and we design a program analysis which can help with identifying which technique to use to control their generalization error. 
-More specifically, we formalize the intuitive notion of \emph{adaptivity} as a quantitative property of programs. 
-We do this because the adaptivity level of a data analysis is a key measure to choose the right technique. 
-Based on this definition, we design a program analysis for soundly approximating this quantity.
-The program analysis generates a representation of the data analysis as a weighted dependency graph, where the weight is an upper bound on the number of times each variable can be reached, and uses a path search strategy to guarantee an upper bound on the adaptivity. 
-We implement our program analysis  and show that it can help to analyze the adaptivity of several concrete data analyses with different adaptivity structures.
 \end{abstract}
 
 %%
@@ -260,36 +249,74 @@ We implement our program analysis  and show that it can help to analyze the adap
 \maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Introduction and Overview %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
 \section{Introduction}
 \label{sec:intro}
-\input{intro}
+\input{introduction}
+% %
 \section{Overview}
 \label{sec:overview}
 \input{overview}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Labeled Query  While  language }
-\label{sec:loop_language}
-{\input{whilelanguage}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Adaptivity %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\section{Definition of Adaptivity}
-\label{sec:adaptivity}
-\input{adapt}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Adaptfun %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\section{The Adaptivity Analysis Algorithm - {\THESYSTEM}}
-\label{sec:algorithm}
-{\input{adaptfun}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Evaluation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\section{Examples}
-\label{sec:examples}
-\input{examples}
-\section{Implementation}
-\input{evaluation}
+% %
+\section{{Language and Program Model}}
+\label{sec:language}
+\input{language}
+% %
+\section{{The Reachability-bound}}
+\label{sec:execution_rb}
+\input{rb_definition}
+% % 
+\section{Main Steps of Path-sensitive Reachability-bound Analysis}
+\label{sec:static_rb}
+\input{alg-preface}
+\section{Abstraction Transition Graph}
+\label{sec:progabs}
+\input{alg-progabs}
+\section{Loop Refinement}
+\label{sec:refine}
+\input{alg-refine}
+\section{Ranking Function Computation and Estimation}
+\label{sec:rank}
+\input{alg-rank}
+\section{Path-sensitive Reachability-bound Algorithm}
+\label{sec:psrb}
+\input{alg-psrb}
+\section{Path Local Reachability-bound Computation}
+\label{sec:pathlocalrb}
+\input{alg-pathlocalrb}
+\section{Loop Reachability-bound Computation}
+\label{sec:looprb}
+\input{alg-looprb}
+% \section{Path and Program Point Reachability-bound Computation}
+% \label{sec:alg-rb}
+% \input{alg-rb}
+\section{Path Reachability-bound Computation}
+\label{sec:pathrb}
+\input{alg-pathrb}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Related Work and Conclusion %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{Reachability-bound Computation}
+\label{sec:alg-rb}
+\input{alg-rb}
+
+% \section{Informal Discussion on the Path-sensitivity}
+% \label{sec:thminformal}
+% \input{alg-theorem_informal}
+\section{Examples}
+\label{sec:example}
+\input{examples}
+\section{Evaluation}
+\label{sec:eval}
+\input{eval}
 \section{Related Work}
+\label{sec:relatedwork}
 \input{relatedwork}
-\section{Conclusion and future works}
+%
+\section{Conclusion and Future Works}
+\label{sec:conlusion}
 \input{conclusion}
+\clearpage
+
+
 
 
 %%

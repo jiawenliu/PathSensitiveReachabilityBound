@@ -57,7 +57,8 @@ For comparison, we show the worst-case bound times $\sum\pointnum$ in the $2^{nd
  \label{tb:accuracy-eval}
  \centering
  {\scriptsize
- \begin{tabular}{ >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c | c | c | c | c | c | c |}
+%  \begin{tabular}{ >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c | c | c | c | c | c | c |}
+    \begin{tabular}{ c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
         &  &  &  & \multicolumn{5}{c|}{reachability-bound} & \multicolumn{5}{c|}{worst bound } &  \multicolumn{2}{c|}{} \\
 {Bench-} & {theory} & ($\# p$) & ($\# l$) & \multicolumn{5}{c|}{ ($\pointnum$)} & \multicolumn{5}{c|}{($\# p$)} & \multicolumn{2}{c|}{overall complexity bound}\\
  \cline{5-16}
@@ -125,7 +126,7 @@ Since our prototype consists of the implementations in OCaml and Python, the int
 \label{tb:performance-eval}
     \centering
 {\scriptsize
-\begin{tabular}{ | >{\small}c | c | c | c | c | c | c | c | c | c | c |}
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c | c | c |}
 \hline
 \multirow{2}{*}{Benchmarks} & \multirow{2}{*}{\# P}  & {M.P.L} & Nested  & {Bounded} & L.O.C & {Success} & \multirow{2}{*}{Failed} & Time  & Total
 \\

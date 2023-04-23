@@ -1,6 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMMANDS FOR GENERAL PAPER WRITING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\highlight}[1]{\textcolor[rgb]{.0,0.0,1.0}{ #1}}
 
 %%%%%%%%%%%%%%%%%% LINK STYLE:
 \hypersetup{
@@ -16,11 +17,20 @@
 \newtheorem{coro}{Corollary}[thm]
 % \newtheorem{lemma}[theorem]{Lemma}
 
+% \usepackage{multirow}
+\usepackage{multirow}
+
+% \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+% text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+% \tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+% text width=5em, text centered, rounded corners, minimum height=4em]
+% \tikzstyle{line} = [draw, -latex']
+% \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+% minimum height=2em]
 
 
-
-\renewcommand\thelemma{\unskip}
-\renewcommand\thecorollary{\unskip}
+% \renewcommand\thelemma{\unskip}
+% \renewcommand\thecorollary{\unskip}
 
 
 
@@ -42,6 +52,7 @@
 
 % \theoremstyle{definition}
 
+\newtheorem{case}{Case}
 \newtheorem{subcase}{Case}
 \numberwithin{subcase}{case}
 \newtheorem{subsubcase}{Case}
