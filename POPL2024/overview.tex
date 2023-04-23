@@ -21,17 +21,17 @@ This motivates our first key novelty -- the \emph{path reachability-bound}
 for a loop-free and interleaving-free path $\tpath$.
 It bounds the times that each path is evaluated in a path-refined program.
 
-\textbf{Challenge II} The second challenge occurs in the nested loop.
+\textbf{Challenge II} T
+\highlight{he second challenge occurs in the nested loop.
 In the command of label 3, $k$ is reset by $i - m$, and $i$ is reset by $k + m$ after the
-loop $L_4$, so $L_4$ is only executed in the first iteration of while loop $L_1$.
+loop $L_4$, so $L_4$ is only executed in the first iteration of loop $L_1$.
+We say the loop $L_4$ is ``reached'' only once in the outer loop $L_1$.
 % \\
-The total number of iterations is
+The total number of loop iterations is
 $n - m + \lfloor\frac{m}{2}\rfloor + 1$,
 and the tight \emph{reachability-bound} for location $5$ inside $L_4$ is $m$, which is the same as this innermost loop iteration bound.
 % \\
-{
-However, for the locations between $L_1$ and $L_4$,
-the tight \emph{reachability-bound} s are the product of the inner and outer loop iteration bounds.}
+}
 Existing approaches either ignore path sensitivity or compute the same bound for all the locations in a loop.
 None of them can give the precise \emph{reachability-bound}s for different locations in the loop.
 Even if the loop bound is known, they are non-trivial to compute.
@@ -46,4 +46,3 @@ with its \emph{loop reachability-bound} w.r.t $L_1$, we can obtain an accurate
 % This quantity isn't considered or computed in any of the previous works.
 \cite{GulwaniJK09} considers a similar quantity using the \emph{Progress Invariant}, but it bounds the iteration times of {inner loop $L_4$} w.r.t. one iteration of $L_1$, which is $m$. They still over-approximate the bound for locations inside $L_4$ as $m \times (n - m)$.
 With these two key quantities, our algorithm computes the reachability-bound for this example through the following steps.
-\input{alg-overview}
