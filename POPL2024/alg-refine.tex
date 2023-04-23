@@ -1,72 +1,240 @@
 % This procedure has three sub-procedures in each paragraph below.
 \paragraph{The Simple Transition Path}
-We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers.
-% in program $c$,
-Then we collect all the \emph{simple transition path}s, $\tpath$ from its abstract transition graph as follows.
-\begin{defn}[Simple Transition Path]
- \label{def:tpath}
+We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
+\begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
+  \label{def:loopl}
+  \[
+  \loopl(c) \triangleq 
+  \left\{
+    \begin{array}{ll}
+      \{\}  & {c} = \clabel{\assign x e}^{l} \\
+      \loopl({c_1}) \cup \loopl({{c_2}})  & {c} = {c_1};{c_2} \\
+      \loopl(c_t) \cup \loopl({{c_f}})   & {c} =\eif(\clabel{\bexpr}^{l}, c_t, c_f) \\
+  \loopl(c_w) \cup \{l\}, &  {c}   = \ewhile \clabel{\bexpr}^{l} \edo (c_w)
+  \end{array}
+\right.
+\]
+  \end{defn}
+% \begin{defn}[Loop Path]
+%   \label{def:looppath}
+% A simple transition path
+% $\tpath \in \paths(\absG(c))$ for the program $c$, is a path on its abstract transition graph $\absG(c) = (\absV(c), \absE(c))$ with 
+% \begin{itemize}
+% \item a vertices sequence $(l_0, \ldots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \ldots, n$ and
+% %
+% \item an edge sequence $(e_1, \ldots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \ldots, n$,
+% \end{itemize}
+% %
+% satisfying:
+% \begin{itemize}
+%   \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 0, \ldots, {n - 1}$,
+%   \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+%   i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
+%   \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
+%   i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$.
+% \end{itemize}
+% \end{defn}
+
+\begin{defn}[Simple Tansition Path]
+  \label{def:tpath}
 A \emph{simple transition path}
-$\tpath$ for the program $c$, is either a simple cyclic path
-%, which has the same start- and end-point
-or a simple path having either different while loop headers, the program entrance or exit as its start- and end-point
+$\tpath \in \paths(\absG(c))$ for the program $c$, is either a simple cyclic path, which has the same start- and end-point
+or a simple path has either different while loop headers, the program entrance or exit as its start- and end-point
 without visiting any loop header inside the path.
 \\
-Formally, a path $l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots l_n \in \paths(\absG(c))$ with the
-vertices $(l_0, \ldots, l_n)$ and the edges $(e_1, \ldots, e_n)$, where $l_i \in \absV(c)$ and $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 0, \ldots, n$
+Specifically, a path $l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots l_n \in \paths(\absG(c))$ with the
+vertices sequence $(l_0, \ldots, l_n)$, where $l_i \in \absV(c)$ for every $i = 0, \ldots, n$ and
+%
+the edge sequence $(e_1, \ldots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \in \absE(c)$ for every $i = 1, \ldots, n$,
 %
 is a \emph{simple transition path} if and only if it satisfies,
 \begin{itemize}
- \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 0, \ldots, {n - 1}$,
- \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
- i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
- \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
- i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$,
- \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
+  \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 0, \ldots, {n - 1}$,
+  \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
+  i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
+  \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
+  i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$,
+  \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
 \end{itemize}
 \end{defn}
-Each $\tpath$ is loop-free and interleaving-free corresponding to a path in the flatten program in Definition~4.1 in \cite{GulwaniJK09}.
-% contains only the edges of atomic assignment or guard transitions, which
-For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), the $1 \to 2 \to 8 \to 1$ is a \emph{simple transition path}.
-However, $1 \to 2 \to 3 \to 4 \to 5 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it is not simple.
-Also, $1 \to 2 \to 3 \to 4 \to 6 \to 7 \to 1$ is not a \emph{simple transition path} because it visits a loop header $4$ inside the path. $1 \to 2 \to 3$ isn't either because its end-point isn't a loop header.
 
 \paragraph{Program Rewriting}
-Then we rewrite the program $c$ by rearranging all \emph{simple transition path}s as the syntax in \cite{GulwaniJK09} and preserves the same semantics in Algorithm~\ref{alg:alg-refine_rewrite} in Appendices~\ref{apdx:alg-rewrite}.
-% We first collect all the \emph{simple transition path}s as the algorithm input. 
-The algorithm takes the set of all $\tpath$ as the input and initializes each candidate with a
-$\tpath$.
-In iterating, it generates new candidates by composing and deletes the used ones until stabilized.
+\paragraph{Syntax.}
+
+\[
+    \rprog := \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} 
+\]
+where $l\in \loopl(c)$ is a loop header.
+
+In the new syntax, $\rprepeat(\rprog)$ is a loop statement iterating over the transitions in $\rprog$.
+$l: \rprepeat(\rprog)$ represents that the loop $ \rprepeat(\rprog)$
+corresponds to a loop of the source program with loop header $l$.
+The multiple-paths statement $\rpchoose{\rprog, \ldots} $ contains all the execution paths of a loop from the source program.
+
+
+\paragraph{Algorithm.}
+Algorithm~\ref{alg:alg-refine_rewrite} transforms the syntax of the while language program 
+into the new syntax defined above.
+% following~\cite{GulwaniJK09} and preserves the semantics.
+
+In this algorithm, we first use a simple depth-first search strategy to collect all the \emph{simple transition path}s satisfying the Definition~\ref{def:tpath}. 
+% It guarantees that every $\tpath$ is equivalent to a path $\rho$ in Definition~4.1 of \cite{GulwaniJK09}.
+In line:2, we initialize each candidate $c_i$ with a \emph{simple transition path} $\tpath_i$. 
+New candidates generated in line:4, 5, and 6 correspond to the loop statement $\rprepeat(c_i)$, multiple-paths statement $\rpchoose{\ldots}$ and sequence statements $c_i; c_j$ respectively.
+
+\begin{algorithm}
+ \caption{Program Rewriting Algorithm. $\kw{Rewrite}(c)$}
+ \label{alg:alg-refine_rewrite}
+ \begin{algorithmic}[1]
+ \REQUIRE program $c$
+%  collects all $c$'s \emph{simple transition path}s from $\absG(c)$, $\tpath_1, \ldots, \tpath_n \in \paths(\absG(c))$.
+ \STATE \textbf{init}: 
+ Set of all \emph{simple transition path}s, 
+ $\mathcal{P} = \{ \tpath_1, \ldots, \tpath_n \}$.
+ \\
+ The candidate set $W = \{c_1, \ldots, c_n\}$, where $c_i = \tpath_i$ for $i = 1, \ldots, n$
+ \STATE \textbf{while} $W.size()> 1$:
+ \STATE
+ \quad create $c' = \rprepeat(c)$ s.t. $c_i \in W \land c[0] = c[-1] \land c[0] \in \loopl(c)$
+ \\ \quad $W.add(c[0]: c')$, \qquad $W.remove(c)$
+ \STATE \quad create $c' = \rpchoose{c_1, \ldots, c_m}$ 
+ s.t. $c_i, c_j \in W \land c_i[0] = c_j[0] = c_i[-1] = c_j[-1]$, $i, j = 1, \ldots, m$.
+ \\ \quad $W.add(c')$ \qquad $W.remove(c_1, \ldots, c_m)$
+ \STATE \quad create $c' = c_1; c_2$ s.t. $c_1, c_2 \in W \land c_1[-1] = c_2[0]$
+ \\
+ \quad $W.add(c')$ \qquad $W.remove(c_1, c_2)$
+ \STATE \textbf{Endwhile}
+ \\ $c^T = W[0]$
+ \RETURN $c^T$.
+\end{algorithmic}
+\end{algorithm}
 %
-The corresponding rewritten program in Figure~\ref{fig:relatedNestedWhileOdd-overview} is
-$ 
-\tpath_0; \rpchoose{\rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2),\rprepeat(\tpath_4) }; \tpath_5
-$.
+%  in paper~\cite{GulwaniJK09} respectively.
+\begin{itemize}
+\item
+Line:4 find the candidate $c'$ that has the same start- and end-point.
+Each candidate corresponds to a loop path, and we create for this candidate a loop statement
+$\rprepeat(c')$.
 
-\paragraph{Program Refinement}
-We implement the algorithm REFINE from paper~\cite{GulwaniJK09} which takes the rewritten program $c$ as input and returns the
-refined program $\rprog$. We denote by $\kw{enclosed}(\rprog, \tpath)$ the closest loop where $\tpath$ is located in $\rprog$.
-The $\rprog$ at the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview} where we can find two interleaving patterns.
-The two loop paths are alternatively executing after each other in the two patterns and
- $4:\rprepeat(\tpath_3) = \kw{enclosed}(\rprog, \tpath_3)$.
+\item
+ Line:5 
+ finds all the candidates $c_1, \ldots, c_m$ that start and end at the same point.
+ These candidates are multiple-paths of a same loop, 
+ we create for these candidates a multiple-path loop statement,  $\rpchoose{c_1, \ldots, c_m}$.
+\item
+Line:6 finds all pairs of candidates $c_1, c_2$ such that  $c_2$ starts with the point where $c_1$ ends.
+%  label, rewrite them 
+For each pair, we create a sequence statement
+ $c_1; c_2$.
+\end{itemize}
 
- We use another example from the benchmark set of~\cite{GulwaniJK09} to show the necessity of the \emph{path refinement}. It has a two paths loop
- with different \emph{reachability-bound}s on the locations of different paths.
- We denote by $\absevent \in \rprog$ that $\absevent$ is an edge on  an $\tpath'$ in $\rprog$.
- %
-Given $n \geq m$,
-the expected \emph{reachability-bound} for the locations $4$ and $5$ on the$\ethen$branch is $m \times \lfloor\frac{n}{m}\rfloor$
-while for locations on the other branch, $2$ and $3$ is $(m + 1) \times \lfloor\frac{n}{m}\rfloor + 1$. 
-The best state-of-art bound analysis
-gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$.
-\input{examples/whileTwoCounters-overview}
-To know the bounds for locations on different branches of a loop, 
-it is necessary to know the alternative iteration patterns of the two paths.
-So over its abstract transition graph generated by Section~\ref{sec:progabs} as Figure~\ref{fig:whileTwoCounters-overview}(b), we collect all its simple transition path as in Figure~\ref{fig:whileTwoCounters-overview}(c).
-Through loop refinement, we explicate the interleaving between paths and
-% using the control-flow refinement technique from~\cite{GulwaniJK09} and 
-transform the loop into the refined program $\rprog$ as the bottom part of Figure~\ref{fig:whileTwoCounters-overview}.
-From this refined program, we can explicitly tell two possible path interleaving patterns.
-In the first one, $\tpath_2$ will be executed after all the iterations of $\tpath_1$ are done, and in the second one,
-only the first loop path $\tpath_1$ will iterate.
-Then the following computation based on this refined program can compute more accurate \emph{reachability-bound}s.
+% \todo{soundness of the program write}
+\subsection{Program Refinement}
+
+\paragraph{Contextualization}
+
+$cxlE$ is a set of edges between two simple transition paths of program $c$. There is an edge from $\tpath_1$ to $\tpath_2$
+if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
+% We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~10 and build the edge.
+
+\paragraph{Path Interleaving Refinement}
+
+  \begin{algorithm}
+    \caption{
+    {Interleaving Refinement}
+    \label{alg:prog-refine}
+    }
+    \begin{algorithmic}[1]
+    \REQUIRE a loop program $c$ with multiple paths;
+    \\
+    set of all the paths in this loop program:
+    $P = \{\tpath_0, \ldots, \tpath_m\}$,
+    \\
+    the contextualization graph $cxlG(c)$ over paths.
+    % the target while loop with label $l$.
+    \STATE  \textbf{Init} 
+    % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
+    \STATE \textbf{Define} {$\kw{dfs(wking\_path, inv\_list, done\_set)}$:}
+    \STATE \quad {$\kw{unfinished\_set = \{\}}$:}
+    \STATE \quad {$\kw{inv0 = inv\_list[-1]}$:}
+    \STATE \quad \textbf{For} $(\tpath, \tpath_i) \in cxlE(c)$ and $\tpath \neq \tpath'$:
+    \\
+    \STATE \quad \quad \textbf{If} {$\kw{visited[\tpath_i]}$} skip the loop
+    \STATE \quad \quad $\kw{visited[\tpath_i]} = \etrue$
+    \STATE \quad \quad $\kw{w_i = wking\_path.append(\tpath')}$
+    \\
+    \quad \quad {Compute Invariant $\kw{inv_i = merge(w_i, inv\_list[-1])}$}
+    \STATE \quad \quad \textbf{If} {$\kw{inv_i = \bot}$} $\eskip$
+    \STATE \quad \quad \textbf{Elif} {$\kw{inv_i = inv\_list[0]}$} $\kw{done\_set.add(\rprepeat(w_i))}$.
+    \STATE \quad \quad \textbf{Elif} {$\kw{inv_i \notin inv\_list}$} 
+    $\kw{unfinished\_set \cup (dfs(w', inv\_list++[inv_i], done\_set)}$
+    \STATE \quad \quad \textbf{Else} 
+    Find the index $j$, such that $\kw{inv_i = inv\_list[j] }$,
+    \STATE \quad \quad \quad
+    $\kw{(dfs(w[:j]++[\rprepeat(w[j:i])]', inv\_list[:j], done\_set)}$.
+    \STATE \quad \quad $\kw{visited[\tpath_i]} = \efalse$.
+    \STATE \quad \textbf{return} $\kw{unfinished\_set}$
+    \STATE Take $\tpath_0$ from $P$ 
+    \STATE initialize $\kw{visited} = [\efalse]*m$ and $\kw{done\_set = \{\}}$
+    \STATE compute the invariant of the loop program $\kw{I_0}$
+    \STATE $\kw{dfs([\tpath_0], I_0, [I_0], done\_set )}$
+    \RETURN $\kw{done\_set}$
+    \end{algorithmic}
+    \end{algorithm}
+
+
+
+The interleaving refinement algorithm computes the execution order of each simple transition paths explicitly.
+This algorithm is inspired from the algorithm REFINE in paper~\cite{GulwaniJK09}. 
+
+It first computes the execution orders of
+the simple transition paths that come from the same loop.
+For example, two simple transition paths $\tpath_1 = (1 \to 2 \to 3 \to 4)$ and 
+$\tpath_4 = (1 \to 2 \to 8 \to 1)$ in the same loop Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) have two possible execution orders:
+either $\tpath_1$ executes after the execution of $\tpath_4$, or vice verse.
+% and compute the 
+
+Then we construct the refined program by explicating the execution orders of simple transition paths.
+% refined program $\rprog$ for a rewritten program $c$.
+Simple transition paths can iterate on themselves, so an execution order could
+contain iterations of simple transition paths, and sequence of iterations.
+For example, the simple transition path $\tpath_3 = (4 \to 5 \to 4)$
+the loop $L_4$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) has only one possible execution order,
+which is the iteration on itself, $\rprepeat(\tpath_3)$.
+
+Each loop in a refined program contains several execution orders over simple transition paths.
+For example, the loop $L_1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b)
+has two execution orders. In the first one,
+$\rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2)$ 
+$\tpath_1$ will execute right after the execution of $\tpath_4$.
+Then following the execution of $\tpath_1$, loop $L_4$ finishes full iterations and followed by the execution of $\tpath_2$.
+In the second execution order,
+$\rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
+$\tpath_4$ is executed after the execution of $\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2$.
+Iteration of one execution order is equivalent to one possible full iterations of the source loop program.
+In this sense, we construct $1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$ as an execution path of the loop $L_1$ in the source program with loop header $1$.
+The refined loop program for $L_1$ is 
+\[
+\rpchoose{ 
+ \begin{array}{l}
+ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), \\
+ 1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) 
+ \end{array}
+ }.
+\]
+
+Then we construct the refined program for program $\kw{nestedOdd}(n, m)$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(a) as follows, which is also presented in Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
+\[
+ \tpath_0 ; \rpchoose{ 
+ \begin{array}{l}
+    1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), \\
+    1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) 
+ \end{array}
+ }; \tpath_5.
+\]
+
+
+\paragraph{Termination Analysis.}
+The visiting array guarantees that every simple transition path is visited at most once.
+In this sense, the algorithm will not fall into infinite loop.
 
