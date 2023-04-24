@@ -1,20 +1,4 @@
 % This procedure has three sub-procedures in each paragraph below.
-\paragraph{The Simple Transition Path}
-We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
-\begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
-  \label{def:loopl}
-  \[
-  \loopl(c) \triangleq 
-  \left\{
-    \begin{array}{ll}
-      \{\}  & {c} = \clabel{\assign x e}^{l} \\
-      \loopl({c_1}) \cup \loopl({{c_2}})  & {c} = {c_1};{c_2} \\
-      \loopl(c_t) \cup \loopl({{c_f}})   & {c} =\eif(\clabel{\bexpr}^{l}, c_t, c_f) \\
-  \loopl(c_w) \cup \{l\}, &  {c}   = \ewhile \clabel{\bexpr}^{l} \edo (c_w)
-  \end{array}
-\right.
-\]
-  \end{defn}
 % \begin{defn}[Loop Path]
 %   \label{def:looppath}
 % A simple transition path
@@ -34,7 +18,24 @@ We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program 
 %   i.e., $l_0 \in \loopl(c) \cup \{ \lex \}$.
 % \end{itemize}
 % \end{defn}
+\subsection{Program Rewriting}
 
+\paragraph{The Simple Transition Path}
+We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
+\begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
+  \label{def:loopl}
+  \[
+  \loopl(c) \triangleq 
+  \left\{
+    \begin{array}{ll}
+      \{\}  & {c} = \clabel{\assign x e}^{l} \\
+      \loopl({c_1}) \cup \loopl({{c_2}})  & {c} = {c_1};{c_2} \\
+      \loopl(c_t) \cup \loopl({{c_f}})   & {c} =\eif(\clabel{\bexpr}^{l}, c_t, c_f) \\
+  \loopl(c_w) \cup \{l\}, &  {c}   = \ewhile \clabel{\bexpr}^{l} \edo (c_w)
+  \end{array}
+\right.
+\]
+  \end{defn}
 \begin{defn}[Simple Tansition Path]
   \label{def:tpath}
 A \emph{simple transition path}
@@ -58,7 +59,6 @@ is a \emph{simple transition path} if and only if it satisfies,
 \end{itemize}
 \end{defn}
 
-\paragraph{Program Rewriting}
 \paragraph{Syntax.}
 
 \[
