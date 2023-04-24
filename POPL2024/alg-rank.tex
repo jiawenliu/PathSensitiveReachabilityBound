@@ -2,6 +2,7 @@
 % % which assigns a variable to each edge on which this variable decreases as its ranking function.
 % the Alg.~3 in~\cite{ZulegerGSV11},
 % and the Def.~25 in Section 4 from~\cite{SinnZV17}, and enriched with path-sensitivity.
+\todo{distinguish the previous works and new contribution, reduce the previous definitions.}
 \paragraph{Collecting Variable Modifications}
  For each variable $x$ in a program $c$, we first compute three transition sets, $\inc(x, c)$, $\dec(x, c)$,
  and $\reset(x, c)$ for $x$
@@ -68,38 +69,51 @@
  It is similar to the local bound computation in~\cite{SinnZV17}.
  % to assign the local bound to each edge as follows.
  \begin{defn}[Ranking Function Generatation]
- \label{def:ranking_gen}
- For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
- its \emph{ranking function}, $\locbound(\absevent, c)$
- is the symbol $x\in \scvar(c)$ that decreases on this edge as follows where $SCC(\absG(c))$ is the set of all the strong connected components of $\absG(c)$.
-{\small
-\[ 
-\begin{array}{ll}
- \locbound(\absevent, c) \triangleq 1 
- & \absevent \notin SCC(\absG(c))
- \\
- \locbound(\absevent, c) \triangleq x
- & \absevent \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land \absevent = (\_, \_ , x' \leq x - v) \\
- \locbound(\absevent, c) \triangleq x
- & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \land \locbound(\absevent', c) = x \\
- % \in SCC(\absG(c)) \land \absevent \in \dec(x, c) \land \absevent = (\_, \_ , x' \leq x - v) \\
- \locbound(\absevent, c) \triangleq x
- & \absevent \in SCC(\absG(c)) \land 
- \absevent \notin \bigcup_{x \in \vardom} \dec(x, c)
- \land \absevent \notin SCC(\absG(c) \setminus \dec(x, c))\\
- \locbound(\absevent, c) \triangleq \infty
- & o.w.
-\end{array}
-\]
-}
- \end{defn}
+    \label{def:ranking_gen}
+    For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
+    its \emph{ranking function/local bound}, $\rank(\absevent, c)$
+    is the variable that decreases on this edge, computed as follows,
+    %
+    \[ 
+   \begin{array}{ll}
+    \rank(\absevent, c) \triangleq 1 
+    & \absevent \notin \kw{SCC}(\absG(c))
+    \\
+    \rank(\absevent, c) \triangleq x
+    & \absevent \in \kw{SCC}(\absG(c)) \land \absevent \in \dec(x, c) \land \absevent = (\_, \_ , x' \leq x - v) \\
+    \rank(\absevent, c) \triangleq \rank(\absevent', c)
+    & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \\
+    \rank(\absevent, c) \triangleq x
+    & \absevent \in \kw{SCC}(\absG(c)) \land 
+    \absevent \notin \bigcup_{x \in \vardom} \dec(x, c) \\
+    & \qquad \land \absevent \notin \kw{SCC}(\absG(c) \setminus \dec(x, c))\\
+    \rank(\absevent, c) \triangleq \infty
+    & o.w..
+   \end{array}
+   \]
+    $\kw{SCC}(\absG(c))$ is the set of all the non-trivial strongly connected components of $\absG(c)$.
+    \end{defn}
+    The first case is straightforward. 
+    For the label $l$ which is not in any while loop, 
+    the labeled command with the label $l$ will be 
+    evaluated at most once. 
+    The second and third cases are guaranteed by the \emph{Discussion on Soundness} in Section 4 in~\cite{SinnZV17}.
+    % The soundness is formalized in Lemma~\ref{lem:local_bound_sound} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+   
  %
  % \todo{Example of ranking function estimated}
  In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we assign variable $i$ to edge $7 \xrightarrow{i' \leq i - 1} 1$ as ranking.
  If we remove this edge, the edges on $\tpath_2$ and $\tpath_1$ are not in any SCC, so they also have the same ranking.
 In the same way, ranking for edges on $\tpath_4$ is $i$ and $\tpath_3$ is $k$.
+
  \paragraph{Estimating the Upper Bound Invariant}
-Then we estimate the upper bound invariant, $\varinvar(\locbound(\absevent, c), c)$ for the ranking function of each abstract transition, $\locbound(\absevent, c)$. Meanwhile, we interactively compute an iteration upper bound, $\absclr(\absevent, c)$ for each $\absevent$ path-insensitively when estimating the ranking function invariant.
+Then we estimate the upper bound invariant, $\varinvar(\locbound(\absevent, c), c)$ for the ranking function of each abstract transition, $\locbound(\absevent, c)$, which
+is an invariant of the maximum value of $\rank(\absevent, c)$ during the program execution.
+
+In order to estimate the invariant of the maximum value of the ranking function $\rank(\absevent, c)$
+ of the edge $\absevent \in \absE(c)$, we use a mutual recursion and recursively compute
+ the bound on the iteration times of the edge, $\absclr(\absevent, c)$ in the meantime.
+
 \begin{defn}[Ranking Function Estimation]
  \label{def:ranking_bound}
 For a program $c$ and an edge $\absevent \in \absE(c)$,
@@ -123,22 +137,6 @@ The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$ on the execut
 % and the approach based on the reset graph is in Appendices~\ref{apdx:alg-resetgraph}.
 % }
 {\small
-% \[ 
-% \begin{array}{lll}
-% \absclr(\absevent, c) 
-% & \triangleq \varinvar(\locbound(\absevent, c), c) & \\
-% & \quad \text{if} ~ \locbound(\absevent, c) \in \scvar(c) & \\
-% \absclr(\absevent, c) 
-% & \triangleq
-% \sum \left\{ \incrs(y, c) | ch \in \resetchain(x, c) \land y \in ch \right\} & \\
-% & \quad + 
-% \sum\limits_{ch \in \resetchain(x, c)}
-% \min \left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
-% \big(\varinvar(in(ch), c) 
-% + \sum\limits_{(\_, (\_, x' \leq y + v, \_), \_) \in ch} v \big) & \\
-% & \quad \text{if} ~\locbound(\absevent, c) = x \land x \notin \scvar(c) & ,
-% \end{array}
-% \]
 \[ 
 \begin{array}{lll}
  \absclr(\absevent, c) 
