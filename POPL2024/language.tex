@@ -3,20 +3,22 @@ We use a standard integer while language with labels to identify different progr
 \emph{Labeled Command}
 The commands are the typical ones from while languages with each annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$ to uniquely identify each program point. The program is a labeled command $c$ having the following syntax. 
 \\
-$ \qquad \qquad
+\[
 {c} ::= 
 \clabel{\assign{x}{\expr}}^l 
 ~|~ \clabel{\eskip}^l
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c} 
-$
+\]
 \\
 Expressions include
 integer arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
 % The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression.
-We denote by $\cdom$ the universe of all labeled commands, $\ldom$ for all labels, and
-$\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$.
+We denote by $\cdom$ the universe of all labeled commands, $\ldom$ for all labels,
+$\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$,
+and $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
+% We use $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
 
 
 \emph{Event and Trace.}
