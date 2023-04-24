@@ -28,13 +28,15 @@ Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the ex
  \end{defn}
 % \footnotetext{In a refined program, there is only one non-zero $\inoutB(l':\rprog'', \tpath)$ where $\tpath \in \rprog''$.}
 
-$\inoutB(\rprog, \tpath, c)$ is a sound \emph{path reachability-bound}
-in \highlight{Appendix~\ref{apdx:pathrb-sound}}.
+$\inoutB(\rprog, \tpath, c)$ is a sound \emph{path reachability-bound}.
 %
-In Figure~\ref{fig:relatedNestedWhileOdd-overview}, with $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
+
+For the example program in Figure~\ref{fig:relatedNestedWhileOdd-overview}(a),
+with $\lpchB(\rprog_1^1, \tpath_3, c) = 1$ and
 $\outinB(\rprepeat(\tpath_3), \tpath_3, c) = n - m$ computed before,
 we obtain $\inoutB(\rprog, \tpath, c) = 1 \times (n - m)$ as tight as expected.
-In Figure~\ref{fig:threeWhile-overview}, with $\lpchB(\rprog_1, \tpath_3, c) = 1$,
+
+For the other example in Figure~\ref{fig:threeWhile-looprb}(a), with $\lpchB(\rprog_1, \tpath_3, c) = 1$,
 $\lpchB(\rprog_3, \tpath_3, c) = 1$ and
 $\outinB(\rprog_6, \tpath_3, c) = N$,
 we also obtain a tight reachability-bound $1 \times 1 \times N$.

@@ -107,8 +107,9 @@ $\varGD(\rprog', c)$ is the \emph{Variable Gradient Decent}--an invariant of the
 %  $ BD(\rprepeat(\rprog_l), c) \triangleq$
 % and recursively computes the loop bound, $BD(\rprog, c)$ in the meantime.
 
-$BD(\rprepeat(\rprog_l), c)\triangleq$
+% $BD(\rprepeat(\rprog_l), c)\triangleq$
  \[
+  BD(\rprepeat(\rprog_l), c)\triangleq
  \left\{ 
  \begin{array}{ll}
  \max\limits_{x \in \left\{ \rank(\absevent, c) | \absevent \in \tpath \right\}} 
@@ -134,9 +135,8 @@ $BD(\rprepeat(\rprog_l), c)\triangleq$
 \]
 where the \emph{variable gradient decent},
 $\varGD(\rprog, c)$ for the ranking functions of $\rprog$ is computed as follows,
-
-$ \varGD(\rprog, c) \triangleq$
 \[
+  \varGD(\rprog, c) \triangleq
  \left\{
  \begin{array}{ll}
  BD(\rprog, c) \times {\varGD(\rprog_l', c)} & \rprog = \rprepeat(\rprog_l') \\

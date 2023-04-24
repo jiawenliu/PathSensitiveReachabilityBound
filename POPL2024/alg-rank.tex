@@ -1,161 +1,193 @@
-% The approach in this step is inspired mainly from the Alg.~2 in~\cite{SinnZV14},
-% % which assigns a variable to each edge on which this variable decreases as its ranking function.
-% the Alg.~3 in~\cite{ZulegerGSV11},
-% and the Def.~25 in Section 4 from~\cite{SinnZV17}, and enriched with path-sensitivity.
-\todo{distinguish the previous works and new contribution, reduce the previous definitions.}
-\paragraph{Collecting Variable Modifications}
- For each variable $x$ in a program $c$, we first compute three transition sets, $\inc(x, c)$, $\dec(x, c)$,
- and $\reset(x, c)$ for $x$
- % Every edge in a set corresponds to a transition 
- in which $x$ is increased,
+We compute the ranking function and estimate its upper bound invariant in three steps as follows.
+
+\begin{enumerate}
+ \item For each variable, we collect three sets 
+ in which the variable increases, decreases, and is reset respectively.
+ \item
+ Then, we assign a symbol (a variable or a normalized counter expression that is viewed as variable)  as the ranking function to the edge on which this symbol decreases.
+ \item
+ In the last step, we compute the upper bound invariant on the maximum value of each ranking function recursively.
+ In the meantime, it also computes an upper bound on the iteration times of each loop in a path-insensitive manner.
+ \end{enumerate}
+
+  %
+ \subsection{Collecting Variable Modifications}
+ For each variable $x$ in a program $c$, this step computes three edge sets, $\inc(x, c)$, $\dec(x, c)$,
+ and $\reset(x, c)$ for $x$.
+ Every edge in a set corresponds to a transition in which $x$ is increased,
  % $\inc(x, c)$,
  decreased
  % $\dec(x, c)$ and 
  or reset
- % $\reset(x, c)$, 
  respectively.
- \begin{defn}[Variable Modifications]
- \label{def:var_modi}
- For each variable $x$ in a program $c$,
- $\inc, \dec : \vardom \to \cdom \to \mathcal{P}(\absevent) $
- is the set of edges where the variable increase and decreases respectively, 
- where $\inc(x, c) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absE(c) \right\}$,
- % $\dec: \vardom \to \cdom \to \mathcal{P}(\absevent) $
- % is the set of abstract events where the variable decrease where
+
+ \begin{itemize}
+ \item
+ $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
+ is the set of edges where the variable increase, 
  %\\
- and $\dec(x, c) = \left\{\absevent| \absevent = (l, x' \leq x - v, l') \land \absevent \in \absE(c) \right\}$;
+ \[ \inc(x, c) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absflow(c) \right\} \]
  %\\
- $\reset: \vardom \to \cdom \to \mathcal{P}(\absevent) $ is the set of abstract events where the variable is assigned by other variables or symbols such that
- %
- $\reset(x, c) = \left\{ \absevent| \absevent = (l, x' \leq y - v, l') \land x \neq y \land \absevent \in \absE(c) \right\}$. 
+ \item
+ $\dec: \vardom \to \mathcal{P}(\absevent) $
+ is the set of abstract events where the variable decrease,
+ %\\
+ \[\dec(x, c) = \left\{\absevent| \absevent = (l, x' \leq x - v, l') \land \absevent \in \absflow(c) \right\}\]
+ %\\
+ \item
+ $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset,
+%
+ \[\reset(x, c) = \left\{ \absevent| \absevent = (l, x' \leq y \pm v, l') \land x \neq y \land \absevent \in \absflow(c) \right\}\]
+ \item
+ Additionally,
+ we also compute the reset graph $\resetG(c)$ and the reset chain, $\resetchain(x, c) \in \mathcal{P}(\mathcal{P}(\absevent))$ for every rank $x$.
+ The $\resetchain(x, c)$ for every rank $x$ contains all the paths in $\resetG(c)$ that end at $x$.
+ The computation of $\resetG(c)$ and $\resetchain(x, c)$ follows the Definition~20 in~\cite{SinnZV17}.
+ \begin{defn}
+    \label{def:resetgraph}
+    For a program $c$, its reset graph $\resetG(c) = (\resetV(c), \resetE(c))$ has two components,
+    each of them is computed as follows,
+%  \[\resetG(c) = (\resetV(c), \resetE(c))\]
+ \[
+    \resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(x, c) \land \absevent = (l, x' \leq y \pm v, l') \right\} 
+ \]
+ \[
+    \resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in \resetE(c) \lor (\_, \_, x) \in \resetE(c) \right\} 
+    \]
  \end{defn}
- % We also compute the reset graph and the reset chain in Appendices~\ref{apdx:alg-resetgraph}. 
-% \\
-% $\inc: \cdom \to \vardom \to \mathcal{P}(\absevent) $
-% is the set of edges where the variable increase, 
-% %\\
-% \[ \inc(x, c) = \left\{ \absevent | \absevent = (l, x' \leq x + v, l') \land \absevent \in \absE(c) \right\} \]
-% %\\
-% $\dec: \vardom \to \mathcal{P}(\absevent) $
-% is the set of abstract events where the variable decrease,
-% %\\
-% \[\dec(x, c) = \left\{\absevent| \absevent = (l, x' \leq x - v, l') \land \absevent \in \absE(c) \right\}\]
-% %\\
-% $\reset: \cdom \to \vardom \to \mathcal{P}(\absevent) $ is the set of the abstract events where the variable is reset,
-% %
-% \[\reset(x, c) = \left\{ \absevent| \absevent = (l, x' \leq y - v, l') \land x \neq y \land \absevent \in \absE(c) \right\}\]
- % Additionally,
- % we compute the reset graph and the reset chain for higher precision in Appendices~\ref{apdx:alg-resetgraph}. 
- % The computation is mainly following the Definition~20 in~\cite{SinnZV17}.
- % \[\resetG(c) = (\resetV(c), \resetE(c))\]
- % \[\resetE(c) = \left\{ (x, \absevent, y) ~\vert~ \absevent \in \reset(x, c) \land \absevent = (l, x' \leq y + c, l') \right\} \]
- % \[\resetV(c) = \left\{ x ~\vert~ (x, \_, \_) \in \resetE(c) \lor (\_, \_, x) \in \resetE(c) \right\} \]
- % In a variable $x$'s reset chain set, $\resetchain(x, c)$, in each chain $(e_0, \ldots, e_m) \in \resetchain(x, c)$
- % a variable $x_i$ is reset by another variable $x_{i + 1}$ on edge $e_{i}$
- % and $x_{i + 1}$ is reset on edge $e_{i + 1}$ recursively
- % for every $i = 0, \ldots, m - 1$.
- % $x$ is reset on the first edge $e_0$ of every sequence in $\resetchain(x, c)$.
- % {Each edge $e_i$ in a sequence $(e_0, \ldots, e_m) \in \resetchain(x, c)$
- % resets a variable $x_i$ by another variable $x_{i + 1}$ such that $x_{i + 1}$
- % is reset on edge $e_{i + 1}$ recursively. The first edge $e_0$ of each sequence resets the variable $x$.}
- % % 
- % \\
- % In the following steps, $c$ is omitted in $\inc(x, c)$,
- % $\dec(x, c)$ and $\reset(x, c)$ for concise when the reference of a program $c$ is clear in the context.
+ In a variable $x$'s reset chain set, $\resetchain(x, c)$, in each chain $(e_0, \ldots, e_m) \in \resetchain(x, c)$
+ a variable $x_i$ is reset by another variable $x_{i + 1}$ on edge $e_{i}$
+ and $x_{i + 1}$ is reset on edge $e_{i + 1}$ recursively
+ for every $i = 0, \ldots, m - 1$.
+ $x$ is reset on the first edge $e_0$ of every sequence in $\resetchain(x, c)$.
+ {Each edge $e_i$ in a sequence $(e_0, \ldots, e_m) \in \resetchain(x, c)$
+ resets a variable $x_i$ by another variable $x_{i + 1}$ such that $x_{i + 1}$
+ is reset on edge $e_{i + 1}$ recursively. The first edge $e_0$ of each sequence resets the variable $x$.}
+ % 
+ \end{itemize}
+ In the following steps, $c$ is omitted in $\inc(x, c)$,
+ $\dec(x, c)$ and $\reset(x, c)$ for concise when the reference of a program $c$ is clear in the context.
 
- \paragraph{Assigning The Ranking Function}
+ \subsection{Assigning The Ranking Function to An Edge}
  For each edge in the transition graph $\absG(c)$ of a program $c$,
- we assign the variable that decreases on this edge as the ranking function of this edge.
- It is similar to the local bound computation in~\cite{SinnZV17}.
- % to assign the local bound to each edge as follows.
+ this step assigns the variable that decreases on this edge as the ranking function of this edge.
+ This step adopts the local bound computation method in Section 4 of~\cite{SinnZV17} to assign the local bound to each edge,
+ formally as follows.
  \begin{defn}[Ranking Function Generatation]
-    \label{def:ranking_gen}
-    For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
-    its \emph{ranking function/local bound}, $\rank(\absevent, c)$
-    is the variable that decreases on this edge, computed as follows,
-    %
-    \[ 
-   \begin{array}{ll}
-    \rank(\absevent, c) \triangleq 1 
-    & \absevent \notin \kw{SCC}(\absG(c))
-    \\
-    \rank(\absevent, c) \triangleq x
-    & \absevent \in \kw{SCC}(\absG(c)) \land \absevent \in \dec(x, c) \land \absevent = (\_, \_ , x' \leq x - v) \\
-    \rank(\absevent, c) \triangleq \rank(\absevent', c)
-    & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \\
-    \rank(\absevent, c) \triangleq x
-    & \absevent \in \kw{SCC}(\absG(c)) \land 
-    \absevent \notin \bigcup_{x \in \vardom} \dec(x, c) \\
-    & \qquad \land \absevent \notin \kw{SCC}(\absG(c) \setminus \dec(x, c))\\
-    \rank(\absevent, c) \triangleq \infty
-    & o.w..
-   \end{array}
-   \]
-    $\kw{SCC}(\absG(c))$ is the set of all the non-trivial strongly connected components of $\absG(c)$.
-    \end{defn}
-    The first case is straightforward. 
-    For the label $l$ which is not in any while loop, 
-    the labeled command with the label $l$ will be 
-    evaluated at most once. 
-    The second and third cases are guaranteed by the \emph{Discussion on Soundness} in Section 4 in~\cite{SinnZV17}.
-    % The soundness is formalized in Lemma~\ref{lem:local_bound_sound} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
-   
+ \label{def:ranking_gen}
+ For every edge $\absevent$ in the transition graph $\absG(c)$ of a program $c$,
+ its \emph{ranking function/local bound}, $\rank(\absevent, c)$
+ is the variable that decreases on this edge, computed as follows,
  %
- % \todo{Example of ranking function estimated}
- In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we assign variable $i$ to edge $7 \xrightarrow{i' \leq i - 1} 1$ as ranking.
- If we remove this edge, the edges on $\tpath_2$ and $\tpath_1$ are not in any SCC, so they also have the same ranking.
-In the same way, ranking for edges on $\tpath_4$ is $i$ and $\tpath_3$ is $k$.
-
- \paragraph{Estimating the Upper Bound Invariant}
-Then we estimate the upper bound invariant, $\varinvar(\locbound(\absevent, c), c)$ for the ranking function of each abstract transition, $\locbound(\absevent, c)$, which
-is an invariant of the maximum value of $\rank(\absevent, c)$ during the program execution.
-
-In order to estimate the invariant of the maximum value of the ranking function $\rank(\absevent, c)$
- of the edge $\absevent \in \absE(c)$, we use a mutual recursion and recursively compute
- the bound on the iteration times of the edge, $\absclr(\absevent, c)$ in the meantime.
-
-\begin{defn}[Ranking Function Estimation]
- \label{def:ranking_bound}
-For a program $c$ and an edge $\absevent \in \absE(c)$,
-the \emph{ranking function bound}, 
-$\varinvar(\locbound(\absevent, c), c)$ for the ranking function $x = \locbound(\absevent, c)$
-of this edge
-is computed as follows,
-{\small
  \[ 
-\begin{array}{lll}
- \varinvar(x, c) & \triangleq x & x \in \scvar(c) \\
- \varinvar(x, c) & \triangleq \incrs(x, c) + \max\left\{\varinvar(y, c) + v ~\mid~ (l, x' \leq y + v, l') \in \reset(x, c) \right\} & x \notin \scvar(c)
+\begin{array}{ll}
+ \rank(\absevent, c) \triangleq 1 
+ & \absevent \notin \kw{SCC}(\absG(c))
+ \\
+ \rank(\absevent, c) \triangleq x
+ & \absevent \in \kw{SCC}(\absG(c)) \land \absevent \in \dec(x, c) \land \absevent = (\_, \_ , x' \leq x - v) \\
+ \rank(\absevent, c) \triangleq \rank(\absevent', c)
+ & \exists \absevent' \in \absG(c), \tpath \in \paths( \absG(c)) \st \absevent, \absevent' \in \tpath \\
+ \rank(\absevent, c) \triangleq x
+ & \absevent \in \kw{SCC}(\absG(c)) \land 
+ \absevent \notin \bigcup_{x \in \vardom} \dec(x, c) \\
+ & \qquad \land \absevent \notin \kw{SCC}(\absG(c) \setminus \dec(x, c))\\
+ \rank(\absevent, c) \triangleq \infty
+ & o.w..
 \end{array}
 \]
-}
-%
-where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(x, c)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
-The path-insensitive bound, $\absclr(\absevent, c) \in \scexpr(c)$ on the execution times of the transition $\absevent$, is interactively computed as well as below,
-% \footnote{We only give the computation based on the variable reset set ($\reset$) for easier understanding
-% % instead of the reset chain ($\resetchain$), 
-% and the approach based on the reset graph is in Appendices~\ref{apdx:alg-resetgraph}.
-% }
-{\small
+ $\kw{SCC}(\absG(c))$ is the set of all the non-trivial strongly connected components of $\absG(c)$.
+ \end{defn}
+ The first case is straightforward. 
+ For the label $l$ which is not in any while loop, 
+ the labeled command with the label $l$ will be 
+ evaluated at most once. 
+%  The soundness is formalized in Lemma~\ref{lem:local_bound_sound} with proof in Appendix~\ref{apdx:pathinsensitive_rb_soundness}.
+ %
+
+ \paragraph{Example}
+ In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we assign variable $i$ to edge $7 \xrightarrow{i' \leq i - 1} 1$ as ranking.
+ If we remove this edge, the edges on $\tpath_2$ and $\tpath_1$ are not in any SCC, so they also have the same ranking.
+In the same way, ranking for edges on $\tpath_4$ is $i$ as well as $k$ for them on $\tpath_3$.
+
+
+ \subsection{Ranking Function Estimation}
+ This step estimates the upper bound, $\varinvar(x, c) \in \scexpr(c)$
+ on the maximum value for each ranking function $x \in \vardom \cup \scvar(c)$.
+ \\
+ For a program $c$, the upper bound invariant,
+ $\varinvar(\rank(\absevent, c), c)$ for a ranking function $\rank(\absevent, c)$ 
+ is an invariant of the maximum value of $\rank(\absevent, c)$ during the program execution.
+
+ In order to estimate the invariant of the maximum value of the ranking function $\rank(\absevent, c)$
+ of the edge $\absevent \in \absE(c)$, we use a mutual recursion and recursively compute
+ the bound on the iteration times of the edge, $\absclr(\absevent, c)$ in the meantime.
+%  is computed interactively in a path-insensitive manner.
+ % \\ 
+ % $\varinvar (x, c) \in \scexpr(c)$
+ % \\
+ % $\absclr(\absevent, c) \in \scexpr(c)$
+ \begin{defn}[Ranking Function Estimation]
+ \label{def:ranking_bound}
+ For a program $c$ and an edge $\absevent \in \absE(c)$,
+ the \emph{ranking function bound}, 
+ $\varinvar(\rank(\absevent, c), c)$ for the ranking function $x = \rank(\absevent, c)$
+ of this edge
+ is computed through a mutual recursion between $\varinvar(x, c)$ and $\absclr(\absevent, c)$ as follows,
+ \[ 
+ \begin{array}{lll}
+ \varinvar(x, c) & \triangleq x & \text{if} ~ x \in \scvar(c) \\
+ \varinvar(x, c) & \triangleq \incrs(x, c) & \text{if} ~ x \notin \scvar(c) \\
+ & \qquad + \max\left\{\varinvar(y, c) + v ~\mid~ (l, x' \leq y + v, l') \in \reset(x, c) \right\} &
+ \end{array}
+ \]
+ %
+ where $\incrs(x, c) \triangleq \sum\limits_{\absevent \in \inc(x, c)}\{\absclr(\absevent, c) \times v ~\mid~ \absevent = (l, x' \leq x + v, l')\}$
+$\absclr(\absevent, c) \in \scexpr(c)$ is an upper bound on the execution times of the transition $\absevent$, which is recursively computed in a path-insensitive manner as below,
 \[ 
 \begin{array}{lll}
  \absclr(\absevent, c) 
- & \triangleq \varinvar(\locbound(\absevent, c), c) \qquad \qquad \text{if} \quad \locbound(\absevent, c) \in \scvar(c) & \\
+ & \triangleq \varinvar(\rank(\absevent, c), c) & \\
+ & \quad \text{if} ~ \rank(\absevent, c) \in \scvar(c) & \\
  \absclr(\absevent, c) 
- & \triangleq \incrs(x, c) 
- + 
- \sum\limits_{\absevent' \in \reset(x, c) \land \absevent' = (l, x \leq y + v, l') }
- \Big( \absclr(\absevent', c) \times \big( \varinvar(y, c) + v \big) \Big)
- & \\
- & \text{if} \quad \locbound(\absevent, c) = x \land x \notin \scvar(c) &.
+ & \triangleq
+ \sum \left\{ \incrs(y, c) | ch \in \resetchain(x, c) \land y \in ch \right\} & \\
+ & \quad + 
+ \sum\limits_{ch \in \resetchain(x, c)}
+ \min \left\{\absclr(\absevent', c) ~\mid~ \absevent' \in ch\right\} \times 
+ \big(\varinvar(in(ch), c) 
+ + \sum\limits_{(\_, (\_, x' \leq y + v, \_), \_) \in ch} v \big) & \\
+ & \quad \text{if} ~\rank(\absevent, c) = x \land x \notin \scvar(c) & ,
 \end{array}
  \]
-}
-% where $in(ch)$ is the first vertex of the reset chain $ch$.
+ where $in(ch)$ is the first vertex of the reset chain $ch$.
 \end{defn}
-% \todo{Example of computed invariant for ranking function and the transition bound}
-In Figure~\ref{fig:relatedNestedWhileOdd-overview}(a), the ranking $i$ is reset by $n$ at edge $0 \to 1$ and 
-$k + m$ at edge $6 \to 7$ and $k$ is assigned value $i - m$ at edge $3 \to 4$. Through reset graph, 
-% (which we do not fully present but can be found in the Definition~20 in~\cite{SinnZV17}), 
-we estimate a symbolic value $n$ for both ranking variables $i$ and $k$.
-Interactively, iteration bounds for all the edges in this loop are $n$ as well path-insensitively.
+ %
+ For every edge, if the ranking function of this edge computed at the previous step is a symbol, specifically an input variable, then this is already the upper bound invariant. 
+
+ If instead, the ranking function of the edge is a variable $y$ which is not an input variable, this step will eliminate it and replace it with a symbolic expression. 
+ In order to do this, these steps will compute two quantities: first, it will recursively sum over the TB of all the edges whose constraint may increment the variable $y$, multiplying the corresponding increment; second, it will recursively compute the upper bound invariant of all the other edges whose difference constraint may reset the variable $y$ and take the maximum value. The sum of these two quantities provides the symbolic expression that is an upper-bound invariant on the maximum value of this ranking function. To compute these two quantities we use two mutually recursive procedures.
+ 
+ If a ranking function is increased in an edge of its nested loop, then this mutual recursion is non-terminating. In this case, we identify a cycle and produce infinity as the bound.
+ 
+%
+\paragraph{Example.}
+% \todo{The w example}
+For the example program in Figure~\ref{fig:relatedNestedWhileOdd-overview}, we first find the ranks for every transition,
+$\rank(0 \to 1) = 1$,
+$\rank(1 \to \lex) = 1$,
+$\rank(1 \to 2) = i$,
+$\rank(2 \to 3) = i$,
+$\rank(3 \to 4) = i$,
+$\rank(4 \to 5) = k$,
+$\rank(5 \to 4) = k$,
+$\rank(4\to 6) = \rank(6 \to 7) = \rank(7 \to 1) = i$,
+and $\rank(2 \to 8) = \rank(8 \to 1) = i$.
+Then we need to estimate the upper bound invariant for the ranking function $i$ and $k$.
+The ranking function $i$ is reset by $n$ at edge $0 \to 1$ and 
+$k + m$ at edge $6 \to 7$ and $k$ is assigned value $i - m$ at edge $3 \to 4$. 
+$i$ is reset by $k+m$, and $k$ is reset by $i - m$.
+ We compute a variable reset graph, and we use a variable renaming method to unify the variable name of $k$ and $i$ into the same new variable $z$.
+ Then this new variable $z$ is the ranking function of all edges where $k$ and $i$ were, and $z$ is only reset on the edge $0 \to 1$ by input variable $n$. $\varinvar(n) = n$ because $n$ is an input variable.
+ So we compute the upper bound invariant for $z$ is $n$, and
+ the upper bound invariant for both $i$ and $k$ is $n$ as well.
