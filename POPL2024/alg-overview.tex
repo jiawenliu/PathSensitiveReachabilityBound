@@ -1,17 +1,45 @@
 
-\textbf{Step 1}
-in Section~\ref{sec:progabs} first 
-generates the \emph{Abstract Transition Graph} as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
+\textbf{Step1: Program Abstraction.}
+In Section~\ref{sec:progabs},
+we first 
+generate the \emph{Abstract Transition Graph} as in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b).
 Each edge $l \xrightarrow{dc} l'$ is an abstract transition $\absevent = (l, dc, l')$ annotated with a constraint $dc$ corresponding to the command of label $l$.
 
+Then we abstract the program in the form of paths.
+$$
+\tpath_0 ; \rpchoose{ 1: \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2, \tpath_4 }; \tpath_5
+$$
+$;$ concatenates sequence of execution paths,
+$\rprepeat(\tpath_3)$ represents looping on the path $\tpath_3$ and
+$\rpchoose{ \ldots}$ represents the loop $L_1$ which contains two possible execution paths,
+$\rprog_1 = \tpath_1; 4:\rprepeat(\tpath_3);\tpath_2$ and $\rprog_2 =\tpath_4$.
+
 % \textbf{Step 2: Program Refinement}
-\textbf{Step 2} in Section~\ref{sec:refine}
+\textbf{Step 2: Path Interleaving Refinement.} 
+The two possible execution paths in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b)
+can interleave each other during the program execution.
+In this step, the Algorithm~\ref{alg:prog-refine} in Section~\ref{sec:refine} compute their interleaving order
+of the two paths by exhaustively checking the transition relation of each path.
+There are two possible interleaving orders,
+either $ rprog_1$ executes after one iteration of $rprog_2$ or vice versa.
+So we generate two interleaving order 
+\[
+\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4
+\qquad
+\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2
+\]
 % The second step in Section~\ref{sec:refine}
-computes the \emph{Refined Program}, $\rprog$ for a program $c$ based on 
-its abstraction transition graph and transforms the multiple-paths loops
+Then we transform the multiple-paths loop
 into multiple loops where
-the interleaving of paths is explicit as in the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c).
-It has two interleaving patterns in the loop $L_1$.
+the interleaving of paths is explicit.
+As in the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c),
+the program is transformed into 
+\[
+    \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), 
+1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) }; \tpath_5
+\]
+In this refined program, 
+each new execution path is equivalent to the execution of the original loop. 
 % denoted as $\rprog_1^1$ and $\rprog_1^2$.
 
 % \textbf{Step 3: Ranking Function Estimation}
