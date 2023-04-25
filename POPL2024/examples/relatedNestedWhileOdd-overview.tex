@@ -29,10 +29,10 @@ $
 \caption{}
 \end{centering}
 \end{subfigure}
-\begin{subfigure}{.5\textwidth}
+\begin{subfigure}{.52\textwidth}
 \begin{centering}
 \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
-\draw[] (-7, 10) circle (0pt) node{{ $0$}};
+\draw[] (-4, 10) circle (0pt) node{{ $0$}};
 \draw[] (0, 10) circle (0pt) node{{ $1$}};
 \draw[] (0, 7) circle (0pt) node{\textbf{$2$}};
 \draw[] (0, 4) circle (0pt) node{{ $3$}};
@@ -67,7 +67,7 @@ $
 \begin{subfigure}{.9\textwidth}    
 \begin{centering}
 {\small
-$\tpath_0 = (0 \to 1)$\footnotemark
+$\tpath_0 = (0 \to 1)$
 \quad
 $\tpath_1 = (1 \to 2 \to 3 \to 4)$
 \quad
@@ -78,20 +78,27 @@ $\tpath_3 = (4 \to 5 \to 4)$
 $\tpath_4 = (1 \to 2 \to 8 \to 1)$
 \quad
 $\tpath_5 = (1 \to \lex)$
-\\
-$
-\tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), 
-1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) }; \tpath_5
-$
 }
-% \caption{}
+\vspace{-0.3cm}
+\caption{}
 \end{centering}
 \end{subfigure}
 % \vspace{-0.5cm}
-
+\begin{subfigure}{.8\textwidth}    
+  \begin{centering}
+  $
+  \tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4), 
+  1: \rprepeat(\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2) }; \tpath_5
+  $
+  % \vspace{-0.5cm}
+  \caption{}
+  \end{centering}
+  \end{subfigure}
 \caption{
 (a) Running example: program with a loop with two  paths and a nested loop in one of them,
-(b) the corresponding \emph{abstract transition graph}, $\absG(\kw{nestedOdd}(n, m))$; the constraints are omitted for the sake of conciseness}
+(b) the corresponding \emph{abstract transition graph}, $\absG(\kw{nestedOdd}(n, m))$,
+(c) all the simple transition paths on this program,
+(d) the refined program.}
 % \vspace{-0.75cm}      
 \label{fig:relatedNestedWhileOdd-overview}
 \end{figure}

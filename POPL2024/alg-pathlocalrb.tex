@@ -197,9 +197,10 @@ To compute a sound and accurate local \emph{path reachability-bound},
 we first compute the \textbf{innermost loop} for a simple transition path.
 \begin{defn}[Innermost Loop]
   \label{def:innermost}
+  The innermost loop of a simple transition path is the loop program that is closest to this path where this path is located.
 \end{defn}
-The innermost loop of a simple transition path is the closest loop program that is closest to this path where this path is located.
-We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \textbf{the innermost loop} inside $\rprog$ where $\tpath$ is located. Then by using the path bound computed by our new approach, we compute the \emph{local path reachability-bound} of
+
+Then by using the path bound, we compute the \emph{local path reachability-bound} of
 the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlocalrb}.
 \begin{defn}[Path Local Reachability-bound Computation]
     \label{def:pathlocalrb}
@@ -259,8 +260,8 @@ The lemma below states that the \emph{path local reachability-bound} of the simp
 
 \paragraph{Example.}
 % \todo{Walk through example}
-Now based on the tighter path bound,
-we compute local reachability-bound for every transition path w.r.t. its innermost loop as
+For the running example in Figure~\ref{fig:relatedNestedWhileOdd-overview}, 
+we compute local path reachability-bound for every simple transition path with respect to its innermost loop as
 $\outinB(\rprog, \tpath_0) = 1$,
 $\outinB(\rprog, \tpath_4) = 1$,
 $\outinB(1: \rprog_1^1, \tpath_1) = \frac{m}{4}$,
@@ -271,16 +272,23 @@ $\outinB(1: \rprog_1^2, \tpath_2) = \frac{m}{4}$,
 $\outinB(1: \rprog_1^2, \tpath_4) = \frac{m}{4}$, and
 $\outinB(4: \rprepeat(\tpath_3), \tpath_3) = n - m$ 
 
-Specifically, for the program in the first interleaving pattern $\rprog_1^1$ in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop for $\tpath_1$, $\tpath_2$ and $\tpath_4$, 
+Specifically, for the program in the first refined execution $\rprog_1^1$ in Example~\ref{ex:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop for $\tpath_1$, $\tpath_2$ and $\tpath_4$, 
 so compute $\outinB(\rprog_1^1, \tpath_1, c) = BD(\rprog_1^1, c) \times \outinB(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4, \tpath_1, c)
 = BD(\rprog_1^1, c) \times (1 + 0) = \lfloor \frac{m}{4} \rfloor $ and the same for $\tpath_2$ and $\tpath_4$.
 
 
-For the program in the first interleaving pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop for $\tpath_1$, $\tpath_2$ and $\tpath_4$, 
- so compute $\outinB(\rprog_1^1, \tpath_1, c) = BD(\rprog_1^1, c) \times \outinB(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4, \tpath_1, c)
- = BD(\rprog_1^1, c) \times (1 + 0) = \lfloor \frac{m}{4} \rfloor $ and the same for $\tpath_2$ and $\tpath_4$.
+For the program in the first interleaving pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}, $\rprog_1^1$ is the innermost loop for $\tpath_1$, $\tpath_2$ and $\tpath_4$.
+We compute as follows
+ $$
+ \begin{array}{l}
+  \outinB(\rprog_1^1, \tpath_1, c) 
+  = BD(\rprog_1^1, c) \times \outinB(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4, \tpath_1, c)\\
+  = BD(\rprog_1^1, c) \times (1 + 0) = \lfloor \frac{m}{4} \rfloor 
+ \end{array}
+ $$
+  and the same for $\tpath_2$ and $\tpath_4$.
 
- As discussed in Section~\ref{sec:psrb}, if there isn't a nested loop, we will skip the Section~\ref{sec:looprb} and use this local bound directly as the global \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ as in Section~\ref{sec:pathrb}. 
+If there does not exist a nested loop, we can skip the Section~\ref{sec:looprb} and use this local bound directly as the global \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ as in Section~\ref{sec:pathrb}. 
  So we already had the $\psRB$ for every program point $l \in \lvar(c)$ by replacing the equation in Definition~\ref{def:point_psrb} with the following one,
  \begin{equation}
  \label{eq:psrb-sub}

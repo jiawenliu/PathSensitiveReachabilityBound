@@ -28,28 +28,55 @@ is either a
 difference constraint $d \in DC(\vardom \cup \scvardom)$, a boolean expression $\bexpr \in \booldom$
 or $\top$ denotes always true.
 \end{defn}
-% If the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$ (rsp. $l \xrightarrow{x' \leq v} l'$),
-% it denotes that
-% the value of variable $x$
-% after executing the command at $l$ is at most
-% the value of variable $y$ plus $v$ (rsp. $v$) before the execution.
-For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), the constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
-describes after the execution of
- the command
-$\clabel{\assign{i}{i - 1}}^{7}$, the value of $i$ is at most the previous $i$'s value minus $1$.
-%
+
+When the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
+% Then $x'$ 
+it denotes that
+the value of variable $x$
+after executing the command at $l$ is at most
+% and the right-hand side describes 
+the value of variable $y$ plus $v$ before the execution,
+and $l \xrightarrow{x' \leq v} l'$ respectively denotes
+% value of variable $x$
+% after executing the command at $l$ is 
+$x$ has at most
+% and the right-hand side describes 
+the value of the symbolic constant $v$.
+% before the execution.
+For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+describes the execution of
+ the command at line $7$, 
+$\clabel{\assign{i}{i - 1}}^{7}$. 
+
 % For every expression in each of the label commands, it is computed in three steps via the program abstraction method adopted from Section~6 in~\cite{SinnZV17}. 
-%
-The boolean constraint
-% $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
-% that after evaluating the guard with label $l$,
-% $\bexpr$ holds to execute the command with label $l'$.
-% For example 
-$i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$ 
+
+The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
+that after evaluating the guard with label $l$,
+$\bexpr$ holds and the command with label $l$ will execute right after.
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
 represents the negation of the testing guard $\clabel{i > 0}^1$
-in the $\ewhile$ command, and $i \leq 0$ must hold to perform the transition from location $1$ to
-the exit $\lex$. 
-$\top$ is preserved for the $\eskip$ command or the commands that don't interfere with any couter.
+in the $\ewhile$ command, and $i \leq 0$ must hold in order to perform this transition from program point $1$ to
+the program exit. 
+We also have $\top$, which is preserved for $\eskip$ command or the commands that don't interfere with any guard variable.
+
+
+% For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), the constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+% describes after the execution of
+%  the command
+% $\clabel{\assign{i}{i - 1}}^{7}$, the value of $i$ is at most the previous $i$'s value minus $1$.
+% %
+% % For every expression in each of the label commands, it is computed in three steps via the program abstraction method adopted from Section~6 in~\cite{SinnZV17}. 
+% %
+% The boolean constraint
+% % $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
+% % that after evaluating the guard with label $l$,
+% % $\bexpr$ holds to execute the command with label $l'$.
+% % For example 
+% $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$ 
+% represents the negation of the testing guard $\clabel{i > 0}^1$
+% in the $\ewhile$ command, and $i \leq 0$ must hold to perform the transition from location $1$ to
+% the exit $\lex$. 
+% $\top$ is preserved for the $\eskip$ command or the commands that don't interfere with any couter.
 
 \begin{defn}[Abstract Transition Graph]
  \label{def:abs_cfg}
@@ -84,9 +111,12 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
  In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path} but not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
 
 
- \subsection{Program Rewriting}
+\subsection{Program Rewriting}
+This step rewrite the program in the form of combinations of execution paths.
 
-\paragraph{The Simple Transition Path}
+
+
+\paragraph{Loop Header.}
 We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
 \begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
   \label{def:loopl}
@@ -102,7 +132,9 @@ We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program 
 \right.
 \]
   \end{defn}
-\begin{defn}[Simple Tansition Path]
+
+  \paragraph{The Simple Transition Path.}
+  \begin{defn}[Simple Tansition Path]
   \label{def:tpath}
 A \emph{simple transition path}
 $\tpath \in \paths(\absG(c))$ for the program $c$, is either a simple cyclic path, which has the same start- and end-point
@@ -124,9 +156,10 @@ is a \emph{simple transition path} if and only if it satisfies,
   \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
 \end{itemize}
 \end{defn}
+A simple transition path is also an execution path.
 
 \paragraph{Syntax.}
-
+The syntax of the refined program is given below. It is combination of the execution paths.
 \[
     \rprog := \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} 
 \]
@@ -136,7 +169,6 @@ In the new syntax, $\rprepeat(\rprog)$ is a loop statement iterating over the tr
 $l: \rprepeat(\rprog)$ represents that the loop $ \rprepeat(\rprog)$
 corresponds to a loop of the source program with loop header $l$.
 The multiple-paths statement $\rpchoose{\rprog, \ldots} $ contains all the execution paths of a loop from the source program.
-
 
 \paragraph{Algorithm.}
 Algorithm~\ref{alg:alg-refine_rewrite} transforms the syntax of the while language program 
