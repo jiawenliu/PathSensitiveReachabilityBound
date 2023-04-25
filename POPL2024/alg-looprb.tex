@@ -1,4 +1,22 @@
-Similar to our new approach of computing loop bound,
+This section introduces the \emph{loop reachability-bound} and gives an algorithm
+that computes a sound \emph{loop reachability-bound}.
+
+
+\begin{defn}[Loop Reachability-bound]
+% \label{def:looprb}
+For the program with nested loops, given its refined program $\rprog$, a simple transition path $\tpath$, and an outer loop
+program $\rprog_l$ where $\tpath$ is nested in,
+$f(\rprog_l, \tpath, c)$ is a \emph{loop reachability-bound} for $\tpath$ w.r.t. $\rprog_l$ if and only if
+for every $\trace \in \ftdom_0(c)$, $f(\rprog_l, \tpath, c)(\trace)$ greater or equal to the
+iteration numbers of $\rprog_l$,
+such that,
+during these iterations, the innermost loop $\kw{enclosed(\tpath)}$ is entered.
+\end{defn}
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $\tpath_3$ has an outer loop $\rprog_1^1$. Since $L_4$ will be ``entered'' only in the first iteration of $\rprog_1^1$,
+we aim to compute $1$ as the \emph{loop reachability-bound} for $\tpath_3$ w.r.t. $\rprog_1^1$.
+
+
+Similar to the approach of computing path bound,
 we also compute two refined abstract states for each loop w.r.t. a simple transition path inside it,
 $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c)$ based on the refined program
 as in Definition~\ref{def:alg-absstate}.

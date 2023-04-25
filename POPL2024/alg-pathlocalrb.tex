@@ -1,5 +1,5 @@
 
-% There are two methods for computing the loop bound, $BD(\rprog_l, c)$ for every loop program $\rprog_l$ in $c$'s refined program.
+% There are two methods for computing the path bound, $BD(\rprog_l, c)$ for every loop program $\rprog_l$ in $c$'s refined program.
 % %
 % Based only on the estimated ranking function from Section~\ref{sec:rank}, we can compute a loose $BD(\rprog', c)$ for each $\rprog'$
 % using the $\absclr(\absevent, c)$ as follows.
@@ -12,11 +12,19 @@
 % it computes $BD(\rprog_1^1) = n$ and $BD(\rprog_1^2) = n $ for the two interleaving pattern of loop $L_1$.
 % % The bounds for $\rprog_1^1$ and $\rprog_1^2$ are both $n$ while 
 % But both of their iteration bounds are expected to be $\lfloor\frac{m}{4}\rfloor$.
-As pre-procedures, we first compute the \emph{loop bound} for every subprogram of a program and the local \emph{path reachability-bound} for every simple transition path.
-\subsection{Loop Bound}
-To compute the loop bound for every subprogram, our approach uses the ranking function invariant to compute a more precise progress invariant inspired from~\cite{GulwaniJK09}.
+As subroutines of the \emph{path reachability-bound} computation, this section gives the \emph{path bound} computation for every subprogram of a program and the local \emph{path reachability-bound} computation for every simple transition path.
+\subsection{Path Bound}
+\begin{defn}[Path Bound]
+ % \label{def:loopbound}
+ For any program $c$ with it refined program $\rprog$,
+ the \emph{path bound}
+ % $BD(\rprog_l, c) \in \scexpr(c)$ 
+ for a subprogram, $\rprog_l$ in $\rprog$ is an upper bound on the times that $\rprog_l$ is executed from its entry to the exit point with arbitrary initial trace.
+\end{defn}
+
+To compute the path bound for every subprogram, our approach uses the ranking function invariant to compute a more precise progress invariant inspired from~\cite{GulwaniJK09}.
 We first compute three abstract states for each ranking function in different subprograms of a refined program as below.
-% Then we these precise abstract states, and estimate the loop bound path sensitively.
+% Then we these precise abstract states, and estimate the path bound path sensitively.
 \begin{defn}[Rank Abstract States Computation]
  \label{def:alg-absstate}
  Given a program $c$ with its refined program $\rprog_c$ and a sub-program $\rprog$ in $\rprog_c$,
@@ -99,13 +107,13 @@ We first compute three abstract states for each ranking function in different su
 % \end{itemize}
 \end{defn}
 Now we compute $BD(\rprog, c)$ through a mutual recursion procedure involving the computation of another quantity, the \emph{Variable Gradient Decent} as follows.
-\begin{defn}[Loop Bound Computation]
+\begin{defn}[Path Bound Computation]
 \label{def:loopbound}
-Given a program $c$ with its refined program $\rprog$ and a subprogram $\rprog' = \rprepeat(\rprog_l) \in \rprog$, we compute a \emph{loop bound}, $BD(\rprepeat(\rprog_l), c)$
+Given a program $c$ with its refined program $\rprog$ and a subprogram $\rprog' = \rprepeat(\rprog_l) \in \rprog$, we compute a \emph{path bound}, $BD(\rprepeat(\rprog_l), c)$
 through a mutual recursion between  $BD(\rprepeat(\rprog_l), c)$ and $\varGD(\rprog', c)$.
 $\varGD(\rprog', c)$ is the \emph{Variable Gradient Decent}--an invariant of the minimum amount decreased in one execution of $\rprog_l$ for the ranking functions in $\rprog$.
 %  $ BD(\rprepeat(\rprog_l), c) \triangleq$
-% and recursively computes the loop bound, $BD(\rprog, c)$ in the meantime.
+% and recursively computes the path bound, $BD(\rprog, c)$ in the meantime.
 
 % $BD(\rprepeat(\rprog_l), c)\triangleq$
  \[
@@ -145,38 +153,9 @@ $\varGD(\rprog, c)$ for the ranking functions of $\rprog$ is computed as follows
  \end{array}
  \right.
  \]
-
-%  \[
-%  \left\{ 
-%  \begin{array}{ll}
-%  \max\limits_{x \in \left\{ \rank(\absevent, c) | \absevent \in \tpath \right\}} 
-%  \Big\{ {\frac{a - b}{\rfnext(\tpath, c)}} & \rprog_l = \tpath
-%  \\ \qquad 
-%  ~\vert~
-%  x = a \in \rfinit(\tpath, c)
-%  \land x = b \in \rffinal(\tpath, c)
-%  \land x = v \in \rfnext(\tpath, c) 
-%  \Big\} 
-%  \\
-%  \max\limits_{x \in \left\{ \rank(\absevent, c) | \absevent \in \tpath \right\}} 
-%  \Big\{ {\frac{\min\{ a, a - v_1 \} - b}{v_2}} 
-%  & \rprog_l = \rprog_1;\rprog_2
-%  \\ \qquad 
-%  ~\vert~
-%  x = a \in \rfinit(\rprog_1, c)
-%  % \\ \qquad 
-%  \land x = b \in \rffinal(\rprog_2;\rprog_2, c)
-%  \\ \qquad 
-%  \land x = v_1 \in \rfnext(\rprog_1, c)
-%  \land x = v_2 \in \rfnext(\rprog_1;\rprog_2, c)
-%  \Big\} \\
-%  0 & o.w.
-%  \end{array} 
-%  \right.
-% \]
 \end{defn}
- Definition~\ref{def:loopbound} computes a sound loop bound for every loop in a refined program, which is formally presented as below.
-\begin{lem}[Soundness of Loop Bound]
+ Definition~\ref{def:loopbound} computes a sound path bound for every loop in a refined program, which is formally presented as below.
+\begin{lem}[Soundness of Path Bound]
   \label{lem:loopbound_sound}
   For every program $c$ with it refined program $\rprog$,
   % for every loop $\rprepeat(\rprog')$ inside $\rprog$, 
@@ -184,7 +163,7 @@ $\varGD(\rprog, c)$ for the ranking functions of $\rprog$ is computed as follows
 \end{lem}
 
 \paragraph{Example.}
-Using our new approach, we compute a more precise loop bound $BD(\rprog)$ for each subprogram of our walk through example. 
+Using our new approach, we compute a more precise path bound $BD(\rprog)$ for each subprogram of our walk through example. 
 For example for the subprogram $\rprepeat(\tpath_3)$, we first compute $\rfinit = \{k = n - m\}$, $\rffinal = \{k = 0\}$ and $\rfnext = 1$ and then get $BD(\rprepeat(\tpath_3)) = n - m$.
 % This result  tighter than $n$ by Eq.~\ref{eq:absBD}.
 For the first iteration pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), we compute 
@@ -198,8 +177,29 @@ $\rfinit = \{k = n - m, i = m\}$, $\rffinal = \{k = 0, i = 0\}$ and $\varGD(\rpr
 Using the $BD$ computed by our new approach, we compute the \emph{path reachability-bound} locally for
 each $\tpath$ w.r.t. the \textbf{innermost loop}, $\kw{enclosed}(\rprog, \tpath)$ where $\tpath$ is located.
 
-\subsection{Path Local Reachability-bound Computation}
-We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \textbf{the innermost loop} inside $\rprog$ where $\tpath$ is located. Then by using the loop bound computed by our new approach, we compute the \emph{path local reachability-bound} of
+\subsection{Local Path Reachability-bound}
+
+\begin{defn}[Local Path Reachability-bound]
+  % \label{def:pathlocalrb}
+  Given program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
+  let $\rprog_l = \kw{enclosed}(\rprog, \tpath)$ be the innermost loop program in $\rprog$ where $\tpath$ is located,
+  then $\tpath$'s \emph{path local reachability-bound} w.r.t. $\rprog_l$, 
+  % $\outinB(\rprog_l, \tpath, c) \in \scexpr(c)$
+  is an upper bound on the times that $\tpath$ is executed when executing program $\rprog_l$ with any initial trace of $c$.
+ \end{defn}
+ Intuitively, it bounds the execution times of $\tpath$ when only its innermost loop program is executing.
+ % and $\rprog$ is the closest loop where $\tpath$ is nested.
+ For example in the first interleaving pattern $\rprog_1^1$ in Figure~\ref{fig:relatedNestedWhileOdd-overview}, 
+ $4:\rprepeat(\tpath_3)$ is the innermost loop program of $\tpath_3$.
+ So we first will compute $m - n$ as its local \emph{path reachability-bound}.
+
+To compute a sound and accurate local \emph{path reachability-bound},
+we first compute the \textbf{innermost loop} for a simple transition path.
+\begin{defn}[Innermost Loop]
+  \label{def:innermost}
+\end{defn}
+The innermost loop of a simple transition path is the closest loop program that is closest to this path where this path is located.
+We first compute $\kw{enclosed}(\rprog, \tpath)$, which is \textbf{the innermost loop} inside $\rprog$ where $\tpath$ is located. Then by using the path bound computed by our new approach, we compute the \emph{local path reachability-bound} of
 the $\tpath$ in its closest nested loop as follows in Definition~\ref{def:pathlocalrb}.
 \begin{defn}[Path Local Reachability-bound Computation]
     \label{def:pathlocalrb}
@@ -259,7 +259,7 @@ The lemma below states that the \emph{path local reachability-bound} of the simp
 
 \paragraph{Example.}
 % \todo{Walk through example}
-Now based on the tighter loop bound,
+Now based on the tighter path bound,
 we compute local reachability-bound for every transition path w.r.t. its innermost loop as
 $\outinB(\rprog, \tpath_0) = 1$,
 $\outinB(\rprog, \tpath_4) = 1$,

@@ -26,7 +26,6 @@ computes the \emph{Reachability-bound}, $\psRB(l, c)$ for every program point $l
 {It requires computing the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath, c)$ for every $\tpath$.
 If there are nested loops, we need to compute the \emph{loop reachability-bound}, $\lpchB(l: \rprog, \tpath, c)$ w.r.t. every level of $\tpath$'s outer loop. }
 Section~\ref{sec:psrb} introduces this algorithm and the following sections describe the computations. 
-The soundness and proof of each algorithm are given in the Appendices and the input $c$ will be omitted in the rest of the paper if the context is clear.
 
 In Figure~\ref{fig:relatedNestedWhileOdd-overview}, for $\tpath_3$ in the first interleaving pattern, $\rprog_1^1 = 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$, 
 we first compute a local \emph{path reachability-bound}, $\outinB(4:\rprepeat(\tpath_3), \tpath_3, c) = n - m$

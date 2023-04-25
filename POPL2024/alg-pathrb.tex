@@ -1,4 +1,20 @@
-Then the \emph{path reachability-bound}, $\inoutB(\rprog, \tpath)$ during the execution of the program $c$ is the product of the $\outinB$ and $\lpchB$ for every simple transition path $\tpath$ formally as in Definition~\ref{def:pathrb}.
+Now we want to bound for each $\tpath$ the number of times it is executed globally.
+This section introduces formally the \emph{path reachability-bound} and gives the computation algorithm.
+
+\begin{defn}[Path Reachability-bound]
+% \label{def:pathrb}
+For a program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in this program, 
+the \emph{path reachability-bound},
+% $\inoutB(\rprog, \tpath, c) \in \scexpr(c)$ 
+is the upper bound on the
+times that $\tpath$ is executed when executing $c$ with arbitrary initial trace.
+\end{defn}
+% Intuitively, $\inoutB(\rprog, \tpath)$ bounds the execution times of $\tpath$ globally during the execution of $c$.
+%
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, since there isn't a nested loop for $\tpath_1$ and $\tpath_2$, their local bound $\frac{m}{4}$ is indeed the global \emph{path reachability-bound}.
+$\tpath_3$ is nested in two loops, but the inner loop $L_4$ is only entered in the first iteration of the outer loop, we aim to compute $\frac{m}{4}$ using the \emph{loop reachability-bound}.
+
+To compute a sound \emph{path reachability-bound}, we simply use the production of the $\outinB$ and $\lpchB$ for every simple transition path $\tpath$ as below.
 %
 \begin{defn}[Path Reachability-bound Computation]
  \label{def:pathrb}

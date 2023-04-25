@@ -38,3 +38,47 @@ Loop summarization and invariant generate through path refinement~\cite{Manolios
 Paper \cite{KincaidBCR19} introduce a precise closed-form loop summarization techniques which can help to improve the accuracy of the path refinement, as well as the non-linear loop summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. They are all heavy compare to our light-weight path refinement implementation adapted from~\cite{GulwaniJK09}.
 % \cite{CyphertBKR19} introduced a precise path refinement techniques over regular expression. While it is accurate only for loop summarizing and invariant generating under the specific recurrence loop program, and doesn't work well in multipath loop refinement.
 The contextualization path refinement algorithm, based on the loop termination techniques in~\cite{ManoliosV06} are used in both~\cite{ZulegerGSV11,SinnZV14}. While this refinement only computes the multiple paths interleaving for one iteration, which is loose comparing to our path refinement implementation limited to at most $100$ iterations.
+
+
+
+\section{Related Work.}
+% \begin{itemize}
+% \item 
+\emph{Program Abstraction.}
+Program abstraction is commonly used in program analysis as a preprocessing step to abstract program features and generates transition graphs or systems. For example, Gulwani et al.~\cite{GulwaniZ10} summarizes programs into some underlying abstract domains (the unified lattice~\cite{CousotH78}, polyhedra~\cite{CousotC77} or octagonal~\cite{Mine06})
+and generates transition systems for loop counters. Kincaid et al.~\cite{KincaidCBR18} abstract  programs into the wedge domain and compute non-linear loop invariant.
+% While it only works well for the specific targeting problem.
+%Efficiency is the main bottleneck when generating and solving the constraint.
+Sinn et al.~\cite{SinnZV17,SinnZV14}
+introduce a program abstraction model based on difference constraints, which we also use in this paper. 
+It is more accurate in the sense that it allow to represent program loops in a path-sensitive way.
+ This representation is also comparatively lightweight.
+
+% \item 
+\emph{Amortized Complexity Analysis.}
+This line of work follows 
+% \emph{amortized complexity analysis}
+% originated 
+from Tarjan's seminal paper~\cite{Tarjan85}. It is usually combined with ranking functions~\cite{BradleyMS05,CookSZ13,Zuleger18} or counter increments~\cite{GulwaniMC09,ZulegerGSV11,AliasDFG10}.
+% They do well in nested loops by alternating the loop bound computation with the ranking or counter estimation. This alternation is efficient without recursively unrolling the nested loops when composing the bound of different paths.
+ % \\
+ Techniques that estimate the counter increments or the ranking function invariants, such as the tools CofloCo~\cite{Montoya17,Flores-MontoyaH14,Flores-Montoya16} and KoAT~\cite{BrockschmidtEFFG16,BrockschmidtEFFG14,FalkeKS12,FalkeKS11}, or the algorithm in~\cite{LuCT21}, often ignore the interleaving between multiple paths in the same loop, on which we focus in this paper.
+% Most of them 
+%and etc.
+% over-approximate the loop bound when the path interleaving affects loop execution.
+%It is hard to repurpose their result as the reachability-bound on different points.
+% loop bound path-insensitively as the reachability-bound on different points.
+Several works have studied \emph{amortized complexity analysis} using type refinement and annotations~\cite{CraryW00,JostHLH10,CicekBG0H17,RajaniG0021,CarbonneauxHS15}. Most of these work also do not distinguish different paths in loops, resulting in over-approximation of the resource cost for different program points.
+% We choose to use difference-constraints based approach and enrich it with boolean expressions and path-sensitivity according to the Alg.~2 in~\cite{SinnZV14},
+% which assigns a variable to each edge on which this variable decrease as its ranking function.
+% the Alg.~3 in~\cite{ZulegerGSV11},
+% and the Def.~25 in Section 4 from~\cite{SinnZV17}.
+
+\emph{Path Refinement Based Complexity Analysis}.
+Another line of related works aims at analyzing loop bounds through loop summarization and path refinements~\cite{ManoliosV06,BalakrishnanSIG09,SharmaDDA11,Flores-MontoyaH14,HumenbergerJK18,CyphertBKR19}, and some of them also analyze the interleaving between different paths~\cite{GulwaniJK09,ZulegerGSV11}.
+Kincaid et al.\cite{KincaidBCR19,KincaidCBR18,BreckCKR20} introduce some loop summarization techniques which can help to improve the accuracy of the path refinement algorithm for non-linear loops and with program recurrence.
+% summarization techniques~\cite{KincaidCBR18} and the invariant generating algorithm considering recurrence in~\cite{BreckCKR20}. 
+However, when composing the bound in nested loops, recursively unrolling the nested loops is heavy and in most cases non-terminating.
+%
+In contrast, our method simplifies the path refinement algorithm in~\cite{GulwaniJK09} using contextualization techniques based on~\cite{ZulegerGSV11,SinnZV14,ManoliosV06}.
+We also limit the iterations of the refinement algorithm to a constant in our bound analysis algorithm.
