@@ -1,11 +1,10 @@
-%\begin{example}
- % [The Running Example with Nested Loop in One Path]
-%  \label{ex:relatedNestedWhileOdd-overview}
+
 { \small
 % \vspace{-0.2cm}
 \begin{figure}
 \centering
-\begin{subfigure}{.4\textwidth}
+\captionsetup{justification=centering}
+\begin{subfigure}{.3\textwidth}
 \begin{centering}
 {\small
 $
@@ -14,25 +13,24 @@ $
   \clabel{ \assign{i}{n} }^{0} ; \\
       L_1: \ewhile ~ \clabel{i > 0}^{1} ~ \edo ~ \\
       \quad \big(
-        \eif(\clabel{i \% 2 \neq 0 }^{2},
-        \clabel{\assign{k}{i - m}}^{3};\\
-        \quad L_4: \ewhile ~ \clabel{k > 0}^{4} \edo \\
-        \quad ( \clabel{\assign{k}{k - 1}}^{5} );\\
-        \quad \clabel{\assign{i}{k + m}}^{6};
-        \clabel{\assign{i}{i - 1}}^{7}, \\
-        \quad \clabel{\assign{i}{i - 3}}^{8})
+        \eif(\clabel{i \% 2 \neq 0 }^{2},\\
+        \qquad \clabel{\assign{k}{i - m}}^{3};\\
+        \qquad L_4: \ewhile ~ \clabel{k > 0}^{4} \edo \\
+        \qquad \quad ( \clabel{\assign{k}{k - 1}}^{5} );\\
+        \qquad \clabel{\assign{i}{k + m}}^{6};\\
+        \qquad \clabel{\assign{i}{i - 1}}^{7}, \\
+        \qquad \clabel{\assign{i}{i - 3}}^{8})
         \big)
   \end{array}
 $
 }
-\vspace{-0.3cm}
 \caption{}
 \end{centering}
 \end{subfigure}
-\begin{subfigure}{.52\textwidth}
+\begin{subfigure}{.35\textwidth}
 \begin{centering}
 \begin{tikzpicture}[scale=\textwidth/20cm,samples=200]
-\draw[] (-4, 10) circle (0pt) node{{ $0$}};
+\draw[] (-6, 10) circle (0pt) node{{ $0$}};
 \draw[] (0, 10) circle (0pt) node{{ $1$}};
 \draw[] (0, 7) circle (0pt) node{\textbf{$2$}};
 \draw[] (0, 4) circle (0pt) node{{ $3$}};
@@ -60,28 +58,26 @@ $
 \draw[ thick, -latex] (-7.5, 7)  --  node [left] {\scriptsize $i' \leq i - 1$ }(-0.5, 9.5);
 % \draw[ thick, -latex] (6, 6.5)  -- node [right] {$\top$} (6, 4.5) ;
 \end{tikzpicture}
-\vspace{-0.5cm}
 \caption{}
 \end{centering}
 \end{subfigure}
-\begin{subfigure}{.9\textwidth}    
-\begin{centering}
+\begin{subfigure}{.3\textwidth}    
+% \begin{centering}
 {\small
 $\tpath_0 = (0 \to 1)$
-\quad
+\\
 $\tpath_1 = (1 \to 2 \to 3 \to 4)$
-\quad
+\\
 $\tpath_2 = (4 \to 6 \to 7 \to 1)$
-\quad
+\\
 $\tpath_3 = (4 \to 5 \to 4)$
-\quad
+\\
 $\tpath_4 = (1 \to 2 \to 8 \to 1)$
-\quad
+\\
 $\tpath_5 = (1 \to \lex)$
 }
-\vspace{-0.3cm}
 \caption{}
-\end{centering}
+% \end{centering}
 \end{subfigure}
 % \vspace{-0.5cm}
 \begin{subfigure}{.8\textwidth}    

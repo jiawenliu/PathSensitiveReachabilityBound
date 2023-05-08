@@ -1,7 +1,7 @@
 We use a standard integer while language with labels to identify different program locations and equipped with trace-based operational semantics.
 
 \emph{Labeled Command}
-The commands are the typical ones from while languages with each annotated with a label $l \in (\mathbb{N} \cup \{\lin, \lex\})$ to uniquely identify each program point. The program is a labeled command $c$ having the following syntax. 
+The commands are the typical ones from while languages with each annotated with a label $l \in (\mathbb{N} \cup \{\lex\})$ to uniquely identify each program point. The program is a labeled command $c$ having the following syntax. 
 \\
 \[
 {c} ::= 
@@ -12,8 +12,7 @@ The commands are the typical ones from while languages with each annotated with 
 ~|~ {c};{c} 
 \]
 \\
-Expressions include
-integer arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
+Expressions include linear arithmetic expression over integers, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{Z}$ and the variable $x$ from a finite universe of all variables, $\vardom$) and boolean expression, $\bexpr \in \booldom$, where we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
 % The operator $\kw{FV}: \expr \to \mathcal{P}(\mathcal{V})$ computes the set of free variables in an expression.
 We denote by $\cdom$ the universe of all labeled commands, $\ldom$ for all labels,
 $\inpvar(c) \subseteq \vardom$ the set of all input variables in a program $c$,
