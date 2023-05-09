@@ -1,4 +1,4 @@
-\emph{Set up} We implemented a prototype {\PSRB} that takes a program as input 
+\paragraph{Set up} We implemented a prototype {\PSRB} that takes a program as input 
 and outputs the reachability-bound on each program point.
 The 
 program abstraction is implemented in OCaml and the program refinement, ranking function estimation, and the path-sensitive reachability-bound algorithm are implemented in Python.
@@ -21,17 +21,23 @@ When comparing with tools for worst-case
 complexity analysis we aim to answer the following two questions: is our prototype able to compute precise reachability-bound for different program points (\emph{Effectiveness})? If so, can we also have better overall complexity estimation (\emph{Accuracy})?
 %  based on the precise reachability-bound?
 
-\emph{Effectiveness}
+\paragraph{Effectiveness}
 % \newcommand{\pointnum}{\kw{\# l}}
 We summarize the results of the effectiveness evaluation in Table~\ref{tb:effectiveness-eval}.
 On each row, a theoretical worst-case complexity is listed in the $2^{nd}$ column and the number of programs (P. \#) with this particular complexity is given in the $3^{rd}$ column.
+Each row of the $4^{th}$ column is the total number of locations (L. \#) in the programs with certain complexity.
 % The  and $3^{rd}$ columns are the theoretical worst-case complexity and the number of programs that have this complexity.
-In the ``worst bound (P. \#)'' column, each row provides the number of programs that the corresponding tool identify of the  corresponding ``theory worst'' complexity. For example, the number $1$ in the column of our tool for the row $O(1)$ says that our tool infer the right complexity for only one of the programs, for the other three programs it infers a higher complexity.
+In the ``worst bound (P. \#)'' column, we present the evaluation result of different tools in sub-columns.
+For each tool, the result in each row is the number of programs that this tool identified with the corresponding ``theory worst'' complexity. For example, the number $1$ in the column of our tool for the row $O(1)$ says that our tool infer the right complexity for only one of the programs, for the other three programs it infers a higher complexity.
 To show \textit{effectiveness}, 
 we present in the ``{reachability-bound (L. \#)}'' column our results w.r.t. the program locations. 
-Each sub-column is the number of locations (L. \#) with certain reachability-bound.
+Because different program points usually have different reachability-bounds,
+we divide this column into sub-columns corresponding to different reachability-bounds.
+Results in the same row are from the programs of the same estimated worst-case complexity.
+For these programs of the same estimated worst-case complexity in the same row, each sub-column contains the computed number of locations that has certain reachability-bound.
+% their reachability-bounds that has this 
+% Each sub-column is the number of locations (L. \#) with certain reachability-bound.
 % Though having the same worst-case complexity, the results show that different points have significantly different reachability-bounds.
-These locations in the same row are from the programs of the same worst-case complexity.
 The results show that although these locations are from the programs of the same worst-case complexity, they have significantly different reachability-bounds. This is because of the existence of multipaths loops, where locations on different paths have different reachability-bound.
 We identify a number of loop patterns with large worst-case complexity but only reachability-bounds of $O(1)$ on points inside the loop.
 For example in the row of $O(n)$ worst complexity in Icra benchmark, we observe that
@@ -103,7 +109,7 @@ None of other tools compute bounds for these programs.
     }
     \end{table}
 
-\emph{Accuracy}
+\paragraph{Accuracy}
 Based on the worst-case bound and reachability-bound, we present the accuracy evaluation result in
 Table~\ref{tb:accuracy-eval}.
 In the last column we show the ``overall complexity bound'' estimation.
@@ -228,7 +234,7 @@ For comparison, we show the worst-case bound times $\sum(L. \#)$ in the $2^{nd}$
 %  }
 %  \end{table}
 %
-\emph{Performance}
+\paragraph{Performance}
 The performance evaluation is in Table~\ref{tb:performance-eval}.
 The columns from $2$ to $6$ are the numbers of the programs, program with multipath loops, program with nested loops, and program with bounded loops and the lines of code in each benchmark set respectively.
 The $7$ to $9$ columns are our success rate, the number of programs we failed and time outs. The last column is the total runtime w.r.t. the programs that we successfully computed bounds.
@@ -262,3 +268,5 @@ Tianhan & 37 & 2 & 3 & 37 & 204 & 100.0\% & 0 & 0 & 1min03sec \\
 \end{tabular}    
 }
 \end{table}
+
+\paragraph{Failed Examples}

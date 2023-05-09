@@ -22,13 +22,11 @@ As subroutines of the \emph{path reachability-bound} computation, this section g
  for a subprogram, $\rprog_l$ in $\rprog$ is an upper bound on the times that $\rprog_l$ is executed from its entry to the exit point with arbitrary initial trace.
 \end{defn}
 
-To compute the path bound for every subprogram, our approach uses the ranking function invariant to compute a more precise progress invariant inspired from~\cite{GulwaniJK09}.
-We first compute three abstract states for each ranking function in different subprograms of a refined program as below.
+To compute the path bound for every subprogram, our approach first compute three abstract states for each ranking function in different subprograms of a refined program as below.
 % Then we these precise abstract states, and estimate the path bound path sensitively.
 \begin{defn}[Rank Abstract States Computation]
  \label{def:alg-absstate}
- Given a program $c$ with its refined program $\rprog_c$ and a sub-program $\rprog$ in $\rprog_c$,
- we compute three abstract states, $\rfinit(\rprog, c)$, $\rffinal(\rprog, c)$ and $\rfnext(\rprog, c) \in \scexpr(c)$ w.r.t. the ranking functions in this sub program as follows.
+ Given a program $c$ with its refined program $\rprog_c$ and a sub-program $\rprog$ in $\rprog_c$, the three abstract states, $\rfinit(\rprog, c)$, $\rffinal(\rprog, c)$ and $\rfnext(\rprog, c) \in \scexpr(c)$ w.r.t. the ranking functions in this sub-program as follows.
  % \begin{itemize}
  % \item 
  

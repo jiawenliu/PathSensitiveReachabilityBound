@@ -7,7 +7,7 @@ Each edge $l \xrightarrow{dc} l'$ is an abstract transition $\absevent = (l, dc,
 
 Then we abstract the program in the form of paths.
 $$
-\tpath_0 ; \rpchoose{ 1: \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2, \tpath_4 }; \tpath_5
+\tpath_0 ; \rpchoose{ 1: \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2), 1:\rprepeat(\tpath_4) }; \tpath_5
 $$
 $;$ concatenates sequence of execution paths,
 $\rprepeat(\tpath_3)$ represents looping on the path $\tpath_3$ and
@@ -16,22 +16,38 @@ $\rprog_1 = \tpath_1; 4:\rprepeat(\tpath_3);\tpath_2$ and $\rprog_2 =\tpath_4$.
 
 % \textbf{Step 2: Program Refinement}
 \textbf{\emph{Step 2: Path interleaving refinement.}} 
-The two execution paths
-can interleave each other during the program execution.
-There are two possible interleaving orders,
-either $\rprog_1$ executes after one iteration of $\rprog_2$ or vice versa.
+Two execution paths are not simply iterating on themselves during the program execution,
+they could interleave each other at certain iteration.
+We summarize each execution path into conjunctions of transition relations.
+\begin{equation}
+    \begin{array}{l}
+        \rprog_1 \models \phi_1 = \\
+    \rprog_2 \models \phi_2 = 
+    \end{array}
+\end{equation}
+  
 In this sense, Algorithm~\ref{alg:prog-refine} in Section~\ref{sec:refine} computes the interleaving orders
-by exhaustively checking the transition relation of combinations of the execution paths.
-It identifies two unique interleaving orders and generates new execution paths as follows,
+by exhaustively checking the compositions of transition relations of different execution paths,
+\begin{equation}
+    \begin{array}{l}
+        \rprog_1 ; \rprog_1 \models \exists i, k \st \phi_1 \circ \phi_1 = ... \implies \efalse\\
+        \rprog_2 ; \rprog_2 \models \exists i, k \st \phi_2 \circ \phi_2 = ... \implies \efalse \\
+        \rprog_2 ; \rprog_1 \models \exists i, k \st \phi_2 \circ \phi_1 = ...  \\
+        \rprog_1 ; \rprog_2 \models \exists i, k \st \phi_1 \circ \phi_2 = ... 
+    \end{array}
+\end{equation}
+Only two execution paths are feasible, so we identify two unique interleaving orders --
+either $\rprog_1$ executes after one iteration of $\rprog_2$ or vice versa.
+% Then, loop $L_1$ in the source program is generates new execution paths as follows,
 \[
-\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4
-\qquad
-\tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2
+    \rprog_1 ; \rprog_2 = \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4
+    \qquad
+    \rprog_2 ; \rprog_1 = \tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2
 \]
 % The second step in Section~\ref{sec:refine}
-Then we transform the multiple-paths loop
-into multiple loops where
-the interleaving of paths is explicit.
+Then, the multiple-paths loop $L_1$ in the source program is refined
+into multiple loops where each one can only iterate following the specified interleaving order.
+% the interleaving of paths is explicit.
 As in the bottom of Figure~\ref{fig:relatedNestedWhileOdd-overview}(c),
 the program is transformed into 
 \[
