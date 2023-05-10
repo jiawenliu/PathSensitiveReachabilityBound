@@ -5,9 +5,10 @@
 %
 ~|~ \div
 \\  
-\mbox{Arithmetic Expression} 
+\mbox{Linear Arithmetic} 
 & \aexpr & ::= & 
-n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  ~|~ \emax (a, a) ~|~ \emin(a, a)
+v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr ~|~ \aexpr + \aexpr ~|~ \aexpr - \aexpr
+  ~|~ \emax (a, a) ~|~ \emin(a, a)
 \\
 \mbox{Boolean Expression} & \bexpr & ::= & 
 %
@@ -54,7 +55,7 @@ n ~|~ {x} ~|~ \aexpr \oplus_a \aexpr  ~|~ \emax (a, a) ~|~ \emin(a, a)
 \\
 \end{array}
 \]
-Likewise, we denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$, and we use the following notations to represent the sets of corresponding terms:
+Likewise, we denote by $\infty$ a value s.t. $v < \infty $ for all $v \in \mathbb{Z}$, and we use the following notations to represent the sets of corresponding terms:
 \[
 \begin{array}{lll}
 \vardom & : & \mbox{Set of Variables}  
@@ -131,7 +132,10 @@ We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all la
   showing up in $c$ that are never defined before using, are actually the input variables of this program.
   We use $\mathcal{V}_{\lin}$ to denote the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
 
-
+  We denote by $\inpvardom$ the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
+  We compute the input variable by taking the union of the free variables in every expression
+  and subtract the set of variables that are assigned in commands.
+  
 \paragraph{Event}
 An event is a triple.
 Its first element is the variable name $x$

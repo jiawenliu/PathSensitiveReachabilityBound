@@ -1,14 +1,5 @@
 \emph{The Reachability-bound}
-We use a set $\lvar(c) \subseteq \ldom$ collecting all the program points in a program $c$, which are simply all the unique labels of $c$.
-And we also define the operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points as follows,
-{\small
-\[
-\tracel([(\_, l, \_)] \tracecat \trace') \triangleq [l] \tracecat \tracel(\trace')
-\qquad
-\tracel(\trace) \triangleq []~~ \mbox{if}~~ \trace = [] \lor \trace \in \inftdom
-\]
-}
-Now we introduce two important counter notations counting the occurrence of a program point and a list of program points respectively.
+We first introduce two important counter notations counting the occurrence of a program point and a list of program points respectively.
 \begin{defn}[Program Point Counter]
  \label{def:counter}
 The counting operator $\counter : \tdom \to \ldom \to (\mathbb{N} \cup \{\bot\})$
@@ -31,7 +22,7 @@ $
 \end{defn}
 \begin{defn}[Point List Counter]
  \label{def:lcounter}
- The counting operator $\lcounter : \tdom \to \mathcal{P}(\ldom) \to (\mathbb{N} \cup \{\infty\})$
+ The counting operator $\lcounter : \tdom \to \mathcal{P}(\ldom) \to (\mathbb{N} \cup \{\bot\})$
  counts the appearance of a list of labels $L = [l_1, \ldots, l_n]$ as
 {\small
 \begin{center}
@@ -40,8 +31,8 @@ $
  \lcounter(\trace'' \tracecat \trace', L ) 
  & \triangleq \lcounter(\trace', L) + 1 & \text{if}~ \pi_2(\trace''[i]) = l_i, \forall i = 1, \ldots, n
  \\ 
- \lcounter([(\_, l, \_)] \tracecat \trace', L ) 
- & \triangleq \lcounter(\trace', L) & \text{if}~ l \neq l_1
+ \lcounter([(\_, l, \_)] \tracecat \trace'' \tracecat \trace', L ) 
+ & \triangleq \lcounter(\trace', L) & \text{if}~ l \neq l_1 \lor \bigvee\limits_{i = 2, \ldots, n} \pi_2(\trace''[i]) \neq l_i
  \\ 
  \lcounter(\trace, L ) 
  & \triangleq \bot & \text{if }~ \trace \in \inftdom.

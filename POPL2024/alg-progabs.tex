@@ -11,9 +11,20 @@ We first introduce some components of this graph.
 \begin{defn}[Symbolic Constant, Symbolic Expression]
  \label{def:symbolic_expr}
 A symbolic constant is either a natural number, $\infty$, or a program's input variable. We denote by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$ the universe of the \emph{symbolic constant}.
- The set of the \emph{symbolic expression} for a program $c$, $\scexpr(c) \subseteq \mathcal{A}$ is all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$.
+ The set of the \emph{symbolic expression} for a program $c$,
+$\scexpr(c) \subseteq \mathcal{A}$ is all the expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ that are
+formed using the arithmetical operators addition ($+$), multiplication
+($\times $), maximum ($\emax $), minimum ($\emin$).
 \end{defn}
 
+\highlight{
+\begin{defn}[Symbolic Expression Semantics]
+\label{def:symbolic_expr_semantics}
+  The semantics function for symbolic expressions, $\sceconfig{}: \scexpr(c) \to (\tdom \to \mathbb{N} \cup \{\infty \})$ evaluates a \emph{symbolic expression}
+  $e \in \scexpr(c)$ over a trace $\trace \in \tdom$ using the usual operator semantics (we have 
+  $e + \infty = \infty, \emin(e, \infty) = e$, etc.).
+\end{defn}
+}
 \begin{defn}[Difference Constraints]
 A difference constraint $d$ is an inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.

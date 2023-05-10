@@ -64,7 +64,7 @@ Algorithms in Section~\ref{sec:rank} identifies the ranking function for each tr
 For example for edge $4 \to 5$, its ranking function is $k$ and edges on $\tpath_1$, $\tpath_2$ and $\tpath_4$ all have $i$ as their ranking functions.
 
 % \textbf{Step 4: Path-sensitive Reachability-bound Computation.}
-\textbf{\emph{Step 4: local path reachability-bound}}
+\textbf{\emph{Step 4: local path reachability-bound.}}
 For $\tpath_3$ in the program in Figure~\ref{fig:relatedNestedWhileOdd-overview}, we want to know how many times it is ``reached'' during the program execution.
 From the refined program, it shows up in both the new generated execution paths and nested in two level loops.
 We first compute a local \emph{path reachability-bound} for it w.r.t. its innermost loop $L_4$.
@@ -72,7 +72,7 @@ This is an upper bound on the number of execution times of $\tpath_3$ when execu
 computes $\outinB(4:\rprepeat(\tpath_3), \tpath_3, c) = n - m$ by computing
 the initial state, next state and final state of ranking functions on $\tpath_3$ during the execution of $\rprepeat(\tpath_3)$.
 
-\textbf{\emph{Step 5: loop reachability-bound}}
+\textbf{\emph{Step 5: loop reachability-bound.}}
 For nested loops, we need to compute the \emph{loop reachability-bound} for each simple transition path with respect to every level of the outer loop.
 Since $\tpath_3$ is nested in two level loops, we compute its \emph{loop reachability-bound}
 with respect to the outer loop $L_1$. 
