@@ -93,12 +93,12 @@ an upper bound on the number of execution times of $\tpath_3$ when executing onl
 \textbf{\emph{Step 5: loop reachability-bound.}}
 Previous step only provides the path reachability-bound for a simple transition path w.r.t. the innermost loop.
 For nested loops, we need to compute the \emph{loop reachability-bound} for each simple transition path with respect to every level of the outer loop.
-Since $\tpath_3$ is nested in two level loops, we compute its \emph{loop reachability-bound}
-with respect to the outer loop $L_1$. 
-It is expected to be $1$ because the inner loop $L_4$ is reached only in the first iteration of the outer loop $L_1$.
+Since $\tpath_3$ is located in two level nested loops, we compute 
+with respect to its only outer loop $L_1$ a \emph{loop reachability-bound}.
+% It is expected to be $1$ because the inner loop $L_4$ is reached only in the first iteration of the outer loop $L_1$.
 % , we aim to compute $1$ as the \emph{loop reachability-bound} of $\tpath_3$ w.r.t. $L_1$.
-In the first refined execution path, $\rprog^1 = \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
-we compute three abstract states when visiting $L_4$ the first, second and last time during the execution of loop $\rprog^1$,
+In the first new execution path, $\rprog^1 = \rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
+Definition~\ref{def:alg-loopabsstate} in Section~\ref{def:looprb} computes three abstract states when visiting $L_4$ the first, second and last time during the execution of loop $\rprog^1$,
 \begin{equation*}
 \lpinit(\rprog^1, \tpath_3, c) = \max\{ n - m\} \quad
 \lpnext(\rprog^1, \tpath_3, c) = \max\{n - m\} \quad
@@ -109,7 +109,7 @@ Then we compute \emph{loop reachability-bound} as the maximal value of the formu
     \max\limits_{x = a \in \{k = 0\}}
     \frac{\lpinit(\max\{n - m\} - a }{\max\{n - m\}} = 1
   \]
-We also compute in the second refined execution path $\rprog_1^2$ the same number.
+For the second new execution path $\rprog^2$, algorithm in Section~\ref{def:looprb} computes the same result.
 % $\outinB(4:\rprepeat(\tpath_3), \tpath, c) = n - m - 3$ and the same $\lpchB(\rprog_1^2, \tpath_3, c)$.
 % So 
 
