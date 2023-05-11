@@ -10,11 +10,14 @@ for the program $c$.
 We first introduce some components of this graph.
 \begin{defn}[Symbolic Constant, Symbolic Expression]
  \label{def:symbolic_expr}
-A symbolic constant is either a natural number, $\infty$, or a program's input variable. We denote by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$ the universe of the \emph{symbolic constant}.
+A symbolic constant is either a natural number, $\infty$, or a program's input variable. We denote by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$ the universe of the \emph{symbolic constant},
+and $ \scvar(c) = \mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ the set of symbolic constant of
+program $c$.
+% and $\scexpr$
  The set of the \emph{symbolic expression} for a program $c$,
-$\scexpr(c) \subseteq \mathcal{A}$ is all the expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ that are
+$\scexpr(c)$ is the set of all the expressions over $\scvar(c)$ that are
 formed using the arithmetical operators addition ($+$), multiplication
-($\times $), maximum ($\emax $), minimum ($\emin$).
+($\times $),  integer division ($/$) maximum ($\emax $), minimum ($\emin$).
 \end{defn}
 
 \highlight{

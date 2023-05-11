@@ -182,9 +182,37 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
     \end{algorithm}
 
 
-
-The interleaving refinement algorithm computes the execution order of each simple transition paths explicitly.
+The interleaving refinement algorithm computes the interleaving orders of each simple transition paths explicitly.
 This algorithm is inspired from the algorithm REFINE in paper~\cite{GulwaniJK09}. 
+
+Line:18 first computes the invariant of the loop in the source program,
+
+\begin{equation}
+   \begin{array}{l}
+       \rprog_1 ; \rprog_1 \models \exists i, k \st i \\
+       \rprog_2 ; \rprog_2 \models \exists i, k \st \phi_2 \circ \phi_2 = ... \implies \efalse \\
+       \rprog_2 ; \rprog_1 \models \exists i, k \st \phi_2 \circ \phi_1 = ...  \\
+       \rprog_1 ; \rprog_2 \models \exists i, k \st \phi_1 \circ \phi_2 = ... 
+   \end{array}
+\end{equation}
+
+\begin{equation}
+   \begin{array}{l}
+       \rprog_1 ; \rprog_1 \models \exists i, k \st \phi_1 \circ \phi_1 = ... \implies \efalse\\
+       \rprog_2 ; \rprog_2 \models \exists i, k \st \phi_2 \circ \phi_2 = ... \implies \efalse \\
+       \rprog_2 ; \rprog_1 \models \exists i, k \st \phi_2 \circ \phi_1 = ...  \\
+       \rprog_1 ; \rprog_2 \models \exists i, k \st \phi_1 \circ \phi_2 = ... 
+   \end{array}
+\end{equation}
+Only two execution paths are feasible, so we identify two unique interleaving orders --
+either $\rprog_1$ executes after one iteration of $\rprog_2$ or vice versa.
+% Then, loop $L_1$ in the source program is generates new execution paths as follows,
+\[
+   \rprog_1 ; \rprog_2 = \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4
+   \qquad
+   \rprog_2 ; \rprog_1 = \tpath_4; \tpath_1; 4:\rprepeat(\tpath_3); \tpath_2
+\]
+
 
 It first computes the execution orders of
 the simple transition paths that come from the same loop.
