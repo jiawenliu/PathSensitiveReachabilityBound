@@ -26,22 +26,23 @@ v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr~|~ \aexpr \% v ~|~ \aexpr
 \end{array}
 $}
 \end{center}
+\mg{Please spell out what the arithmetic operations are and why some of them are formed by values instead of arithmetic expressions.}
 where $l$ is a label in $\mathbb{N}$, $x$ is a variable from
 some set $\vardom$, $\bexpr$ is a boolean expression from some set
 $\booldom$, and $e$ is an expression consisting of either an
 arithmetic expression $\aexpr \in \mathcal{A}$ or a boolean
-expression~\mg{If we have space I suggest we spell out the syntax for expressions or at least we need to do this in the appendix.}.
+expression.
 %
-\mg{The next sentence may need to be moved to the semantics part. Also, is $\bot$ a value?}
 A value $v\in \valdom$ is either an integer in $\mathbb{Z}$ or a boolean in $\mathbb{B}$.
 We 
 assume that the labeling of programs is such that each program
 point is uniquely annotated with a label $l\in\mathbb{N}$.
-\mg{I do not know how the set $\inpvar(c)$ of input variable of a program $c$ is defined. Can we spell it out?}\\
+\\
 \highlight{$\inpvar(c)$ is the set of input variables in a program $c$. 
 It is computed by taking the union of the free variables in every expression in $c$
 and then subtracting the set of variables that are assigned in commands.
 }
+\mg{I don't think this is accurate. Accordingly to this definition, the following program has no input variables: y=x+2; x=x+1. I imagine that x here should be an input variable. Am I wrong?}
 %
 %% Expressions include integer arithmetic expression,
 %% $\aexpr \in \mathcal{A}$ (with the value
@@ -57,8 +58,9 @@ and then subtracting the set of variables that are assigned in commands.
 %% % We use $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
 
 \noindent\emph{Set of labels.} While we assume that programs points are annotated only with natural numbers as labels, in the following we will use a more general set of labels: $\ldom = \mathbb{N}\cup\{\lin,\lex\}$. The label $\lin$ will be used to denote input variables in traces, while $\lex$ will be used in our program analysis to identify program exit points.
-\highlight{We use a set $\lvar(c) \subseteq \ldom$ collecting all the program points in a program $c$, which are simply all the unique labels of $c$.
-}
+We denote by  $\lvar(c) \subseteq \ldom$ the set of all the unique labels of $c$.
+
+
 
 
 
@@ -87,33 +89,31 @@ the operator $\tracecat$ concatenates two traces. We use set notation $\event \i
 We denote the set of finite traces by $\ftdom$, the set of infinite traces by $\inftdom$ and the set of traces by $\tdom = \ftdom \cup \inftdom$.
 % The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in~\cite{Cousot19}.
 }
-\highlight{$\trace[j]$ denotes the $j^{th}$ event in this trace $\trace$ counting from head of the list with $\trace[1]$ for the first event,
-and we also define the operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$ projects the label from every event in a trace as a list of program points as follows,
-{\small
+We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head of the list, with $\trace[1]$ denoting the first event.
+We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$ which projects the labels of every event in a trace as a list of program points. This is defined as follows,\mg{the previous definition was not well defined since it was missing the otherwise. In particular, both cases were applying to an infinite trace.}
 \[
-\tracel([(\_, l, \_)] \tracecat \trace') \triangleq [l] \tracecat \tracel(\trace')
-\qquad
-\tracel(\trace) \triangleq []~~ \mbox{if}~~ \trace = [] \lor \trace \in \inftdom
+\begin{array}{rcll}
+\tracel(\trace) &\triangleq & [] &\qquad  \mbox{if}~~ \trace = [] \lor \trace \in \inftdom
+\\ 
+\tracel([(\_, l, \_)] \tracecat \trace') &\triangleq & [l] \tracecat \tracel(\trace') &\qquad  \mbox{otherwise}
+\end{array}
 \]
-}
-}
-
 %
 We denote by $\bot$ a value s.t. $\bot < v $ for all $v \in \mathbb{Z}$\mg{Why do we need $\bot$ to be smaller than all the integers?}, and we use the operator $\env: {\ftdom} \to \vardom \to(\mathbb{N} \cup \{\bot\})$ \mg{In which case do we get $\infty$?} to fetch the latest value assigned to a variable in the trace, which returns $\bot$ if the variable doesn't have a value in the trace.
 % In the rest of the paper, We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
-We use $\ftdom_0(c)$ to denote the set of all initial traces for the program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$\mg{Is this the definition of initial trace?  a trace where every input variable has a value?}.\\
-\highlight{
+%% We use $\ftdom_0(c)$ to denote the set of all initial traces for the program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$\mg{Is this the definition of initial trace?  a trace where every input variable has a value?}.\\
     \begin{defn}[Initial Trace]
         \label{def:initial_trace}
-        Given a program $c$, $\trace$ is an initial trace of $c$ if and only if all the input variables of $c$ have an initial value in this trace.
+        Given a program $c$, a finite trace $\trace$ is an initial trace of $c$ if and only if all the input variables of $c$ have an initial value in this trace.\mg{This is inconsistent, since $\bot$ \bf{is a value}.}
         \[
         \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
         \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot
         \]
         We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$.
         \end{defn}
-        For instance, the initial trace of $\kw{nestedOdd}(n, m)$ example contains the initial value of the input variable $n$ and $m$.
-}
+        As an example, the initial trace of $\kw{nestedOdd}(n, m)$ example contains the initial value of the input variable $n$ and $m$.
+\\
+
 
 \emph{Semantics}
 We evaluate the expression using the usual arithmetic operator semantics, denoted by
