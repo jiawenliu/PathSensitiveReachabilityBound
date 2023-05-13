@@ -14,11 +14,17 @@ $\rprepeat(\tpath_3)$ represents looping on the path $\tpath_3$ and
 $\rpchoose{ \ldots}$ represents the loop $L_1$ which contains two possible execution paths,
 $\rprog_1 = \tpath_1; 4:\rprepeat(\tpath_3);\tpath_2$ and $\rprog_2 =\tpath_4$.
 
+\textbf{\emph{Step 2: ranking function estimation.}}
+Algorithms in Section~\ref{sec:rank} identifies the ranking function for each transition edge, which is a symbol whose number of decreasing times can represent the number of execution of this edge.
+For example for edge $4 \to 5$, its ranking function is $k$ and edges on $\tpath_1$, $\tpath_2$ and $\tpath_4$ all have $i$ as their ranking functions.
+
+
 % \textbf{Step 2: Program Refinement}
-\textbf{\emph{Step 2: Path interleaving refinement.}} 
+\textbf{\emph{Step 3: Path interleaving refinement.}} 
 Two execution paths are not simply iterating on themselves during the program execution,
 they could interleave each other at certain iteration.
-We summarize each execution path into conjunctions of transition relations.
+We summarize each execution path into conjunctions of the invariant of ranking functions on this path.
+% , which is a  of transition relations.
 \begin{equation}
     \begin{array}{l}
         \rprog_1 \models \phi_1 = \\
@@ -59,10 +65,6 @@ each new execution path is equivalent to the execution of the original loop.
 % denoted as $\rprog_1^1$ and $\rprog_1^2$.
 
 % \textbf{Step 3: Ranking Function Estimation}
-\textbf{\emph{Step 3: ranking function estimation.}}
-Algorithms in Section~\ref{sec:rank} identifies the ranking function for each transition edge, which is a symbol whose number of decreasing times can represent the number of execution of this edge.
-For example for edge $4 \to 5$, its ranking function is $k$ and edges on $\tpath_1$, $\tpath_2$ and $\tpath_4$ all have $i$ as their ranking functions.
-
 % \textbf{Step 4: Path-sensitive Reachability-bound Computation.}
 \textbf{\emph{Step 4: local path reachability-bound.}}
 For $\tpath_3$ in the program in Figure~\ref{fig:relatedNestedWhileOdd-overview}, we want to know how many times it is ``reached'' during the program execution.
@@ -107,28 +109,35 @@ Definition~\ref{def:alg-loopabsstate} in Section~\ref{def:looprb} computes three
 Then we compute \emph{loop reachability-bound} as the maximal value of the formula,
 \[
     \max\limits_{x = a \in \{k = 0\}}
-    \frac{\lpinit(\max\{n - m\} - a }{\max\{n - m\}} = 1
+    \left\{ \frac{\max\{n - m\} - a }{\max\{n - m\}} \right\} = 1
   \]
 For the second new execution path $\rprog^2$, algorithm in Section~\ref{def:looprb} computes the same result.
 % $\outinB(4:\rprepeat(\tpath_3), \tpath, c) = n - m - 3$ and the same $\lpchB(\rprog_1^2, \tpath_3, c)$.
 % So 
 
 \textbf{\emph{Step 6: path reachability-bound.}}
-For each simple transition path in every refined execution path where it shows up, we take the production of the \emph{loop reachability-bound}
-and local \emph{path reachability-bound}.
-For example for $\tpath_3$ in the first refined execution path 
-$\rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
-we compute $1 \times (n - m)$ and $1 \times (n - m - 3)$ in the second execution path.
-Then we
-take the maximal value over all refined execution order and
-$\inoutB(\rprog, \tpath_3, c) = \max\{ 1 \times (n - m), 1 \times (n - m - 3) \} = n - m$.
+For each simple transition path in every refined execution path where it shows up, we take the production of the local \emph{path reachability-bound} and the  \emph{loop reachability-bound} w.r.t. each level of its outer loop.
+For $\tpath_3$,
+% $\rprepeat(\tpath_1; 4:\rprepeat(\tpath_3); \tpath_2; \tpath_4)$,
+we compute its \emph{path reachability-bound} globally
+$$
+\inoutB(\rprog, \tpath_3, c) = \max\{ 1 \times (n - m), 1 \times (n - m - 3) \} = n - m
+$$
+% , and $1 \times (n - m - 3)$ in the second execution path.
+% Then we
+by
+taking the maximal value over all newly generated execution paths.
 This maximization operation does not produce over-approximation because there does not exist interleave
 between the refined execution paths and each refined execution path is equivalent to the original loop, and each other as well.
 
 \textbf{\emph{Step 7: reachability-bound.}}
-Now for every program point $l$, we sum up the $\inoutB(\rprog, \tpath)$ over all $\tpath$ that contains $l$ and get $\psRB(l, c)$.
-Since point $5$ only shows up on $\tpath_3$, we compute \highlight{$\psRB(5, c) = n - m$}.
+Now for every program point $l$, we sum up the $\inoutB(\rprog, \tpath)$ over all $\tpath$ that contains $l$ to get $\psRB(l, c)$.
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}(c), program point $5$ only shows up on $\tpath_3$, so we have
+$$\psRB(5, c) = \inoutB(\rprog, \tpath_3, c) = n - m.$$
 The points $0$ and $\lex$ are not in any loop, so we have $\psRB(0, c) = \psRB(\lex, c) = 1$.
-The points $3, 6, 7$ and $8$ which only show up once on $\tpath_2$ and $\tpath_4$ are all equal to $\lfloor\frac{m}{4}\rfloor$ the same as their $\inoutB$.
-For the loop headers $1$ and $4$, we only count the $\tpath$ where they show up as a start-point.
-So $\psRB(4, c) = \lfloor\frac{m}{4}\rfloor + n - m + 1$ and $\psRB(1,c) = 2 \times \lfloor\frac{m}{4}\rfloor + 1$ all as expected.
+The points $3, 6, 7$ and $8$ which only show up once on $\tpath_2$ and $\tpath_4$ has reachability-bound as
+$$\inoutB(\rprog, \tpath_2, c) = \frac{m}{4}, \inoutB(\rprog, \tpath_4, c) = \frac{m}{4}$$
+% $\lfloor\frac{m}{4}\rfloor$ the same as their $\inoutB$.
+For the loop headers $1$ and $4$, we only count the $\tpath$ where they show up as a start-point,
+$$\psRB(4, c) = \lfloor\frac{m}{4}\rfloor + n - m + 1, \qquad \psRB(1,c) = 2 \times \lfloor\frac{m}{4}\rfloor + 1$$ 
+all as expected.
