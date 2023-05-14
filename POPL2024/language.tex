@@ -99,8 +99,8 @@ We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$ which projects the 
 %
 % We denote by $\bot$ a value s.t. $\bot < v $ for all $v \in \mathbb{Z}$
 \mg{Why do we need $\bot$ to be smaller than all the integers?}
-% \jl{To guarantee the soundness in case of non-terminating execution, specifically refer to Definition~\ref{def:counter}}, 
-We use the operator $\env: {\tdom} \to \vardom \to(\mathbb{N} \cup \{\bot\})$ 
+\jl{Because in Definition~\ref{def:counter}, the counter was returning $\bot$ when the trace is an infinite trace, requiring the $\bot$ to be smaller than all integers can guarantee the soundness in the case of non-terminating execution.}, 
+We use the operator $\env: {\tdom} \to \vardom \to \mathbb{Z}$ 
 \mg{In which case do we get $\infty$?}
 \jl{When the estimated reachability-bound is $\infty$} to fetch the latest value assigned to a variable in the trace,
  which returns $\bot$ if the variable doesn't show up in the trace, or the trace is an infinite trace.
