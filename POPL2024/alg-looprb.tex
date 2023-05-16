@@ -7,7 +7,7 @@ that computes a sound \emph{loop reachability-bound}.
 For the program with nested loops, given its refined program $\rprog$, a simple transition path $\tpath$, and an outer loop
 program $\rprog_l$ where $\tpath$ is nested in,
 $f(\rprog_l, \tpath, c)$ is a \emph{loop reachability-bound} for $\tpath$ w.r.t. $\rprog_l$ if and only if
-for every $\trace \in \ftdom_0(c)$, $f(\rprog_l, \tpath, c)(\trace)$ greater or equal to the
+for every $\trace \in \tdom$, $f(\rprog_l, \tpath, c)(\trace)$ greater or equal to the
 iteration numbers of $\rprog_l$,
 such that,
 during these iterations, the innermost loop $\kw{enclosed(\tpath)}$ is entered.
@@ -106,10 +106,10 @@ which is formally stated in Lemma~\ref{lem:looprb-sound}.
 %  with proof in \highlight{Appendix~\ref{apdx:looprb-sound}}.
 \begin{lem}[Soundness of the Loop Reachability-Bound]
   \label{lem:looprb-sound}
-  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$ under initial trace $\trace_0 \in \ftdom_0(c)$, is bounded by $\econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0)$.
+  For any loop $l: \rprog$ and a simple transition path $\tpath$ in a refined program, if $l_t: \rprog_t$ is the closest loop enclosing the $\tpath$, then the entering times of $l_t: \rprog_t$ when executing the $l: \rprog$ under initial trace $\trace_0 \in \tdom$, is bounded by $\econfig{\lpchB(l: \rprog, \tpath, c)}(\trace_0)$.
   \[
     \begin{array}{l}
-    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c_l), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+    \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom, \trace \in \tdom, l, l' \in \ldom, \rprog \st 
     \rprog = REFINE(\algrewrite(c))
     \\ \qquad
     \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
