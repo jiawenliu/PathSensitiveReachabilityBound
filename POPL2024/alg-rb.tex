@@ -24,7 +24,7 @@ $\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for $l$ in $c$.
 {\small
 \[
  \begin{array}{l}
- \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+ \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom, \trace \in \tdom, l, l' \in \ldom, \rprog \st 
  \\ \quad
  \rprog = REFINE(\algrewrite(c))
  \land 
@@ -33,8 +33,8 @@ $\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for $l$ in $c$.
  \\ \quad
  \land
  \Big(
- \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
- \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+ \config{c_0, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+ \lor \config{c_0, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
  \Big)
  \implies \econfig{\psRB(l, c)}(\trace_0) \geq \counter(\trace, l)
  \end{array}.

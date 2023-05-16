@@ -8,7 +8,7 @@
 \mbox{Linear Arithmetic} 
 & \aexpr & ::= & 
 v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr ~|~ \aexpr + \aexpr ~|~ \aexpr - \aexpr
-  ~|~ \emax (a, a) ~|~ \emin(a, a)
+  % ~|~ \emax (a, a) ~|~ \emin(a, a)
 \\
 \mbox{Boolean Expression} & \bexpr & ::= & 
 %
@@ -26,7 +26,7 @@ v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr ~|~ \aexpr + \aexpr ~|~ \
 \\  
 %
 \mbox{Value} 
-& v & ::= & { n \in \mathbb{N} \cup \{\infty\} ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
+& v & ::= & { n \in \mathbb{Z} ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
 %
 % \\%
 \mbox{Label} 
@@ -55,7 +55,7 @@ v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr ~|~ \aexpr + \aexpr ~|~ \
 \\
 \end{array}
 \]
-Likewise, we denote by $\infty$ a value s.t. $v < \infty $ for all $v \in \mathbb{Z}$, and we use the following notations to represent the sets of corresponding terms:
+We use the following notations to represent the sets of corresponding terms:
 \[
 \begin{array}{lll}
 \vardom & : & \mbox{Set of Variables}  
@@ -97,11 +97,12 @@ Likewise, we denote by $\infty$ a value s.t. $v < \infty $ for all $v \in \mathb
 %
 \paragraph{Expression}
 Expressions include
-standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{N} \cup \{ \infty\}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$.
-We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{N}$.
+standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{Z}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$.
+We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{Z}$.
 
-An arithmetic expression can be a constant $n$ denoting integer, a variable $x$ from some countable set $\vardom$, arithmetic binary operation $\oplus_a$ including addition, product, subtraction, division, over arithmetic expressions, or
-$\emax$, $\emin$ of two arithmetic expressions.
+An arithmetic expression can be a constant $n$ denoting integer, a variable $x$ from some countable set $\vardom$ or an expression over variables $x_1, x_2, \ldots \in \vardom$
+and integers $n_0, n_1, n_2, \ldots \in \mathbb{Z}$ that is composed using arithmetic operators,
+multiplication($\times $), mod($\%$), addition($+$), subtraction($-$) in the form of linear polynomial such as $v_0 + n_1 x_1 + n_2 x_2 + \ldots$ or $n_0 + x_1 \% n_1 + n_2 x_2 \ldots$ where operators $\times$ and $\%$ can only compose an arithmetic expression with an integer.
 
 %
 A boolean expression can be either {\tt true} or {\tt false}, basic boolean connectives including logical negation,  $\neg \bexpr$, logical and, $\bexpr \land \bexpr$ and logic or
@@ -130,11 +131,9 @@ We denote by $\cdom$ the universe of all labeled commands and $\ldom$ for all la
   expression $\aexpr$ and boolean expression $\bexpr$ respectively.
   The union of all the free variables
   showing up in $c$ that are never defined before using, are actually the input variables of this program.
-  We use $\mathcal{V}_{\lin}$ to denote the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
-
-  We denote by $\inpvardom$ the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
-  We compute the input variable by taking the union of the free variables in every expression
-  and subtract the set of variables that are assigned in commands.
+  % We use $\mathcal{V}_{\lin}$ to denote the universe of all input variables and $\kw{V_{\lin}}(c)$ the set of input variables in a given program $c$.
+  We denote by $\inpvardom$ the universe of all input variables and $\inpvar(c)$ is the set of input variables in a program $c$, which is all the free variables
+  in program expressions that are used before it is defined.
   
 \paragraph{Event}
 An event is a triple.
@@ -202,11 +201,19 @@ $\tracecat$ is defined as:
 \right.
 \]
 \end{defn}
-
-
+We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head of the list, with $\trace[1]$ denoting the first event.
+We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$ which projects the labels of every event in a trace as a list of program points. This is defined as follows,
+\[
+\begin{array}{rcll}
+\tracel(\trace) &\triangleq & [] &\qquad  \mbox{if}~~ \trace = [] \lor \trace \in \inftdom
+\\ 
+\tracel([(\_, l, \_)] \tracecat \trace') &\triangleq & [l] \tracecat \tracel(\trace') &\qquad  \mbox{otherwise}.
+\end{array}
+\]
 %
-\paragraph{Environment.} $\env : {\tdom}  \to \vardom \to(\mathbb{N} \cup \{\bot, \infty\})$.  
+\paragraph{Environment.} $\env : {\tdom}  \to \vardom \to \mathbb{Z}$.  
 We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
+$\env$ returns $\bot$ if the variable does not show up in the trace or the trace is an infinite trace.
 \[
 \begin{array}{lll}
 \env(\trace  \traceadd (x, l, v)) x \triangleq v
@@ -282,50 +289,50 @@ We also define for $\infty$ the following mathematic computation with arbitrary 
    \aconfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
    = v
   }
-  \and
-  \inferrule{ 
-    \aconfig{\aexpr_1}(\trace) = v_1
-    \and 
-    \aconfig{\aexpr_2}(\trace) = v_2
-    \and 
-     v_1 < v_2
-  }{
-   \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
-   = v_2
-  }
-  \and
-  \inferrule{ 
-    \aconfig{\aexpr_1}(\trace) = v_1
-    \and 
-    \aconfig{\aexpr_2}(\trace) = v_2
-    \and 
-     v_1 \geq v_2
-  }{
-   \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
-   = v_1
-  }
-  \and
-  \inferrule{ 
-    \aconfig{\aexpr_1}(\trace) = v_1
-    \and 
-    \aconfig{\aexpr_2}(\trace) = v_2
-    \and 
-     v_1 < v_2
-  }{
-   \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
-   = v_1
-  }
-  \and
-  \inferrule{ 
-    \aconfig{\aexpr_1}(\trace) = v_1
-    \and 
-    \aconfig{\aexpr_2}(\trace) = v_2
-    \and 
-     v_1 \geq v_2
-  }{
-   \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
-   = v_2
-  }
+  % \and
+  % \inferrule{ 
+  %   \aconfig{\aexpr_1}(\trace) = v_1
+  %   \and 
+  %   \aconfig{\aexpr_2}(\trace) = v_2
+  %   \and 
+  %    v_1 < v_2
+  % }{
+  %  \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
+  %  = v_2
+  % }
+  % \and
+  % \inferrule{ 
+  %   \aconfig{\aexpr_1}(\trace) = v_1
+  %   \and 
+  %   \aconfig{\aexpr_2}(\trace) = v_2
+  %   \and 
+  %    v_1 \geq v_2
+  % }{
+  %  \aconfig{ \emax(\aexpr_1, \aexpr_2) } (\trace)
+  %  = v_1
+  % }
+  % \and
+  % \inferrule{ 
+  %   \aconfig{\aexpr_1}(\trace) = v_1
+  %   \and 
+  %   \aconfig{\aexpr_2}(\trace) = v_2
+  %   \and 
+  %    v_1 < v_2
+  % }{
+  %  \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
+  %  = v_1
+  % }
+  % \and
+  % \inferrule{ 
+  %   \aconfig{\aexpr_1}(\trace) = v_1
+  %   \and 
+  %   \aconfig{\aexpr_2}(\trace) = v_2
+  %   \and 
+  %    v_1 \geq v_2
+  % }{
+  %  \aconfig{ \emin(\aexpr_1, \aexpr_2) } (\trace)
+  %  = v_2
+  % }
    \end{mathpar}
    \caption{Evaluation rules of arithmetic expression}
    \label{fig:aexpr-eval}
@@ -651,10 +658,8 @@ then the program's execution terminates and produces a finite execution trace $\
 %
 This definition has the similar intuition as the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the semantics of the program model in~\cite{SinnZV17}.
 \\
-% If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
-% So we 
-We also have the trace non-decreasing property in this language model as below.
-It is similar to the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lem_language}. 
+If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
+The Lemma below describe this property formally with proof in Appendix~\ref{apdx:lem_language}. 
 \begin{lem}
   [Trace Non-Decreasing]
   \label{lem:psRB-tracenondec}

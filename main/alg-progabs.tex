@@ -33,7 +33,12 @@ Again we first introduce some components of the constraint.
 The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$, in which a symbolic constant can be a natural number, $\infty$, or a program's input variable.
  The \emph{symbolic expression} of a program $\scexpr(c) \subseteq \mathcal{A}$ is the set of all the arithmetic expressions over $\mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ for the program $c$.
 \end{defn}
-
+\begin{defn}[Symbolic Expression Semantics]
+    \label{def:symbolic_expr_semantics}
+      The semantics function for symbolic expressions, $\sceconfig{}: \scexpr(c) \to (\tdom \to \mathbb{N} \cup \{\infty \})$ evaluates a \emph{symbolic expression}
+      $e \in \scexpr(c)$ over a trace $\trace \in \tdom$ using the usual operator semantics (we have 
+      $e + \infty = \infty, \emin(e, \infty) = e$, etc.).
+    \end{defn}
 \begin{defn}[Difference Constraints]
  The difference constraints $DC(\vardom \cup \scvardom)$ is the set of all the inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.

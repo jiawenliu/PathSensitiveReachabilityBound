@@ -2,7 +2,7 @@
 We first introduce two important counter notations counting the occurrence of a program point and a list of program points respectively.
 \begin{defn}[Program Point Counter]
  \label{def:counter}
-The counting operator $\counter : \tdom \to \ldom \to (\mathbb{N} \cup \{\bot\})$
+The counting operator $\counter : \tdom \to \ldom \to \mathbb{N}$
 counts the appearance of a label in a trace.
 \begin{center}
 {\small
@@ -14,7 +14,7 @@ $
 \\
 \counter([(\_, l', v)] \tracecat \trace', l) \triangleq \counter(\trace', l) & \text{if}~ l' \neq l
 &
-\counter(\trace, l) \triangleq \bot & \text{if }~ \trace \in \inftdom
+\counter(\trace, l) \triangleq 0 & \text{if }~ \trace \in \inftdom
 \end{array}
 $
 }
@@ -22,7 +22,7 @@ $
 \end{defn}
 \begin{defn}[Point List Counter]
  \label{def:lcounter}
- The counting operator $\lcounter : \tdom \to \mathcal{P}(\ldom) \to (\mathbb{N} \cup \{\bot\})$
+ The counting operator $\lcounter : \tdom \to \mathcal{P}(\ldom) \to \mathbb{N}$
  counts the appearance of a list of labels $L = [l_1, \ldots, l_n]$ as
 {\small
 \begin{center}
@@ -35,7 +35,7 @@ $
  & \triangleq \lcounter(\trace', L) & \text{if}~ l \neq l_1 \lor \bigvee\limits_{i = 2, \ldots, n} \pi_2(\trace''[i]) \neq l_i
  \\ 
  \lcounter(\trace, L ) 
- & \triangleq \bot & \text{if }~ \trace \in \inftdom.
+ & \triangleq 0 & \text{if }~ \trace \in \inftdom.
  \end{array}
  $
  \end{center}
@@ -43,19 +43,18 @@ $
 % {When the input trace is infinite, $\lcounter(\trace, L)$ returns $\bot$ for any $L$.}
 \end{defn}
 %
-% {Notice here in both Definition~\ref{def:lcounter} and~\ref{def:counter}, w
-When the input trace is infinite, both $\counter(\trace, l)$ and $\lcounter(\trace, L)$ returns $\bot$.
-% {When the input trace is infinite, $\lcounter(\trace, L)$ returns $\bot$ for any $L$.}
+When the input trace is infinite, both $\counter(\trace, l)$ and $\lcounter(\trace, L)$ returns $0$.
+We denote by $\infty$ a value s.t. $v < \infty $ for all $v \in \mathbb{N}$
 
 \begin{defn}[Reachability-bound]
  \label{def:rb}
  For a program ${c}$ and a location $l$ in $c$,
-a function $f(c, l) : \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{reachability-bound} for $l$ if and only if
+a function $f(c, l) : \tdom \to (\mathbb{N} \cup \{\infty\})$ is a \emph{reachability-bound} for $l$ if and only if
 {\small
 \begin{center}
  $
 \begin{array}{ll}
- \forall \trace_0 \in \ftdom_0(c), c' \in \cdom, l, l' \in \lvar(c), \trace \in \tdom \st 
+ \forall \trace_0, \trace \in \tdom, c' \in \cdom, l, l' \in \lvar(c) \st 
  \\ \qquad
  \Big(
  \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace} 
@@ -68,5 +67,5 @@ a function $f(c, l) : \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{r
 \end{center}
 }
 \end{defn}
-It is easy to compute a trivial \emph{reachability-bound} $f(c, l): \ftdom_0(c) \to \infty$, and 
+It is easy to compute a trivial \emph{reachability-bound} $f(c, l): \tdom \to \infty$, and 
 our algorithm computes a non-trivial one.
