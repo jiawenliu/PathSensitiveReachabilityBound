@@ -38,7 +38,7 @@ for each $\tpath$ w.r.t. every level of its outer nested loop.
 For the program with nested loops, given its refined program $\rprog$, a simple transition path $\tpath$, and an outer loop
 program $\rprog_l$ where $\tpath$ is nested in,
 $f(\rprog_l, \tpath, c)$ is a \emph{loop reachability-bound} for $\tpath$ w.r.t. $\rprog_l$ if and only if
-for every $\trace \in \ftdom_0(c)$, $f(\rprog_l, \tpath, c)(\trace)$ greater or equal to the
+for every $\trace \in \tdom$, $f(\rprog_l, \tpath, c)(\trace)$ greater or equal to the
 iteration numbers of $\rprog_l$,
 such that,
 during these iterations, the innermost loop $\kw{enclosed(\tpath)}$ is entered.
@@ -91,7 +91,7 @@ $\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for $l$ in $c$.
 {\small
 \[
  \begin{array}{l}
- \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace_r \in \ftdom_0(c_r), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+ \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0, \trace \in \tdom, \trace_r \in \ftdom_0(c_r), l, l' \in \ldom, \rprog \st 
  \\ \quad
  \rprog = REFINE(\algrewrite(c))
  \land 

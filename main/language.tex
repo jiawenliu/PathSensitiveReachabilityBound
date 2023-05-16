@@ -658,10 +658,8 @@ then the program's execution terminates and produces a finite execution trace $\
 %
 This definition has the similar intuition as the maximal trace semantics in Equation (12) from Section 2.5 of paper~\cite{Cousot19a}, and the semantics of the program model in~\cite{SinnZV17}.
 \\
-% If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
-% So we 
-We also have the trace non-decreasing property in this language model as below.
-It is similar to the Lemma~\ref{lem:tracenondec} with proof in Appendix~\ref{apdx:lem_language}. 
+If we observe the operational semantics rules, we can find that no rule will shrink the trace. 
+The Lemma below describe this property formally with proof in Appendix~\ref{apdx:lem_language}. 
 \begin{lem}
   [Trace Non-Decreasing]
   \label{lem:psRB-tracenondec}

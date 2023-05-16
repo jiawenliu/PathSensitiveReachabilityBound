@@ -49,12 +49,12 @@ We denote by $\infty$ a value s.t. $v < \infty $ for all $v \in \mathbb{N}$
 \begin{defn}[Reachability-bound]
  \label{def:rb}
  For a program ${c}$ and a location $l$ in $c$,
-a function $f(c, l) : \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{reachability-bound} for $l$ if and only if
+a function $f(c, l) : \tdom \to (\mathbb{N} \cup \{\infty\})$ is a \emph{reachability-bound} for $l$ if and only if
 {\small
 \begin{center}
  $
 \begin{array}{ll}
- \forall \trace_0 \in \ftdom_0(c), c' \in \cdom, l, l' \in \lvar(c), \trace \in \tdom \st 
+ \forall \trace_0, \trace \in \tdom, c' \in \cdom, l, l' \in \lvar(c) \st 
  \\ \qquad
  \Big(
  \config{{c}, \trace_0} \to^{*} \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace} 
@@ -67,5 +67,5 @@ a function $f(c, l) : \ftdom_0(c) \to (\mathbb{N} \cup \{\infty\})$ is a \emph{r
 \end{center}
 }
 \end{defn}
-It is easy to compute a trivial \emph{reachability-bound} $f(c, l): \ftdom_0(c) \to \infty$, and 
+It is easy to compute a trivial \emph{reachability-bound} $f(c, l): \tdom \to \infty$, and 
 our algorithm computes a non-trivial one.
