@@ -130,33 +130,32 @@
 
 % \todo{soundness of the program write}
 This section presents the multiple-paths interleaving refinement algorithm.
-\paragraph{Contextualization}
+% \paragraph{Contextualization}
 
-$cxlE$ is a set of edges between two simple transition paths of program $c$. There is an edge from $\tpath_1$ to $\tpath_2$
-if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
+% $cxlE$ is a set of edges between two simple transition paths of program $c$. There is an edge from $\tpath_1$ to $\tpath_2$
+% if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
 % We adopt the contextualization method from paper~\cite{ZulegerGSV11} Definition~10 and build the edge.
 
-\paragraph{Path Interleaving Refinement}
+% \paragraph{Path Interleaving Refinement}
 
   \begin{algorithm}
     \caption{
-    {Interleaving Refinement}
+    {Interleaving Refinement $\kw{IRefine}(c)$}
     \label{alg:prog-refine}
     }
     \begin{algorithmic}[1]
     \REQUIRE a loop program $c$ with multiple paths;
-    \\
-    set of all the paths in this loop program:
-    $P = \{\tpath_0, \ldots, \tpath_m\}$,
-    \\
-    the contextualization graph $cxlG(c)$ over paths.
+   %  the contextualization graph $cxlG(c)$ over paths.
     % the target while loop with label $l$.
     \STATE  \textbf{Init} 
+    \STATE Abstracting the program by algorithm~\ref{alg:alg-refine_rewrite},  $\rprog = \algrewrite(c)$
+    \STATE  Compute set of all the paths in this loop program:
+    $P = \{\tpath_0, \ldots, \tpath_m\}$,
     % \STATE \todo{Define algorithm $\kw{dfs(w, I_{l}, FS)}$}
     \STATE \textbf{Define} {$\kw{dfs(wking\_path, inv\_list, done\_set)}$:}
     \STATE \quad {$\kw{unfinished\_set = \{\}}$:}
     \STATE \quad {$\kw{inv0 = inv\_list[-1]}$:}
-    \STATE \quad \textbf{For} $(\tpath, \tpath_i) \in cxlE(c)$ and $\tpath \neq \tpath'$:
+    \STATE \quad \textbf{For} $\tpath_i$ in the same loop with $\tpath$ and $\tpath \neq \tpath'$:
     \\
     \STATE \quad \quad \textbf{If} {$\kw{visited[\tpath_i]}$} skip the loop
     \STATE \quad \quad $\kw{visited[\tpath_i]} = \etrue$
@@ -183,7 +182,7 @@ if and only if $\tpath_2$ can execute right after execution of $\tpath_1$.
 
 
 The interleaving refinement algorithm computes the interleaving orders of each simple transition paths explicitly.
-This algorithm is inspired from the algorithm REFINE in paper~\cite{GulwaniJK09}. 
+This algorithm is inspired from the path refinement algorithm in paper~\cite{GulwaniJK09}. 
 
 Line:18 first computes the invariant of the loop in the source program,
 

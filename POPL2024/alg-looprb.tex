@@ -110,11 +110,12 @@ which is formally stated in Lemma~\ref{lem:looprb-sound}.
   \[
     \begin{array}{l}
     \forall c, c_l \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom, \trace \in \tdom, l, l' \in \ldom, \rprog \st 
-    \rprog = REFINE(\algrewrite(c))
+    \rprog = \kw{IRefine}(c)
     \\ \qquad
     \land l_t: \rprog_t = \kw{enclosed}(\rprog, \tpath)
     \land 
     \rprog = \algrewrite(c_l)
+    \\ \qquad
     \land
     \Big(
     \config{c_l, \trace_0} \to^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}

@@ -57,3 +57,31 @@ $\lpchB(\rprog_3, \tpath_3, c) = 1$ and
 $\outinB(\rprog_6, \tpath_3, c) = N$,
 we also obtain a tight reachability-bound $1 \times 1 \times N$.
 
+
+We show the \emph{path reachability-bound} of the simple transition path $\tpath$ in a refined program $\rprog$ is a sound upper bound of its execution times when executing the program in Lemma~\ref{lem:pathrb-sound} below.
+% , with the proof in \highlight{Appendix~\ref{apdx:pathrb-sound}}.
+\begin{lem}[Soundness of the Path Reachability-bound]
+  \label{lem:pathrb-sound}
+  For any program with its refined program $\rprog$ and a simple transition path $\tpath$ in this program,
+  the execution times of $\tpath$ when executing the $\rprog$ under initial trace $\trace_0 \in \tdom$ is bounded by $\econfig{\inoutB(\rprog, \tpath)}(\trace_0)$.
+  \[
+    \begin{array}{l}
+    \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom, \trace \in \tdom, l \in \ldom, \rprog \st 
+    \\ \qquad
+    \kw{IRefine}(c) = \rprog
+    \land 
+    \algrewrite(c_r) = \rprog
+    \land
+    \\ \qquad
+    \land 
+    \Big(
+      \config{c_r, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l}, \trace_0 \tracecat \trace}
+      \lor \config{c_r, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
+      \Big)
+  \\ \qquad
+    \implies
+    \econfig{\inoutB(\rprog, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
+    \end{array}
+  \]  
+\end{lem}
+This lemma is similar to Lemma~\ref{lem:pathlocalrb-sound}, except we require the program that is executing is the entire program rather than part of the program.

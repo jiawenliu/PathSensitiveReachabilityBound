@@ -1,4 +1,4 @@
-\begin{lemma}[Soundness of the Path Local Reachability-Bound]
+\begin{lemma}[Soundness of the Path Local Reachability-bound]
   % \label{lem:pathlocalrb-sound}
   For any program $c$ with its refined program $\rprog$ and a simple transition path $\tpath$ in $\rprog$,
   if $l: \rprog_l = \kw{enclosed}(\rprog, \tpath)$ is the closest loop where $\tpath$ is nested in this program,
@@ -6,9 +6,9 @@
   \[
     \begin{array}{l}
     \forall c, c_l \in \cdom, \tpath \in \absG(c), 
-    \trace_l \in \ftdom_0(c_l), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+    \trace_l, \trace \in \tdom, l, l' \in \ldom, \rprog \st 
     \\ \qquad
-    \rprog = REFINE(\algrewrite(c))
+    \rprog = REFINE(c)
     \land
     l: \rprog_l = \kw{enclosed}(\rprog, \tpath)
     \land 
@@ -21,7 +21,7 @@
     \Big)
     \\ \qquad
     \implies
-    \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
+    \econfig{\outinB(\rprog_l, \tpath)}(\trace_l) \geq \lcounter(\trace, \pathl(\tpath)).
     \end{array}
   \]  
 \end{lemma}
