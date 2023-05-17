@@ -80,17 +80,16 @@ We use list notation for traces, where $[]$ is the empty trace, and
 the operator $\tracecat$ concatenates two traces. We use set notation $\event \in \trace$ or $\event \notin \trace$ to denote whether an event $\event$ belongs or not to $\trace$.
 We denote the set of finite traces by $\ftdom$, the set of infinite traces by $\inftdom$ and the set of traces by $\tdom = \ftdom \cup \inftdom$.
 We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head of the list, with $\trace[1]$ denoting the first event.
-We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$\mg{I don't think that $\mathcal{P}{(\ldom)}$ is standard notation for the list of $\ldom$. I would use something like $\kw{List}(\ldom)$.} which projects the labels of every event in a trace as a list of labels. This is defined as follows,
-% \mg{the previous definition was not well defined since it was missing the otherwise. In particular, both cases were applying to an infinite trace.}
-\[
-\begin{array}{rcll}
-\tracel(\trace) &\triangleq & [] &\qquad  \mbox{if}~~ \trace = [] \lor \trace \in \inftdom
-\\ 
-\tracel([(\_, l, \_)] \tracecat \trace') &\triangleq & [l] \tracecat \tracel(\trace') &\qquad  \mbox{otherwise}
-\end{array}
-\]
-
-\mg{I would rewrite what above as following.}
+% We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$\mg{I don't think that $\mathcal{P}{(\ldom)}$ is standard notation for the list of $\ldom$. I would use something like $\kw{List}(\ldom)$.} which projects the labels of every event in a trace as a list of labels. This is defined as follows,
+% \[
+% \begin{array}{rcll}
+% \tracel(\trace) &\triangleq & [] &\qquad  \mbox{if}~~ \trace = [] \lor \trace \in \inftdom
+% \\ 
+% \tracel([(\_, l, \_)] \tracecat \trace') &\triangleq & [l] \tracecat \tracel(\trace') &\qquad  \mbox{otherwise}
+% \end{array}
+% \]
+% \mg{I would rewrite what above as following.}
+% \jl{Thanks for rewriting}
 We use an operator $\tracel: \tdom \to \kw{List}(\ldom)\cup \bot$, where $\bot$ represent as usual an undefined value, which projects the labels of every event in a trace as a list of labels. This is defined as follows,
 % \mg{the previous definition was not well defined since it was missing the otherwise. In particular, both cases were applying to an infinite trace.}
 \[
@@ -147,7 +146,6 @@ We use an operator $\env: {\tdom} \to \vardom \to \mathbb{Z}\cup\bot$ to fetch t
 
 \mg{I find the notation $\traceadd$ extremely comnfusing. It is not what a reader expect it to mean, so we need to explain it. I tried but I don't even have a clue of why we chose this notation, rather than using standard list notation. Please, explain it.}
 
-% In the rest of the paper, We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 %% We use $\ftdom_0(c)$ to denote the set of all initial traces for the program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$\mg{Is this the definition of initial trace?  a trace where every input variable has a value?}.\\
 %     \begin{defn}[Initial Trace]
 %         \label{def:initial_trace}
