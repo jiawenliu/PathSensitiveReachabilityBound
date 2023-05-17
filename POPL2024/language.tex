@@ -102,15 +102,14 @@ We use an operator $\tracel: \tdom \to \kw{List}(\ldom)\cup \bot$, where $\bot$ 
 \tracel(\tau) &\triangleq & \bot  &\qquad  \mbox{otherwise}
 \end{array}
 \]
-\mg{finish rewriting}
-
+% \mg{finish rewriting}
 %
 % We denote by $\bot$ a value s.t. $\bot < v $ for all $v \in \mathbb{Z}$
-\mg{Why do we need $\bot$ to be smaller than all the integers?}
-\jl{Because in Definition~\ref{def:counter}, the counter was returning $\bot$ when the trace is an infinite trace, requiring the $\bot$ to be smaller than all integers can guarantee the soundness in the case of non-terminating execution.}, 
+% \mg{Why do we need $\bot$ to be smaller than all the integers?}
+% \jl{Because in Definition~\ref{def:counter}, the counter was returning $\bot$ when the trace is an infinite trace, requiring the $\bot$ to be smaller than all integers can guarantee the soundness in the case of non-terminating execution.}, 
 We use the operator $\env: {\tdom} \to \vardom \to \mathbb{Z}$ 
-\mg{In which case do we get $\infty$?}
-\jl{When the estimated reachability-bound is $\infty$} to fetch the latest value assigned to a variable in the trace,
+% \mg{In which case do we get $\infty$?}
+% \jl{When the estimated reachability-bound is $\infty$} to fetch the latest value assigned to a variable in the trace,
  which returns the default value $0$ if the variable doesn't show up in the trace, or the trace is an infinite trace.
  \highlight{
     \[
