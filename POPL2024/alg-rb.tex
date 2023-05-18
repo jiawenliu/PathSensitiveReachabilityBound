@@ -24,12 +24,11 @@ $\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for $l$ in $c$.
 {\small
 \[
  \begin{array}{l}
- \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \tdom, \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+ \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
  \\ \quad
  \rprog = REFINE(\algrewrite(c))
  \land 
  \rprog = \algrewrite(c_r)
- \land
  \\ \quad
  \land
  \Big(

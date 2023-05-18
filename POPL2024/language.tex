@@ -77,8 +77,8 @@ from an event.
 
 A trace $\trace$ is a potentially infinite list of events, 
 collecting the events generated  during program execution. 
-We use list notation for traces, where $[]$ is the empty trace, and
-the operator $\tracecat$ concatenates two traces. We use set notation $\event \in \trace$ or $\event \notin \trace$ to denote whether an event $\event$ belongs or not to $\trace$.
+We use list notation for traces, where $[]$ is the empty trace,
+the operator $\tracecat$ concatenates two traces\highlight{, and $::$ to append an event at the end of the trace}. We use set notation $\event \in \trace$ or $\event \notin \trace$ to denote whether an event $\event$ belongs or not to $\trace$.
 We denote the set of finite traces by $\ftdom$, the set of infinite traces by $\inftdom$ and the set of traces by $\tdom = \ftdom \cup \inftdom$.
 We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head of the list, with $\trace[1]$ denoting the first event.
 % We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$\mg{I don't think that $\mathcal{P}{(\ldom)}$ is standard notation for the list of $\ldom$. I would use something like $\kw{List}(\ldom)$.} which projects the labels of every event in a trace as a list of labels. This is defined as follows,
@@ -107,27 +107,27 @@ We use an operator $\tracel: \tdom \to \kw{List}(\ldom)\cup \bot$, where $\bot$ 
 % We denote by $\bot$ a value s.t. $\bot < v $ for all $v \in \mathbb{Z}$
 % \mg{Why do we need $\bot$ to be smaller than all the integers?}
 % \jl{Because in Definition~\ref{def:counter}, the counter was returning $\bot$ when the trace is an infinite trace, requiring the $\bot$ to be smaller than all integers can guarantee the soundness in the case of non-terminating execution.}, 
-We use the operator $\env: {\tdom} \to \vardom \to \mathbb{Z}$ 
-% \mg{In which case do we get $\infty$?}
-% \jl{When the estimated reachability-bound is $\infty$} to fetch the latest value assigned to a variable in the trace,
- which returns the default value $0$ if the variable doesn't show up in the trace, or the trace is an infinite trace.
- \highlight{
-    \[
-\begin{array}{lll}
-\env(\trace  \traceadd (x, l, v)) x \triangleq v
-&
-\env({[]} ) x \triangleq 0
-&
-\env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
-\\
-\env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x ~ \text{if}~ y \neq x
-&
-\env(\trace ) x \triangleq 0 ~ \text{if}~ \trace \in \inftdom
-\end{array}
-\]
- }
+% We use the operator $\env: {\tdom} \to \vardom \to \mathbb{Z}$ 
+% % \mg{In which case do we get $\infty$?}
+% % \jl{When the estimated reachability-bound is $\infty$} to fetch the latest value assigned to a variable in the trace,
+%  which returns the default value $0$ if the variable doesn't show up in the trace, or the trace is an infinite trace.
+%  \highlight{
+%     \[
+% \begin{array}{lll}
+% \env(\trace  \traceadd (x, l, v)) x \triangleq v
+% &
+% \env({[]} ) x \triangleq 0
+% &
+% \env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
+% \\
+% \env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x ~ \text{if}~ y \neq x
+% &
+% \env(\trace ) x \triangleq 0 ~ \text{if}~ \trace \in \inftdom
+% \end{array}
+% \]
+%  }
 
-\mg{I would rewrite what above as following.}
+% \mg{I would rewrite what above as following.}
 
 We use an operator $\env: {\tdom} \to \vardom \to \mathbb{Z}\cup\bot$ to fetch the latest value assigned to a variable in the trace. The operator returns $\bot$ if the variable does not show up in the trace, or the trace is infinite. The operator is defined as follows
     \[
@@ -142,22 +142,22 @@ We use an operator $\env: {\tdom} \to \vardom \to \mathbb{Z}\cup\bot$ to fetch t
 \end{array}
 \]
  
-\mg{end rewriting.}
+% \mg{end rewriting.}
 
 \mg{I find the notation $\traceadd$ extremely comnfusing. It is not what a reader expect it to mean, so we need to explain it. I tried but I don't even have a clue of why we chose this notation, rather than using standard list notation. Please, explain it.}
 
-%% We use $\ftdom_0(c)$ to denote the set of all initial traces for the program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$\mg{Is this the definition of initial trace?  a trace where every input variable has a value?}.\\
-%     \begin{defn}[Initial Trace]
-%         \label{def:initial_trace}
-%         Given a program $c$, a finite trace $\trace$ is an initial trace of $c$ if and only if all the input variables of $c$ have an initial value in this trace.\mg{This is inconsistent, since $\bot$ \bf{is a value}.}
-%         \[
-%         \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
-%         \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot
-%         \]
-%         We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$.
-%         \end{defn}
-%         As an example, the initial trace of $\kw{nestedOdd}(n, m)$ example contains the initial value of the input variable $n$ and $m$.
-% \\
+% We use $\ftdom_0(c)$ to denote the set of all initial traces for the program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$\mg{Is this the definition of initial trace?  a trace where every input variable has a value?}.\\
+    \begin{defn}[Initial Trace]
+        \label{def:initial_trace}
+        Given a program $c$, a finite trace $\trace$ is an initial trace of $c$ if and only if all the input variables of $c$ have an initial value in this trace.
+        % \mg{This is inconsistent, since $\bot$ \bf{is a value}.}
+        \[
+        \forall c \in \cdom, \trace \in \ftdom \st \trace \in \ftdom_0(c) \iff 
+        \forall x \in \inpvar(c) \st \env(\trace_0) x \neq \bot
+        \]
+        We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$.
+        \end{defn}
+        As an example, the initial trace of $\kw{nestedOdd}(n, m)$ example contains the initial value of the input variable $n$ and $m$.
 
 
 \emph{Semantics}
@@ -170,5 +170,5 @@ one.
 The rules are standard and omitted here.
 We use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$ under an initial trace 
-$\trace_0 \in \tdom$,
+$\trace_0 \in \ftdom_0(c)$,
 then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution denoted by $\config{c, \trace_0} \uparrow^{\infty} \trace$ that produces an infinite trace $\trace \in \inftdom$. The complete rules and definition can be found in the supplementary materials.

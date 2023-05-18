@@ -235,7 +235,7 @@ The lemma below states that the \emph{path local reachability-bound} of the simp
   \[
     \begin{array}{l}
     \forall c, c_l \in \cdom, \tpath \in \absG(c), 
-    \trace_l, \trace \in \tdom, l, l' \in \ldom, \rprog \st 
+    \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
     \\ \qquad
     \rprog = \kw{IRefine}(c)
     \land
@@ -245,12 +245,12 @@ The lemma below states that the \emph{path local reachability-bound} of the simp
     \\ \qquad
     \land
     \Big(
-    \config{c_l, \trace_l} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_l \tracecat \trace}
-    \lor \config{c_l, \trace_l} \uparrow^{\infty} \trace_l \tracecat \trace 
+    \config{c_l, \trace_0} \rightarrow^* \config{\clabel{\eskip}^{l'}, \trace_0 \tracecat \trace}
+    \lor \config{c_l, \trace_0} \uparrow^{\infty} \trace_0 \tracecat \trace 
     \Big)
     \\ \qquad
     \implies
-    \econfig{\outinB(\rprog_l, \tpath)}(\trace_l) \geq \lcounter(\trace, \pathl(\tpath)).
+    \econfig{\outinB(\rprog_l, \tpath)}(\trace_0) \geq \lcounter(\trace, \pathl(\tpath)).
     \end{array}
   \]  
 \end{lem}
