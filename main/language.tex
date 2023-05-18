@@ -202,33 +202,33 @@ $\tracecat$ is defined as:
 \]
 \end{defn}
 We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head of the list, with $\trace[1]$ denoting the first event.
-We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$ which projects the labels of every event in a trace as a list of program points. This is defined as follows,
+We use an operator $\tracel: \tdom \to \kw{List}(\ldom)\cup \bot$, where $\bot$ represent as usual an undefined value, which projects the labels of every event in a trace as a list of labels. This is defined as follows,
+% \mg{the previous definition was not well defined since it was missing the otherwise. In particular, both cases were applying to an infinite trace.}
 \[
 \begin{array}{rcll}
-\tracel(\trace) &\triangleq & [] &\qquad  \mbox{if}~~ \trace = [] \lor \trace \in \inftdom
+\tracel([]) &\triangleq & [] &\qquad  
 \\ 
-\tracel([(\_, l, \_)] \tracecat \trace') &\triangleq & [l] \tracecat \tracel(\trace') &\qquad  \mbox{otherwise}.
+\tracel([(\_, l, \_)] \tracecat \trace') &\triangleq & [l] \tracecat \tracel(\trace') &\qquad  \mbox{if}\ \trace'\in\ftdom
+\\
+\tracel(\tau) &\triangleq & \bot  &\qquad  \mbox{otherwise}
 \end{array}
 \]
 %
 \paragraph{Environment.} $\env : {\tdom}  \to \vardom \to \mathbb{Z}$.  
-We don't use separate data structure as the environment to record each variable's value or state. Instead, we use the operator $\env (\trace) x$ to fetch the latest value assigned to $x$ in the trace $\trace$. 
-$\env$ returns $\bot$ if the variable does not show up in the trace or the trace is an infinite trace.
-\[
-\begin{array}{lll}
-\env(\trace  \traceadd (x, l, v)) x \triangleq v
-&
-\env(\trace \traceadd (y, l, v)) x \triangleq \env(\trace) x, y \neq x
-&
-\env(\trace \traceadd (b, l, v)) x \triangleq \env(\trace) x
+We use an operator $\env: {\tdom} \to \vardom \to \mathbb{Z}\cup\bot$ to fetch the latest value assigned to a variable in the trace. The operator returns $\bot$ if the variable does not show up in the trace, or the trace is infinite. The operator is defined as follows
+    \[
+\begin{array}{rcll}
+\env(\trace ) x &\triangleq& \bot &~ \text{if}~ \trace \in \inftdom\\
+ \env({[]} ) x &\triangleq& \bot&\\
+\env(\trace  \traceadd (x, l, v)) x &\triangleq& v
 \\
-\env({[]} ) x \triangleq \bot
-&
-\env(\trace ) x \triangleq \bot ~ \text{if}~ \trace \in \inftdom
+\env(\trace \traceadd (b, l, v)) x &\triangleq& \env(\trace) x
+\\
+\env(\trace \traceadd (y, l, v)) x &\triangleq& \env(\trace) x & ~ \text{if}~ y \neq x
 \end{array}
 \]
 %
-\begin{defn}[Well-formed Initial Traces]
+\begin{defn}[Initial Traces]
   \label{def:initial_trace}
   Given a program $c$, $\trace$ is a well-formed initial trace of $c$ if and only if all the input variables of $c$ has an initial value in this trace.
   \[
