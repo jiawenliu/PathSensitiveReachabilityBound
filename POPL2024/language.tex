@@ -31,7 +31,8 @@ some set $\vardom$, and $e$ is an expression consisting of either an
 arithmetic expression $\aexpr \in \mathcal{A}$ or a boolean
 expression.
 Our language of arithmetic expressions supports linear terms built out of  multiplication ($\times $), mod ($\%$), addition ($+$) and subtraction ($-$) over variables and integers. Multiplication and mod can only compose an arithmetic expression with an integer to guarantee that terms are linear. 
-A value $v\in \valdom$ is either an integer in $\mathbb{Z}$ or a boolean in $\mathbb{B}$, or the symbol $\bot$ representing as usual an undefined value.\mg{Notice that I added $\bot$ to the values, otherwise the operational semantics is not well defined. This definition could be moved to the semantics part, but we use values also in the trace part, so I leave it here.}
+A value $v\in \valdom$ is either an integer in $\mathbb{Z}$ or a boolean in $\mathbb{B}$, or the symbol $\bot$ representing as usual an undefined value.
+\mg{Notice that I added $\bot$ to the values, otherwise the operational semantics is not well defined. This definition could be moved to the semantics part, but we use values also in the trace part, so I leave it here.}
 We 
 assume that the labeling of programs is such that each program
 point is uniquely annotated with a label $l\in\mathbb{N}$.
@@ -79,7 +80,8 @@ collecting the events generated  during program execution.
 We use list notation for traces, where $[]$ is the empty trace,
 the operator $\tracecat$ concatenates two traces, and the operator $::$ appends an event at the end of a trace. We use set notation $\event \in \trace$ or $\event \notin \trace$ to denote whether an event $\event$ belongs or not to $\trace$.
 We denote the set of finite traces by $\ftdom$, the set of infinite traces by $\inftdom$ and the set of traces by $\tdom = \ftdom \cup \inftdom$.
-We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head of the list\mg{what is the head of the list in your notation? consider the list $[]::a::b::c$ is the head $c$ or $a$ or $[]$?}, with $\trace[1]$ denoting the first event.
+We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head \highlight{(left-hand side)}
+of the list\mg{what is the head of the list in your notation? consider the list $[]::a::b::c$ is the head $c$ or $a$ or $[]$?}, with $\trace[1]$ denoting the first event.
 % We use an operator $\tracel: \tdom \to \mathcal{P}{(\ldom)}$\mg{I don't think that $\mathcal{P}{(\ldom)}$ is standard notation for the list of $\ldom$. I would use something like $\kw{List}(\ldom)$.} which projects the labels of every event in a trace as a list of labels. This is defined as follows,
 % \[
 % \begin{array}{rcll}
@@ -164,12 +166,13 @@ We use an operator $\env: {\tdom} \to \vardom \to \mathbb{Z}\cup\bot$ to fetch t
 \emph{Semantics}
 We evaluate expressions using a rather standard semantics operator denoted by
 $\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$ where
-$\econfig{\expr}(\trace)$ evaluates $\expr$ under the trace $\trace$. We omit the definition of the semantics here, it can be found in the supplementary material.\mg{Jiawen, can you confirm that we have it in the supplementary material?}
+$\econfig{\expr}(\trace)$ evaluates $\expr$ under the trace $\trace$. We omit the definition of the semantics here, it can be found in the supplementary material.
+% \mg{Jiawen, can you confirm that we have it in the supplementary material?}
 
-% Our symbolic bound expression is a subset of the arithmetic expressions, and we use the same evaluation notation for evaluating the bound expression.
 We describe the trace-based operational semantics for programs in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another
 one.
-The rules are rather standard and omitted here, they can be found with all the definitions in the supplementary material.\mg{Jiawen, can you confirm that we have it in the supplementary material?}
+The rules are rather standard and omitted here, they can be found with all the definitions in the supplementary material.
+% \mg{Jiawen, can you confirm that we have it in the supplementary material?}
 We use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$ under an initial trace 
 $\trace_0 \in \ftdom_0(c)$,

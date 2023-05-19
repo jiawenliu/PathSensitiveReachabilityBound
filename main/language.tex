@@ -7,9 +7,7 @@
 \\  
 \mbox{Linear Arithmetic} 
 & \aexpr & ::= & 
-v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr ~|~ \aexpr + \aexpr ~|~ \aexpr - \aexpr
-  % ~|~ \emax (a, a) ~|~ \emin(a, a)
-\\
+n \in \mathbb{Z} ~|~ x \in \vardom ~|~ n \times \aexpr~|~ \aexpr \% n ~|~ \aexpr + \aexpr ~|~ \aexpr - \aexpr\\
 \mbox{Boolean Expression} & \bexpr & ::= & 
 %
 \etrue ~|~ \efalse  ~|~ \neg \bexpr
@@ -22,11 +20,11 @@ v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr ~|~ \aexpr + \aexpr ~|~ \
 ~|~ \aexpr < \aexpr 
 ~|~ \aexpr = \aexpr 
 \\
-\mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr ~|~ [\expr, \dots, \expr]
+\mbox{Expression} & \expr & ::= & v ~|~ \aexpr ~|~ \bexpr 
 \\  
 %
 \mbox{Value} 
-& v & ::= & { n \in \mathbb{Z} ~|~ \etrue ~|~ \efalse ~|~ [] ~|~ [v, \dots, v]} \\
+& v & ::= & { n \in \mathbb{Z} ~|~ \etrue ~|~ \efalse} \\
 %
 % \\%
 \mbox{Label} 
@@ -36,9 +34,7 @@ v \in \mathbb{Z} ~|~ x \in \vardom ~|~ v \times \aexpr ~|~ \aexpr + \aexpr ~|~ \
 \mbox{Labeled Command} 
 & {c} & ::= &  
 \clabel{\assign{x}{\expr}}^l 
-~|~  \clabel{\eskip}^l 
-\\
-& & &
+~|~ \clabel{\eskip}^l
 ~|~ \ewhile \clabel{\bexpr}^{l} \edo ({c})
 ~|~ \eif(\clabel{\bexpr}^{l} , {c}, {c}) 
 ~|~ {c};{c}  
@@ -98,6 +94,7 @@ We use the following notations to represent the sets of corresponding terms:
 \paragraph{Expression}
 Expressions include
 standard arithmetic expression, $\aexpr \in \mathcal{A}$ (with the value $n \in \mathbb{Z}$ and the variable $x$ from a finite universe $\vardom$) and boolean expression, $\bexpr \in \booldom$.
+A value $v\in \valdom$ is either an integer in $\mathbb{Z}$ or a boolean in $\mathbb{B}$, or the symbol $\bot$ representing as usual an undefined value.
 We denote by $\infty$ a value s.t. $n < \infty $ for all $n \in \mathbb{Z}$.
 
 An arithmetic expression can be a constant $n$ denoting integer, a variable $x$ from some countable set $\vardom$ or an expression over variables $x_1, x_2, \ldots \in \vardom$
@@ -163,8 +160,10 @@ $\pi_i : \eventset \to \vardom \cup \booldom \cup \ldom $
 
 \paragraph{Trace.}
 %
-A trace $\trace \in \tdom$ is a list of events, 
-collecting the events generated during a specific program execution. 
+A trace $\trace$ is a potentially infinite list of events, 
+collecting the events generated  during program execution. 
+We use list notation for traces, where $[]$ is the empty trace,
+the operator $\tracecat$ concatenates two traces, and the operator $::$ appends an event at the end of a trace. We use set notation $\event \in \trace$ or $\event \notin \trace$ to denote whether an event $\event$ belongs or not to $\trace$.
 \[
 \begin{array}{llll}
 \mbox{Trace} & \trace
@@ -172,9 +171,6 @@ collecting the events generated during a specific program execution.
 % ~|~ []^{\infty}
 \end{array}
 \]
-A trace can be regarded as the program history, 
-which records all the evaluations for assignment commands and guards in $\eif$ and $\ewhile$ command.
-\\
 {
 A trace can be finite ($\trace \in \ftdom$) or infinite $\trace \in \inftdom$.
 If a program doesn't terminate when executing under some initial trace,
@@ -201,7 +197,7 @@ $\tracecat$ is defined as:
 \right.
 \]
 \end{defn}
-We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head of the list, with $\trace[1]$ denoting the first event.
+We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head (left-hand side) of the list, with $\trace[1]$ denoting the first event.
 We use an operator $\tracel: \tdom \to \kw{List}(\ldom)\cup \bot$, where $\bot$ represent as usual an undefined value, which projects the labels of every event in a trace as a list of labels. This is defined as follows,
 % \mg{the previous definition was not well defined since it was missing the otherwise. In particular, both cases were applying to an infinite trace.}
 \[
@@ -244,22 +240,6 @@ Again, $\ftdom_0(c)$ denotes the set of all well-formed initial traces for progr
 \paragraph{Expression Semantics}
 The evaluation notation for arithmetic expression is $\aconfig{} : \mathcal{A} \to \tdom \to \mathcal{V}$.
 The $\aconfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under trace $\trace$ following the arithmetic expression evaluation rules in Figure~\ref{fig:aexpr-eval}.
-We also define for $\infty$ the following mathematic computation with arbitrary $\trace \in \tdom$.
- \[
-  \begin{array}{llll}
-  \aconfig{\aexpr + \infty} (\trace) = \infty
- &
- \aconfig{\aexpr - \infty} (\trace) = 0
- &
- \aconfig{\infty - \aexpr} (\trace) = \infty
-  &
- \aconfig{\aexpr \div \infty} (\trace) = 0
- \\
- \aconfig{\emin(\aexpr, \infty)} (\trace) = \aexpr
- &
- \aconfig{\emax(\aexpr, \infty)} (\trace) = \infty
-  \end{array}
- \]
 % and
 \begin{figure}
 \begin{mathpar}

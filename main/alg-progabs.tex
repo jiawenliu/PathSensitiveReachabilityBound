@@ -39,6 +39,23 @@ The universe of the \emph{symbolic constant} is denoted by $\scvardom \subseteq 
       $e \in \scexpr(c)$ over a trace $\trace \in \tdom$ using the usual operator semantics (we have 
       $e + \infty = \infty, \emin(e, \infty) = e$, etc.).
     \end{defn}
+    In symbol, we define for $e \in \scexpr(c)$ with $\infty$ the following mathematic computation with arbitrary $\trace \in \tdom$.
+    \[
+     \begin{array}{llll}
+     \sceconfig{\expr + \infty} (\trace) = \infty
+    &
+    \sceconfig{\expr - \infty} (\trace) = 0
+    &
+    \sceconfig{\infty - \expr} (\trace) = \infty
+     &
+    \sceconfig{\expr \div \infty} (\trace) = 0
+    \\
+    \sceconfig{\emin(\expr, \infty)} (\trace) = \aexpr
+    &
+    \sceconfig{\emax(\expr, \infty)} (\trace) = \infty
+     \end{array}
+    \]
+   
 \begin{defn}[Difference Constraints]
  The difference constraints $DC(\vardom \cup \scvardom)$ is the set of all the inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.
