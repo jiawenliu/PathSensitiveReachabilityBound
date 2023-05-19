@@ -38,23 +38,6 @@ with proof in Appendix~\ref{apdx:lem_language}.
  \]
 \end{lem}
 %
-\begin{defn}(An Event Belongs to A Trace)
- An event $\event \in \eventset$ belongs to a trace $\trace \in \tdom$, i.e., $\event \in \trace$ are defined as follows:
-%
-\begin{equation*}
- \event \in \trace 
- \triangleq \left\{
- \begin{array}{ll} 
- \etrue & \trace = [\event] \tracecat \trace'
- \land \event = \event' \\
- \event \in \trace' & \trace = [\event'] \tracecat \trace'
- \land \event \neq \event' \\ 
- \efalse & \trace = [] \lor \trace \in \inftdom
- \end{array}
- \right.
-\end{equation*}
-As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
-\end{defn}
 %
 % We denote by $\bot$ a value s.t. $\bot < n $ for all $n \in \mathbb{N}$.
 \begin{defn}[Counter Notation for Program Point]

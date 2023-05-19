@@ -179,8 +179,9 @@ from $\inftdom$, which records a non-terminating computation.
 So we denote by $\tdom$ the set of all traces, and $\tdom = \ftdom \cup \inftdom$.
 The trace-based semantics with non-terminating execution is defined below following the maximal trace semantics in \cite{Cousot19}.}
 
-We use list notation for traces, where $[]$ is the empty trace, the operator $\traceadd$ combines an event and a trace in a new event, 
-and the operator $\tracecat$ concatenates two traces formally defined as follows. 
+% We use list notation for traces, where $[]$ is the empty trace, the operator $\traceadd$ combines an event and a trace in a new event, 
+% and the operator $\tracecat$ concatenates two traces formally defined as follows. 
+The trace behavior of concatenation operator is defined formally as follows.
 \begin{defn}[Trace Concatenation, $\tracecat: \tdom \to \tdom\to \tdom $]
   \label{def:trace_concate}
 Given two traces $\trace_1 \in \tdom, \trace_2 \in \tdom$, the trace concatenation operator 
@@ -197,6 +198,26 @@ $\tracecat$ is defined as:
 \right.
 \]
 \end{defn}
+
+We also define the belongs to relation $\in$ between event and trace as follows.
+\begin{defn}[An Event Belongs to A Trace]
+  An event $\event \in \eventset$ belongs to a trace $\trace \in \tdom$, i.e., $\event \in \trace$ are defined as follows:
+ %
+ \begin{equation*}
+  \event \in \trace 
+  \triangleq \left\{
+  \begin{array}{ll} 
+  \etrue & \trace = [\event] \tracecat \trace'
+  \land \event = \event' \\
+  \event \in \trace' & \trace = [\event'] \tracecat \trace'
+  \land \event \neq \event' \\ 
+  \efalse & \trace = [] \lor \trace \in \inftdom
+  \end{array}
+  \right.
+ \end{equation*}
+ As usual, we denote by $\event \notin \trace$ that the event $\event$ doesn't belong to the trace $\trace$.
+ \end{defn}
+ 
 We use the notation $\trace[j]$ for the $j^{th}$ event in the trace $\trace$ counting from the head (left-hand side) of the list, with $\trace[1]$ denoting the first event.
 We use an operator $\tracel: \tdom \to \kw{List}(\ldom)\cup \bot$, where $\bot$ represent as usual an undefined value, which projects the labels of every event in a trace as a list of labels. This is defined as follows,
 % \mg{the previous definition was not well defined since it was missing the otherwise. In particular, both cases were applying to an infinite trace.}
