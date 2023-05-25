@@ -23,26 +23,35 @@ For example for edge $4 \to 5$, its ranking function is $k$ and edges on $\tpath
 \textbf{\emph{Step 3: Path interleaving refinement.}} 
 Two execution paths are not simply iterating on themselves during the program execution,
 they could interleave each other at certain iteration.
-We summarize each execution path into conjunctions of the invariant of ranking functions on this path.
+We summarize each execution path into conjunctions of transition relations on this path.
 % , which is a  of transition relations.
 \begin{equation}
     \begin{array}{l}
-        \rprog_1 \models \phi_1 = \\
-    \rprog_2 \models \phi_2 = 
+        \rprog_1 \models i > 0 \land  i \%2 \neq 0 \land k' \leq \emin(0, i - m) 
+        \land i' \leq \emin(0, i - m) + m - 1\\
+    \rprog_2 \models i > 0 \land i \%2 = 0 \land  i' \leq i - 3
     \end{array}
 \end{equation}
-  
-In this sense, Algorithm~\ref{alg:prog-refine} in Section~\ref{sec:refine} computes the interleaving orders
-by exhaustively checking the compositions of transition relations of different execution paths,
+
+However, $\rpchoose{1: \rprepeat(\rprog_1), 1:\rprepeat(\rprog_2)}$ represents a larger set of paths than the actual program execution paths because $\rprog_1 $ and $\rprog_2$ cannot always executable during the program execution.
+To know how they interleave between each other, computes the interleaving orders
+by exhaustively checking the compositions of their transition relations.
 \begin{equation}
     \begin{array}{l}
-        \rprog_1 ; \rprog_1 \models \exists i, k \st \phi_1 \circ \phi_1 = ... \implies \efalse\\
-        \rprog_2 ; \rprog_2 \models \exists i, k \st \phi_2 \circ \phi_2 = ... \implies \efalse \\
-        \rprog_2 ; \rprog_1 \models \exists i, k \st \phi_2 \circ \phi_1 = ...  \\
-        \rprog_1 ; \rprog_2 \models \exists i, k \st \phi_1 \circ \phi_2 = ... 
+        \rprog_1 ; \rprog_1 \models 
+        \exists m \st  i > 0 \land  i \%2 \neq 0 \land k' \leq \emin(0, i - m - 1) \land \emin(0, i - m) + m - 1 > 0 \\
+            \qquad \qquad \qquad \land \emin(0, i - m) + m - 1 \% 2 \neq 0 \land i' \leq  \emin(0, i - m) + m - 2 \\
+        \rprog_2 ; \rprog_2 \models \exists m \st  i > 0 \land  i \%2 = 0 \land i - 3 > 0 \land (i - 3) \% 2 = 0 \land i' \leq i - 6  \\
+        \rprog_2 ; \rprog_1 \models \exists m \st  i > 0 \land  i \%2 = 0 \land i - 3 > 0 \land (i - 3) \%2 \neq 0 \land k' \leq \emin(0, i - m - 3) \\
+        \qquad \qquad \qquad 
+        \land i' \leq \emin(0, i - m) + m - 4 \\
+        \rprog_1 ; \rprog_2 \models \exists m \st  i > 0 \land  i \%2 \neq 0 \land k' \leq \emin(0, i - m - 1) \land \emin(0, i - m) + m - 1 > 0 \\
+        \qquad \qquad \qquad \land \emin(0, i - m) + m - 1 \% 2 = 0 \land i' \leq  \emin(0, i - m) + m - 4
     \end{array}
 \end{equation}
-Only two execution paths are feasible, so we identify two unique interleaving orders --
+Then we eliminate the interleaving orders that are infeasible and preserve these whose composition can imply the
+representation of the original loop.
+So we compute two new loops that
 either $\rprog_1$ executes after one iteration of $\rprog_2$ or vice versa.
 % Then, loop $L_1$ in the source program is generates new execution paths as follows,
 \[
