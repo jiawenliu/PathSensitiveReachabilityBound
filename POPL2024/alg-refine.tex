@@ -141,8 +141,8 @@ This section presents the multiple-paths interleaving refinement algorithm.
   \begin{algorithm}
     \caption{
     {Interleaving Refinement $\kw{IRefine}(c)$}
-    \label{alg:prog-refine}
     }
+    \label{alg:prog-refine}
     \begin{algorithmic}[1]
     \REQUIRE a loop program $c$ with multiple paths;
    %  the contextualization graph $cxlG(c)$ over paths.
@@ -184,7 +184,7 @@ This section presents the multiple-paths interleaving refinement algorithm.
 The interleaving refinement algorithm computes the interleaving orders of each simple transition paths explicitly.
 This algorithm is inspired from the path refinement algorithm in paper~\cite{GulwaniJK09}. 
 
-Line:18 first computes the invariant of the loop in the source program,
+Line:18 first computes the transition relations of the loop in the source program,
 
 \begin{equation}
    \begin{array}{l}

@@ -30,7 +30,7 @@ formed using the arithmetical operators addition ($+$), multiplication
 }
 \begin{defn}[Difference Constraints]
 A difference constraint $d$ is an inequality of
-form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$.
+form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $, $v \in \scvardom$ and $x' \in \vardom'$, which is the set of primed copies of variables in $\vardom$.
 $x' \leq y + v$ (rsp. $x' \leq v$) describes that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus the symbolic constant $v$ (rsp. the value of $v$).
 $DC(\vardom \cup \scvardom)$ denotes the universe of all difference constraints over $\vardom \cup \scvardom$.
@@ -125,6 +125,15 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
  In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path} but not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
 
 
+ \begin{defn}[Transition Relation]
+  The transition relation of is a logic formula over constraints.
+  \[
+    \begin{array}{rll}
+     \mbox{Transition Relation} & \phi & := dc ~|~ \phi \land \phi ~|~ \phi \lor \phi ~|~ (\phi)^* ~|~ \exists x \in \vardom \st \phi
+    \end{array}
+  \]
+\end{defn}
+
 \subsection{Program Rewriting}
 This step rewrite the program in the form of combinations of execution paths.
 
@@ -173,9 +182,13 @@ is a \emph{simple transition path} if and only if it satisfies,
 A simple transition path is also an execution path.
 
 \paragraph{Syntax.}
-The syntax of the refined program is given below. It is combination of the execution paths.
+We define the syntax of abstract language based on graph paths and logic formulas as below. 
+The syntax of the refined program is combination of the execution paths on this program.
 \[
-    \rprog := \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} 
+  \begin{array}{rll}
+   \mbox{Abstract Program} & \rprog &:= \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} \\
+  %  \mbox{Transition Relation} & \phi & := dc ~|~ \phi \land \phi ~|~ \phi \lor \phi ~|~ (\phi)^* ~|~ \exists x \in \vardom \st \phi
+  \end{array}
 \]
 where $l\in \loopl(c)$ is a loop header.
 
@@ -183,6 +196,78 @@ In the new syntax, $\rprepeat(\rprog)$ is a loop statement iterating over the tr
 $l: \rprepeat(\rprog)$ represents that the loop $ \rprepeat(\rprog)$
 corresponds to a loop of the source program with loop header $l$.
 The multiple-paths statement $\rpchoose{\rprog, \ldots} $ contains all the execution paths of a loop from the source program.
+
+The derivation relations between an abstract program and the transition relations are in Figure~\ref{fig:transition-relation-rule}.
+In the rule \rname{base}, a simple transition path is translated into conjunctions of constraints on this path.
+Transition relation from sequence statements is conjunction of two transition relations respectively and the multiple-path statement $\rpchoose{\rprog, \ldots} $ is translated into disjunctions of 
+transition relation of each path.
+
+\begin{figure}
+  \begin{mathpar}
+    %
+    \inferrule
+    {
+    \empty
+    }
+    {
+      \tpath \models \bigwedge \left\{ dc \vert (l, dc, l') \in \tpath \right\}
+    }
+    ~\rname{base}
+    \and
+    %
+    \inferrule
+    {
+    \rprog_1 \models \phi_1
+     \and 
+     \rprog_2 \models \phi_2
+    }
+    {
+      \rprog_1; \rprog_2 \models \phi_1 \land \phi_2
+    }
+    ~\rname{seq}
+    %
+    %
+    \and
+    %
+    \inferrule
+    {
+      \rprog \models \phi 
+    }
+    {
+      \rprepeat(\rprog) \models (\phi)^*
+    }
+    ~\rname{loop}
+    \and
+    %
+    %
+    \inferrule
+    {
+    \rprog \models \phi 
+    }
+    {
+      l:\rprepeat(\rprog) \models (\phi)^*
+    }
+    ~\rname{loop-l}
+    %
+    \and
+    %
+    \inferrule
+    {
+      \rprog_1 \models \phi_1 \ldots
+    }
+    {
+      \rpchoose{\rprog_1, \ldots} \models \lor \left\{ \phi_1 \ldots \right\}
+    }
+    ~\rname{choose}
+    %
+    %
+    %
+    %
+    \end{mathpar}
+    \caption{Transition Relation Generation}
+    \label{fig:transition-relation-rule}
+\end{figure}
+
 
 \paragraph{Algorithm.}
 Algorithm~\ref{alg:alg-refine_rewrite} transforms the syntax of the while language program 
