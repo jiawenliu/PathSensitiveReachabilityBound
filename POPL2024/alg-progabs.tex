@@ -1,25 +1,22 @@
-As pre-procedures, this section shows the program abstraction. 
-It contains the abstraction transition graph generation
-and the program rewriting. 
+As first steps, we transform a program in its abstract transition graph and we do some program rewriting to prepare it for the main algorithm.
 
 \subsection{Abstraction Transition Graph}
-Our algorithm
-is performed on basis of an \emph{Abstract Transition Graph}, $\absG(c)$
+We consider the \emph{Abstract Transition Graph}, $\absG(c)$
 % $ =(\absV(c), \absE(c))$ 
-for the program $c$.
+of a program $c$.
 We first introduce some components of this graph.
-\begin{defn}[Symbolic Constant, Symbolic Expression]
+\begin{defn}[Symbolic Constants, Symbolic Expressions]
  \label{def:symbolic_expr}
 A symbolic constant is either a natural number, $\infty$, or a program's input variable. We denote by $\scvardom \subseteq \mathbb{N} \cup \vardom \cup \{\infty \}$ the universe of the \emph{symbolic constant},
 and $ \scvar(c) = \mathbb{N} \cup \inpvar(c) \cup \{\infty \}$ the set of symbolic constant of
-program $c$.
+program $c$.\\
 % and $\scexpr$
  The set of the \emph{symbolic expression} for a program $c$,
 $\scexpr(c)$ is the set of all the expressions over $\scvar(c)$ that are
 formed using the arithmetical operators addition ($+$), multiplication
 ($\times $),  integer division ($/$) maximum ($\emax $), minimum ($\emin$).
 \end{defn}
-
+\mg{This language of expression is different from the language of expression we use in programs, e.g. in programs we don’t have division, max and min, but we have mod for a scalar, subtraction, multiplication for a scalar. Why do we use the same notation? I think it would be better to differentiate it, and also to give explicitly the semantics, since there are non-trivial cases. E.g. is 0*infinity =0 or infinity?}
 \highlight{
 \begin{defn}[Symbolic Expression Semantics]
 \label{def:symbolic_expr_semantics}
