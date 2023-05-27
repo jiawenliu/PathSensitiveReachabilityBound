@@ -29,7 +29,7 @@ $
 where $l$ is a label in $\mathbb{N}$, $x$ is a variable from
 some set $\vardom$, and $e$ is an expression consisting of either an
 arithmetic expression $\aexpr \in \mathcal{A}$ or a boolean
-expression.
+expression $\bexpr \in \booldom$. 
 Our language of arithmetic expressions supports linear terms built out of  multiplication ($\times $), mod ($\%$), addition ($+$) and subtraction ($-$) over variables and integers. Multiplication and mod can only compose an arithmetic expression with an integer to guarantee that terms are linear. 
 A value $v\in \valdom$ is either an integer in $\mathbb{Z}$ or a boolean in $\mathbb{B}$, or the symbol $\bot$ representing as usual an undefined value.
 %\mg{Notice that I added $\bot$ to the values, otherwise the operational semantics is not well defined. This definition could be moved to the semantics part, but we use values also in the trace part, so I leave it here.}
@@ -154,7 +154,7 @@ We use an operator $\env: {\tdom} \to \vardom \to \mathbb{Z}\cup\bot$ to fetch t
 % We use $\ftdom_0(c)$ to denote the set of all initial traces for the program $c$, and each input variable $x \in \inpvar(c)$ has an initial value in an initial trace $\trace_0 \in \ftdom_0(c)$\mg{Is this the definition of initial trace?  a trace where every input variable has a value?}.\\
     \begin{defn}[Initial Trace]
         \label{def:initial_trace}
-        Given a program $c\in\cdom$, a finite trace $\trace\in\ftdom$ is an initial trace of $c$ if and only if all the input variables of $c$ have an initial value in this trace.      We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$. In symbols:
+        Given a program $c\in\cdom$, a finite trace $\trace\in\ftdom$ is an initial trace of $c$ if and only if all the input variables of $c$ have an initial value in this trace. We use $\ftdom_0(c)$ to denote the set of all initial traces for program $c$. In symbols:
         % \mg{This is inconsistent, since $\bot$ \bf{is a value}.}
         \[
         %\forall c \in \cdom, \trace \in \ftdom \st
@@ -168,17 +168,112 @@ We use an operator $\env: {\tdom} \to \vardom \to \mathbb{Z}\cup\bot$ to fetch t
 \emph{Semantics}
 We evaluate expressions using a rather standard semantics operator denoted by
 $\econfig{} : \mathcal{A} \cup \booldom \to \tdom \to \mathcal{V}$ where
-$\econfig{\expr}(\trace)$ evaluates $\expr$ under the trace $\trace$. We omit the definition of the semantics here, it can be found in the supplementary material.
-% \mg{Jiawen, can you confirm that we have it in the supplementary material?}
-
+$\econfig{\expr}(\trace)$ evaluates $\expr$ under the trace $\trace$.
+\highlight{We select two arithmetic evaluation rules in figure\ref{fig:aexpr-eval} and the
+others found in the supplementary material.
+We use $\aconfig{\aexpr}(\trace)$ specifically
+representing the evaluation of an arithmetic expression $\aexpr$, $\bconfig{\bexpr}(\trace)$ for 
+evaluating a boolean expression $\bexpr$ and $\econfig{\expr}(\trace)$ contain of both of them accordingly.
+The only unusual rule we want to point out is the \rname{var}, in which we require that the variable must have a value
+in the trace. During the program execution, this condition is guaranteed by the definition of initial trace where every input
+variable has an initial value in the trace.
+    \begin{figure}
+        \small{
+            \begin{mathpar}
+        \inferrule{ 
+        \env(\trace) x = v
+        \and 
+        \env(\trace) x \neq \bot
+        }{
+        \aconfig{x} (\trace)
+        = v
+        }~\rname{var}
+        \and
+        \inferrule{ 
+        \aconfig{\aexpr_1}(\trace) = v_1
+        \and 
+        \aconfig{\aexpr_2}(\trace) = v_2
+        \and 
+            v_1 \oplus_a v_2 = v
+        }{
+        \aconfig{\aexpr_1 \oplus_a \aexpr_2} (\trace)
+        = v
+        }~\rname{bop}
+        \end{mathpar}
+        }
+\caption{Evaluation rules of arithmetic expression}
+\label{fig:aexpr-eval}
+\end{figure}
+}
 We describe the trace-based operational semantics for programs in terms of a small step evaluation relation $\config{c, \trace} \to \config{c', \trace'}$ describing how a configuration program-trace evaluates to another
 one.
-The rules are rather standard and omitted here, they can be found with all the definitions in the supplementary material.
-\mg{I suggest we put some of the rules in the paper if we have space. The way we use traces is not so standard, so better to give it if we can.}
-% \mg{Jiawen, can you confirm that we have it in the supplementary material?}
+The rules are rather standard, 
+\highlight{we select the evaluation rules for while and assignment command below and
+others found in the supplementary material.
+In rule \rname{asn}, we again require that the evaluation result $\econfig{\expr}(\trace)  \neq \bot$, referring back to the initial trace as well.
+The \rname{while-t} and \rname{while-f} are standard, we additionally generate a testing event recording the
+evaluation of the guard and append it at the right-hand side of the trace.
+ }
+% omitted here, they can be found with all the definitions in the supplementary material.}
+% \mg{I suggest we put some of the rules in the paper if we have space. The way we use traces is not so standard, so better to give it if we can.}
 We use $\to^*$ for the reflexive and transitive closure of $\to$. 
 If $\config{c, \trace_0} \rightarrow^{*} \config{\clabel{\eskip}^l, \trace_0 \tracecat \trace}$ under an initial trace 
 $\trace_0 \in \ftdom_0(c)$,
 then the program's execution terminates and produces a finite execution trace $\trace \in \ftdom$. We also have non-terminating execution denoted by $\config{c, \trace_0} \uparrow^{\infty} \trace$ that produces an infinite trace $\trace \in \inftdom$, under an initial trace 
 $\trace_0 \in \ftdom_0(c)$.
-%The complete rules and definition can be found in the supplementary materials.
+    \begin{figure}
+\small{
+    \begin{mathpar}
+    \inferrule
+    {
+    \econfig{\expr}(\trace)  = v
+    \and
+    \event = ({x}, l, v)
+    \and 
+    \econfig{\expr}(\trace)  \neq \bot
+    }
+    {
+    \config{\clabel{\assign{{x}}{\expr}}^{l},  \trace } 
+    \xrightarrow{} 
+    \config{\clabel{\eskip}^l, \trace \traceadd \event}
+    }
+    ~\rname{asn}
+    %
+    %
+    \and
+    %
+    \inferrule
+    {
+    \bconfig{\bexpr}(\trace)  = \efalse
+    \and 
+    \event = (\bexpr, l, \efalse)
+    }
+    {
+    \config{{\ewhile \clabel{\bexpr}^{l} \edo (c), \trace}}
+    \xrightarrow{} 
+    \config{{
+    \clabel{\eskip}^l,
+    \trace \traceadd \event}}
+    }
+    ~\rname{while-f}
+    \and
+    %
+    \inferrule
+    {
+    \bconfig{\bexpr}(\trace)  = \etrue
+    \and 
+    \event = (\bexpr, l, \etrue)
+    }
+    {
+    \config{{\ewhile \clabel{\bexpr}^{l} \edo (c), \trace}}
+    \xrightarrow{} 
+    \config{{
+    c; \ewhile \clabel{\bexpr}^{l} \edo (c),
+    \trace \traceadd \event}}
+    }
+    ~\rname{while-t}
+\end{mathpar}
+}
+\caption{Operational semantics rules}
+\label{fig:command-os}
+\end{figure}

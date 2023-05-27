@@ -13,16 +13,40 @@ program $c$.\\
 % and $\scexpr$
  The set of the \emph{symbolic expression} for a program $c$,
 $\scexpr(c)$ is the set of all the expressions over $\scvar(c)$ that are
-formed using the arithmetical operators addition ($+$), multiplication
+formed using the arithmetical operators' addition ($+$), multiplication
 ($\times $),  integer division ($/$) maximum ($\emax $), minimum ($\emin$).
+\[
+  \begin{array}{rl}
+  \scexpr(c) := \sexpr \in \mathbb{N} \cup \inpvar(c) \cup \{\infty \} ~|~ \sexpr \times \sexpr ~|~ \sexpr / \sexpr ~|~
+  \sexpr + \sexpr ~|~ \emax(\sexpr, \sexpr) ~|~ \emin(\sexpr, \sexpr)
+  \end{array}
+\]
 \end{defn}
 \mg{This language of expression is different from the language of expression we use in programs, e.g. in programs we don’t have division, max and min, but we have mod for a scalar, subtraction, multiplication for a scalar. Why do we use the same notation? I think it would be better to differentiate it, and also to give explicitly the semantics, since there are non-trivial cases. E.g. is 0*infinity =0 or infinity?}
 \highlight{
 \begin{defn}[Symbolic Expression Semantics]
 \label{def:symbolic_expr_semantics}
   The semantics function for symbolic expressions, $\sceconfig{}: \scexpr(c) \to (\tdom \to \mathbb{N} \cup \{\infty \})$ evaluates a \emph{symbolic expression}
-  $e \in \scexpr(c)$ over a trace $\trace \in \tdom$ using the usual operator semantics (we have 
-  $e + \infty = \infty, \emin(e, \infty) = e$, etc.).
+  $e \in \scexpr(c)$ over a trace $\trace \in \tdom$ using the usual operator semantics extend with $\infty$ as follows,
+  \[
+    \begin{array}{llll}
+    \sceconfig{\sexpr + \infty} (\trace) = \infty
+   &
+   \sceconfig{\sexpr - \infty} (\trace) = 0
+   &
+   \sceconfig{\infty - \sexpr} (\trace) = \infty
+    &
+   \sceconfig{\sexpr / \infty} (\trace) = 0
+   \\
+   \sceconfig{0 \times \infty} (\trace) = 0
+   &
+   \sceconfig{\sexpr \times \infty} (\trace) = \infty
+   &
+   \sceconfig{\emin(\sexpr, \infty)} (\trace) = \sexpr
+   &
+   \sceconfig{\emax(\sexpr, \infty)} (\trace) = \infty
+    \end{array}
+   \]
 \end{defn}
 }
 \begin{defn}[Difference Constraints]
