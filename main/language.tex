@@ -412,21 +412,21 @@ The $\aconfig{\aexpr}(\trace)$ evaluates an arithmetic expression $\aexpr$ under
   \inferrule{ 
     \bconfig{\bexpr}(\trace)  = v
   }{
-   \bconfig{\bexpr}(\trace)  
+   \econfig{\bexpr}(\trace)  
    = v
   }
   \and
-  \inferrule{ 
-    \econfig{\expr_1}(\trace)  = v_1
-    \and 
-    \ldots
-    \and 
-    \econfig{\expr_n}(\trace)  = v_n
-  }{
-   \econfig{ [\expr_1, \ldots, \expr_n]}(\trace) 
-   = [v_1, \ldots, v_n]
-  }
-  \and
+  % \inferrule{ 
+  %   \econfig{\expr_1}(\trace)  = v_1
+  %   \and 
+  %   \ldots
+  %   \and 
+  %   \econfig{\expr_n}(\trace)  = v_n
+  % }{
+  %  \econfig{ [\expr_1, \ldots, \expr_n]}(\trace) 
+  %  = [v_1, \ldots, v_n]
+  % }
+  % \and
   \inferrule{ 
     \empty
   }{

@@ -141,8 +141,8 @@ This section presents the multiple-paths interleaving refinement algorithm.
   \begin{algorithm}
     \caption{
     {Interleaving Refinement $\kw{IRefine}(c)$}
-    \label{alg:prog-refine}
     }
+    \label{alg:prog-refine}
     \begin{algorithmic}[1]
     \REQUIRE a loop program $c$ with multiple paths;
    %  the contextualization graph $cxlG(c)$ over paths.
@@ -157,12 +157,12 @@ This section presents the multiple-paths interleaving refinement algorithm.
     \STATE \quad {$\kw{inv0 = inv\_list[-1]}$:}
     \STATE \quad \textbf{For} $\tpath_i$ in the same loop with $\tpath$ and $\tpath \neq \tpath'$:
     \\
-    \STATE \quad \quad \textbf{If} {$\kw{visited[\tpath_i]}$} skip the loop
+    \STATE \quad \quad \textbf{If} {$\kw{visited[\tpath_i]}$} \textbf{Then} skip this iteration
     \STATE \quad \quad $\kw{visited[\tpath_i]} = \etrue$
     \STATE \quad \quad $\kw{w_i = wking\_path.append(\tpath')}$
     \\
-    \quad \quad {Compute Invariant $\kw{inv_i = merge(w_i, inv\_list[-1])}$}
-    \STATE \quad \quad \textbf{If} {$\kw{inv_i = \bot}$} $\eskip$
+    \quad \quad {Compute Invariant $\kw{inv_i = (w_i \lcompose inv\_list[-1])}$}
+    \STATE \quad \quad \textbf{If} {$\kw{solve(inv_i) = \bot}$} $\eskip$
     \STATE \quad \quad \textbf{Elif} {$\kw{inv_i = inv\_list[0]}$} $\kw{done\_set.add(\rprepeat(w_i))}$.
     \STATE \quad \quad \textbf{Elif} {$\kw{inv_i \notin inv\_list}$} 
     $\kw{unfinished\_set \cup (dfs(w', inv\_list++[inv_i], done\_set)}$
@@ -174,7 +174,7 @@ This section presents the multiple-paths interleaving refinement algorithm.
     \STATE \quad \textbf{return} $\kw{unfinished\_set}$
     \STATE Take $\tpath_0$ from $P$ 
     \STATE initialize $\kw{visited} = [\efalse]*m$ and $\kw{done\_set = \{\}}$
-    \STATE compute the invariant of the loop program $\kw{I_0}$
+    \STATE compute the invariant of the loop program $\rprog \models \kw{I_0}$
     \STATE $\kw{dfs([\tpath_0], I_0, [I_0], done\_set )}$
     \RETURN $\kw{done\_set}$
     \end{algorithmic}
@@ -184,22 +184,22 @@ This section presents the multiple-paths interleaving refinement algorithm.
 The interleaving refinement algorithm computes the interleaving orders of each simple transition paths explicitly.
 This algorithm is inspired from the path refinement algorithm in paper~\cite{GulwaniJK09}. 
 
-Line:18 first computes the invariant of the loop in the source program,
+Line:18 first computes the transition relations of the loop in the source program,
 
-\begin{equation}
-   \begin{array}{l}
-       \rprog_1 ; \rprog_1 \models \exists i, k \st i \\
-   \end{array}
-\end{equation}
+% \begin{equation}
+%    \begin{array}{l}
+%        \rprog_1 ; \rprog_1 \models \exists i, k \st i \\
+%    \end{array}
+% \end{equation}
 
-\begin{equation}
-   \begin{array}{l}
-       \rprog_1 ; \rprog_1 \models \exists i, k \st \phi_1 \circ \phi_1 = ... \implies \efalse\\
-       \rprog_2 ; \rprog_2 \models \exists i, k \st \phi_2 \circ \phi_2 = ... \implies \efalse \\
-       \rprog_2 ; \rprog_1 \models \exists i, k \st \phi_2 \circ \phi_1 = ...  \\
-       \rprog_1 ; \rprog_2 \models \exists i, k \st \phi_1 \circ \phi_2 = ... 
-   \end{array}
-\end{equation}
+% \begin{equation}
+%    \begin{array}{l}
+%        \rprog_1 ; \rprog_1 \models \exists i, k \st \phi_1 \circ \phi_1 = ... \implies \efalse\\
+%        \rprog_2 ; \rprog_2 \models \exists i, k \st \phi_2 \circ \phi_2 = ... \implies \efalse \\
+%        \rprog_2 ; \rprog_1 \models \exists i, k \st \phi_2 \circ \phi_1 = ...  \\
+%        \rprog_1 ; \rprog_2 \models \exists i, k \st \phi_1 \circ \phi_2 = ... 
+%    \end{array}
+% \end{equation}
 Only two execution paths are feasible, so we identify two unique interleaving orders --
 either $\rprog_1$ executes after one iteration of $\rprog_2$ or vice versa.
 % Then, loop $L_1$ in the source program is generates new execution paths as follows,

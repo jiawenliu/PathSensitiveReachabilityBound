@@ -13,21 +13,45 @@ program $c$.\\
 % and $\scexpr$
  The set of the \emph{symbolic expression} for a program $c$,
 $\scexpr(c)$ is the set of all the expressions over $\scvar(c)$ that are
-formed using the arithmetical operators addition ($+$), multiplication
+formed using the arithmetical operators' addition ($+$), multiplication
 ($\times $),  integer division ($/$) maximum ($\emax $), minimum ($\emin$).
+\[
+  \begin{array}{rl}
+  \scexpr(c) := \sexpr \in \mathbb{N} \cup \inpvar(c) \cup \{\infty \} ~|~ \sexpr \times \sexpr ~|~ \sexpr / \sexpr ~|~
+  \sexpr + \sexpr ~|~ \emax(\sexpr, \sexpr) ~|~ \emin(\sexpr, \sexpr)
+  \end{array}
+\]
 \end{defn}
-\mg{This language of expression is different from the language of expression we use in programs, e.g. in programs we don’t have division, max and min, but we have mod for a scalar, subtraction, multiplication for a scalar. Why do we use the same notation? I think it would be better to differentiate it, and also to give explicitly the semantics, since there are non-trivial cases. E.g. is 0*infinity =0 or infinity?}
+% \mg{This language of expression is different from the language of expression we use in programs, e.g. in programs we don’t have division, max and min, but we have mod for a scalar, subtraction, multiplication for a scalar. Why do we use the same notation? I think it would be better to differentiate it, and also to give explicitly the semantics, since there are non-trivial cases. E.g. is 0*infinity =0 or infinity?}
 \highlight{
 \begin{defn}[Symbolic Expression Semantics]
 \label{def:symbolic_expr_semantics}
   The semantics function for symbolic expressions, $\sceconfig{}: \scexpr(c) \to (\tdom \to \mathbb{N} \cup \{\infty \})$ evaluates a \emph{symbolic expression}
-  $e \in \scexpr(c)$ over a trace $\trace \in \tdom$ using the usual operator semantics (we have 
-  $e + \infty = \infty, \emin(e, \infty) = e$, etc.).
+  $e \in \scexpr(c)$ over a trace $\trace \in \tdom$ using the usual operator semantics extend with $\infty$ as follows,
+  \[
+    \begin{array}{llll}
+    \sceconfig{\sexpr + \infty} (\trace) = \infty
+   &
+   \sceconfig{\sexpr - \infty} (\trace) = 0
+   &
+   \sceconfig{\infty - \sexpr} (\trace) = \infty
+    &
+   \sceconfig{\sexpr / \infty} (\trace) = 0
+   \\
+   \sceconfig{0 \times \infty} (\trace) = 0
+   &
+   \sceconfig{\sexpr \times \infty} (\trace) = \infty
+   &
+   \sceconfig{\emin(\sexpr, \infty)} (\trace) = \sexpr
+   &
+   \sceconfig{\emax(\sexpr, \infty)} (\trace) = \infty
+    \end{array}
+   \]
 \end{defn}
 }
 \begin{defn}[Difference Constraints]
 A difference constraint $d$ is an inequality of
-the form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $ and $v \in \scvardom$. The inequality
+form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $, $v \in \scvardom$ and $x' \in \vardom'$ (the set of primed copies of variables in $\vardom$).
 $x' \leq y + v$ (rsp. $x' \leq v$) describes that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus the symbolic constant $v$ (rsp. the value of $v$).
 We use $DC(\vardom \cup \scvardom)$ to denote the set of all difference constraints over $\vardom \cup \scvardom$.
@@ -111,12 +135,14 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
 
 \begin{defn}[Path]
  \label{def:abs_cfgpath} 
- A path on $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots $ with
+ A path $p$ on a program's abstract transition graph $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots $ with
  \begin{itemize}
  \item the vertices $(l_0, \ldots)$, where $l_i \in \absV(c)$ for every $i = 0, 1, \ldots$ and
  %
  \item the edges $(e_0, \ldots)$, where $e_i = (l_{i}, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, 1, \ldots$.
  \end{itemize}
+  $(e_0, \ldots)$ is the edge sequence and $(l_0, \ldots)$ is the vertices sequence
+ of this path, $v_i \in p$ (rsp. $e_i \in p$) represent that $v_i$ (rsp. $e_i$ )is a vertex (rsp. edge) in this sequence respectively.
  A path is cyclic if it has the same start- and end-point. A path is simple if it does not visit a location twice except for the start- and end-location. We use $\paths(\absG(c))$ to denote the set of all the paths on $\absG(c)$,
  and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
  where $\pathl: \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
@@ -125,7 +151,7 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
 
 
 \subsection{Program Rewriting}
-This step rewrite the program in the form of combinations of execution paths.
+This step rewrite the program in the form of combinations of simple transition paths.
 
 
 
@@ -172,16 +198,113 @@ is a \emph{simple transition path} if and only if it satisfies,
 A simple transition path is also an execution path.
 
 \paragraph{Syntax.}
-The syntax of the refined program is given below. It is combination of the execution paths.
+We define the syntax of abstract program and the transition relation based on graph paths as below. 
+The syntax of the refined program is combination of the execution paths on this program and the logic transition relation of is a logic formula over constraints.
 \[
-    \rprog := \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} 
+  \begin{array}{rll}
+   \mbox{Abstract Program} & \rprog &:= \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} \\
+   \mbox{Transition Relation} & \phi & := dc ~|~ \phi \land \phi ~|~ \phi \lor \phi ~|~ (\phi)^* ~|~ \exists v \in \mathbb{Z} \st \phi
+  \end{array}
 \]
 where $l\in \loopl(c)$ is a loop header.
 
-In the new syntax, $\rprepeat(\rprog)$ is a loop statement iterating over the transitions in $\rprog$.
+In the abstract program syntax, $\rprepeat(\rprog)$ is a loop statement iterating over the transitions in $\rprog$.
 $l: \rprepeat(\rprog)$ represents that the loop $ \rprepeat(\rprog)$
 corresponds to a loop of the source program with loop header $l$.
 The multiple-paths statement $\rpchoose{\rprog, \ldots} $ contains all the execution paths of a loop from the source program.
+
+The transition relation can be either a constraint, conjunctions or disjunctions of itself.
+$(\phi)^*$ corresponds to a loop path in the program and denotes unknown times of compositions of
+$\phi$, $\exists i \in \mathbb{N} \st \underbrace{\phi \lcompose \phi \lcompose \ldots}_{i} $.
+Composition operation $\lcompose$ of two transition relations is computed as below.
+\[
+  \phi_1 \lcompose \phi_2 = \phi_1 \land \phi_2[\varvector{x''}/\varvector{x'}][\varvector{x'}/{\varvector{x}}]
+\]
+It can also be a formula quantified by existential of set of symbols $v \in \scvardom$.
+% \begin{defn}
+%   \label{def:lcompose}
+% \end{defn}
+% Program represented in the above syntax
+% \begin{defn}[Transition Relation]
+%   The transition relation of is a logic formula over constraints.
+%   \[
+%     \begin{array}{rll}
+%      \mbox{Transition Relation} & \phi & := dc ~|~ \phi \land \phi ~|~ \phi \lor \phi ~|~ (\phi)^* ~|~ \exists x \in \vardom \st \phi
+%     \end{array}
+%   \]
+% \end{defn}
+The derivation relations between an abstract program and the transition relations are in Figure~\ref{fig:transition-relation-rule}.
+In the rule \rname{base}, a simple transition path is translated into conjunctions of constraints on this path.
+Transition relation from sequence statements is conjunction of two transition relations respectively and the multiple-path statement $\rpchoose{\rprog, \ldots} $ is translated into disjunctions of 
+transition relation of each path.
+
+\begin{figure}
+  \begin{mathpar}
+    %
+    \inferrule
+    {
+    \empty
+    }
+    {
+      \tpath \models \bigwedge \left\{ dc \vert (l, dc, l') \in \tpath \right\}
+    }
+    ~\rname{base}
+    \and
+    %
+    \inferrule
+    {
+    \rprog_1 \models \phi_1
+     \and 
+     \rprog_2 \models \phi_2
+    }
+    {
+      \rprog_1; \rprog_2 \models \phi_1 \lcompose \phi_2
+    }
+    ~\rname{seq}
+    %
+    %
+    \and
+    %
+    \inferrule
+    {
+      \rprog \models \phi 
+    }
+    {
+      \rprepeat(\rprog) \models (\phi)^*
+    }
+    ~\rname{loop}
+    \and
+    %
+    %
+    \inferrule
+    {
+    \rprog \models \phi 
+    }
+    {
+      l:\rprepeat(\rprog) \models 
+      \bigwedge\limits_{v \in \left\{ v \vert (l, x \leq y' + v, l') \in \phi  \land v \notin \mathbb{N} \cup \{\infty\}\right\}} \exists {v} \in \mathbb{Z} \st (\phi)^*
+    }
+    ~\rname{loop-l}
+    %
+    \and
+    %
+    \inferrule
+    {
+      \rprog_1 \models \phi_1 \ldots
+    }
+    {
+      \rpchoose{\rprog_1, \ldots} \models \lor \left\{ \phi_1 \ldots \right\}
+    }
+    ~\rname{choose}
+    %
+    %
+    %
+    %
+    \end{mathpar}
+    \caption{Transition Relation Generation}
+    \label{fig:transition-relation-rule}
+\end{figure}
+
 
 \paragraph{Algorithm.}
 Algorithm~\ref{alg:alg-refine_rewrite} transforms the syntax of the while language program 
