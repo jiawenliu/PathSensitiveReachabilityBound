@@ -49,19 +49,23 @@ formed using the arithmetical operators' addition ($+$), multiplication
    \]
 \end{defn}
 }
+In the next definition we will need to refer to the current state and the previous state of a computation. We will use ``primed'' variables  to refer to the current state and ``non-primed'' to refer to their value in the previous state. For example $x'$ will refer to the value of the variable $x$ in the current state, while $x$ will denote its value in the previous state. We will denote by $\vardom'$ the set of primed copies of variables in $\vardom$.
+\mg{is this the convention we use?}
 \begin{defn}[Difference Constraints]
 A difference constraint $d$ is an inequality of
-form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $, $v \in \scvardom$ and $x' \in \vardom'$ (the set of primed copies of variables in $\vardom$).
-$x' \leq y + v$ (rsp. $x' \leq v$) describes that the value of $x$ in the current state is
+form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $, $v \in \scvardom$ and $x' \in \vardom'$. The difference constraint
+$x' \leq y + v$ (rsp. $x' \leq v$) states that the value of $x$ in the current state is
 at most the value of $y$ in the previous state plus the symbolic constant $v$ (rsp. the value of $v$).
-$DC(\vardom \cup \scvardom)$ denotes the universe of all difference constraints over $\vardom \cup \scvardom$.
+We use $DC(\vardom \cup \scvardom)$ to denote the set of all difference constraints over $\vardom \cup \scvardom$.
 \end{defn}
 
+\mg{I am confused by why in the next definition we need the symbol $\top$. In the set of boolean expressions we have the expression $\kw{true}$ which is always true. What is the difference between them?}
+
 \begin{defn}[Constraints]
-A constraint $dc \in \dcdom^{\top}$
+A constraint $dc$
 is either a
 difference constraint $d \in DC(\vardom \cup \scvardom)$, a boolean expression $\bexpr \in \booldom$
-or $\top$ denotes always true.
+or the symbol $\top$ denoting ``true''. We use $\dcdom^{\top}$ to denote the set of constraints. 
 \end{defn}
 
 When the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
