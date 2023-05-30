@@ -140,7 +140,7 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
  \item the edges $(e_0, \ldots)$, where $e_i = (l_{i}, dc_i, l_{i + 1}) \in \absE(c)$ for every $i = 0, 1, \ldots$.
  \end{itemize}
   $(e_0, \ldots)$ is the edge sequence and $(l_0, \ldots)$ is the vertices sequence
- of this path, $v_i \in p$ (rsp. $e_i \in p$) represent that $v_i$ (rsp. $e_i$ )is a vertex (rsp. edge) in this sequence respectively.
+ of this path, $v_i \in p$ (rsp. $e_i \in p$) represent that $v_i$ (rsp. $e_i$ ) is a vertex (rsp. edge) on this path respectively.
  A path is cyclic if it has the same start- and end-point. A path is simple if it does not visit a location twice except for the start- and end-location. We use $\paths(\absG(c))$ to denote the set of all the paths on $\absG(c)$,
  and $\pathl(p)$ to represent the list of program points corresponding to the vertices sequence of this path $p \in \paths(\absG(c))$,
  where $\pathl: \paths(\absG(c)) \to \mathcal{P}{(\ldom)}$.
@@ -211,13 +211,16 @@ $l: \rprepeat(\rprog)$ represents that the loop $ \rprepeat(\rprog)$
 corresponds to a loop of the source program with loop header $l$.
 The multiple-paths statement $\rpchoose{\rprog, \ldots} $ contains all the execution paths of a loop from the source program.
 
-The transition relation can be either a constraint, conjunctions or disjunctions of itself.
+The transition relation can be either a constraint, conjunctions or disjunctions of itself, and $dc \in \phi$ denotes that
+the constraint $dc$ shows up in a subclause of $\phi$ either in the form of conjunction or disjunction.
 $(\phi)^*$ corresponds to a loop path in the program and denotes unknown times of compositions of
 $\phi$, $\exists i \in \mathbb{N} \st \underbrace{\phi \lcompose \phi \lcompose \ldots}_{i} $.
 Composition operation $\lcompose$ of two transition relations is computed as below.
 \[
-  \phi_1 \lcompose \phi_2 = \phi_1 \land \phi_2[\varvector{x''}/\varvector{x'}][\varvector{x'}/{\varvector{x}}]
+  \phi_1 \lcompose \phi_2 = \phi_1 \land \phi_2[\varvector{x''}/\varvector{x'}][\varvector{x'}/{\varvector{x}}],
 \]
+in which $\varvector{x} = (x_1, x_2, \ldots)$ for each $x_1, x_2, \ldots \in \vardom$ and the corresponding prime copies $\varvector{x'}$ are all the variables showing up in $\phi_2$ in the form of
+$x_i \leq x_i'$ or $x_i \leq x_i' + v$ for some $v \in \scvardom$.
 It can also be a formula quantified by existential of set of symbols $v \in \scvardom$.
 % \begin{defn}
 %   \label{def:lcompose}
@@ -235,6 +238,8 @@ The derivation relations between an abstract program and the transition relation
 In the rule \rname{base}, a simple transition path is translated into conjunctions of constraints on this path.
 Transition relation from sequence statements is conjunction of two transition relations respectively and the multiple-path statement $\rpchoose{\rprog, \ldots} $ is translated into disjunctions of 
 transition relation of each path.
+In rule \rname{loop-l},  $\scvar({\phi}) = \left\{ v \vert x \leq y' + v \in \phi \right\} $ gives all the symbolic constants showing up in $\phi$.
+%  that are not $\infty$ or natural numbers.
 
 \begin{figure}
   \begin{mathpar}
@@ -280,7 +285,7 @@ transition relation of each path.
     }
     {
       l:\rprepeat(\rprog) \models 
-      \bigwedge\limits_{v \in \left\{ v \vert (l, x \leq y' + v, l') \in \phi  \land v \notin \mathbb{N} \cup \{\infty\}\right\}} \exists {v} \in \mathbb{Z} \st (\phi)^*
+      \bigwedge\limits_{ v \in \left\{v \in \scvar({\phi}) \setminus (\mathbb{N} \cup \{\infty\}) \right\}}\exists {v} \in \mathbb{Z} \st (\phi)^*
     }
     ~\rname{loop-l}
     %
@@ -291,7 +296,7 @@ transition relation of each path.
       \rprog_1 \models \phi_1 \ldots
     }
     {
-      \rpchoose{\rprog_1, \ldots} \models \lor \left\{ \phi_1 \ldots \right\}
+      \rpchoose{\rprog_1, \ldots} \models \bigvee \left\{ \phi_1 \ldots \right\}
     }
     ~\rname{choose}
     %
