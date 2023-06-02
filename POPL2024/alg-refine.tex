@@ -162,14 +162,14 @@ This section presents the multiple-paths interleaving refinement algorithm.
     \STATE \quad \quad $\kw{w_i = wking\_path.append(\rprog_i)}$
     \\
     \quad \quad {Compute transition relation $\kw{(w_i \lcompose inv\_list[-1]) \models inv_i}$}
-    \STATE \quad \quad \textbf{If} {$\kw{solve(inv_i) = \efalse}$} \textbf{Then} skip this iteration
-    \STATE \quad \quad \textbf{Elif} {$\kw{inv_i \implies inv\_list[0]}$} \textbf{Then}  $\kw{done\_set.add(\rprepeat(w_i))}$.
-    \STATE \quad \quad \textbf{Elif} {$\kw{inv_i \notin inv\_list}$} \textbf{Then} 
-    $\kw{candidate \cup (dfs(w', inv\_list++[inv_i], done\_set)}$
-    \STATE \quad \quad \textbf{Else} 
-    Find the index $j$, such that $\kw{inv_i \implies inv\_list[j] }$,
+    \STATE \quad \quad \textbf{If} {$\kw{solve(inv_i) = \efalse}$}, \textbf{Then} skip this iteration
+    \STATE \quad \quad \textbf{Elif} {$\kw{inv_i \implies inv\_list[0]}$}, \textbf{Then}  $\kw{done\_set.add(\rprepeat(w_i))}$.
+    \STATE \quad \quad \textbf{Elif} 
+    Find the index $j$, such that $\kw{inv_i \implies inv\_list[j] }$, \textbf{Then}
     \STATE \quad \quad \quad
-    $\kw{(dfs(w_i[:j]++[\rprepeat(w[j:i])], inv\_list[:j], done\_set)}$.
+    $\kw{candidate \cup (dfs(w_i[:j] \tracecat [\rprepeat(w[j:i])], inv\_list[:j], done\_set)}$.
+    \STATE \quad \quad \textbf{Else}  
+    $\kw{candidate \cup (dfs(w', inv\_list\tracecat[inv_i], done\_set)}$
     \STATE \quad \quad $\kw{visited[\rprog_i]} = \efalse$.
     \STATE \quad \textbf{return} $\kw{candidate}$
    %  \STATE Take $\tpath_0$ from $P$ 
@@ -199,14 +199,15 @@ and
 Then from Line-7 to 16, we start to search for all the other unvisited paths  in the loop
 and compose each with the existing candidate in Line-10 $\kw{w_i = wking\_path.append(\rprog')}$.
 
-Line-11 to 16 check the transition relations in comparison with existing transition relations.
-Line-10 eliminates the infeasible orders.
+Line-11 to 16 check the new transition relations produced from new
+interleaving orders in comparison with existing transition relations.
+Line-10 eliminates the infeasible ones.
 If solving of the new transition relations can imply the source loop program,
-it is an equivalent execution of the loop program and added into the output set, $\kw{done\_set}$.
+then executing this new interleaving order is an equivalent execution of the loop program and added into the output set, $\kw{done\_set}$.
 In Line-14 and 15, if solving the new transition relation can imply previous one, then there is a sub loop
 in existing interleaving orders. We update existing interleaving order
-as $w_i[:j]++[\rprepeat(w[j:i])]$ and continuously recursion.
-Otherwise, we continuously recursion on the rest paths and add back the result into candidate set.
+as $w_i[:j] \tracecat [\rprepeat(w[j:i])]$ and continuously apply the algorithm on the other unvisited paths.
+Otherwise, the algorithm is recursively applied on the rest paths and returns the candidate set from recursion.
 
 In the terminating program, the candidate set should be empty. We guarantee the soundness of this refinement algorithm
 by adding also the $\rpchoose{ \rprog \vert \rprog \in \kw{candidate}}$ into the refined program.
