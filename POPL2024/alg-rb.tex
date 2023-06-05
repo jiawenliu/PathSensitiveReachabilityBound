@@ -26,7 +26,7 @@ $\econfig{\psRB(l, c)}$ is a \emph{reachability-bound} for $l$ in $c$.
  \begin{array}{l}
  \forall c, c_r \in \cdom, \tpath \in \absG(c), \trace_0 \in \ftdom_0(c), \trace \in \tdom, l, l' \in \ldom, \rprog \st 
  \\ \quad
- \rprog = REFINE(\algrewrite(c))
+ \rprog = \kw{IRefine}(\algrewrite(c))
  \land 
  \rprog = \algrewrite(c_r)
  \\ \quad
