@@ -52,6 +52,7 @@ None of other tools compute bounds for these programs.
 \begin{table}[ht]
     \caption{The Effectiveness Evaluation Table of {\PSRB}}
     \label{tb:effectiveness-eval}
+    \vspace{-0.3cm}    
     \centering
     {\scriptsize
     \begin{tabular}{ | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
@@ -117,9 +118,11 @@ In the $1^{st}$ sub-column, formula in each row is the sum of the reachability-b
 For comparison, we show the worst-case bound times $\sum(L. \#)$ in the $2^{nd}$ sub-column by other tools. Given the precise reachability-bounds on every program locations, we can compute tighter overall complexity bound than the best worst-case analysis tools.
 
 \begin{table}[ht]
+    \vspace{-0.3cm}    
     \caption{The Accuracy Evaluation Table of {\PSRB}}
     \label{tb:accuracy-eval}
-    \centering
+\vspace{-0.3cm}    
+\centering
     {\scriptsize
     \begin{tabular}{| >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c |}
         \hline
@@ -270,8 +273,12 @@ Tianhan & 37 & 2 & 3 & 37 & 204 & 100.0\% & 0 & 0 & 1min03sec \\
 \end{table}
 
 \paragraph{Failed Examples}
+Because of the limitation of our program language model, we are only able to handle the integer program with
+linear computation.
+For the set of example programs that have loop of logarithm complexity in the ``representative'' benchmark set in Table~\ref{tb:effectiveness-eval} and Tab.~\ref{tb:effectiveness-eval}, we
+only over-estimate them as $O(n^2)$ complexity.
 
-\begin{itemize}
-    \item Logarithm time loops, the binary search
-    \item 
-\end{itemize}
+% \begin{itemize}
+%     \item Logarithm time loops, the binary search
+%     \item 
+% \end{itemize}

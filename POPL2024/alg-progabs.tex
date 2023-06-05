@@ -1,4 +1,4 @@
-As first steps, we transform a program in its abstract transition graph and we do some program rewriting to prepare it for the main algorithm.
+As first steps, we transform a program in its abstract transition graph and generate the corresponding abstract program and the transition relations to prepare it for the main algorithm.
 
 \subsection{Abstraction Transition Graph}
 We consider the \emph{Abstract Transition Graph}, $\absG(c)$
@@ -157,9 +157,8 @@ $\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the wh
  In Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), $1 \to 2 \to 3 \to 4 \to 5 \to 4$ is a \emph{path} but not simple (the program points $4$ is visited twice). The path $4 \to 5 \to 4$ is both cyclic and simple.
 
 
-\subsection{Program Rewriting}
-This step rewrite the program in the form of combinations of simple transition paths.
-
+\subsection{Abstract Program And Transition Relation}
+This section describes the generation of the abstract program and the transition relations.
 
 
 \paragraph{Loop Header.}
@@ -205,8 +204,8 @@ is a \emph{simple transition path} if and only if it satisfies,
 A simple transition path is also an execution path.
 
 \paragraph{Syntax.}
-We define the syntax of abstract program and the transition relation based on graph paths as below. 
-The syntax of the refined program is combination of the execution paths on this program and the logic transition relation of is a logic formula over constraints.
+We define the abstract program syntax and the transition relation based on graph paths as below. 
+The syntax of the abstract program is combination of the execution paths with extra annotations and the logic transition relation is a logic formula over constraints.
 \[
   \begin{array}{rll}
    \mbox{Abstract Program} & \rprog &:= \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} \\
