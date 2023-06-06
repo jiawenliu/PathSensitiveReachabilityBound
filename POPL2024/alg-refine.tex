@@ -164,12 +164,14 @@ This section presents the multiple-paths interleaving refinement algorithm.
     \quad \quad {Compute transition relation $\kw{(w_i \lcompose inv\_list[-1]) \models inv_i}$}
     \STATE \quad \quad \textbf{If} {$\kw{solve(inv_i) = \efalse}$}, \textbf{Then} skip this iteration
     \STATE \quad \quad \textbf{Elif} {$\kw{inv_i \implies inv\_list[0]}$}, \textbf{Then}  $\kw{done\_set.add(\rprepeat(w_i))}$.
+    \STATE \quad \quad \quad
+    $\kw{candidate \cup (dfs([\rprepeat(w_i)], inv\_list[0], done\_set)}$.
     \STATE \quad \quad \textbf{Elif} 
     Find the index $j$, such that $\kw{inv_i \implies inv\_list[j] }$, \textbf{Then}
     \STATE \quad \quad \quad
-    $\kw{candidate \cup (dfs(w_i[:j] \tracecat [\rprepeat(w[j:i])], inv\_list[:j], done\_set)}$.
+    $\kw{candidate \cup (dfs(w_i[:j] \tracecat [\rprepeat(w_i[j:i])], inv\_list[:j], done\_set)}$.
     \STATE \quad \quad \textbf{Else}  
-    $\kw{candidate \cup (dfs(w', inv\_list\tracecat[inv_i], done\_set)}$
+    $\kw{candidate \cup (dfs(w_i, inv\_list\tracecat[inv_i], done\_set)}$
     \STATE \quad \quad $\kw{visited[\rprog_i]} = \efalse$.
     \STATE \quad \textbf{return} $\kw{candidate}$
    %  \STATE Take $\tpath_0$ from $P$ 
@@ -280,7 +282,6 @@ Then we generate the final refined program for program $\kw{nestedOdd}(n, m)$ in
 The visiting array guarantees that every simple transition path is visited at most once.
 In this sense, the algorithm will not fall into infinite loop.
 
-
 \paragraph{Example.}
 We use another example from the benchmark set of~\cite{GulwaniJK09} to show the necessity of the \emph{path refinement}. 
 It has a two paths loop
@@ -292,25 +293,43 @@ while for locations on the other branch, $2$ and $3$ is $(m + 1) \times \lfloor\
 The best state-of-art bound analysis
 gives the same \emph{reachability-bound}, $n + \lfloor\frac{n}{m}\rfloor$ for all the locations within the loop $L_2$.
 \input{examples/whileTwoCounters-refine}
-To know the bounds for locations on different branches of a loop, 
-it is necessary to know the execution orders of the two paths.
+% To know the bounds for locations on different branches of a loop, 
+% it is necessary to know the execution orders of the two paths.
 
-Over its abstract transition graph in Figure~\ref{fig:whileTwoCounters-refine}(b), we first collect all its simple transition path as in Figure~\ref{fig:whileTwoCounters-refine}(c).
-Then we transform the multiple-path loop by computing the interleaving between paths explicitly and
-generates a refined program $\rprog$ as the bottom part of Figure~\ref{fig:whileTwoCounters-refine}.
+Over its abstract transition graph in Figure~\ref{fig:whileTwoCounters-refine}(b), we first collect all its simple transition path as in Figure~\ref{fig:whileTwoCounters-refine}(c) and derive its transition relation for each path,
+\[
+   \begin{array}{rl}
+   \tpath_1 & \models \phi_1 =  i> 0 \land j < m \land j' \leq j + 1 \land i' \leq i - 1\\
+   \tpath_2 & \models  \phi_2 =  i> 0 \land \neg(j < m) \land j' \leq 0 \\
+   \rpchoose{2: \tpath_1, 2: \tpath_2} & \models \phi = \exists m \in \mathbb{N} \st i > 0 \land (j < m \land j' \leq j + 1 \land i' \leq i - 1) \lor (\neg(j < m) \land j' \leq 0)
+   \end{array}
+\]
+% Then we transform the multiple-path loop by computing the interleaving between paths explicitly and
+% generates a refined program $\rprog$ as the bottom part of Figure~\ref{fig:whileTwoCounters-refine}.
 
-We first compute that $\tpath_1$ can iterate on itself, so there is one possible execution sub-order,
-$\rprepeat(\tpath_1)$.
-We recursively compute that after $\tpath_1$ done with the iteration on itself,
-either the iteration of the original loop is finished
-or $\tpath_2$ can execute right after.
-For the first case, we compute a complete execution order $\rprepeat(\tpath_1)$.
-In the second case, we again have a possible execution sub-order, $\rprepeat(\tpath_1); \tpath_2$.
-After execution of $\tpath_2$, we compute that $\tpath_1$ iterates on itself again
-and goes back to the same execution sub-order. 
-The refinement algorithm finds this repetition and generate a complete execution order
-$\rprepeat(\rprepeat(\tpath_1); \tpath_2)$.
-Then the algorithm finish the refinement process since all the paths are visited and there is no more sub-orders. 
+We first compute that $\tpath_1$ can iterate on itself and solving $\phi_1$ can imply
+$\phi$, so we add $\rprepeat(\tpath_1)$ into the done set and recursively
+compute other interleaving order.
+% so there is one possible execution sub-order,
+% $\rprepeat(\tpath_1)$.
+% We recursively compute that after $\tpath_1$ done with the iteration on itself,
+% the iteration of the original loop can finish as well, by solving that $\phi_1$ can imply
+% $\phi$, so we add $\rprepeat(\tpath_1)$ into the done set.
+Next, we compute $\tpath_2$ can execute right after $\rprepeat(\tpath_1)$, corresponding
+to the candidate $\rprepeat(\tpath_1); \tpath_2$.
+% After execution of $\tpath_2$, we compute that $\tpath_1$ iterates on itself again
+% and goes back to the same execution sub-order. 
+\[
+   \begin{array}{ll}
+      2: \rprepeat(\rprepeat(\tpath_1); \tpath_2) & \models \exists m \in \mathbb{N} \st i > 0 \land j' \leq 0 \land i' \leq i - m
+   \end{array}
+\]
+% The refinement algorithm finds this repetition and generate a complete execution order
+% $\rprepeat(\rprepeat(\tpath_1); \tpath_2)$.
+Since solving the formula above can imply $\phi$, we compute another path into the done set, 
+$2: \rprepeat(\rprepeat(\tpath_1); \tpath_2)$.
+Since $tpath_2$ itself is infeasible at the beginning, the interleaving algorithm then is finished.
+% Then the algorithm finish the refinement process since all the paths are visited and there is no more sub-orders. 
 %  In the first one, $\tpath_2$ will be executed after all the iterations of $\tpath_1$ are done, and in the second one,
 %  the entire loop is done after $\tpath_1$ finishes the iteration.
 The refined program then is constructed below as in Figure~\ref{fig:whileTwoCounters-refine}(e).
