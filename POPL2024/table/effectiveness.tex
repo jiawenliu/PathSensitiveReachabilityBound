@@ -1,0 +1,62 @@
+\begin{table}[ht]
+    \vspace{-0.3cm}    
+    \caption{The Effectiveness Evaluation Table of {\PSRB}}
+    \label{tb:effectiveness-eval}
+    \vspace{-0.3cm}    
+    \centering
+    {\scriptsize
+    \begin{tabular}{ | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+    \hline
+    \hline
+    {Bench-} & {theory} & \multirow{2}{*}{P. \# } & \multirow{2}{*}{L. \#} & \multicolumn{6}{c|}{reachability-bound (L. \#)} & \multicolumn{5}{c|}{worst bound (P. \#)} \\
+    \cline{5-15}
+    -marks & worst &  &  & $1$ & $n$ & $n^2$ & $n^3$ & $n^4$ & $\infty$ & {\tiny \PSRB} & {\tiny Loopus} & {\tiny Cofloco} & {\tiny SPEED} & {\tiny \cite{BenchmarkTianhan}}  \\
+    \hline
+    \hline
+    & $O(1)$   &  4 & 82 & 32 & 0 & 0 & 0 & 0 & 0 & 1 & 2 & 3 & 2 & 1  \\
+    \cline{2-2}
+    & $O(n)$   & 59 & 373 & 112 & 261 & 0 & 0 & 0 & 0 & 48 & 51 & 45 & 46 & 40 \\
+    \cline{2-2}Represen-
+    & $O(n^2)$ & 31 & 414 & 70 & 191 & 153 & 0 & 0 & 0  & 37 & 29 & 34 & 37 & 49  \\
+    \cline{2-2}
+    tatives
+    & $n\log(n)$ & 6 & 81 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0  \\
+    \cline{2-2}
+    & $O(n^3)$   & 2 & 91 & 6 & 16 & 13 & 13 & 0 & 0 & 4 & 3 & 2 & 5 & 7 \\
+    \cline{2-2}
+    & $O(n^{4})$ & 3 & 36 & 4 & 9 & 9 & 12 & 11 & 0 & 4 & 4 & 3 & 5 & 5 \\
+    \hline \hline
+    \multirow{5}{*}{Loopus} 
+    & $O(1)$     & 1 & 154 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0  \\
+    \cline{2-2}
+    & $O(n)$     & 13 & 176 & 49 & 105 & 0 & 0 & 0 & 0 & 12 & 13 & 14 & 14 & 11 \\
+    \cline{2-2}
+    & $O(n^2)$   & 4 & 64 & 4 & 13 & 15 & 0 & 0 & 0 & 3 & 2 & 5 & 2 & 6 \\
+    \cline{2-2}
+    & $O(n^3)$   & 4 & 193 & 2 & 7 & 10 & 4 & 0 & 0 & 2 & 1 & 2 & 2 & 3 \\
+    \cline{2-2}
+    & $O(n^{4})$ & 1 & 21 & 1 & 3 & 6 & 8 & 2 & 0 & 1 & 1 & 1 & 1 & 0 \\
+    \hline \hline
+    \multirow{6}{*}{Icra} 
+    & $O(1)$ & 4 & 93 & 41 & 0 & 0 & 0 & 0 & 0 & 1 & 3 & 2 & 2 & 0  \\
+    \cline{2-2}
+    & $\log(n)$ & 2 & 16 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0   \\
+    \cline{2-2}
+    & $O(n)$ & 79 & 988 & 267 & 698 & 0 & 0 & 0 & 0 & 78 & 80 & 82 & 78 & 77  \\
+    \cline{2-2}
+    & $O(n^2)$ & 12 & 151 & 26 & 110 & 26 & 0 & 0 & 0 & 18 & 14 & 11 & 16 & 17  \\
+    \cline{2-2}
+    & $O(n^3)$ & 1 &  9 & 1 & 3 & 3 & 2 & 0 & 0 & 1 & 1 & 4 & 2 & 4  \\
+    \cline{2-2}
+    & $\infty$ & 20 & 295 &  50 & 0 & 0 & 0 & 0 & 245 & 9 & 0 & 0 & 0 & 0  \\
+    \hline \hline
+    \multirow{2}{*}{Tianhan} 
+    & $O(n)$ & 35 & 188 & 68 & 120 & 0 & 0 & 0 & 0 & 35 & 35 & 35 & 35 & 35  \\
+    \cline{2-2}
+    & $O(n^2)$ & 2 & 12 & 4 & 8 & 4 & 0 & 0 & 0 & 2 & 2 & 2 & 2 & 2   \\
+    \hline
+    \hline
+    \end{tabular}
+    }
+    \vspace{-0.3cm}    
+    \end{table}

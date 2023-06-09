@@ -25,7 +25,7 @@ Then we use the two states and the $\rffinal$ state to compute the
 \begin{defn}[Loop Abstract States Computation]
 \label{def:alg-loopabsstate}
 Given a program $c$, with $l:\rprog$ as a sub-program (a loop) in $c$'s refined program, 
-where $l: \rprog \subseteq REFINE(\kw{Rewrite(c)})$, 
+where $l: \rprog \subseteq \kw{IRefine}(\kw{Rewrite(c)})$, 
 we compute four two abstract states for the ranking functions of this loop, 
    $\lpinit(l: \rprog, \tpath, c)$, and $\lpnext(l: \rprog, \tpath, c) \in \scexpr(c)$
    are formally presented as follows.

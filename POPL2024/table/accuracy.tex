@@ -1,0 +1,62 @@
+\begin{table}[ht]
+    \vspace{-0.3cm}    
+    \caption{The Accuracy Evaluation Table of {\PSRB}}
+    \label{tb:accuracy-eval}
+\vspace{-0.3cm}    
+\centering
+    {\scriptsize
+    \begin{tabular}{| >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | >{\scriptsize}c | c | c | c | c | c | c |}
+        \hline
+        \hline
+    {Bench-} & {theory} & \multirow{2}{*}{P. \#} & \multirow{2}{*}{L. \#} & \multicolumn{2}{c|}{overall complexity bound}\\
+    \cline{5-6}
+    -marks & worst &  &   & {\PSRB} & worst \\
+    \hline
+    \hline
+    & $O(1)$   &  4 & 82  & 32 & 64 \\
+    \cline{2-2}
+    & $O(n)$   & 59 & 373 & $112 + 261n$  & $373n$\\
+    \cline{2-2}Represen-
+    & $O(n^2)$ & 31 & 414  & $70 + 191n + 153n^2$ & $ 414n^2 $ \\
+    \cline{2-2}
+    tatives
+    & $n\log(n)$ & 6 & 81  & 0 & 0 \\
+    \cline{2-2}
+    & $O(n^3)$   & 2 & 91  & $6 + 16n + 13n^2 + 13n^3$ & $48 n^3$\\
+    \cline{2-2}
+    & $O(n^{4})$ & 3 & 36 & $4 + 9n + 9n^2 + 12n^3 + 11n^4$ & $45n^4$\\
+    \hline \hline
+    \multirow{5}{*}{Loopus} 
+    & $O(1)$     & 1 & 154 & 0 & - \\
+    \cline{2-2}
+    & $O(n)$     & 13 & 176  & $49 + 105n$ & $162n$\\
+    \cline{2-2}
+    & $O(n^2)$   & 4 & 64 & $4 + 13n + 15n^2$ & $32n^2$ \\
+    \cline{2-2}
+    & $O(n^3)$   & 4 & 193  & $2 + 7n + 10n^2 + 4n^3 $ & $23n^3$\\
+    \cline{2-2}
+    & $O(n^{4})$ & 1 & 21  & $1+3n+6n^2+8n^3+2n^4$ & $20n^4$\\
+    \hline \hline
+    \multirow{6}{*}{Icra} 
+    & $O(1)$ & 4 & 93 & 6 & 64 \\
+    \cline{2-2}
+    & $\log(n)$ & 2 & 16 & 0 & 0 \\
+    \cline{2-2}
+    & $O(n)$ & 79 & 988  & $267 + 698n$ & $ 965n $\\
+    \cline{2-2}
+    & $O(n^2)$ & 12 & 151  & $26+110n+26n^2$ & $162n^2$\\
+    \cline{2-2}
+    & $O(n^3)$ & 1 &  9 & $1+3n+3n^2+2n^3$ & $9n^3$\\
+    \cline{2-2}
+    & $\infty$ & 20 & 295  & $50$ & $ \infty$\\
+    \hline \hline
+    \multirow{2}{*}{Tianhan} 
+    & $O(n)$ & 35 & 188 & $68+120n$ & $188n$\\
+    \cline{2-2}
+    & $O(n^2)$ & 2 & 12  & $4+8n+4n^2$ & $16n^2$ \\
+    \hline
+    \hline
+    \end{tabular}
+    }
+    \vspace{-0.3cm}
+    \end{table}
