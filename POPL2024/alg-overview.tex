@@ -49,9 +49,10 @@ by exhaustively checking the compositions of their transition relations.
         \qquad \qquad \qquad \land \emin(0, i - m) + m - 1 \% 2 = 0 \land i' \leq  \emin(0, i - m) + m - 4
     \end{array}
 \end{equation}
-Then we eliminate the interleaving orders that are infeasible and preserve these whose composition can imply the
-representation of the original loop.
-So we compute two new loops that
+Then we eliminate the interleaving orders that are infeasible and preserve these compositions (interleaving orders) that are equivalent
+representations of the original loop.
+For each equivalent representations, we create a new loop with the corresponding interleaving order as the only one execution path.
+We compute two new loops for this example that
 either $\rprog_1$ executes after one iteration of $\rprog_2$ or vice versa.
 % Then, loop $L_1$ in the source program is generates new execution paths as follows,
 \[
