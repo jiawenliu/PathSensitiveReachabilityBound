@@ -194,7 +194,7 @@ the edge sequence $(e_1, \ldots, e_n)$, where $e_i = (l_{i - 1}, dc_i, l_{i}) \i
 %
 is a \emph{simple transition path} if and only if it satisfies,
 \begin{itemize}
-  \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 0, \ldots, {n - 1}$,
+  \item $l_i \neq l_j$ for every $i = 0, \ldots, n$ and $j = 1, \ldots, {n - 1}$,
   \item $l_0$ is either the program point of a loop header or the program entrance ($l_0 = 0$),
   i.e., $l_0 \in \loopl(c) \cup \{ 0 \}$
   \item and $l_n$ is either the program point of a loop header or the program exit ($l_n = \lex$),
@@ -202,11 +202,11 @@ is a \emph{simple transition path} if and only if it satisfies,
   \item and $l_i \notin \loopl(c) \cup \{ 0, \lex \}$ for every $i = 1, \ldots, n-1$.
 \end{itemize}
 \end{defn}
-A simple transition path is also an execution path.
+% A simple transition path is also an execution path.
 
 \paragraph{Syntax.}
-We define the abstract program syntax and the transition relation based on graph paths as below. 
-The syntax of the abstract program is combination of the execution paths with extra annotations and the logic transition relation is a logic formula over constraints.
+We define the abstract program syntax and the transition relation over the graph paths as below. 
+The syntax of the abstract program is combination of the execution paths with annotations and the logic transition relation is a logic formula over constraints.
 \[
   \begin{array}{rll}
    \mbox{Abstract Program} & \rprog &:= \tpath ~|~ \rprepeat(\rprog) ~|~ l : \rprepeat(\rprog) ~|~ \rprog;\rprog ~|~ \rpchoose{\rprog, \ldots} \\
@@ -220,15 +220,16 @@ $l: \rprepeat(\rprog)$ represents that the loop $ \rprepeat(\rprog)$
 corresponds to a loop of the source program with loop header $l$.
 The multiple-paths statement $\rpchoose{\rprog, \ldots} $ contains all the execution paths of a loop from the source program.
 
-The transition relation can be either a constraint, conjunctions or disjunctions of itself, and $dc \in \phi$ denotes that
-the constraint $dc$ shows up in a subclause of $\phi$ either in the form of conjunction or disjunction.
+The transition relation can be either a constraint, conjunctions or disjunctions of itself. $dc \in \phi$ denotes that
+the constraint $dc$ is showing up in a subclause of $\phi$.
+% either in the form of conjunction or disjunction.
 $(\phi)^*$ corresponds to a loop path in the program and denotes unknown times of compositions of
 $\phi$, $\exists i \in \mathbb{N} \st \underbrace{\phi \lcompose \phi \lcompose \ldots}_{i} $.
-Composition operation $\lcompose$ of two transition relations is computed as below.
+Composition operation $\lcompose$ of two transition relations is computed as below,
 \[
-  \phi_1 \lcompose \phi_2 = \phi_1 \land \phi_2[\varvector{x''}/\varvector{x'}][\varvector{x'}/{\varvector{x}}],
+  \phi_1 \lcompose \phi_2 = \phi_1 \land \phi_2[\varvector{x''}/\varvector{x'}][\varvector{x'}/{\varvector{x}}].
 \]
-in which $\varvector{x} = (x_1, x_2, \ldots)$ for each $x_1, x_2, \ldots \in \vardom$ and the corresponding prime copies $\varvector{x'}$ are all the variables showing up in $\phi_2$ in the form of
+$\varvector{x} = (x_1, x_2, \ldots)$ where $x_1, x_2, \ldots \in \vardom$ and the corresponding prime copies $\varvector{x'}$ are all the variables showing up in $\phi_2$ in the form of
 $x_i \leq x_i'$ or $x_i \leq x_i' + v$ for some $v \in \scvardom$.
 It can also be a formula quantified by existential of set of symbols $v \in \scvardom$.
 % \begin{defn}
