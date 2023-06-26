@@ -59,7 +59,7 @@ formed using the arithmetical operators' addition ($+$), multiplication
 A difference constraint $d$ is an inequality of
 form $x' \leq y + v$ or $x' \leq v$ where $x, y \in \vardom $, $v \in \scvardom$ and $x' \in \vardom'$. The difference constraint
 $x' \leq y + v$ (rsp. $x' \leq v$) states that the value of $x$ in the current state is
-at most the value of $y$ in the previous state plus the symbolic constant $v$ (rsp. the value of $v$).
+at most the value of $y$ in the previous state plus the symbolic constant $v$ (rsp. the symbolic constant of $v$).
 We use $DC(\vardom \cup \scvardom)$ to denote the set of all difference constraints over $\vardom \cup \scvardom$.
 \end{defn}
 
@@ -73,35 +73,7 @@ difference constraint $d \in DC(\vardom \cup \scvardom)$ or a boolean expression
 % We use $\dcdom^{\top}$ to denote the set of constraints. 
 \end{defn}
 
-When the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
-% Then $x'$ 
-it denotes that
-the value of variable $x$
-after executing the command at $l$ is at most
-% and the right-hand side describes 
-the value of variable $y$ plus $v$ before the execution,
-and $l \xrightarrow{x' \leq v} l'$ respectively denotes
-% value of variable $x$
-% after executing the command at $l$ is 
-$x$ has at most
-% and the right-hand side describes 
-the value of the symbolic constant $v$.
-% before the execution.
-For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
-describes the execution of
- the command at line $7$, 
-$\clabel{\assign{i}{i - 1}}^{7}$. 
-
-% For every expression in each of the label commands, it is computed in three steps via the program abstraction method adopted from Section~6 in~\cite{SinnZV17}. 
-
-The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
-that after evaluating the guard with label $l$,
-$\bexpr$ holds and the command with label $l$ will execute right after.
-In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$, 
-represents the negation of the testing guard $\clabel{i > 0}^1$
-in the $\ewhile$ command, and $i \leq 0$ must hold in order to perform this transition from program point $1$ to
-the program exit. 
-We also have $\top$, which is preserved for $\eskip$ command or the commands that don't interfere with any guard variable.
+% We also have $\top$, which is preserved for $\eskip$ command or the commands that don't interfere with any guard variable.
 
 
 % For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), the constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
@@ -137,9 +109,38 @@ the command with label $l'$ can execute right after the execution of the command
 The constraint $dc \in \dcdom$ on each edge
 describes the abstract execution of the command with label $l$.
 \end{defn}
-The edge $(0 \xrightarrow{i' \leq n} 1)$ on the top of Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) tells us the command 
-$\clabel{\assign{i}{n}}^0$ is executed with a continuation point $1$, and the while loop with header at location $1$, $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed right after.
+The edge $(0 \xrightarrow{i' \leq n} 1)$ on the top of Figure~\ref{fig:relatedNestedWhileOdd-overview}(b) tells us the command at location $0$,
+$\clabel{\assign{i}{n}}^0$ is executed on this transition described by the constraint $i' \leq n$. The while loop at the location $1$, $\ewhile \clabel{i > 0}^1 \edo \{\ldots\}$ will be executed right after.
 
+
+When the constraint in a transition is a difference constrain, $l \xrightarrow{x' \leq y + v} l'$,
+% Then $x'$ 
+it denotes that
+the value of variable $x$
+after executing the command at $l$ is at most
+% and the right-hand side describes 
+the value of variable $y$ before the execution plus $v$,
+and $l \xrightarrow{x' \leq v} l'$ respectively denotes
+% value of variable $x$
+% after executing the command at $l$ is 
+$x$ has at most
+% and the right-hand side describes 
+the value of the symbolic constant $v$.
+% before the execution.
+For example in Figure~\ref{fig:relatedNestedWhileOdd-overview}(b), constraint $i' \leq i - 1$ on the edge $7 \xrightarrow{i' \leq i - 1} 1$
+describes the execution of
+ the command at line $7$, 
+$\clabel{\assign{i}{i - 1}}^{7}$. 
+
+% For every expression in each of the label commands, it is computed in three steps via the program abstraction method adopted from Section~6 in~\cite{SinnZV17}. 
+
+The boolean constraint, $\bexpr$ on an edge $l \xrightarrow{b} l'$ describes
+that after evaluating the guard with label $l$,
+$\bexpr$ holds and the command with label $l$ will execute right after.
+In Figure~\ref{fig:relatedNestedWhileOdd-overview}, $i \leq 0 $ on the edge $1 \xrightarrow{i \leq 0} \lex$
+represents the negation of the testing guard $\clabel{i > 0}^1$
+in the $\ewhile$ command. $i \leq 0$ must hold in order to perform this transition from program point $1$ to
+the exit. 
 \begin{defn}[Path]
  \label{def:abs_cfgpath} 
  A path $p$ on a program's abstract transition graph $\absG(c)$ is a sequence, $ l_0 \xrightarrow{dc_0} l_1 \xrightarrow{dc_1} \ldots $ with
@@ -162,7 +163,7 @@ This section describes the generation of the abstract program and the transition
 
 
 \paragraph{Loop Header.}
-We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all program points corresponding to the loop headers in program $c$.
+We first collect the loop headers $\loopl(c) \subseteq \lvar(c)$ from a program $c$, which is the set of all the labels corresponding to the loop headers in program $c$.
 \begin{defn}[Loop Headers ($\loopl : \cdom \to \mathcal{P}(\ldom)$)]
   \label{def:loopl}
   \[
